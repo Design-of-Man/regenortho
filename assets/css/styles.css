@@ -66,6 +66,15 @@ body {
   background: var(--porcelain);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  /* Fraunces carries an optical-size axis, and browsers default to
+     font-optical-sizing:auto — so a 65px heading asks for opsz ~49. Above
+     opsz 20 Fraunces swaps in its display alternates: a curled f, a J that
+     drops below the baseline, and a swash ampersand. Handsome on a magazine,
+     eccentric on an orthopedic practice. Pinning opsz to 20 keeps the clean
+     text cut at every size. Inherited, so it covers every element and every
+     stylesheet. Manrope has no opsz axis, so this is a no-op there, and
+     naming only opsz leaves font-weight in charge of the wght axis. */
+  font-variation-settings: "opsz" 20;
 }
 
 img { max-width: 100%; height: auto; display: block; }
