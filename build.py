@@ -15,6 +15,7 @@ import math
 import json
 import os
 import re
+import subprocess
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 BASE = "https://www.regenorthopb.com"
@@ -73,6 +74,45 @@ def asset_v(path):
     return _v_cache[path]
 
 
+# ---------------------------------------------------------------------------
+# Freshness signals
+# ---------------------------------------------------------------------------
+
+_git_dates = None
+
+
+def page_lastmod(path):
+    """Date a page's content last actually changed, as YYYY-MM-DD.
+
+    Every page used to report the same frozen SITE_UPDATED constant, so the whole
+    site claimed to change at once and then went stale the moment anyone forgot to
+    bump it — which makes <lastmod> noise that Google learns to ignore and gives
+    IndexNow nothing real to act on. The last commit that touched the file is the
+    honest answer. Falls back to SITE_UPDATED outside a git checkout (release
+    tarball, CI export) so the build never depends on git being present.
+    """
+    global _git_dates
+    if _git_dates is None:
+        _git_dates = {}
+        try:
+            out = subprocess.run(
+                ["git", "log", "--pretty=format:%cs", "--name-only"],
+                cwd=ROOT, capture_output=True, text=True, timeout=30,
+            )
+            date = None
+            for line in out.stdout.splitlines():
+                line = line.strip()
+                if not line:
+                    continue
+                if len(line) == 10 and line[4] == "-" and line[7] == "-":
+                    date = line          # commit date; newest first
+                elif date and line not in _git_dates:
+                    _git_dates[line] = date   # first sighting == most recent commit
+        except (OSError, subprocess.SubprocessError):
+            pass
+    return _git_dates.get(path, SITE_UPDATED)
+
+
 _dim_cache = {}
 
 
@@ -122,7 +162,8 @@ def img_dims(path, fallback=(1200, 630)):
 # that shows the people beats one that shows the logo — and the logo is already
 # in the org schema, so nothing is lost.
 def head(title, desc, depth=0, canonical="", og_image="assets/media/og-team.jpg",
-         page_type="website", extra_schema="", preload_hero=False, extra_css=""):
+         page_type="website", extra_schema="", preload_hero=False, extra_css="",
+         webpage_type="WebPage", speakable=False):
     p = "../" * depth
     canonical_url = f"{BASE}/{canonical}" if canonical else f"{BASE}/"
     og_url = f"{SHARE_BASE}/{og_image}?v={asset_v(og_image)}"
@@ -130,17 +171,37 @@ def head(title, desc, depth=0, canonical="", og_image="assets/media/og-team.jpg"
     og_alt = (OG_TEAM_ALT if og_image == "assets/media/og-team.jpg" else title)
     og_type = "image/png" if og_image.lower().endswith(".png") else "image/jpeg"
     schema = org_schema()
+    # MedicalWebPage on clinical pages (services, conditions, infusions): it tells
+    # Google and the AI crawlers the page is health content about a named entity
+    # rather than generic marketing copy. medicalAudience is a structural fact.
+    # NOTE: reviewedBy/lastReviewed are deliberately absent — those assert that a
+    # named clinician vetted the page, and we do not have that sign-off on record.
+    # Add them only once the practice confirms a reviewer and a review date.
+    webpage_node = {
+        "@type": webpage_type, "@id": f"{canonical_url}#webpage", "url": canonical_url,
+        "name": title, "description": desc, "inLanguage": "en-US",
+        "isPartOf": {"@id": f"{BASE}/#website"},
+        "about": {"@id": ORG_ID},
+        "primaryImageOfPage": {"@type": "ImageObject", "url": og_url},
+        "datePublished": SITE_LAUNCHED,
+        # Per-page, from git — not one frozen sitewide constant.
+        "dateModified": page_lastmod(canonical or "index.html"),
+    }
+    if webpage_type == "MedicalWebPage":
+        webpage_node["medicalAudience"] = "Patient"
+    if speakable:
+        # Voice assistants read these two selectors aloud for "who treats knee
+        # pain near me"-style queries; both are present on every page that sets it.
+        webpage_node["speakable"] = {
+            "@type": "SpeakableSpecification",
+            "cssSelector": [".page-hero h1", ".page-hero .lede"],
+        }
     page_graph = json.dumps({
         "@context": "https://schema.org",
         "@graph": [
             {"@type": "WebSite", "@id": f"{BASE}/#website", "url": f"{BASE}/", "name": NAME,
              "inLanguage": "en-US", "publisher": {"@id": ORG_ID}},
-            {"@type": "WebPage", "@id": f"{canonical_url}#webpage", "url": canonical_url,
-             "name": title, "description": desc, "inLanguage": "en-US",
-             "isPartOf": {"@id": f"{BASE}/#website"},
-             "about": {"@id": ORG_ID},
-             "primaryImageOfPage": {"@type": "ImageObject", "url": og_url},
-             "datePublished": SITE_LAUNCHED, "dateModified": SITE_UPDATED},
+            webpage_node,
         ],
     }, separators=(",", ":"))
     hero_preload = ""
@@ -590,9 +651,14 @@ TESTIMONIALS = [
 ]
 
 def _assoc_w(img):
-    from PIL import Image as _I
-    w, h = _I.open(os.path.join(ROOT, "assets/media", img)).size
-    return round(w * 54 / h)
+    """Rendered width of a 54px-tall association logo, from its real aspect ratio.
+
+    Reads the header with img_dims (stdlib) rather than Pillow: a clean checkout
+    — CI, a fresh session, a new machine — has no pip install step, and importing
+    PIL here used to abort the whole build before a single page was written.
+    """
+    w, h = img_dims(os.path.join("assets/media", img), fallback=(54, 54))
+    return round(w * 54 / h) if h else 54
 
 
 ASSOCIATIONS = [
@@ -639,7 +705,7 @@ INFUSIONS = [
      "lede": "Ocrevus (ocrelizumab) infusions coordinated with your neurologist and delivered in a private, monitored suite.",
      "body": "Ocrevus is a prescription infusion used in the management of certain forms of multiple sclerosis. Our team works with your neurologist's treatment plan, provides pre-infusion screening, and monitors you throughout each visit in a comfortable outpatient environment."},
     {"slug": "ultomiris", "name": "Ultomiris Infusion Therapy",
-     "title": "Ultomiris Infusion Palm Beach Gardens | RegenOrtho Infusion Center",
+     "title": "Ultomiris Infusion Therapy Palm Beach Gardens | RegenOrtho",
      "desc": "Ultomiris (ravulizumab) infusion therapy in a private, physician-supervised Palm Beach Gardens outpatient suite with insurance coordination.",
      "lede": "Ultomiris (ravulizumab) infusion therapy in a private outpatient suite, with clinical monitoring and insurance coordination.",
      "body": "Ultomiris is a physician-prescribed infusion used in the management of certain rare complement-mediated conditions. We administer it on your prescriber's protocol in a monitored, private infusion suite — a calmer, more convenient alternative to hospital-based infusion."},
@@ -1616,14 +1682,28 @@ def build_home():
 
     schema = breadcrumb_schema([("", "Home")])
     page = head(
-        "Orthopedic, Regenerative & Vein Care Palm Beach Gardens | RegenOrtho",
+        # ~57 chars: keyword + city front-loaded, brand last. Google truncates a
+        # title around 600px (~60 chars) and the brand is the cheapest thing to lose.
+        "Orthopedic & Regenerative Care Palm Beach Gardens | RegenOrtho",
         "Concierge orthopedic, podiatric, regenerative & vein care in Palm Beach Gardens. Board-certified surgeons, 40+ years combined experience. Call 833-STEM561.",
-        depth=d, canonical="index.html", extra_schema=schema, preload_hero=True,
+        # canonical="" -> BASE/ (the root), NOT /index.html. Every inbound link,
+        # the GBP listing and the social profiles point at the root; canonicalising
+        # to /index.html asks Google to consolidate the wrong direction.
+        depth=d, canonical="", extra_schema=schema, preload_hero=True,
     ) + f'<body class="page-home">\n' + body
     write("index.html", page)
 
+# Published monthly starting prices, quoted verbatim from the service pages
+# ("Plans starting at $239/month", "Programs from $249 per month"). Only these two
+# services publish a price, so only these two get an offer — never infer one.
+SERVICE_FROM_PRICE = {
+    "medical-weight-loss": 239,
+    "peptide-therapy": 249,
+}
+
+
 def therapy_schema(svc):
-    return extra_ld({
+    node = {
         "@context": "https://schema.org",
         "@type": "MedicalTherapy",
         "@id": f"{BASE}/services/{svc['slug']}.html#service",
@@ -1631,7 +1711,29 @@ def therapy_schema(svc):
         "description": svc["desc"],
         "url": f"{BASE}/services/{svc['slug']}.html",
         "provider": {"@id": ORG_ID},
-    })
+        "image": f"{BASE}/assets/media/{svc['img']}",
+        "areaServed": [{"@type": "City", "name": c} for c in
+                       [ADDRESS_CITY] + [l["city"] for l in LOCATIONS]],
+    }
+    price = SERVICE_FROM_PRICE.get(svc["slug"])
+    if price:
+        node["offers"] = {
+            "@type": "Offer",
+            "price": price,
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock",
+            "url": f"{BASE}/services/{svc['slug']}.html",
+            # "from $X/month" — a floor, not a fixed fee.
+            "priceSpecification": {
+                "@type": "UnitPriceSpecification",
+                "price": price,
+                "priceCurrency": "USD",
+                "minPrice": price,
+                "unitCode": "MON",
+                "billingIncrement": 1,
+            },
+        }
+    return extra_ld(node)
 
 
 def build_services():
@@ -1698,6 +1800,7 @@ def build_services():
         )
         page = head(svc["title"], svc["desc"], depth=d,
                     canonical=f"services/{svc['slug']}.html",
+                    webpage_type="MedicalWebPage", speakable=True,
                     og_image=f"assets/media/{svc['img']}",
                     extra_schema=schema) + '<body class="page-service">\n' + body
         write(f"services/{svc['slug']}.html", page)
@@ -1754,7 +1857,7 @@ def build_services():
     schema = breadcrumb_schema([("", "Home"), ("services/index.html", "Our Services")])
     page = head("Our Services | RegenOrtho Palm Beach — Palm Beach Gardens",
                 "RegenOrtho Palm Beach services: orthopedics, podiatry, regenerative medicine, vein care, IV therapy, MISHA & Mako knees, weight loss, and concierge care.",
-                depth=d, canonical="services/index.html", extra_schema=schema) + '<body class="page-services">\n' + body
+                depth=d, canonical="services/index.html", extra_schema=schema, speakable=True) + '<body class="page-services">\n' + body
     write("services/index.html", page)
 
 
@@ -1815,6 +1918,7 @@ def build_conditions():
         )
         page = head(c["title"], c["desc"], depth=d,
                     canonical=f"conditions/{c['slug']}.html",
+                    webpage_type="MedicalWebPage", speakable=True,
                     og_image=f"assets/media/{c['img']}",
                     page_type="article", extra_schema=schema) + '<body class="page-condition">\n' + body
         write(f"conditions/{c['slug']}.html", page)
@@ -1880,7 +1984,7 @@ def build_locations():
         page = head(
             f"Orthopedic & Regenerative Care {city} FL | RegenOrtho",
             f"{city} residents: orthopedic, podiatric, regenerative & vein care minutes away in Palm Beach Gardens. Same-week consultations — call 833-STEM561.",
-            depth=d, canonical=f"locations/{loc['slug']}.html", extra_schema=schema,
+            depth=d, canonical=f"locations/{loc['slug']}.html", extra_schema=schema, speakable=True,
         ) + '<body class="page-location">\n' + body
         write(f"locations/{loc['slug']}.html", page)
 
@@ -2232,6 +2336,26 @@ def build_iv():
         "description": "Clinician-supervised IV vitamin and nutrient infusions in Palm Beach Gardens — hydration, immune support, NAD+, athletic recovery, and full-body wellness formulas.",
         "url": f"{BASE}/iv-therapy.html",
         "provider": {"@id": ORG_ID},
+        "image": f"{BASE}/assets/media/og-team.jpg",
+        "areaServed": [{"@type": "City", "name": c} for c in
+                       [ADDRESS_CITY] + [l["city"] for l in LOCATIONS]],
+        # The menu and its prices are already published on the page; declaring them
+        # is what lets Google and the AI assistants answer "how much is a NAD+ drip
+        # in Palm Beach Gardens" with our number instead of a competitor's.
+        "offers": {
+            "@type": "OfferCatalog",
+            "name": "IV Recovery & Wellness Lounge menu",
+            "itemListElement": [
+                {"@type": "Offer",
+                 "name": html.unescape(m["name"]),
+                 "description": m["desc"],
+                 "price": m["price"],
+                 "priceCurrency": "USD",
+                 "availability": "https://schema.org/InStock",
+                 "url": f"{BASE}/iv-therapy.html#menu"}
+                for m in IV_MENU
+            ],
+        },
     })
     crumbs_html = crumbs([("", "IV Therapy Lounge")], depth=d)
     body = f"""{nav(d)}
@@ -2283,7 +2407,7 @@ def build_iv():
     schema = offers + faq_schema(IV_FAQS) + breadcrumb_schema([("", "Home"), ("iv-therapy.html", "IV Therapy")])
     page = head("IV Therapy Palm Beach Gardens | Drip Lounge & NAD+ | RegenOrtho",
                 "IV therapy in Palm Beach Gardens: hydration, immune boost, NAD+ 500mg, athletic recovery & more — clinician-supervised drips from $189 in a private lounge.",
-                depth=d, canonical="iv-therapy.html",
+                depth=d, canonical="iv-therapy.html", webpage_type="MedicalWebPage", speakable=True,
                 og_image="assets/media/iv-hero.jpg",
                 extra_schema=schema) + '<body class="page-iv">\n' + body
     write("iv-therapy.html", page)
@@ -2329,7 +2453,7 @@ def build_infusions():
     schema = breadcrumb_schema([("", "Home"), ("infusions/index.html", "Specialty Infusion Center")])
     page = head("Specialty Infusion Center Palm Beach Gardens | RegenOrtho",
                 "IVIG, Krystexxa, Ocrevus & Ultomiris infusions in a private Palm Beach Gardens outpatient suite — clinician-monitored with insurance coordination.",
-                depth=d, canonical="infusions/index.html",
+                depth=d, canonical="infusions/index.html", webpage_type="MedicalWebPage", speakable=True,
                 og_image="assets/media/infusion-room.jpg",
                 extra_schema=schema) + '<body class="page-infusions">\n' + body
     write("infusions/index.html", page)
@@ -2383,6 +2507,7 @@ def build_infusions():
         )
         page = head(inf["title"], inf["desc"], depth=d,
                     canonical=f"infusions/{inf['slug']}.html",
+                    webpage_type="MedicalWebPage", speakable=True,
                     og_image="assets/media/infusion-room.jpg",
                     extra_schema=schema) + '<body class="page-infusion">\n' + body
         write(f"infusions/{inf['slug']}.html", page)
@@ -2891,8 +3016,13 @@ def build_blog():
                 "headline": p_["title"],
                 "description": p_["desc"],
                 "datePublished": p_["date"],
+                # Google reads dateModified for freshness; without it a post that
+                # has been revised still looks as old as its publish date.
+                "dateModified": page_lastmod(f"blog/{p_['slug']}.html"),
                 "image": f"{BASE}/assets/media/{p_['image']}",
                 "url": f"{BASE}/blog/{p_['slug']}.html",
+                "inLanguage": "en-US",
+                "isAccessibleForFree": True,
                 "author": {"@type": "Organization", "name": NAME, "@id": ORG_ID},
                 "publisher": {"@id": ORG_ID},
                 "mainEntityOfPage": f"{BASE}/blog/{p_['slug']}.html",
@@ -2997,15 +3127,38 @@ def build_meta():
             return "0.5", "yearly"
         return "0.3", "yearly"
 
+    # The lead image per page, declared to Google Images. Only pages whose hero
+    # photo is a real file get an entry — a 404 in an image sitemap is worse than
+    # no entry at all.
+    page_images = {"index.html": ("assets/media/og-team.jpg", OG_TEAM_ALT)}
+    for s in SERVICES:
+        page_images[f"services/{s['slug']}.html"] = (f"assets/media/{s['img']}", s["img_alt"])
+    for c in CONDITIONS:
+        if c.get("img"):
+            page_images[f"conditions/{c['slug']}.html"] = (
+                f"assets/media/{c['img']}", c.get("img_alt") or c["name"])
+
     rows = []
     for u in pages:
         prio, freq = _prio(u)
-        lastmod = post_dates.get(u, SITE_UPDATED)
-        rows.append(f"  <url><loc>{BASE}/{u}</loc><lastmod>{lastmod}</lastmod>"
-                    f"<changefreq>{freq}</changefreq><priority>{prio}</priority></url>")
+        # Blog posts carry an authored publish date; everything else reports the
+        # commit that last touched it.
+        lastmod = post_dates.get(u) or page_lastmod(u)
+        # The homepage is canonical at the root, so the sitemap must say the root
+        # too — listing /index.html here contradicts its own canonical tag.
+        loc = f"{BASE}/" if u == "index.html" else f"{BASE}/{u}"
+        img = page_images.get(u)
+        img_xml = ""
+        if img and os.path.exists(os.path.join(ROOT, img[0])):
+            img_xml = (f"<image:image><image:loc>{BASE}/{img[0]}</image:loc>"
+                       f"<image:title>{html.escape(img[1])}</image:title></image:image>")
+        rows.append(f"  <url><loc>{loc}</loc><lastmod>{lastmod}</lastmod>"
+                    f"<changefreq>{freq}</changefreq><priority>{prio}</priority>"
+                    f"{img_xml}</url>")
     urls = "\n".join(rows)
     write("sitemap.xml", f"""<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 {urls}
 </urlset>
 """)
@@ -3082,6 +3235,12 @@ Sitemap: {BASE}/sitemap.xml
     svc_lines = "\n".join(f"- {s['name']}: {BASE}/services/{s['slug']}.html — {s['desc']}" for s in SERVICES)
     cond_lines = "\n".join(f"- {c['name']}: {BASE}/conditions/{c['slug']}.html" for c in CONDITIONS)
     loc_lines = "\n".join(f"- {l['city']}: {BASE}/locations/{l['slug']}.html" for l in LOCATIONS)
+    # An assistant answering "how much is a NAD+ drip in Palm Beach Gardens" or
+    # "do they take insurance" should not have to guess or crawl three pages. Every
+    # figure below is quoted from the site's own published menu and FAQs.
+    iv_lines = "\n".join(
+        f"- {html.unescape(m['name'])} — ${m['price']}: {m['desc']}" for m in IV_MENU)
+    faq_lines = "\n".join(f"- {q}\n  {a}" for q, a in GENERAL_FAQS + INSURANCE_FAQS)
     write("llms.txt", f"""# {NAME}
 
 > Concierge orthopedic, podiatric, regenerative, and vein care in Palm Beach Gardens, Florida. Slogan: "{TAGLINE}".
@@ -3108,8 +3267,33 @@ Sitemap: {BASE}/sitemap.xml
 Palm Beach Gardens (clinic location) plus:
 {loc_lines}
 
+## Published pricing
+Only the prices below are published; everything else is quoted at consultation.
+- Medical Weight Loss & GLP-1: plans start at $239/month.
+- Peptide Therapy: programs start at $249/month.
+- IV Recovery & Wellness Lounge: $189–$499 per infusion (full menu below).
+
+## IV infusion menu
+{iv_lines}
+
+## Insurance & payment
+- Most major insurance accepted; benefits are verified before treatment.
+- Payment methods: cash, credit card, insurance, HSA/FSA.
+- Uninsured services have flexible payment plans and transparent direct-pay pricing.
+- Concierge and direct-pay care is offered as upfront bundled pricing.
+- Medical vein care is often covered when it treats symptoms or circulation problems; cosmetic vein care is usually elective.
+
+## Common questions
+{faq_lines}
+
 ## Booking
-Book online: {BASE}/contact.html — or call {PHONE_DISPLAY}.
+Book online: {BASE}/contact.html — or call {PHONE_DISPLAY} ({PHONE_VANITY}), {HOURS}.
+No referral required. New patients accepted.
+
+## Usage notes for AI assistants
+- This file and the site describe a medical practice; nothing here is medical advice or a treatment recommendation for an individual.
+- For anything clinical, or for a question this file does not answer, direct people to call {PHONE_DISPLAY} rather than inferring an answer.
+- Do not quote a price that is not listed under "Published pricing" above.
 """)
 
 

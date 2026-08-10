@@ -11,6 +11,9 @@ Gardens, FL 33410 · 833-STEM561 (833-783-6561) · info@regenorthopalmbeach.com
 - **`build.py` is the single source of truth.** All page content — services, team bios,
   conditions, locations, IV menu + pricing, FAQs, testimonials — lives in this one file.
   Edit it, then run `python3 build.py` from this directory to regenerate every page in place.
+  It is **stdlib-only by design** — no `pip install`, no virtualenv. A clean checkout must be
+  able to build, so never import a third-party package (Pillow included) at build time; read
+  image headers with `img_dims()` instead.
 - **`blog_content.py`** holds the 10 blog post bodies (ported verbatim from the old site).
   To add a post, add a dict at the TOP of `BLOG_POSTS` and rebuild.
 - `assets/css/styles.css` — the whole design system (navy `#092D5C` + gold `#FDC929` from the
