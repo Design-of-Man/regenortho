@@ -14,7 +14,7 @@ Gardens, FL 33410 · 833-STEM561 (833-783-6561) · info@regenorthopalmbeach.com
 - **`blog_content.py`** holds the 10 blog post bodies (ported verbatim from the old site).
   To add a post, add a dict at the TOP of `BLOG_POSTS` and rebuild.
 - `assets/css/styles.css` — the whole design system (navy `#092D5C` + gold `#FDC929` from the
-  brand mark, porcelain background, Fraunces + Manrope self-hosted fonts).
+  brand mark, porcelain background, Lora + Manrope self-hosted fonts).
 - `assets/js/main.js` — nav, scroll reveals, counters, marquees, testimonial rotator, and the
   homepage's interactive anatomy section (draws in on scroll; nodes link to condition pages).
 - **Hero video drop-in**: the homepage hero background is a CSS-animated coastline. To swap in

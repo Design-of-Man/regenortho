@@ -1,19 +1,19 @@
 /* ==========================================================================
    RegenOrtho Palm Beach — design system
    Navy (#092D5C) + gold (#FDC929) from the brand mark, porcelain light field,
-   Fraunces display serif + Manrope UI sans (self-hosted, variable).
+   Lora display serif + Manrope UI sans (self-hosted, variable).
    ========================================================================== */
 
 @font-face {
-  font-family: "Fraunces";
-  src: url("../fonts/fraunces.woff2") format("woff2");
+  font-family: "Lora";
+  src: url("../fonts/lora.woff2") format("woff2");
   font-weight: 400 700;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Fraunces";
-  src: url("../fonts/fraunces-italic.woff2") format("woff2");
+  font-family: "Lora";
+  src: url("../fonts/lora-italic.woff2") format("woff2");
   font-weight: 400 700;
   font-style: italic;
   font-display: swap;
@@ -42,7 +42,7 @@
   --line: #DCD5C6;
   --line-dark: rgba(253, 201, 41, .18);
   --white: #FFFFFF;
-  --serif: "Fraunces", Georgia, serif;
+  --serif: "Lora", Georgia, serif;
   --sans: "Manrope", -apple-system, "Segoe UI", sans-serif;
   --shadow-lg: 0 30px 60px -25px rgba(4, 16, 31, .35);
   --shadow-sm: 0 10px 30px -18px rgba(4, 16, 31, .35);
@@ -66,15 +66,6 @@ body {
   background: var(--porcelain);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
-  /* Fraunces carries an optical-size axis, and browsers default to
-     font-optical-sizing:auto — so a 65px heading asks for opsz ~49. Above
-     opsz 20 Fraunces swaps in its display alternates: a curled f, a J that
-     drops below the baseline, and a swash ampersand. Handsome on a magazine,
-     eccentric on an orthopedic practice. Pinning opsz to 20 keeps the clean
-     text cut at every size. Inherited, so it covers every element and every
-     stylesheet. Manrope has no opsz axis, so this is a no-op there, and
-     naming only opsz leaves font-weight in charge of the wght axis. */
-  font-variation-settings: "opsz" 20;
 }
 
 img { max-width: 100%; height: auto; display: block; }

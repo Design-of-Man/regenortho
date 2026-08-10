@@ -195,7 +195,7 @@ def head(title, desc, depth=0, canonical="", og_image="assets/media/og-team.jpg"
 <link rel="icon" type="image/png" sizes="16x16" href="{p}assets/media/favicon-16.png?v=1">
 <link rel="apple-touch-icon" href="{p}assets/media/apple-touch-icon.png?v=1">
 <link rel="manifest" href="{p}site.webmanifest">
-<link rel="preload" href="{p}assets/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{p}assets/fonts/lora.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{p}assets/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin>
 {hero_preload}<link rel="stylesheet" href="{p}assets/css/styles.css?v={asset_v('assets/css/styles.css')}">
 <link rel="stylesheet" href="{p}assets/css/assist.css?v={asset_v('assets/css/assist.css')}">
