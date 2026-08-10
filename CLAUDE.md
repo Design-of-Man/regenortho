@@ -6,7 +6,7 @@ Static site, 56 pages, generated — do not edit HTML files directly.
 - **`build.py`** is the single source of truth: all page content, services, team, conditions,
   locations, IV menu/pricing, FAQs, testimonials. Edit it, run `python3 build.py` (from this
   directory) to regenerate every page in place. `blog_content.py` holds blog post bodies.
-- Fonts are SELF-HOSTED in assets/fonts/ (Fraunces + Manrope variable woff2, @font-face at
+- Fonts are SELF-HOSTED in assets/fonts/ (Lora + Manrope variable woff2, @font-face at
   the top of styles.css, preloads in head()) — do not add Google Fonts links.
 - All CSS/JS links carry build-time content-hash cache-busters (`asset_v()` in build.py) —
   never link an asset without one.
