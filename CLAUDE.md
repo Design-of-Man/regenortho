@@ -134,7 +134,29 @@ CSS coastline scene stays underneath as the no-video fallback. asset_v() returns
   Per page: Physician (providers), MedicalTherapy (services), MedicalCondition (conditions),
   FAQPage (faq + service/condition pages), Service-per-city (locations), BlogPosting (posts),
   BreadcrumbList (interior). sitemap.xml/robots.txt/llms.txt regenerate on build.
+- The homepage canonical is the ROOT (`canonical=""` -> https://www.regenorthopb.com/), not
+  /index.html, and the sitemap emits the root to match. Inbound links, GBP and the social
+  profiles all point at the root — canonicalising to /index.html consolidates the wrong way.
+  If you ever change one of the two, change both or they contradict each other.
+- `page_lastmod()` derives per-page dates from the last commit that touched the file (one
+  `git log` walk, cached). It feeds sitemap <lastmod>, WebPage.dateModified and
+  BlogPosting.dateModified. Do NOT put SITE_UPDATED back in those three places — a sitewide
+  frozen constant is noise Google learns to discount. It falls back to SITE_UPDATED outside
+  a git checkout, so the build still works from a tarball. Known and harmless: a page's date
+  comes from its LAST commit, so the build that introduces a change still emits the previous
+  date; the next build after committing picks up the new one. Don't "fix" this by stamping
+  today's date at build time — that makes every page look changed on every build.
+- Clinical pages (services, conditions, infusions, IV) pass `webpage_type="MedicalWebPage"`;
+  pages built on `page_hero()` pass `speakable=True` (selectors `.page-hero h1` /
+  `.page-hero .lede` — if you rename either class, update the SpeakableSpecification).
 - DELIBERATE: no aggregateRating in our own schema (Google guideline). Do not add.
+- DELIBERATE: no `reviewedBy` / `lastReviewed` on MedicalWebPage. Both assert that a named
+  clinician vetted the page for accuracy; that sign-off does not exist on record. Add them
+  only when the practice names a reviewer and a real review date — not from a build script.
+- Prices in schema come from `SERVICE_FROM_PRICE` (the two services that publish a "from"
+  price) and `IV_MENU` (the 12-item OfferCatalog). Never add an offer for a service that
+  does not publish a price on the page — an invented price is a fact violation and a
+  structured-data penalty.
 - New pages: unique title (~50–60 chars, keyword + city front-loaded), desc (~150–160),
   canonical, entry in build_meta() pages list.
 - robots.txt names AI crawlers (GPTBot, ClaudeBot, PerplexityBot, Google-Extended…)
