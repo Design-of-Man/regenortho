@@ -208,7 +208,7 @@ def head(title, desc, depth=0, canonical="", og_image="assets/media/og-team.jpg"
     if preload_hero:
         # The hero poster is the homepage's LCP image — the <video> ships
         # preload="none", so the poster is what paints first on every device.
-        _pp = f"assets/video/juno-poster.jpg?v={asset_v('assets/video/juno-poster.jpg')}"
+        _pp = f"assets/video/bag-poster.jpg?v={asset_v('assets/video/bag-poster.jpg')}"
         hero_preload = (f'<link rel="preload" as="image" href="{p}{_pp}" '
                         f'fetchpriority="high">\n')
     extra_css_tag = ""
@@ -1465,17 +1465,16 @@ def build_home():
 
     body = f"""{nav(d)}
 <main id="main">
-<section class="hero" id="hero">
+<section class="hero hero-light" id="hero">
   <div class="hero-scene" aria-hidden="true">
     <div class="hero-video-slot">
-      <video class="hero-video" autoplay muted loop playsinline preload="none"
-             poster="assets/video/juno-poster.jpg?v={asset_v('assets/video/juno-poster.jpg')}"
-             data-hero-video
-             data-mp4-max="assets/video/juno-max.mp4?v={asset_v('assets/video/juno-max.mp4')}"
-             data-mp4-hd="assets/video/juno-hd.mp4?v={asset_v('assets/video/juno-hd.mp4')}"
-             data-webm-hd="assets/video/juno-hd.webm?v={asset_v('assets/video/juno-hd.webm')}"
-             data-mp4-portrait="assets/video/juno-portrait.mp4?v={asset_v('assets/video/juno-portrait.mp4')}" data-webm-portrait="assets/video/juno-portrait.webm?v={asset_v('assets/video/juno-portrait.webm')}" data-mp4-mobile="assets/video/juno-mobile.mp4?v={asset_v('assets/video/juno-mobile.mp4')}"
-             data-webm-mobile="assets/video/juno-mobile.webm?v={asset_v('assets/video/juno-mobile.webm')}"></video>
+      <video class="hero-video" muted playsinline preload="none"
+             poster="assets/video/bag-poster.jpg?v={asset_v('assets/video/bag-poster.jpg')}"
+             data-hero-video data-hero-intro data-reveal-at="6.5"
+             data-mp4-hd="assets/video/bag-hd.mp4?v={asset_v('assets/video/bag-hd.mp4')}"
+             data-webm-hd="assets/video/bag-hd.webm?v={asset_v('assets/video/bag-hd.webm')}"
+             data-mp4-mobile="assets/video/bag-mobile.mp4?v={asset_v('assets/video/bag-mobile.mp4')}"
+             data-webm-mobile="assets/video/bag-mobile.webm?v={asset_v('assets/video/bag-mobile.webm')}"></video>
       <div class="hero-video-scrim"></div>
     </div>
     <div class="scene-sky"></div>

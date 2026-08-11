@@ -1188,3 +1188,114 @@ body.nav-locked .mobile-call { display: none !important; }
 @media print {
   .topbar, .site-header, .site-footer, .mobile-call, .cta-band, .hero-marquee { display: none; }
 }
+
+/* ===========================================================================
+   HERO — light variant (.hero-light), used by the homepage IV-bag film.
+   The clip is near-white (mean luma 222/255), so the shipping light-on-dark
+   hero copy measured 1.17:1 against it — invisible. Everything below inverts
+   the hero to navy-on-porcelain, which measures 10.07:1 on the same frames.
+   Gold goes to --bronze-text for the same reason: #FDC929 on porcelain fails.
+   =========================================================================== */
+.hero-light { background: var(--porcelain); color: var(--ink); }
+
+/* The CSS coastline is a golden-hour scene and cannot sit behind navy copy, so
+   the light hero drops it and falls back to flat porcelain instead. */
+.hero-light .hero-scene > *:not(.hero-video-slot) { display: none; }
+
+.hero-light .hero-copy { text-shadow: none; }
+.hero-light h1 { color: var(--navy-800); }
+.hero-light h1 em { color: var(--bronze-text); }
+.hero-light .hero-eyebrow { color: var(--bronze-text); }
+.hero-light .lede { color: var(--muted); }
+.hero-light .hero-stats dt { color: var(--navy-800); }
+.hero-light .hero-stats dd { color: var(--muted); }
+
+/* Porcelain wash weighted to the copy side, mirroring the navy one it replaces. */
+.hero-light .hero-video-scrim {
+  background: linear-gradient(90deg, rgba(249, 247, 242, .62) 0%,
+              rgba(249, 247, 242, .30) 40%, rgba(249, 247, 242, 0) 62%);
+  opacity: 0; transition: opacity .9s var(--ease);
+}
+.hero-light.is-revealed .hero-video-scrim { opacity: 1; }
+.hero-light .hero-scrim { background: none; }
+
+/* The bag's own REGEN ORTHO wordmark occupies 32-68% of the frame. The copy
+   column stops before it so the two never overlap and the view carries one
+   wordmark, not two. */
+@media (min-width: 768px) {
+  .hero-light .hero-copy { max-width: 30ch; }
+}
+
+/* --- intro sequence -------------------------------------------------------
+   JS stamps .is-armed before first paint so the copy never flashes, then
+   .is-revealed once the film has settled (6.5s) or on any interaction. The
+   existing --hd stagger is reused, compressed so the copy lands together
+   rather than trickling in for another 1.35s. */
+.hero.is-armed .h-rise { animation: none; opacity: 0; }
+.hero.is-armed.is-revealed .h-rise {
+  animation: hRise .9s var(--ease) forwards;
+  animation-delay: calc(var(--hd, 0s) * .45);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero.is-armed .h-rise { animation: none; opacity: 1; }
+  .hero-light .hero-video-scrim { opacity: 1; transition: none; }
+}
+
+/* --- header over the light hero -------------------------------------------
+   The transparent header ships a white wordmark and #EAF1F8 links, which is
+   correct over the navy hero and invisible over the near-white film. On the
+   homepage, the header swaps to the navy wordmark and navy links until it
+   sticks -- once .is-stuck paints the navy bar behind it, the light set is
+   right again. */
+body.page-home .site-header:not(.is-stuck) .brand-dark { display: none; }
+body.page-home .site-header:not(.is-stuck) .brand-light { display: block; }
+body.page-home .site-header:not(.is-stuck) .nav-link,
+body.page-home .site-header:not(.is-stuck) .drop-btn { color: var(--navy-800); }
+body.page-home .site-header:not(.is-stuck) .nav-link:hover,
+body.page-home .site-header:not(.is-stuck) .drop-btn:hover { color: var(--bronze-text); }
+
+/* --- framing: the film is a band, the copy sits under it -------------------
+   Cover-fitting a 2.12:1 film into a hero as tall as this one's content zooms
+   it until the bag fills the frame and its OWN wordmark lands under the
+   headline -- two wordmarks fighting, and no copy column wide enough to clear
+   it. Overlaying copy fights the asset, so the light hero stops overlaying:
+   the film runs full-bleed as a band at close to its native aspect, and the
+   copy sits beneath it on porcelain, where it is legible whatever the footage
+   does. Height is the smaller of the film's own aspect (100vw / 2.122) and
+   58vh, so the band plus the copy still fit one screen on a laptop. */
+.hero-light .hero-scene {
+  position: relative; inset: auto; width: 100%;
+  height: min(47vw, 58vh); animation: none;
+}
+.hero-light .hero-inner { padding-top: clamp(1.6rem, 3vw, 2.6rem); }
+.hero-light .hero-copy {
+  /* Sized in rem, not ch: ch resolves against the sans body font while the
+     headline is set in the serif display face, so a ch cap wraps it to ribbons. */
+  text-align: center; margin-inline: auto; max-width: min(46rem, 90vw);
+  text-shadow: none;
+}
+.hero-light h1 { max-width: none; margin-inline: auto; }
+.hero-light .lede { margin-inline: auto; }
+.hero-light .hero-cta-row { justify-content: center; }
+.hero-light .hero-stats { justify-content: center; margin-inline: auto; text-align: center; }
+/* The porcelain wash existed to lift copy off the film; nothing overlaps now. */
+.hero-light .hero-video-scrim { display: none; }
+
+@media (max-width: 767px) and (orientation: portrait) {
+  /* Portrait gets the film's full aspect -- no vertical crop at all. */
+  .hero-light .hero-scene { height: auto; aspect-ratio: 1392 / 656; }
+  .hero-light { padding-bottom: 2.2rem; }
+}
+
+/* --- light-hero fixes for chrome that assumed a dark hero ------------------ */
+/* The hamburger is white with a gold hairline, which vanishes on the film. */
+body.page-home .site-header:not(.is-stuck) .nav-toggle {
+  color: var(--navy-800); border-color: rgba(9, 45, 92, .35);
+}
+body.page-home .site-header:not(.is-stuck) .nav-toggle-box span { background: var(--navy-800); }
+
+/* On phones the stats sit in a rgba(4,16,31,.68) panel built for the navy hero;
+   navy-on-navy is unreadable, so the light hero gives them a porcelain card. */
+.hero-light .hero-stats {
+  background: rgba(255, 255, 255, .72); border: 1px solid var(--line);
+}

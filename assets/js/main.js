@@ -62,31 +62,73 @@
 
   /* ---------------------------------------------------- hero video pick */
   /* The <video> ships with NO <source> children. Exactly one rendition pair is
-     attached here, so phones never fetch the 4K/HD URLs, and nothing downloads
-     at all under reduced-motion or Save-Data. 4K only goes to screens that can
-     actually resolve it AND aren't on a metered connection. */
+     attached here, so phones never fetch the desktop file, and nothing
+     downloads at all under reduced-motion or Save-Data. The IV-bag film masters
+     at 1392x656, so there is no "max" tier to pick -- upscaling past the master
+     buys nothing. */
   var heroVid = document.querySelector("[data-hero-video]");
   if (heroVid) {
+    var hero = heroVid.closest(".hero");
     var conn = navigator.connection || {};
     var saveData = !!conn.saveData || /(^|\b)2g/.test(conn.effectiveType || "");
-    if (reduceMotion || saveData) {
+    var noPlay = reduceMotion || saveData;
+
+    /* --- intro sequence ---------------------------------------------------
+       The film plays once and holds on the settled bag; the hero copy rises in
+       after it has stopped moving. Rules that matter more than the effect:
+         - once per SESSION, not per page load. Bounce to a service page and
+           back and the copy is simply there.
+         - any scroll, tap or key press reveals immediately. Nobody is held by
+           an animation when they want to read.
+         - the copy is NEVER gated on the video succeeding. Blocked autoplay, a
+           decode error, Save-Data or a slow network all fall through. The
+           headline is the page's main content; it cannot depend on a download.
+         - reduced-motion skips the whole thing.
+       .is-armed is what hides the copy, and it is only ever added when we are
+       actually going to run the sequence -- so with JS off, or on any of the
+       fallback paths above, the copy animates in normally. */
+    var introSeen = false;
+    try { introSeen = sessionStorage.getItem("rga-hero-intro") === "1"; } catch (e) {}
+    /* Desktop and tablet only. On a phone the film is a short band and the copy
+       sits under it, so holding the copy back shows most of a screen of empty
+       porcelain rather than a film worth waiting for. */
+    var bigScreen = window.matchMedia("(min-width: 768px)").matches;
+    var runIntro = hero && heroVid.hasAttribute("data-hero-intro") &&
+                   !noPlay && !introSeen && bigScreen;
+    var revealAt = parseFloat(heroVid.getAttribute("data-reveal-at")) || 6.5;
+    var revealed = false;
+    var revealTimer = null;
+
+    var reveal = function () {
+      if (revealed || !hero) return;
+      revealed = true;
+      hero.classList.add("is-revealed");
+      try { sessionStorage.setItem("rga-hero-intro", "1"); } catch (e) {}
+      if (revealTimer) { clearTimeout(revealTimer); revealTimer = null; }
+      window.removeEventListener("scroll", reveal);
+      window.removeEventListener("pointerdown", reveal);
+      window.removeEventListener("keydown", reveal);
+    };
+
+    if (runIntro) {
+      hero.classList.add("is-armed");
+      window.addEventListener("scroll", reveal, { passive: true, once: true });
+      window.addEventListener("pointerdown", reveal, { once: true });
+      window.addEventListener("keydown", reveal, { once: true });
+      // Backstop: if the film never reports progress, show the copy anyway.
+      revealTimer = setTimeout(reveal, (revealAt + 4) * 1000);
+    } else if (hero) {
+      reveal();
+    }
+
+    if (noPlay) {
       heroVid.removeAttribute("autoplay");   // poster only
     } else {
       var isMobile = window.matchMedia("(max-width: 767px)").matches;
-      // A landscape file cover-fitted into a tall portrait hero is scaled ~2.9x
-      // and loses most of the frame. Portrait phones get a 9:16 crop instead.
-      var isPortrait = isMobile && window.matchMedia("(orientation: portrait)").matches
-                       && !!heroVid.getAttribute("data-mp4-portrait");
-      var wantMax = !isMobile && window.innerWidth >= 1200 &&
-                    (window.devicePixelRatio || 1) * window.innerWidth >= 2200;
-      var mp4 = isPortrait ? heroVid.getAttribute("data-mp4-portrait")
-              : isMobile ? heroVid.getAttribute("data-mp4-mobile")
-              : wantMax ? heroVid.getAttribute("data-mp4-max")
-              : heroVid.getAttribute("data-mp4-hd");
-      var webm = isPortrait ? heroVid.getAttribute("data-webm-portrait")
-               : isMobile ? heroVid.getAttribute("data-webm-mobile")
-               : wantMax ? heroVid.getAttribute("data-webm-hd")   // VP9 fallback for max tier too
-               : heroVid.getAttribute("data-webm-hd");
+      var mp4 = isMobile ? heroVid.getAttribute("data-mp4-mobile")
+                         : heroVid.getAttribute("data-mp4-hd");
+      var webm = isMobile ? heroVid.getAttribute("data-webm-mobile")
+                          : heroVid.getAttribute("data-webm-hd");
       var s1 = document.createElement("source");
       s1.src = mp4; s1.type = "video/mp4";
       heroVid.appendChild(s1);
@@ -95,10 +137,17 @@
         s2.src = webm; s2.type = "video/webm";
         heroVid.appendChild(s2);
       }
+      if (runIntro) {
+        heroVid.addEventListener("timeupdate", function () {
+          if (heroVid.currentTime >= revealAt) reveal();
+        });
+        heroVid.addEventListener("ended", reveal);
+        heroVid.addEventListener("error", reveal);
+      }
       heroVid.load();
       var tryPlay = function () {
         var pr = heroVid.play();
-        if (pr && pr.catch) pr.catch(function () { /* autoplay veto → poster stays */ });
+        if (pr && pr.catch) pr.catch(reveal);   // autoplay veto -> copy anyway
       };
       if (heroVid.readyState >= 2) tryPlay();
       else heroVid.addEventListener("canplay", tryPlay, { once: true });

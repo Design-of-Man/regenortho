@@ -80,6 +80,45 @@ Two traps that cost real time here:
 - The arm masses deliberately overlap the trunk. Drawn clear of it, the gap shows
   background through the lit figure as a hard black void.
 
+## Homepage hero — the IV bag film (current)
+Source: a branded 1392x656 / 9.85s clip of a RegenOrtho-printed IV bag dropping into
+water. The lockup, "PALM BEACH" and the tagline are PRINTED IN THE SHOT — no logo
+compositing, do not add any.
+- Renditions in assets/video/: `bag-hd.mp4|webm` (1392x656) and `bag-mobile.mp4|webm`
+  (1044x492), plus `bag-poster.jpg` (frame one, preloaded as the LCP image). There is
+  NO max tier — the master is 1392 wide, so upscaling buys nothing.
+- Audio is stripped; the file plays once and holds its last frame. It does NOT loop,
+  so there is no loop seam to protect.
+- INTRO SEQUENCE: the film plays on arrival and the hero copy rises in at 6.5s
+  (`data-reveal-at`), once the splash is over. Five rules in main.js matter more than
+  the effect and must not be dropped: once per SESSION (sessionStorage `rga-hero-intro`),
+  any scroll/tap/keypress reveals immediately, a hard timeout reveals anyway, blocked
+  autoplay / decode error / Save-Data / reduced-motion all fall through to visible copy,
+  and the intro only runs at >=768px. The copy is NEVER gated on the video succeeding —
+  the H1 is the page's main content. `.is-armed` is what hides it and is only ever added
+  when the sequence will actually run, so with JS off the copy animates in normally.
+- THE HERO IS LIGHT (`.hero hero-light`). The film averages 222/255 luma; the shipping
+  light-on-dark copy measured 1.17:1 against it. Navy-on-porcelain measures 10.07:1.
+  Gold becomes `--bronze-text` for the same reason. Chrome built for the dark hero is
+  overridden on the homepage only: the header swaps to the navy wordmark + navy links +
+  navy hamburger until `.is-stuck`, and `.hero-stats` gets a porcelain card instead of
+  its rgba(4,16,31,.68) panel. If you ever put a dark film back, revert those together.
+- THE COPY DOES NOT OVERLAY THE FILM. The bag's own wordmark occupies 32-68% of frame
+  width; cover-fitting 2.12:1 into a hero as tall as this one's content zooms it until
+  that wordmark lands under the headline — two wordmarks fighting, with no copy column
+  wide enough to clear it. So the film is a BAND (`height: min(47vw, 58vh)`, portrait
+  gets its full aspect uncropped) and the copy sits beneath it on porcelain. Do not
+  "fix" this by moving the copy back over the film.
+- `.hero-light .hero-copy` is capped in rem, not ch: ch resolves against the sans body
+  font while the headline is serif, and a ch cap wraps the H1 to ribbons.
+- The CSS coastline scene is hidden under `.hero-light` — it is a golden-hour scene and
+  cannot sit behind navy copy. Porcelain is the no-video fallback here.
+
+## Previous hero video — Juno Beach pier (retained, not currently used)
+The assets/video/juno-* files are no longer referenced by any page. Kept so the coastline
+hero can be restored; delete them if that is off the table (~84MB). Everything below
+documents how they were built.
+
 ## Hero video (do not regress)
 Source of truth: "Juno.MP4" in the Dropbox /kashuba folder — 2688×1512@59.94,
 15.65s drone shot of the Juno Beach Pier. Native camera resolution: there is NO
