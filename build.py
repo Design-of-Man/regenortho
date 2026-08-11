@@ -1861,9 +1861,41 @@ def build_services():
     write("services/index.html", page)
 
 
+CONDITION_FAQ_CAP = 5
+
+
+def condition_faqs(c):
+    """The condition's own FAQs, topped up from the services it already links to.
+
+    Condition pages shipped 2 Q&As each against 5 on services and 7 on IV, and
+    conditions are where the high-intent questions actually land ("can knee pain
+    be treated without surgery"). Everything here is copy the practice has already
+    published — a condition's own FAQs first, then FAQs from the services listed
+    in c["services"], which are by definition the ones relevant to it. Nothing new
+    is written, so nothing needs fresh clinical sign-off.
+    """
+    out, seen = [], set()
+    for q, a in c["faqs"]:
+        if q not in seen:
+            seen.add(q)
+            out.append((q, a))
+    for slug in c["services"]:
+        for svc in SERVICES:
+            if svc["slug"] != slug:
+                continue
+            for q, a in svc["faqs"]:
+                if len(out) >= CONDITION_FAQ_CAP:
+                    return out
+                if q not in seen:
+                    seen.add(q)
+                    out.append((q, a))
+    return out
+
+
 def build_conditions():
     d = 1
     for c in CONDITIONS:
+        c_faqs = condition_faqs(c)
         symptoms = "".join(f"<li>{s}</li>" for s in c["symptoms"])
         svcs = "".join(
             f"""<a class="treat-card reveal" href="{svc_href(s, 0).replace('services/', '../services/').replace('iv-therapy.html', '../iv-therapy.html')}"><strong>{svc_name(s)}</strong><em class="svc-more">Learn more <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></a>"""
@@ -1871,7 +1903,7 @@ def build_conditions():
         )
         faqs = "".join(
             f"""<details class="faq-item"><summary>{q}</summary><div class="faq-a"><p>{a}</p></div></details>"""
-            for q, a in c["faqs"]
+            for q, a in c_faqs
         )
         crumbs_html = crumbs([("conditions/", "Conditions"), ("", c["name"])], depth=d)
         body = f"""{nav(d)}
@@ -1880,14 +1912,14 @@ def build_conditions():
 <section class="section cond-layout">
   <div class="cond-grid">
     <div class="cond-main reveal">
-      <h2>Understanding {c['name'].lower()}</h2>
+      <h2>What are my options for {c['name'].lower()}?</h2>
       <p>{c['body']}</p>
-      <h2>How we treat it</h2>
+      <h2>How do we treat {c['name'].lower()}?</h2>
       <div class="treat-grid">{svcs}</div>
     </div>
     <aside class="cond-side reveal" style="--d:120ms">
       <div class="sym-card">
-        <h2>Sound familiar?</h2>
+        <h2>{c['name']} symptoms we see</h2>
         <ul class="check-list">{symptoms}</ul>
         <a class="btn btn-gold" href="../contact.html#book">Get it evaluated</a>
         <p class="sym-call">Or call <a href="tel:{PHONE_TEL}">{PHONE_VANITY}</a> — same-week consultations are usually available.</p>
@@ -1913,7 +1945,7 @@ def build_conditions():
                     {"@type": "MedicalTherapy", "name": svc_name(s)} for s in c["services"]
                 ],
             })
-            + faq_schema(c["faqs"])
+            + faq_schema(c_faqs)
             + breadcrumb_schema([("", "Home"), (f"conditions/{c['slug']}.html", c["name"])])
         )
         page = head(c["title"], c["desc"], depth=d,

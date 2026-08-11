@@ -159,6 +159,17 @@ CSS coastline scene stays underneath as the no-video fallback. asset_v() returns
   structured-data penalty.
 - New pages: unique title (~50–60 chars, keyword + city front-loaded), desc (~150–160),
   canonical, entry in build_meta() pages list.
+- Condition page H2s are deliberately QUESTION-SHAPED ("What are my options for knee
+  pain?", "How do we treat knee pain?") — AI engines retrieve passages under the heading
+  matching how the question was asked, and the old "Understanding X"/"How we treat it"/
+  "Sound familiar?" matched nothing anyone types. Keep them phrased as questions and keep
+  the condition name in each. Service pages keep their brand-voice headings on purpose.
+- `condition_faqs()` tops a condition's own FAQs up to `CONDITION_FAQ_CAP` (5) using the
+  FAQs of the services in its `services` list. Every Q&A is already-published copy, so
+  nothing needs fresh clinical sign-off — do NOT write new condition Q&As in build.py
+  without the practice approving the medical content. The visible <details> list and the
+  FAQPage schema are built from the SAME list; Google requires FAQ schema content to be
+  visible on the page, so never let those two diverge.
 - `/pricing.md` is the machine-readable price sheet for AI assistants and buying
   agents (generated in build_meta(), linked from llms.txt, served as text/plain via
   vercel.json). It restates ONLY published figures — `SERVICE_FROM_PRICE` and
