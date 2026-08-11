@@ -159,6 +159,13 @@ CSS coastline scene stays underneath as the no-video fallback. asset_v() returns
   structured-data penalty.
 - New pages: unique title (~50–60 chars, keyword + city front-loaded), desc (~150–160),
   canonical, entry in build_meta() pages list.
+- `/pricing.md` is the machine-readable price sheet for AI assistants and buying
+  agents (generated in build_meta(), linked from llms.txt, served as text/plain via
+  vercel.json). It restates ONLY published figures — `SERVICE_FROM_PRICE` and
+  `IV_MENU` — and explicitly lists the nine services that are quoted at consultation
+  under a "do not infer or estimate one" heading. That fence is the point of the
+  file: an assistant with no number invents one. Never add a price here that is not
+  on the page it links to.
 - robots.txt names AI crawlers (GPTBot, ClaudeBot, PerplexityBot, Google-Extended…)
   with Allow: / — several treat silence as refusal, which costs AI-answer visibility.
   Robots meta carries max-snippet:-1 + max-image-preview:large (feeds AI Overviews).
