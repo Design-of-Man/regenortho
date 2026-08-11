@@ -51,6 +51,7 @@ Palm Beach Gardens (clinic location) plus:
 - Lake Park: https://www.regenorthopb.com/locations/lake-park.html
 
 ## Published pricing
+Machine-readable pricing (all figures, plus what is deliberately unpriced): https://www.regenorthopb.com/pricing.md
 Only the prices below are published; everything else is quoted at consultation.
 - Medical Weight Loss & GLP-1: plans start at $239/month.
 - Peptide Therapy: programs start at $249/month.

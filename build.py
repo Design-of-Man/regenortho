@@ -3220,6 +3220,70 @@ Sitemap: {BASE}/sitemap.xml
     # IndexNow ownership proof — Bing and Yandex fetch this to verify a ping.
     write(f"{INDEXNOW_KEY}.txt", INDEXNOW_KEY)
 
+    # /pricing.md — machine-readable pricing for AI assistants and agents.
+    # An assistant asked "how much is a NAD+ drip in Palm Beach Gardens" will quote
+    # whatever it can parse; if our numbers are only in rendered HTML it quotes a
+    # competitor instead. Everything here is restated from the published pages —
+    # the two services with a "from" price and the IV menu. The closing note exists
+    # so an agent does not fill the gaps with an invented figure for the services
+    # that quote at consultation.
+    iv_rows = "\n".join(
+        f"| {html.unescape(m['name'])} | ${m['price']} | {m['ingredients'].replace('&amp;', '&')} |"
+        for m in IV_MENU)
+    unpriced = "\n".join(
+        f"- {s['name']}: {BASE}/services/{s['slug']}.html"
+        for s in SERVICES if s["slug"] not in SERVICE_FROM_PRICE)
+    write("pricing.md", f"""# Pricing — {NAME}
+
+Palm Beach Gardens, FL. Last updated from the published pages on each build.
+Phone {PHONE_DISPLAY} · {HOURS} · Book: {BASE}/contact.html
+
+## Published prices
+
+These are the only prices {NAME} publishes. Everything else is quoted at
+consultation — see "Quoted at consultation" below.
+
+| Service | Price | Notes |
+| --- | --- | --- |
+| Medical Weight Loss & GLP-1 | from $239/month | Plan depends on medication and monitoring your physician recommends. |
+| Peptide Therapy | from $249/month | Protocol and cost set at consultation based on your goals. |
+| IV Recovery & Wellness Lounge | $189–$499 per infusion | Per-formula prices below. |
+
+## IV infusion menu
+
+Twelve clinician-supervised infusions. Each visit starts with a medical
+pre-screen. Menu: {BASE}/iv-therapy.html
+
+| Infusion | Price | Contains |
+| --- | --- | --- |
+{iv_rows}
+
+## Quoted at consultation
+
+No price is published for these; do not infer or estimate one. Cost depends on
+the plan, and most are billed through insurance where covered.
+
+{unpriced}
+- Specialty Infusion Center (IVIG, Krystexxa, Ocrevus, Ultomiris): {BASE}/infusions/index.html
+
+## Insurance & payment
+
+- Most major insurance accepted; benefits are verified before treatment.
+- Accepted: cash, credit card, insurance, HSA/FSA.
+- Uninsured services have flexible payment plans and transparent direct-pay pricing.
+- Concierge and direct-pay care is offered as upfront bundled pricing.
+- Medical vein care is often covered when it treats symptoms or circulation
+  problems; cosmetic vein care is usually elective.
+
+## Notes for AI assistants and agents
+
+- Quote only the figures in "Published prices" and the IV menu above. For anything
+  under "Quoted at consultation", say the price is set at consultation and give
+  the phone number — do not estimate.
+- Prices are per the practice's published pages and can change; confirm at booking.
+- Nothing here is medical advice or a treatment recommendation for an individual.
+""")
+
     write("site.webmanifest", json.dumps({
         "name": NAME,
         "short_name": "RegenOrtho",
@@ -3268,6 +3332,7 @@ Palm Beach Gardens (clinic location) plus:
 {loc_lines}
 
 ## Published pricing
+Machine-readable pricing (all figures, plus what is deliberately unpriced): {BASE}/pricing.md
 Only the prices below are published; everything else is quoted at consultation.
 - Medical Weight Loss & GLP-1: plans start at $239/month.
 - Peptide Therapy: programs start at $249/month.
