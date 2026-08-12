@@ -89,14 +89,13 @@ compositing, do not add any.
   NO max tier — the master is 1392 wide, so upscaling buys nothing.
 - Audio is stripped; the file plays once and holds its last frame. It does NOT loop,
   so there is no loop seam to protect.
-- INTRO SEQUENCE: the film plays on arrival and the hero copy rises in at 6.5s
-  (`data-reveal-at`), once the splash is over. Five rules in main.js matter more than
-  the effect and must not be dropped: once per SESSION (sessionStorage `rga-hero-intro`),
-  any scroll/tap/keypress reveals immediately, a hard timeout reveals anyway, blocked
-  autoplay / decode error / Save-Data / reduced-motion all fall through to visible copy,
-  and the intro only runs at >=768px. The copy is NEVER gated on the video succeeding —
-  the H1 is the page's main content. `.is-armed` is what hides it and is only ever added
-  when the sequence will actually run, so with JS off the copy animates in normally.
+- NO PHASE-IN. The hero copy is present in its settled state at first paint and is
+  never gated on the film. `.hero-light .h-rise { animation: none; opacity: 1 }` kills
+  the rise (`.h-rise` is used only by this hero, so nothing else is affected). An
+  earlier build gated the copy behind a 6.5s reveal; it was removed on request. If it
+  ever comes back, the copy must still never depend on playback — blocked autoplay, a
+  decode error, Save-Data or a slow network cannot be allowed to hide the H1, which is
+  the page's main content.
 - THE HERO IS LIGHT (`.hero hero-light`). The film averages 222/255 luma; the shipping
   light-on-dark copy measured 1.17:1 against it. Navy-on-porcelain measures 10.07:1.
   Gold becomes `--bronze-text` for the same reason. Chrome built for the dark hero is

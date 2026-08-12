@@ -65,63 +65,17 @@
      attached here, so phones never fetch the desktop file, and nothing
      downloads at all under reduced-motion or Save-Data. The IV-bag film masters
      at 1392x656, so there is no "max" tier to pick -- upscaling past the master
-     buys nothing. */
+     buys nothing.
+
+     The film plays once on arrival and holds its last frame. The hero copy is
+     NOT gated on it: it is present from first paint, so a blocked autoplay, a
+     decode error, Save-Data or a slow network changes nothing about the page's
+     main content. */
   var heroVid = document.querySelector("[data-hero-video]");
   if (heroVid) {
-    var hero = heroVid.closest(".hero");
     var conn = navigator.connection || {};
     var saveData = !!conn.saveData || /(^|\b)2g/.test(conn.effectiveType || "");
-    var noPlay = reduceMotion || saveData;
-
-    /* --- intro sequence ---------------------------------------------------
-       The film plays once and holds on the settled bag; the hero copy rises in
-       after it has stopped moving. Rules that matter more than the effect:
-         - once per SESSION, not per page load. Bounce to a service page and
-           back and the copy is simply there.
-         - any scroll, tap or key press reveals immediately. Nobody is held by
-           an animation when they want to read.
-         - the copy is NEVER gated on the video succeeding. Blocked autoplay, a
-           decode error, Save-Data or a slow network all fall through. The
-           headline is the page's main content; it cannot depend on a download.
-         - reduced-motion skips the whole thing.
-       .is-armed is what hides the copy, and it is only ever added when we are
-       actually going to run the sequence -- so with JS off, or on any of the
-       fallback paths above, the copy animates in normally. */
-    var introSeen = false;
-    try { introSeen = sessionStorage.getItem("rga-hero-intro") === "1"; } catch (e) {}
-    /* Desktop and tablet only. On a phone the film is a short band and the copy
-       sits under it, so holding the copy back shows most of a screen of empty
-       porcelain rather than a film worth waiting for. */
-    var bigScreen = window.matchMedia("(min-width: 768px)").matches;
-    var runIntro = hero && heroVid.hasAttribute("data-hero-intro") &&
-                   !noPlay && !introSeen && bigScreen;
-    var revealAt = parseFloat(heroVid.getAttribute("data-reveal-at")) || 6.5;
-    var revealed = false;
-    var revealTimer = null;
-
-    var reveal = function () {
-      if (revealed || !hero) return;
-      revealed = true;
-      hero.classList.add("is-revealed");
-      try { sessionStorage.setItem("rga-hero-intro", "1"); } catch (e) {}
-      if (revealTimer) { clearTimeout(revealTimer); revealTimer = null; }
-      window.removeEventListener("scroll", reveal);
-      window.removeEventListener("pointerdown", reveal);
-      window.removeEventListener("keydown", reveal);
-    };
-
-    if (runIntro) {
-      hero.classList.add("is-armed");
-      window.addEventListener("scroll", reveal, { passive: true, once: true });
-      window.addEventListener("pointerdown", reveal, { once: true });
-      window.addEventListener("keydown", reveal, { once: true });
-      // Backstop: if the film never reports progress, show the copy anyway.
-      revealTimer = setTimeout(reveal, (revealAt + 4) * 1000);
-    } else if (hero) {
-      reveal();
-    }
-
-    if (noPlay) {
+    if (reduceMotion || saveData) {
       heroVid.removeAttribute("autoplay");   // poster only
     } else {
       var isMobile = window.matchMedia("(max-width: 767px)").matches;
@@ -137,17 +91,10 @@
         s2.src = webm; s2.type = "video/webm";
         heroVid.appendChild(s2);
       }
-      if (runIntro) {
-        heroVid.addEventListener("timeupdate", function () {
-          if (heroVid.currentTime >= revealAt) reveal();
-        });
-        heroVid.addEventListener("ended", reveal);
-        heroVid.addEventListener("error", reveal);
-      }
       heroVid.load();
       var tryPlay = function () {
         var pr = heroVid.play();
-        if (pr && pr.catch) pr.catch(reveal);   // autoplay veto -> copy anyway
+        if (pr && pr.catch) pr.catch(function () { /* autoplay veto -> poster stays */ });
       };
       if (heroVid.readyState >= 2) tryPlay();
       else heroVid.addEventListener("canplay", tryPlay, { once: true });

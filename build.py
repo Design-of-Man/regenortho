@@ -1470,7 +1470,7 @@ def build_home():
     <div class="hero-video-slot">
       <video class="hero-video" muted playsinline preload="none"
              poster="assets/video/bag-poster.jpg?v={asset_v('assets/video/bag-poster.jpg')}"
-             data-hero-video data-hero-intro data-reveal-at="6.5"
+             data-hero-video
              data-mp4-hd="assets/video/bag-hd.mp4?v={asset_v('assets/video/bag-hd.mp4')}"
              data-webm-hd="assets/video/bag-hd.webm?v={asset_v('assets/video/bag-hd.webm')}"
              data-mp4-mobile="assets/video/bag-mobile.mp4?v={asset_v('assets/video/bag-mobile.mp4')}"

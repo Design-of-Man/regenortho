@@ -1210,36 +1210,13 @@ body.nav-locked .mobile-call { display: none !important; }
 .hero-light .hero-stats dt { color: var(--navy-800); }
 .hero-light .hero-stats dd { color: var(--muted); }
 
-/* Porcelain wash weighted to the copy side, mirroring the navy one it replaces. */
-.hero-light .hero-video-scrim {
-  background: linear-gradient(90deg, rgba(249, 247, 242, .62) 0%,
-              rgba(249, 247, 242, .30) 40%, rgba(249, 247, 242, 0) 62%);
-  opacity: 0; transition: opacity .9s var(--ease);
-}
-.hero-light.is-revealed .hero-video-scrim { opacity: 1; }
 .hero-light .hero-scrim { background: none; }
 
-/* The bag's own REGEN ORTHO wordmark occupies 32-68% of the frame. The copy
-   column stops before it so the two never overlap and the view carries one
-   wordmark, not two. */
-@media (min-width: 768px) {
-  .hero-light .hero-copy { max-width: 30ch; }
-}
-
-/* --- intro sequence -------------------------------------------------------
-   JS stamps .is-armed before first paint so the copy never flashes, then
-   .is-revealed once the film has settled (6.5s) or on any interaction. The
-   existing --hd stagger is reused, compressed so the copy lands together
-   rather than trickling in for another 1.35s. */
-.hero.is-armed .h-rise { animation: none; opacity: 0; }
-.hero.is-armed.is-revealed .h-rise {
-  animation: hRise .9s var(--ease) forwards;
-  animation-delay: calc(var(--hd, 0s) * .45);
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero.is-armed .h-rise { animation: none; opacity: 1; }
-  .hero-light .hero-video-scrim { opacity: 1; transition: none; }
-}
+/* No phase-in. The hero copy is present in its settled state at first paint --
+   the film plays behind/above it, but nothing about the copy is animated or
+   gated on playback. .h-rise is used only by this hero, so neutralising it here
+   affects no other page. */
+.hero-light .h-rise { animation: none; opacity: 1; }
 
 /* --- header over the light hero -------------------------------------------
    The transparent header ships a white wordmark and #EAF1F8 links, which is
