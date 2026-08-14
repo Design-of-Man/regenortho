@@ -835,6 +835,42 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
 .crumbs a:hover { color: var(--gold); }
 .crumbs [aria-current] { color: var(--gold); font-weight: 700; }
 
+/* --------------------------- cash-pay offer modal ------------------------ */
+/* z-index 96 clears the assistant panel (95), which clears the header (90). */
+.offer-modal { position: fixed; inset: 0; z-index: 96; display: grid; place-items: center;
+  padding: 1.2rem; background: rgba(4, 16, 31, .62); backdrop-filter: blur(3px);
+  animation: offerIn .22s var(--ease) both; }
+.offer-modal[hidden] { display: none; }
+@keyframes offerIn { from { opacity: 0; } }
+body.offer-open { overflow: hidden; }
+.offer-panel { position: relative; width: min(30rem, 100%); max-height: 92vh; overflow-y: auto;
+  background: var(--porcelain, #F9F7F2); color: var(--navy-900, #092D5C);
+  border-radius: var(--r-lg); padding: 2.4rem 1.9rem 1.7rem; text-align: center;
+  box-shadow: 0 30px 70px rgba(4, 16, 31, .42); animation: offerPop .26s var(--ease) both; }
+@keyframes offerPop { from { opacity: 0; transform: translateY(14px) scale(.97); } }
+.offer-logo { width: clamp(9rem, 42%, 12rem); height: auto; margin: 0 auto .9rem; display: block; }
+.offer-panel h2 { font-size: clamp(1.5rem, 4.4vw, 1.95rem); margin: 0 0 .5rem; }
+.offer-sub { font-size: .93rem; line-height: 1.55; margin: 0 0 1.3rem; }
+.offer-panel form { display: flex; flex-direction: column; gap: .7rem; }
+.offer-panel input { width: 100%; padding: .85rem 1rem; font: inherit; font-size: 1rem;
+  color: inherit; background: #fff; border: 1px solid rgba(9, 45, 92, .28); border-radius: 10px; }
+.offer-panel input:focus-visible { outline: 3px solid var(--gold); outline-offset: 1px; }
+.offer-panel .btn { width: 100%; justify-content: center; }
+/* Bronze, not a light grey: this line carries the send failure message and has
+   to stay AA on porcelain. */
+.offer-status { min-height: 1.2em; margin: .8rem 0 0; font-size: .85rem; color: var(--bronze, #74590A); }
+.offer-skip { margin-top: .9rem; padding: .3rem; font: inherit; font-size: .82rem;
+  color: rgba(9, 45, 92, .72); background: none; border: 0; text-decoration: underline;
+  cursor: pointer; }
+.offer-skip:hover { color: var(--navy-900, #092D5C); }
+.offer-x { position: absolute; top: .6rem; right: .6rem; display: grid; place-items: center;
+  width: 2.4rem; height: 2.4rem; color: var(--navy-900, #092D5C); background: none;
+  border: 0; border-radius: 50%; cursor: pointer; }
+.offer-x:hover { background: rgba(9, 45, 92, .09); }
+@media (prefers-reduced-motion: reduce) {
+  .offer-modal, .offer-panel { animation: none; }
+}
+
 /* ------------------------------ service page ----------------------------- */
 
 .svc-intro-grid, .provider-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2.6rem; align-items: center; max-width: var(--wrap); margin: 0 auto; }

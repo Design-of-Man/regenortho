@@ -173,6 +173,50 @@ def photo_figure(img, alt, depth=0, cls="", delay=None):
             f'width="{w}" height="{h}" loading="lazy" decoding="async"></figure>')
 
 
+# Cash-pay surfaces that carry the offer. The IV Lounge page covers the whole
+# 12-item drip menu, since those cards live on it. Specialty infusions (IVIG,
+# Krystexxa, Ocrevus, Ultomiris) are deliberately absent: they are prescription
+# therapies billed through insurance, not cash-pay, and a discount prompt on a
+# prescription drug page is the wrong offer to the wrong person.
+OFFER_SERVICES = {"peptide-therapy", "medical-weight-loss"}
+
+
+def offer_modal(depth=0):
+    """The cash-pay offer modal — 25% off a first service.
+
+    Wording matches what the practice already publishes on regenorthopb.com, so
+    nothing here is a new commitment. Do NOT add terms (expiry, "new patients
+    only", exclusions) unless the practice states them: an invented condition on
+    a published discount is a fact violation the same as an invented price.
+
+    Email only. See the note at the top of offer.js before adding any field.
+    """
+    p = "../" * depth
+    # "light" here means FOR light backgrounds — this is the navy wordmark, and
+    # the panel is porcelain. logo-dark.png is the white one and vanishes on it.
+    logo = "assets/media/logo-light.png"
+    return f"""<div class="offer-modal" data-offer data-offer-email="{EMAIL}" hidden
+     role="dialog" aria-modal="true" aria-labelledby="offer-h">
+  <div class="offer-panel" tabindex="-1">
+    <button class="offer-x" type="button" data-offer-close aria-label="Close and continue to booking">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <img class="offer-logo" src="{p}{logo}?v={asset_v(logo)}" alt="RegenOrtho Palm Beach" width="{img_dims(logo)[0]}" height="{img_dims(logo)[1]}">
+    <h2 id="offer-h">25% off your <em>first service</em></h2>
+    <p class="offer-sub">Drop your email and we'll send your code. Then pick a time that suits you — the booking form is one click away.</p>
+    <form data-offer-form novalidate>
+      <label class="sr-only" for="offer-email">Email address</label>
+      <input id="offer-email" data-offer-input type="email" name="email" placeholder="Email address"
+             autocomplete="email" required>
+      <button class="btn btn-gold" type="submit">Send my code</button>
+    </form>
+    <p class="offer-status" data-offer-status role="status" aria-live="polite"></p>
+    <button class="offer-skip" type="button" data-offer-close>No thanks — just take me to booking</button>
+  </div>
+</div>
+"""
+
+
 def photo_strip(img, alt, depth=0):
     """A single full-width photo band — for pages that are otherwise all text."""
     return (f'<section class="section photo-strip">'
@@ -1862,7 +1906,8 @@ def build_services():
 </section>
 {cta_band(d, heading=svc['cta'], sub=svc['cta_sub'])}
 </main>
-{footer(d)}"""
+{offer_modal(d) if svc['slug'] in OFFER_SERVICES else ''}
+{footer(d, extra_js="assets/js/offer.js" if svc['slug'] in OFFER_SERVICES else "")}"""
         schema = (
             therapy_schema(svc)
             + faq_schema(svc["faqs"])
@@ -2506,7 +2551,8 @@ def build_iv():
 </section>
 {cta_band(d, heading="Feel better <em>today</em>", sub="Visit our infusion lounge for clinically guided IV therapy tailored to recovery, immune support, energy, and metabolic health.")}
 </main>
-{footer(d)}"""
+{offer_modal(d)}
+{footer(d, extra_js="assets/js/offer.js")}"""
     schema = offers + faq_schema(IV_FAQS) + breadcrumb_schema([("", "Home"), ("iv-therapy.html", "IV Therapy")])
     page = head("IV Therapy Palm Beach Gardens | Drip Lounge & NAD+ | RegenOrtho",
                 "IV therapy in Palm Beach Gardens: hydration, immune boost, NAD+ 500mg, athletic recovery & more — clinician-supervised drips from $189 in a private lounge.",

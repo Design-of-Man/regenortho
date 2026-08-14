@@ -31,6 +31,18 @@ Static site, 56 pages, generated — do not edit HTML files directly.
   scroll-behavior:auto because the site's global smooth scrolling turns
   scrollTo() into an animation that lands elsewhere. Panel z-index is 95 — it
   must outrank the fixed site header (90) now that the sheet starts at top:0.
+- `assets/js/offer.js` + `offer_modal()` in build.py — the cash-pay offer modal
+  ("25% off your first service"). Shows on the IV Lounge (which carries the whole
+  12-item drip menu), peptide therapy and medical weight loss — the set is
+  `OFFER_SERVICES` plus the IV page. NOT on the specialty infusion pages: IVIG,
+  Krystexxa, Ocrevus and Ultomiris are prescription therapies billed through
+  insurance, and a discount prompt does not belong on them. It intercepts clicks
+  on `contact.html#book` links, but dismissing OR submitting both continue to
+  that destination — the offer must never sit between a visitor and the
+  appointment request. Once per visitor per 30 days via localStorage. The
+  wording matches what the practice already publishes; do not add terms
+  (expiry, "new patients only", exclusions) they have not stated. Email only —
+  never add a symptom, condition or medication field.
 - `assets/js/assist.js` — concierge assistant. SET ANSWERS only (FAQ array) — no AI, no
   external API, no medical advice; route unknowns to 833-783-6561. Leads deliver via
   FormSubmit (formsubmit.co/ajax/info@regenorthopalmbeach.com) with a localStorage retry queue.
