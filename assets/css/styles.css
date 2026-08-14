@@ -829,12 +829,22 @@ body.page-iv:not(.nav-locked) .site-header:not(.is-stuck) .nav-toggle {
    Do NOT reintroduce a dark scrim here. If legibility needs help, weight the
    white veil below; and judge it against the FOOTAGE, because axe measures the
    CSS background underneath the video and passes either way. */
-.page-hero.has-video { background: #fff; color: var(--navy-900); }
-/* A white veil, not a dark one — lifts navy copy off the busiest part of the
-   frame while leaving the shot bright. */
-.page-hero.has-video .hero-video-scrim {
-  background: linear-gradient(90deg, rgba(255, 255, 255, .58) 0%, rgba(255, 255, 255, .42) 46%,
-    rgba(255, 255, 255, .16) 72%, rgba(255, 255, 255, .06) 100%); z-index: 2; }
+.page-hero.has-video { background: #fff; color: var(--navy-900); padding-top: 0; }
+/* BAND, not an overlay. The bag carries the RegenOrtho wordmark, so any copy
+   laid over the film collides with it — and with the header's wordmark that is
+   the brand three times in one viewport. The film is 2.12:1 in a wider box, so
+   cover crops vertically only and the wordmark cannot be framed out of the copy
+   column. Overlaying was tried twice and rejected; this stops overlaying.
+   `height`, NOT `min-height`: .page-hero grows to fit its content, so a
+   min-height leaves the video zoomed instead of capping the band. */
+.page-hero.has-video .hero-video-slot {
+  position: relative; inset: auto; height: min(46vw, 58vh); }
+/* Nothing sits over the film now except the transparent header, and frame one
+   is near-white up top where the navy nav reads fine. The veil has no job. */
+.page-hero.has-video .hero-video-scrim { display: none; }
+/* The section's top padding moved to the copy block so the film can run full
+   bleed up behind the header. */
+.page-hero.has-video .page-hero-inner { padding-top: clamp(2rem, 5vh, 3.2rem); }
 /* The aurora blobs are #12457F / #0E3A6E — the residual blue once the scrim is
    gone, so this hero does without them. */
 .page-hero.has-video .aurora { display: none; }
@@ -852,11 +862,10 @@ body.page-iv:not(.nav-locked) .site-header:not(.is-stuck) .nav-toggle {
 .page-hero.has-video .btn-ghost-light:hover {
   border-color: var(--navy-900); color: var(--navy-900); background: rgba(255, 255, 255, .8); }
 @media (max-width: 900px) {
-  /* The copy fills the hero on a phone, so the veil goes vertical and stronger
-     — there is no clear column to fall away into. */
-  .page-hero.has-video .hero-video-scrim {
-    background: linear-gradient(180deg, rgba(255, 255, 255, .72) 0%, rgba(255, 255, 255, .62) 55%,
-      rgba(255, 255, 255, .3) 100%); }
+  /* Taller than the desktop ratio for two reasons: a vw-driven band turns into
+     a letterbox sliver on a phone, and the bag's own wordmark needs clearance
+     from the header's — at 64vw the two sat within about 80px of each other. */
+  .page-hero.has-video .hero-video-slot { height: min(82vw, 48vh); }
 }
 .page-hero h1 { color: #fff; margin: .9rem 0 1rem; max-width: 22ch; }
 .page-hero .lede { max-width: 62ch; }

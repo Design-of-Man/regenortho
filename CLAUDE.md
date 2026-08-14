@@ -31,17 +31,26 @@ Static site, 56 pages, generated — do not edit HTML files directly.
   scroll-behavior:auto because the site's global smooth scrolling turns
   scrollTo() into an animation that lands elsewhere. Panel z-index is 95 — it
   must outrank the fixed site header (90) now that the sheet starts at top:0.
-- IV LOUNGE HERO is LIGHT, and deliberately so. `page_hero(video="bag")` plays the
-  practice's branded bag film — a white studio shot, frame one is near-blank white and
-  the clip averages luma ~222. Carrying white copy over it needed a navy scrim at .9
-  alpha, which erased the footage and washed the section blue; the client rejected
-  that. The copy is navy instead (~11:1 measured against the actual frames, vs ~1.2:1
-  for white) and `.hero-video-scrim` is a WHITE veil. Do not put a dark scrim back.
-  Contrast here must be judged against the FOOTAGE — axe reads the CSS background
-  underneath the `<video>` and passes either way, which is exactly how the blue version
-  scored clean. Because the hero is light, `body.page-iv:not(.nav-locked)
-  .site-header:not(.is-stuck)` swaps in the navy wordmark and navy nav links; both
-  guards matter, since `.is-stuck` and the open mobile menu paint their own navy.
+- IV LOUNGE HERO is a VIDEO BAND with the copy BELOW it, not an overlay.
+  `page_hero(video="bag")` plays the practice's branded bag film. Two overlay
+  treatments were built and rejected: a navy scrim (the film is a white studio shot,
+  luma ~222, so carrying white copy took .9 alpha — it erased the footage and washed
+  the section blue) and then navy copy on the bare film (the bag CARRIES the RegenOrtho
+  wordmark, so it collided with the H1, and with the header mark that is the brand three
+  times in one viewport). No scrim or crop fixes that: the film is 2.12:1 in a wider box,
+  so cover crops vertically only and the wordmark cannot be framed out.
+  So: `.page-hero.has-video .hero-video-slot` is `position: relative` with an explicit
+  `height` — NOT `min-height`, which does not cap it because `.page-hero` grows to fit
+  its content. `padding-top: 0` lets the film run full bleed under the transparent
+  header; `.page-hero-inner` carries its own top padding. `.hero-video-scrim` is
+  `display: none` — nothing sits over the film now. The mobile band is deliberately
+  taller (82vw) to keep the bag's wordmark clear of the header's.
+  The copy block below is LIGHT: navy H1/lede, bronze eyebrow, navy crumbs, inverted
+  `.btn-ghost-light`. It must stay inside `<section class="page-hero">` — `speakable=True`
+  targets `.page-hero h1` and `.page-hero .lede`.
+  Because the header sits over a white film, `body.page-iv:not(.nav-locked)
+  .site-header:not(.is-stuck)` swaps in the navy wordmark and navy nav links; both guards
+  matter, since `.is-stuck` and the open mobile menu paint their own navy.
 - `assets/js/offer.js` + `offer_modal()` in build.py — the cash-pay offer modal
   ("25% off your first service"). Shows on the IV Lounge (which carries the whole
   12-item drip menu), peptide therapy and medical weight loss — the set is
