@@ -460,7 +460,14 @@ def footer(depth=0, extra_js="", analytics=True):
 """
 
 
-def page_hero(eyebrow, title, lede, crumbs_html="", cta=True, depth=0):
+def page_hero(eyebrow, title, lede, crumbs_html="", cta=True, depth=0, video=None):
+    """Interior page hero. `video` is a rendition prefix in assets/video/ —
+    "bag" expects bag-poster.jpg, bag-hd.mp4/webm and bag-mobile.mp4/webm.
+
+    The markup carries NO <source> children on purpose: main.js attaches exactly
+    one pair from the data-* attributes, so phones never fetch the desktop file
+    and nothing downloads at all under reduced-motion or Save-Data.
+    """
     p = "../" * depth
     cta_html = ""
     if cta:
@@ -468,9 +475,23 @@ def page_hero(eyebrow, title, lede, crumbs_html="", cta=True, depth=0):
       <a class="btn btn-gold" href="{p}contact.html#book">Book a Consultation</a>
       <a class="btn btn-ghost-light" href="tel:{PHONE_TEL}">Call {PHONE_VANITY}</a>
     </div>"""
-    return f"""<section class="page-hero">
+    video_html = ""
+    if video:
+        v = f"assets/video/{video}"
+        video_html = f"""<div class="hero-video-slot">
+    <video autoplay muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"
+           poster="{p}{v}-poster.jpg?v={asset_v(f'{v}-poster.jpg')}"
+           data-hero-video
+           data-mp4-hd="{p}{v}-hd.mp4?v={asset_v(f'{v}-hd.mp4')}"
+           data-webm-hd="{p}{v}-hd.webm?v={asset_v(f'{v}-hd.webm')}"
+           data-mp4-mobile="{p}{v}-mobile.mp4?v={asset_v(f'{v}-mobile.mp4')}"
+           data-webm-mobile="{p}{v}-mobile.webm?v={asset_v(f'{v}-mobile.webm')}"></video>
+  </div>
+  <div class="hero-video-scrim" aria-hidden="true"></div>
+  """
+    return f"""<section class="page-hero{' has-video' if video else ''}">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
-  <div class="page-hero-inner reveal">
+  {video_html}<div class="page-hero-inner reveal">
     {crumbs_html}
     <p class="eyebrow">{eyebrow}</p>
     <h1>{title}</h1>
@@ -2442,7 +2463,7 @@ def build_iv():
     crumbs_html = crumbs([("", "IV Therapy Lounge")], depth=d)
     body = f"""{nav(d)}
 <main id="main">
-{page_hero("The IV Lounge", "Repair. Rehydrate. Renew.", "Revitalize your body and restore essential nutrients with IV treatments performed by our medical team — in a lounge designed for comfort, not a hospital corridor.", crumbs_html, depth=d)}
+{page_hero("The IV Lounge", "Repair. Rehydrate. Renew.", "Revitalize your body and restore essential nutrients with IV treatments performed by our medical team — in a lounge designed for comfort, not a hospital corridor.", crumbs_html, depth=d, video="bag")}
 <section class="section section-dark section-drips" id="menu">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="section-head reveal"><p class="eyebrow">The Menu</p><h2>Twelve formulas, <em>one goal: you at 100%</em></h2>

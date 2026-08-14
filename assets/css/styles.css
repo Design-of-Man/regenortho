@@ -803,7 +803,29 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
 
 .page-hero { position: relative; background: linear-gradient(178deg, var(--navy-900) 0%, var(--navy-950) 100%); color: #E7EFF7;
   padding: calc(var(--header-h) + clamp(1.6rem, 4vh, 2.6rem)) 1.2rem clamp(2.8rem, 7vh, 4.6rem); overflow: hidden; }
-.page-hero-inner { position: relative; max-width: var(--wrap); margin: 0 auto; }
+.page-hero-inner { position: relative; z-index: 2; max-width: var(--wrap); margin: 0 auto; }
+/* Video-backed interior hero (IV Lounge). The bag film averages luma 222 — near
+   white — so the homepage's light coastline scrim (.34 -> 0) would leave this
+   section's white copy at roughly 1.2:1 against it. This scrim is far heavier
+   on purpose, and stays weighted to the copy side so the bag itself keeps some
+   brightness. Do not lighten it without re-checking contrast over the footage,
+   not over the navy underneath: axe measures the CSS background and will pass
+   either way. */
+.page-hero.has-video { background: var(--navy-950); }
+/* Held near-opaque across the copy column (the lede runs to roughly 55% at
+   desktop widths) and released after it, so the bag stays bright on the right.
+   The film is 2.12:1 in a ~3:1 box, so cover crops vertically only — shifting
+   object-position horizontally does nothing here. Legibility has to come from
+   the scrim. */
+.page-hero.has-video .hero-video-scrim {
+  background: linear-gradient(90deg, rgba(4, 16, 31, .9) 0%, rgba(4, 16, 31, .86) 45%,
+    rgba(4, 16, 31, .7) 62%, rgba(4, 16, 31, .44) 100%); z-index: 2; }
+.page-hero.has-video .aurora { opacity: .35; }
+@media (max-width: 900px) {
+  .page-hero.has-video .hero-video-scrim {
+    background: linear-gradient(180deg, rgba(4, 16, 31, .9) 0%, rgba(4, 16, 31, .84) 55%,
+      rgba(4, 16, 31, .64) 100%); }
+}
 .page-hero h1 { color: #fff; margin: .9rem 0 1rem; max-width: 22ch; }
 .page-hero .lede { max-width: 62ch; }
 .crumbs { margin-bottom: 1.4rem; font-size: .8rem; }
