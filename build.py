@@ -371,13 +371,6 @@ def nav(depth=0, current=""):
           </ul>
         </li>
         <li><a class="nav-link" href="{p}iv-therapy.html">IV Lounge</a></li>
-        <li class="has-drop"><button class="drop-btn" aria-expanded="false">Patient Forms<svg viewBox="0 0 12 8" width="10" height="7" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 1.5 6 6.5 11 1.5"/></svg></button>
-          <ul class="drop">
-            <li><a href="{p}forms/index.html">All patient forms</a></li>
-            <li><a href="{p}forms/new-patient.html">New Patient Intake Form</a></li>
-            <li><a href="{p}forms/peptide-glp-questionnaire.html">Peptide &amp; GLP-1 Questionnaire</a></li>
-          </ul>
-        </li>
         <li><a class="nav-link" href="{p}blog/index.html">Blog</a></li>
         <li><a class="nav-link" href="{p}faq.html">FAQ</a></li>
         <li><a class="nav-link" href="{p}contact.html">Contact</a></li>
@@ -395,11 +388,12 @@ def footer(depth=0, extra_js="", analytics=True):
     extra_js_tag = ""
     if extra_js:
         extra_js_tag = f'<script src="{p}{extra_js}?v={asset_v(extra_js)}" defer></script>\n'
-    # Vercel Web Analytics — cookieless, no consent banner needed. Deliberately
-    # NOT emitted on /forms/* (analytics=False there): those pages ask about
-    # health, and per the HIPAA notes in README.md no tracking script may load
-    # on them. 404s harmlessly until Analytics is enabled in the Vercel
-    # dashboard (Project → Analytics → Enable).
+    # Vercel Web Analytics — cookieless, so no consent banner is needed. 404s
+    # harmlessly until Analytics is enabled in the Vercel dashboard
+    # (Project → Analytics → Enable). The analytics=False switch is kept for
+    # any future page that collects health information: no tracking script may
+    # load on one, because a page view of a condition-specific URL tied to an
+    # IP address is the exact pattern regulators have pursued.
     analytics_tag = ""
     if analytics:
         analytics_tag = '<script defer src="/_vercel/insights/script.js"></script>\n'
@@ -425,7 +419,6 @@ def footer(depth=0, extra_js="", analytics=True):
         <li><a href="{p}services/index.html">Our Services</a></li>
         <li><a href="{p}iv-therapy.html">IV Therapy Lounge</a></li>
         <li><a href="{p}patient-resources.html">Patient Resources</a></li>
-        <li><a href="{p}forms/index.html">Patient Forms</a></li>
         <li><a href="{p}faq.html">FAQ</a></li>
         <li><a href="{p}blog/index.html">Blog</a></li>
         <li><a href="{p}contact.html">Contact Us</a></li>
@@ -2756,7 +2749,7 @@ def build_resources():
       <h2>Preparing for Your Appointment</h2>
       <p>Your time with our specialists is valuable. Arriving prepared ensures you get the most out of your visit.</p>
       <ul class="check-list"><li>Bring a list of medications</li><li>Wear comfortable clothing for exams</li><li>Note any recent symptoms or health changes</li></ul>
-      <p style="margin-top:1rem;"><a href="forms/index.html">Complete your patient forms before you arrive →</a></p>
+      <p style="margin-top:1rem;"><a href="contact.html#book">Request an appointment →</a></p>
     </article>
     <article class="res-card reveal" style="--d:270ms"><span class="res-num" aria-hidden="true">04</span>
       <h2>Post-Treatment Care</h2>
@@ -2791,15 +2784,6 @@ def build_resources():
     write("patient-resources.html", page)
 
 
-# ---------------------------------------------------------------------------
-# Patient forms
-#
-# HIPAA: these pages collect protected health information, so they are built to
-# keep it in the patient's browser. Nothing is POSTed, no third-party form
-# service is involved, and no analytics/tracking script is loaded on them.
-# On finish the answers become a printable summary the patient saves or brings
-# in. Read the HIPAA NOTES section of README.md before changing that.
-# ---------------------------------------------------------------------------
 
 def _field(f, depth=0):
     """Render one field. Clinical inputs default to autocomplete=off so the
@@ -2872,163 +2856,6 @@ def _section(s, depth=0):
       {fields}
     </div>
   </section>"""
-
-
-def build_forms():
-    from forms_content import FORMS
-    d = 1
-
-    # ---- hub -------------------------------------------------------------
-    def _steps(f):
-        return len(f["sections"]) + 1          # +1 for the acknowledgment step
-
-    cards = "".join(f"""<article class="form-card reveal" style="--d:{i * 110}ms">
-      <span class="form-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">{f['card']['icon']}</svg></span>
-      <h2><a href="{f['slug']}.html">{f['name']}</a></h2>
-      <p class="form-card-who">{f['card']['for_who']}</p>
-      <ul class="form-card-list">{"".join(f'<li>{c}</li>' for c in f['card']['covers'])}</ul>
-      <p class="form-card-meta"><span>{_steps(f)} sections</span><span>Save or resume anytime</span></p>
-      <span class="form-card-go"><span class="btn btn-gold" aria-hidden="true">Start the form</span></span>
-    </article>""" for i, f in enumerate(FORMS))
-
-    hub_crumbs = crumbs([("", "Patient Forms")], depth=d)
-    hub_body = f"""{nav(d)}
-<main id="main">
-{page_hero("Before Your Visit", "Patient Forms", "Complete your paperwork at home, in your own time. Both forms fill out right in your browser — your answers never leave your device until you choose to share them with us.", hub_crumbs, cta=False, depth=d)}
-<section class="section form-hub">
-  <div class="form-card-grid">{cards}</div>
-</section>
-
-<section class="section section-tint form-how">
-  <div class="section-head reveal">
-    <p class="eyebrow">How it works</p>
-    <h2>Three steps, <em>no account needed</em></h2>
-  </div>
-  <ol class="form-steps-strip">
-    <li class="reveal"><span class="fs-num" aria-hidden="true">1</span>
-      <strong>Fill it out</strong>
-      <span>Work through it a section at a time. Skip around, stop, come back — nothing is locked.</span></li>
-    <li class="reveal" style="--d:100ms"><span class="fs-num" aria-hidden="true">2</span>
-      <strong>Print or save it</strong>
-      <span>Finishing builds a clean summary. Print it, save it as a PDF, or download it as a text file.</span></li>
-    <li class="reveal" style="--d:200ms"><span class="fs-num" aria-hidden="true">3</span>
-      <strong>Bring it with you</strong>
-      <span>Hand it to our front desk when you arrive. That's it — you skip the clipboard entirely.</span></li>
-  </ol>
-</section>
-
-<section class="section form-privacy-section">
-  <div class="privacy-panel reveal">
-    <div class="privacy-panel-head">
-      <span class="privacy-shield" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4.5 6v5.5c0 4.4 3.1 8.4 7.5 9.5 4.4-1.1 7.5-5.1 7.5-9.5V6L12 3Z"/><path d="m8.8 12.2 2.2 2.2 4.2-4.4"/></svg></span>
-      <div>
-        <p class="eyebrow">Your privacy</p>
-        <h2>How we protect what you write here</h2>
-      </div>
-    </div>
-    <div class="privacy-grid">
-      <div><strong>Nothing is transmitted</strong><p>These forms don't send your answers over the internet. Everything you type stays in your browser.</p></div>
-      <div><strong>No tracking on form pages</strong><p>We don't load analytics, advertising, or session-recording scripts on any page that asks about your health.</p></div>
-      <div><strong>You choose how it reaches us</strong><p>When you finish, the form builds a summary you print, save as a PDF, or bring to your appointment.</p></div>
-      <div><strong>Saving is opt-in</strong><p>Your progress is only kept on your device if you switch it on — and a single button erases it.</p></div>
-    </div>
-    <p class="privacy-foot">Questions about your privacy? Read our <a href="../privacy-policy.html">privacy policy</a>, or call us at <a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a>.</p>
-  </div>
-</section>
-{cta_band(d, heading="Prefer to fill these out <em>with us?</em>", sub="Arrive fifteen minutes early and our front desk will walk you through everything on a practice tablet. Either way works.")}
-</main>
-{footer(d, analytics=False)}"""
-    hub = head("Patient Forms | RegenOrtho Palm Beach",
-               "Complete RegenOrtho Palm Beach patient forms at home — the new patient intake and peptide & GLP-1 questionnaire, filled out privately in your browser.",
-               depth=d, canonical="forms/index.html", extra_css="assets/css/forms.css",
-               extra_schema=breadcrumb_schema([("", "Home"), ("forms/index.html", "Patient Forms")])
-               ) + '<body class="page-forms">\n' + hub_body
-    write("forms/index.html", hub)
-
-    # ---- the forms themselves -------------------------------------------
-    for f in FORMS:
-        secs = "\n  ".join(_section(s, d) for s in f["sections"])
-        steps = "".join(
-            f'<li><button type="button" class="f-step" data-goto="{i}">'
-            f'<span aria-hidden="true">{s["n"]}</span>'
-            f'<span class="f-step-name">{s["title"]}</span></button></li>'
-            for i, s in enumerate(f["sections"])
-        )
-        n_secs = len(f["sections"])
-        steps += (f'<li><button type="button" class="f-step" data-goto="{n_secs}">'
-                  f'<span aria-hidden="true">{n_secs + 1:02d}</span>'
-                  f'<span class="f-step-name">Acknowledgment</span></button></li>')
-        c = crumbs([("forms/index.html", "Patient Forms"), ("", f["plain_name"])], depth=d)
-        body = f"""{nav(d)}
-<main id="main">
-{page_hero("Patient Forms", f['name'], f['lede'], c, cta=False, depth=d)}
-<section class="section form-section">
-  <div class="form-shell">
-    <nav class="f-steps" aria-label="Form sections">
-      <ol>{steps}</ol>
-    </nav>
-    <div class="form-main">
-      <div class="f-privacy">
-        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" d="M12 3 4.5 6v5.5c0 4.4 3.1 8.4 7.5 9.5 4.4-1.1 7.5-5.1 7.5-9.5V6L12 3Z"/><path fill="none" stroke="currentColor" stroke-width="1.7" d="m8.8 12.2 2.2 2.2 4.2-4.4"/></svg>
-        <p><strong>This form stays on your device.</strong> Your answers are not sent anywhere when you press Finish — the form builds a summary you print, save as a PDF, or bring with you. We load no tracking scripts on this page.</p>
-      </div>
-
-      <form id="patient-form" class="patient-form" data-form="{f['slug']}" novalidate autocomplete="off">
-        <p class="f-required-note">Fields marked <span class="req" aria-hidden="true">*</span><span class="sr-only">with an asterisk</span> are required.</p>
-        <div class="f-errors" role="alert" hidden></div>
-        {secs}
-        <section class="f-sec" data-step aria-labelledby="sec-ack" hidden>
-          <p class="f-sec-num" aria-hidden="true">{n_secs + 1:02d}</p>
-          <h2 id="sec-ack" tabindex="-1">Patient Acknowledgment</h2>
-          <div class="f-fields">
-            <p class="f-ack-text">{f['ack']}</p>
-            <fieldset class="f-checks f-ack">
-              <legend class="sr-only">Acknowledgment</legend>
-              <span class="f-check">
-                <input type="checkbox" id="acknowledgment" name="acknowledgment" value="Acknowledged" required aria-required="true">
-                <label for="acknowledgment">I acknowledge and agree to the above statement <span class="req" aria-hidden="true">*</span></label>
-              </span>
-            </fieldset>
-            <p class="f-save-opt">
-              <span class="f-check">
-                <input type="checkbox" id="save-local">
-                <label for="save-local">Save my progress in this browser</label>
-              </span>
-              <span class="f-hint">Only turn this on if this device is yours — your answers will stay in this browser until you erase them.</span>
-            </p>
-          </div>
-        </section>
-
-        <div class="f-nav">
-          <button type="button" class="btn btn-ghost" data-prev hidden>Back</button>
-          <p class="f-progress" aria-live="polite">Section <span data-cur>1</span> of {n_secs + 1}</p>
-          <button type="button" class="btn btn-gold" data-next>Continue</button>
-          <button type="submit" class="btn btn-gold" data-finish hidden>Finish &amp; review</button>
-        </div>
-      </form>
-
-      <div class="f-done" hidden>
-        <h2 tabindex="-1">Your {f['plain_name']} is ready</h2>
-        <p>Nothing has been sent. Print this summary or save it as a PDF, then bring it to your appointment or hand it to our front desk — whichever is easier.</p>
-        <div class="f-done-actions">
-          <button type="button" class="btn btn-gold" data-print>Print / save as PDF</button>
-          <button type="button" class="btn btn-ghost" data-download>Download as a text file</button>
-          <button type="button" class="btn btn-ghost" data-edit>Go back and edit</button>
-        </div>
-        <div class="f-summary" id="form-summary"></div>
-        <p class="f-erase-row"><button type="button" class="f-erase" data-erase>Erase my answers from this device</button></p>
-      </div>
-    </div>
-  </div>
-</section>
-</main>
-{footer(d, extra_js="assets/js/forms.js", analytics=False)}"""
-        page = head(f["title"], f["desc"], depth=d, canonical=f"forms/{f['slug']}.html",
-                    extra_css="assets/css/forms.css",
-                    extra_schema=breadcrumb_schema([("", "Home"), ("forms/index.html", "Patient Forms"),
-                                                    (f"forms/{f['slug']}.html", f["plain_name"])])
-                    ) + '<body class="page-form">\n' + body
-        write(f"forms/{f['slug']}.html", page)
 
 
 _BLOG_SEO_TITLES = {'knee-shoulder-hip-pain-without-surgery': 'Joint Pain Without Surgery | RegenOrtho Palm Beach', 'prp-therapy-knee-osteoarthritis': 'PRP for Knee Osteoarthritis | RegenOrtho Palm Beach', 'regenerative-medicine-vs-joint-replacement': 'Regeneration vs Replacement | RegenOrtho Palm Beach', 'five-pillar-concierge-orthopedic-recovery': 'Concierge Orthopedic Recovery | RegenOrtho Palm Beach', 'orthopedic-sports-medicine-pain-free-living': 'Orthopedics & Sports Medicine | RegenOrtho Palm Beach', 'regenerative-medicine-future-of-healing': 'Regenerative Medicine Explained | RegenOrtho Palm Beach', 'healing-without-surgery': 'Healing Without Surgery | RegenOrtho Palm Beach Blog', 'minimally-invasive-foot-ankle-surgery': 'Minimally Invasive Foot Surgery | RegenOrtho Palm Beach', 'modern-vein-care-varicose-spider-veins': 'Modern Varicose Vein Care | RegenOrtho Palm Beach Blog', 'iv-therapy-recovery-wellness': 'IV Therapy for Recovery | RegenOrtho Palm Beach Blog'}
@@ -3142,10 +2969,8 @@ def build_legal_and_404():
     <p>The content on this website is provided for general information about our practice and services. It is not medical advice and does not create a doctor–patient relationship. For medical questions, please contact our office or consult a qualified healthcare provider.</p>
     <h2>Appointment requests &amp; forms</h2>
     <p>Information you submit through appointment request forms or the site assistant is used only to contact you about scheduling and your care, and is transmitted to our front desk email. Please do not include detailed medical history, insurance numbers, or other sensitive records in web forms — we will collect anything needed through secure channels during intake.</p>
-    <h2>Patient forms</h2>
-    <p>The new patient intake form and the peptide &amp; GLP-1 questionnaire on this site work differently from the appointment request forms above: <strong>they do not transmit anything.</strong> Everything you type stays in your own browser. When you finish, the form assembles your answers into a summary that you print, save as a PDF, or download — you decide how and when it reaches us. Your progress is stored on your device only if you switch that option on, and the "Erase my answers" button removes it.</p>
     <h2>Analytics</h2>
-    <p>This site may use privacy-friendly, cookieless analytics to understand aggregate site usage. We do not load analytics, advertising, or session-recording scripts on the patient form pages. We do not sell visitor information.</p>
+    <p>This site may use privacy-friendly, cookieless analytics to understand aggregate site usage. We do not sell visitor information.</p>
     <h2>Emergencies</h2>
     <p>If you are experiencing a medical emergency, call 911 or go to the nearest emergency room. This website and its assistant are not monitored in real time.</p>
     <h2>Questions</h2>
@@ -3190,8 +3015,6 @@ def build_meta():
     from blog_content import BLOG_POSTS
     pages = ["index.html", "about.html", "contact.html", "faq.html", "iv-therapy.html",
              "patient-resources.html", "privacy-policy.html", "terms.html",
-             "forms/index.html", "forms/new-patient.html",
-             "forms/peptide-glp-questionnaire.html",
              "services/index.html", "infusions/index.html", "blog/index.html",
              "providers/dr-marc-matarazzo.html", "providers/dr-orlando-cedeno.html",
              "providers/emily-bahnick.html"]
@@ -3216,8 +3039,6 @@ def build_meta():
             return "0.8", "monthly"
         if u.startswith("blog/"):
             return "0.6", "yearly"
-        if u.startswith("forms/"):
-            return "0.5", "yearly"
         return "0.3", "yearly"
 
     # The lead image per page, declared to Google Images. Only pages whose hero
@@ -3415,7 +3236,6 @@ the plan, and most are billed through insurance where covered.
 - Hours: {HOURS}
 - Instagram: {INSTAGRAM}
 - Specialists: Dr. Marc Matarazzo, MD (board-certified sports medicine & orthopedic surgeon, 23+ years, MAKO-certified); Dr. Orlando Cedeno, DPM (board-certified podiatric surgeon & vein specialist); Emily Bahnick, MSN, RN (IV infusion nurse & care coordinator).
-- Patient forms: {BASE}/forms/ — new patient intake and peptide/GLP-1 questionnaire, completed privately in the browser (nothing transmitted).
 - New patients accepted; no referral required; most major insurance accepted; concierge/direct-pay bundles available.
 
 ## Services
@@ -3477,7 +3297,6 @@ def main():
     build_faq()
     build_contact()
     build_resources()
-    build_forms()
     build_blog()
     build_legal_and_404()
     build_meta()

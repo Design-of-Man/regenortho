@@ -35,10 +35,6 @@ Static site, 56 pages, generated — do not edit HTML files directly.
   external API, no medical advice; route unknowns to 833-783-6561. Leads deliver via
   FormSubmit (formsubmit.co/ajax/info@regenorthopalmbeach.com) with a localStorage retry queue.
   Never put secret keys in it.
-- `assets/js/forms.js` + `assets/css/forms.css` + `forms_content.py` — the two patient
-  forms (`/forms/new-patient.html`, `/forms/peptide-glp-questionnaire.html`). Questions are
-  declarative in `forms_content.py`; the renderer (`_field`/`_section`/`build_forms` in
-  build.py) generates markup, validation, the step rail, the summary and the print sheet.
 
 ## Business facts (canonical)
 - RegenOrtho Palm Beach · "The Regeneration of Orthopedics"
@@ -205,26 +201,35 @@ CSS coastline scene stays underneath as the no-video fallback. asset_v() returns
 
 ## Analytics
 - Vercel Web Analytics (cookieless, no consent banner) is emitted by `footer()` on every
-  page EXCEPT `/forms/*` — those three pages pass `analytics=False` per the HIPAA rule
-  below. Never widen the exclusion away or add any other tracker to form pages.
+  page. `footer(analytics=False)` still exists and MUST be used on any future page that
+  asks about health — see "No PHI on this site" below.
 - The tag 404s harmlessly until Web Analytics is switched on in the Vercel dashboard
   (regenortho project → Analytics → Enable) — that toggle is the one manual step.
 - Homepage LCP: `head(preload_hero=True)` (homepage only) preloads the hero poster with
   `fetchpriority=high`; the video itself stays `preload="none"` with JS-attached sources.
 
-## Patient forms — HIPAA (do not regress)
-These two pages collect PHI, so they are built to keep it in the browser. `forms.js` has
-NO fetch/XHR/beacon/third-party SDK — Finish renders an on-page summary the patient prints,
-saves as PDF, or downloads. No analytics or tracking script may be added to `/forms/*`.
-localStorage persistence is opt-in (unchecked by default) with an Erase button — never
-flip that default; these are often shared devices. `vercel.json` sets `no-store` +
-`noarchive` for `/forms/*`. Do NOT point these at FormSubmit, Formspree, Zapier, a Google
-Form, or a plain mailbox: electronic delivery needs a HIPAA-eligible destination under a
-signed BAA plus encryption, access controls, audit logging and a retention schedule — and
-the on-page notice and privacy policy both promise nothing is transmitted, so they must be
-rewritten in the same change. Full checklist in README.md → "Patient forms & HIPAA".
-The site's other forms (contact, assistant) may keep using FormSubmit — they collect
-contact details and a reason for calling, not clinical history.
+## No PHI on this site (do not regress)
+
+The patient forms — `/forms/new-patient.html`, `/forms/peptide-glp-questionnaire.html`
+and the `/forms/` hub — were REMOVED at the client's request. The site now collects a
+name, phone, email and a reason for calling, and nothing else. That is the whole reason
+the contact form and the assistant may keep using FormSubmit: they take contact details,
+not clinical history.
+
+If a form that asks about health, medication, symptoms or history is ever added back,
+it changes the site's risk profile and the following all apply again:
+
+- The destination must be HIPAA-eligible under a signed Business Associate Agreement.
+  NOT FormSubmit, Formspree, Zapier, a Google Form, or a plain mailbox.
+- No analytics, ad pixel or session-recording script on that page —
+  `footer(analytics=False)`. A page view of a condition-specific URL tied to an IP
+  address is the exact pattern regulators have pursued.
+- `vercel.json` needs `Cache-Control: no-store` + `X-Robots-Tag: noarchive` for it.
+- The privacy policy has to be rewritten in the same change.
+
+The prior implementation kept PHI in the browser and transmitted nothing; if that
+pattern is wanted again, recover `forms_content.py`, `assets/js/forms.js`,
+`assets/css/forms.css` and `build_forms()` from git history rather than rewriting them.
 
 ## Facts discipline
 All claims/credentials/prices/reviews are from the practice's own published content. Never
