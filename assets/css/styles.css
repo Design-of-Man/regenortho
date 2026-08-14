@@ -150,6 +150,22 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
 .brand img { width: 184px; height: auto; }
 .brand-light { display: none; }
 
+/* The header is transparent until .is-stuck, so on a page whose hero is LIGHT
+   (the IV Lounge, whose bag film is a white studio shot) the white wordmark and
+   #EAF1F8 links vanish into it. Swap to the navy mark and navy links while the
+   header is still over the hero; .is-stuck paints its own navy background and
+   must keep the light treatment, hence :not(.is-stuck) on every rule.
+   body.nav-locked also paints navy, so the open mobile menu is excluded too. */
+body.page-iv:not(.nav-locked) .site-header:not(.is-stuck) .brand-dark { display: none; }
+body.page-iv:not(.nav-locked) .site-header:not(.is-stuck) .brand-light { display: block; }
+body.page-iv:not(.nav-locked) .site-header:not(.is-stuck) .nav-link,
+body.page-iv:not(.nav-locked) .site-header:not(.is-stuck) .drop-btn { color: var(--navy-900); }
+body.page-iv:not(.nav-locked) .site-header:not(.is-stuck) .nav-link:hover,
+body.page-iv:not(.nav-locked) .site-header:not(.is-stuck) .drop-btn:hover,
+body.page-iv:not(.nav-locked) .site-header:not(.is-stuck) .drop-btn[aria-expanded="true"] { color: var(--bronze-text); }
+body.page-iv:not(.nav-locked) .site-header:not(.is-stuck) .nav-toggle {
+  color: var(--navy-900); border-color: rgba(9, 45, 92, .35); }
+
 .main-nav { justify-self: center; }
 .header-cta { justify-self: end; white-space: nowrap; }
 .nav-menu { display: flex; align-items: center; gap: .15rem; list-style: none; }
@@ -804,27 +820,43 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
 .page-hero { position: relative; background: linear-gradient(178deg, var(--navy-900) 0%, var(--navy-950) 100%); color: #E7EFF7;
   padding: calc(var(--header-h) + clamp(1.6rem, 4vh, 2.6rem)) 1.2rem clamp(2.8rem, 7vh, 4.6rem); overflow: hidden; }
 .page-hero-inner { position: relative; z-index: 2; max-width: var(--wrap); margin: 0 auto; }
-/* Video-backed interior hero (IV Lounge). The bag film averages luma 222 — near
-   white — so the homepage's light coastline scrim (.34 -> 0) would leave this
-   section's white copy at roughly 1.2:1 against it. This scrim is far heavier
-   on purpose, and stays weighted to the copy side so the bag itself keeps some
-   brightness. Do not lighten it without re-checking contrast over the footage,
-   not over the navy underneath: axe measures the CSS background and will pass
-   either way. */
-.page-hero.has-video { background: var(--navy-950); }
-/* Held near-opaque across the copy column (the lede runs to roughly 55% at
-   desktop widths) and released after it, so the bag stays bright on the right.
-   The film is 2.12:1 in a ~3:1 box, so cover crops vertically only — shifting
-   object-position horizontally does nothing here. Legibility has to come from
-   the scrim. */
+/* Video-backed interior hero (IV Lounge) — a LIGHT hero, deliberately.
+   The bag film is a white studio shot: frame one is near-blank white and the
+   clip averages luma ~222. Darkening it enough to carry white copy took a navy
+   scrim at .9 alpha, which erased the footage and washed the whole section
+   blue. Flipping the copy to navy is the treatment this film actually wants —
+   navy reads about 10:1 on it where white reads about 1.2:1.
+   Do NOT reintroduce a dark scrim here. If legibility needs help, weight the
+   white veil below; and judge it against the FOOTAGE, because axe measures the
+   CSS background underneath the video and passes either way. */
+.page-hero.has-video { background: #fff; color: var(--navy-900); }
+/* A white veil, not a dark one — lifts navy copy off the busiest part of the
+   frame while leaving the shot bright. */
 .page-hero.has-video .hero-video-scrim {
-  background: linear-gradient(90deg, rgba(4, 16, 31, .9) 0%, rgba(4, 16, 31, .86) 45%,
-    rgba(4, 16, 31, .7) 62%, rgba(4, 16, 31, .44) 100%); z-index: 2; }
-.page-hero.has-video .aurora { opacity: .35; }
+  background: linear-gradient(90deg, rgba(255, 255, 255, .58) 0%, rgba(255, 255, 255, .42) 46%,
+    rgba(255, 255, 255, .16) 72%, rgba(255, 255, 255, .06) 100%); z-index: 2; }
+/* The aurora blobs are #12457F / #0E3A6E — the residual blue once the scrim is
+   gone, so this hero does without them. */
+.page-hero.has-video .aurora { display: none; }
+.page-hero.has-video h1 { color: var(--navy-900); }
+.page-hero.has-video .lede { color: var(--navy-900); }
+.page-hero.has-video .eyebrow { color: var(--bronze-text); }
+.page-hero.has-video .crumbs a { color: rgba(9, 45, 92, .72); }
+.page-hero.has-video .crumbs a:hover { color: var(--bronze-text); }
+.page-hero.has-video .crumbs [aria-current] { color: var(--bronze-text); }
+.page-hero.has-video .crumbs li:not(:last-child)::after { color: rgba(9, 45, 92, .45); }
+/* .btn-gold is unchanged and still reads; the ghost button is built for dark
+   backgrounds and has to invert. */
+.page-hero.has-video .btn-ghost-light {
+  border-color: rgba(9, 45, 92, .5); color: var(--navy-900); background: rgba(255, 255, 255, .5); }
+.page-hero.has-video .btn-ghost-light:hover {
+  border-color: var(--navy-900); color: var(--navy-900); background: rgba(255, 255, 255, .8); }
 @media (max-width: 900px) {
+  /* The copy fills the hero on a phone, so the veil goes vertical and stronger
+     — there is no clear column to fall away into. */
   .page-hero.has-video .hero-video-scrim {
-    background: linear-gradient(180deg, rgba(4, 16, 31, .9) 0%, rgba(4, 16, 31, .84) 55%,
-      rgba(4, 16, 31, .64) 100%); }
+    background: linear-gradient(180deg, rgba(255, 255, 255, .72) 0%, rgba(255, 255, 255, .62) 55%,
+      rgba(255, 255, 255, .3) 100%); }
 }
 .page-hero h1 { color: #fff; margin: .9rem 0 1rem; max-width: 22ch; }
 .page-hero .lede { max-width: 62ch; }
