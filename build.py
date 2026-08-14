@@ -154,6 +154,31 @@ def img_dims(path, fallback=(1200, 630)):
     return dims
 
 
+def photo_figure(img, alt, depth=0, cls="", delay=None):
+    """A `.svc-photo` figure for any page — the treatment service pages already use.
+
+    Width/height come from img_dims() rather than a hardcoded pair: outside
+    `.svc-intro-grid` the figure is auto-height, so those attributes are what
+    reserves the box before the image lands. Declaring a portrait photo as 3:2
+    would shift the paragraph under it on load.
+
+    `alt` is required — every page here is audited for it, and an image with no
+    alt is a WCAG failure and a lost image-search entry in one.
+    """
+    path = f"assets/media/{img}"
+    w, h = img_dims(path, fallback=(1200, 800))
+    style = f' style="--d:{delay}"' if delay else ""
+    return (f'<figure class="svc-photo reveal{cls}"{style}>'
+            f'<img src="{"../" * depth}{path}?v={asset_v(path)}" alt="{alt}" '
+            f'width="{w}" height="{h}" loading="lazy" decoding="async"></figure>')
+
+
+def photo_strip(img, alt, depth=0):
+    """A single full-width photo band — for pages that are otherwise all text."""
+    return (f'<section class="section photo-strip">'
+            f'{photo_figure(img, alt, depth=depth, cls=" photo-band")}</section>')
+
+
 # ---------------------------------------------------------------------------
 # Shared chrome
 # ---------------------------------------------------------------------------
@@ -688,23 +713,34 @@ IV_MENU = [
     {"name": 'All-Inclusive', "short": "All-Inclusive", "cat": "wellness", "ingredients": "Every add-in on the menu", "price": 399, "bag": "bag-all-inclusive.png", "desc": 'Comprehensive full-body infusion delivering vitamins, minerals, amino acids, antioxidants, and hydration for total wellness optimization.'},
 ]
 
+# The photo on each drug page shows the SUITE, never a drug being administered —
+# these are prescription therapies and a photo implying "this is your Ocrevus
+# infusion" is a claim we cannot make from a stock frame. Alt text says the room.
 INFUSIONS = [
     {"slug": "ivig", "name": "IVIG (Intravenous Immunoglobulin)",
+     "img": "iv-lounge-2.jpg",
+     "img_alt": "A clinician reviewing a patient's chart during an intravenous infusion",
      "title": "IVIG Infusion Therapy Palm Beach Gardens | RegenOrtho",
      "desc": "Physician-supervised IVIG (intravenous immunoglobulin) infusion therapy in a private Palm Beach Gardens suite. Insurance coordination and flexible scheduling.",
      "lede": "Intravenous immunoglobulin therapy delivered in a private, clinician-supervised infusion suite — without the hospital.",
      "body": "IVIG (intravenous immunoglobulin) is a physician-prescribed infusion used to support patients with certain immune-mediated and neurological conditions. Our infusion center administers IVIG in a calm, private suite with clinical monitoring throughout your visit, coordinating directly with your referring physician on protocol, frequency, and follow-up."},
     {"slug": "krystexxa", "name": "Krystexxa Infusion Therapy",
+     "img": "palm-beach-aerial.jpg",
+     "img_alt": "A patient rehydrating beside an IV line during a treatment session",
      "title": "Krystexxa Infusion Therapy Palm Beach Gardens | RegenOrtho",
      "desc": "Krystexxa (pegloticase) infusion therapy for uncontrolled gout, administered under physician supervision in our Palm Beach Gardens infusion suite.",
      "lede": "Physician-supervised Krystexxa (pegloticase) infusions for chronic, uncontrolled gout — in a private outpatient setting.",
      "body": "Krystexxa is an infusion medication prescribed for adults with chronic gout that has not responded to conventional urate-lowering therapy. Treatment is administered in our monitored infusion suite, with pre-infusion screening and coordination with your prescribing physician at every step."},
     {"slug": "ocrevus", "name": "Ocrevus Treatment",
+     "img": "clinic-interior.jpg",
+     "img_alt": "The treatment suite at RegenOrtho Palm Beach in Palm Beach Gardens",
      "title": "Ocrevus Infusion Palm Beach Gardens | RegenOrtho Infusion Center",
      "desc": "Ocrevus (ocrelizumab) infusion treatment administered under clinical supervision in a private Palm Beach Gardens suite, coordinated with your neurologist.",
      "lede": "Ocrevus (ocrelizumab) infusions coordinated with your neurologist and delivered in a private, monitored suite.",
      "body": "Ocrevus is a prescription infusion used in the management of certain forms of multiple sclerosis. Our team works with your neurologist's treatment plan, provides pre-infusion screening, and monitors you throughout each visit in a comfortable outpatient environment."},
     {"slug": "ultomiris", "name": "Ultomiris Infusion Therapy",
+     "img": "clinic-lounge.jpg",
+     "img_alt": "Recovery seating in the RegenOrtho Palm Beach treatment suite",
      "title": "Ultomiris Infusion Therapy Palm Beach Gardens | RegenOrtho",
      "desc": "Ultomiris (ravulizumab) infusion therapy in a private, physician-supervised Palm Beach Gardens outpatient suite with insurance coordination.",
      "lede": "Ultomiris (ravulizumab) infusion therapy in a private outpatient suite, with clinical monitoring and insurance coordination.",
@@ -1279,29 +1315,49 @@ PATHWAYS = [
     ("IV Therapy &amp; Wellness", "Infusions, IM shots &amp; concierge wellness memberships.", "from $149/mo", "iv-therapy.html"),
 ]
 
+# Every location page shows the SAME clinic — there is one office, in Palm Beach
+# Gardens. The photo rotates so eight pages don't look copy-pasted, but the alt
+# text always names Palm Beach Gardens: "our Jupiter office" would be a plain
+# factual misstatement, and these pages already rank for city terms.
 LOCATIONS = [
     {"slug": "jupiter", "city": "Jupiter",
+     "img": "iv-nurse.jpg",
+     "img_alt": "A therapist guiding a patient through knee mobility work at RegenOrtho Palm Beach",
      "blurb": "Just down the road from Jupiter's beaches, golf communities, and active neighborhoods — many of our sports medicine, foot & ankle, and vein patients make the short trip south along US-1 or I-95 to our Palm Beach Gardens clinic.",
      "angle": "Jupiter is one of the most active communities in South Florida — tennis, golf, boating, running. When injuries or joint pain interrupt that lifestyle, our board-certified specialists are minutes away."},
     {"slug": "north-palm-beach", "city": "North Palm Beach",
+     "img": "clinic-interior.jpg",
+     "img_alt": "Inside the RegenOrtho Palm Beach clinic on Prosperity Farms Road in Palm Beach Gardens",
      "blurb": "Our clinic sits on Prosperity Farms Road at the edge of North Palm Beach — for most Village residents we're one of the closest orthopedic and vein practices there is.",
      "angle": "From the North Palm Beach Country Club to the marinas, this is a community that stays on its feet. We help keep it that way with same-week orthopedic access and concierge-level care."},
     {"slug": "juno-beach", "city": "Juno Beach",
+     "img": "ultrasound-guided.jpg",
+     "img_alt": "A patient consultation with a physician at RegenOrtho Palm Beach",
      "blurb": "A short drive down US-1 from Juno Beach's pier and oceanfront neighborhoods, our Palm Beach Gardens clinic serves Juno Beach residents with orthopedic, podiatric, regenerative, and vein care.",
      "angle": "Beach walkers and pier regulars know what heel pain and joint stiffness can steal. Our specialists treat both — often without surgery."},
     {"slug": "tequesta", "city": "Tequesta",
+     "img": "anatomy-sketch.jpg",
+     "img_alt": "A clinician performing a diagnostic ultrasound scan at RegenOrtho Palm Beach",
      "blurb": "Tequesta residents reach us with an easy drive south — worth it for board-certified specialists in orthopedics, podiatry, vein care, and regenerative medicine under one roof.",
      "angle": "For a village built around the water — boating, fishing, paddling — mobility is everything. We offer Tequesta patients concierge access and personalized treatment plans."},
     {"slug": "palm-beach", "city": "Palm Beach",
+     "img": "clinic-lounge.jpg",
+     "img_alt": "The recovery lounge at the RegenOrtho Palm Beach clinic in Palm Beach Gardens",
      "blurb": "Palm Beach residents expect a concierge standard of medicine. Our private suites, same-day diagnostics, and direct-pay bundled pricing were designed for exactly that expectation.",
      "angle": "Discreet, efficient, and personal — concierge orthopedic and regenerative care matched to Palm Beach standards, twenty minutes from the island."},
     {"slug": "west-palm-beach", "city": "West Palm Beach",
+     "img": "recovery-stretch.jpg",
+     "img_alt": "Clinical staff supporting a patient through assisted walking during recovery",
      "blurb": "From downtown West Palm Beach, our Palm Beach Gardens clinic is a straight shot north on I-95 — with the full breadth of orthopedic, podiatric, regenerative, vein, and IV wellness care waiting at the other end.",
      "angle": "West Palm Beach professionals and families choose us for direct specialist access, same-day injury consultations, and treatment plans that don't default to surgery."},
     {"slug": "singer-island", "city": "Singer Island",
+     "img": "exam-room.jpg",
+     "img_alt": "Preparing a platelet-rich plasma sample for a regenerative injection",
      "blurb": "Singer Island and Palm Beach Shores residents cross the bridge to reach our Prosperity Farms Road clinic — for vein care, foot & ankle treatment, joint preservation, and IV wellness.",
      "angle": "Island living is walking living. When heel pain, veins, or joints start protesting, our specialists get you back to the beach path."},
     {"slug": "lake-park", "city": "Lake Park",
+     "img": "shockwave-tech.jpg",
+     "img_alt": "The Stryker Mako robotic-arm system used for knee replacement at RegenOrtho Palm Beach",
      "blurb": "Lake Park sits minutes from our clinic — making RegenOrtho Palm Beach a natural choice for orthopedic urgencies, foot and ankle care, and ongoing joint treatment.",
      "angle": "Quick to reach and quick to respond: same-day injury consultations and a full regenerative toolkit, right up the road from Lake Park."},
 ]
@@ -1835,7 +1891,7 @@ def build_services():
     </a>
     <a class="svc-card reveal" href="../infusions/index.html">
       <span class="svc-num" aria-hidden="true">{len(SERVICES) + 2:02d}</span>
-      <span class="svc-media"><img src="../assets/media/infusion-room.jpg?v={asset_v('assets/media/infusion-room.jpg')}" alt="" width="640" height="420" loading="lazy"></span>
+      <span class="svc-media"><img src="../assets/media/iv-lounge-2.jpg?v={asset_v('assets/media/iv-lounge-2.jpg')}" alt="" width="640" height="420" loading="lazy"></span>
       <span class="svc-body"><strong>Specialty Infusion Center</strong><span>IVIG, Krystexxa, Ocrevus &amp; Ultomiris in a private, monitored outpatient suite…</span><em class="svc-more">Explore <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></span>
     </a>
   </div>
@@ -1977,6 +2033,7 @@ def build_locations():
     <div class="loc-main reveal">
       <h2>Care for {city} residents — minutes away in Palm Beach Gardens</h2>
       <p>{loc['blurb']}</p>
+      {photo_figure(loc['img'], loc['img_alt'], depth=d, cls=" photo-band")}
       <p>Our clinic at {ADDRESS_STREET}, {ADDRESS_CITY} brings together <strong>Dr. Marc Matarazzo, MD</strong> — a board-certified, fellowship-trained orthopedic surgeon with more than 23 years of experience in sports medicine and minimally invasive arthroscopic surgery — and <strong>Dr. Orlando Cedeno, DPM</strong>, board certified in foot surgery by the American Board of Foot &amp; Ankle Surgery with advanced expertise in vein care. Around them: an IV wellness lounge, regenerative medicine program, advanced non-surgical therapies, and concierge-level coordination.</p>
       <h2>What {city} patients come to us for</h2>
       <div class="treat-grid">{svc_list}</div>
@@ -2461,7 +2518,7 @@ def build_infusions():
 {page_hero("Specialty Infusion Center", "Hospital-Grade Infusions. Boutique Setting.", "Physician-prescribed specialty infusions — IVIG, Krystexxa, Ocrevus, and Ultomiris — administered in a private, monitored outpatient suite with insurance coordination and flexible scheduling.", crumbs_html, depth=d)}
 <section class="section">
   <div class="svc-intro-grid">
-    <figure class="svc-photo reveal"><img src="../assets/media/infusion-room.jpg?v={asset_v('assets/media/infusion-room.jpg')}" alt="Private infusion suite at RegenOrtho Palm Beach" width="700" height="470"></figure>
+    <figure class="svc-photo reveal"><img src="../assets/media/iv-lounge-2.jpg?v={asset_v('assets/media/iv-lounge-2.jpg')}" alt="A clinician reviewing a patient's chart during an intravenous infusion" width="700" height="470"></figure>
     <div class="svc-why reveal" style="--d:120ms">
       <p class="eyebrow">Why infuse here</p>
       <h2>The alternative to the <em>hospital chair</em></h2>
@@ -2486,7 +2543,7 @@ def build_infusions():
     page = head("Specialty Infusion Center Palm Beach Gardens | RegenOrtho",
                 "IVIG, Krystexxa, Ocrevus & Ultomiris infusions in a private Palm Beach Gardens outpatient suite — clinician-monitored with insurance coordination.",
                 depth=d, canonical="infusions/index.html", webpage_type="MedicalWebPage", speakable=True,
-                og_image="assets/media/infusion-room.jpg",
+                og_image="assets/media/iv-lounge-2.jpg",
                 extra_schema=schema) + '<body class="page-infusions">\n' + body
     write("infusions/index.html", page)
 
@@ -2501,6 +2558,7 @@ def build_infusions():
     <div class="cond-main reveal">
       <h2>About this therapy</h2>
       <p>{inf['body']}</p>
+      {photo_figure(inf['img'], inf['img_alt'], depth=d, cls=" photo-band")}
       <h2>What every infusion visit includes</h2>
       <ul class="check-list">
         <li>Pre-infusion screening and vitals check</li>
@@ -2540,7 +2598,7 @@ def build_infusions():
         page = head(inf["title"], inf["desc"], depth=d,
                     canonical=f"infusions/{inf['slug']}.html",
                     webpage_type="MedicalWebPage", speakable=True,
-                    og_image="assets/media/infusion-room.jpg",
+                    og_image="assets/media/iv-lounge-2.jpg",
                     extra_schema=schema) + '<body class="page-infusion">\n' + body
         write(f"infusions/{inf['slug']}.html", page)
 
@@ -2567,6 +2625,7 @@ def build_faq():
     body = f"""{nav(d)}
 <main id="main">
 {page_hero("Patient Guide & Answers", "Frequently Asked Questions", "Everything patients ask us — about getting started, our services, insurance, and what to expect — in one searchable place. Can't find your answer? Call 833-STEM561 and a real person will help.", crumbs_html, depth=d)}
+{photo_strip("ultrasound-guided.jpg", "A patient talking through treatment options with a physician at RegenOrtho Palm Beach", depth=d)}
 <section class="section faq-section">
   <div class="faq-tools reveal">
     <label class="faq-search"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15zM21 21l-5-5"/></svg>
@@ -2596,6 +2655,7 @@ def build_contact():
     body = f"""{nav(d)}
 <main id="main">
 {page_hero("Contact Us", "Your Health Journey Starts Here", "We're here to answer your questions, guide your treatment options, and help you take the next step toward recovery and wellness.", crumbs_html, cta=False, depth=d)}
+{photo_strip("clinic-interior.jpg", "Inside the RegenOrtho Palm Beach clinic on Prosperity Farms Road in Palm Beach Gardens", depth=d)}
 <section class="section" id="book">
   <div class="contact-grid">
     <div class="contact-info reveal">
@@ -2679,6 +2739,7 @@ def build_resources():
     body = f"""{nav(d)}
 <main id="main">
 {page_hero("Patient Resources", "Confident, Informed, Supported", "Answers to common questions, guidance through the treatment process, and helpful tips for before and after your visits — all in one place.", crumbs_html, depth=d)}
+{photo_strip("clinic-lounge.jpg", "The recovery lounge at the RegenOrtho Palm Beach clinic in Palm Beach Gardens", depth=d)}
 <section class="section">
   <div class="res-grid">
     <article class="res-card reveal"><span class="res-num" aria-hidden="true">01</span>
@@ -3169,6 +3230,12 @@ def build_meta():
         if c.get("img"):
             page_images[f"conditions/{c['slug']}.html"] = (
                 f"assets/media/{c['img']}", c.get("img_alt") or c["name"])
+    for loc in LOCATIONS:
+        page_images[f"locations/{loc['slug']}.html"] = (
+            f"assets/media/{loc['img']}", loc["img_alt"])
+    for inf in INFUSIONS:
+        page_images[f"infusions/{inf['slug']}.html"] = (
+            f"assets/media/{inf['img']}", inf["img_alt"])
 
     rows = []
     for u in pages:

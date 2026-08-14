@@ -819,6 +819,27 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
 .svc-photo { position: relative; border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-lg); }
 .svc-photo::after { content: ""; position: absolute; inset: 0; border: 1px solid rgba(9, 45, 92, .18); border-radius: var(--r-lg); translate: 10px 10px; pointer-events: none; }
 .svc-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+/* A .svc-photo used OUTSIDE .svc-intro-grid — in a text column or on its own.
+   There the figure is auto-height, so `height: 100%` on the img resolves to
+   nothing and a portrait source runs the full length of the page. Pinning the
+   ratio here keeps every band the same shape whatever the source is; the
+   offset ::after border is dropped because a full-width band has no column
+   beside it for the offset to read against. */
+.photo-band { aspect-ratio: 16 / 9; margin: 1.6rem 0 2rem; }
+.photo-band::after { display: none; }
+/* A strip sits directly under the page hero, so it is deliberately letterboxed:
+   at 16/9 it filled the viewport and pushed the page's actual content — the FAQ
+   search, the contact form — below the fold. */
+.photo-strip { padding-top: 1.6rem; padding-bottom: 0; }
+.photo-strip .photo-band { aspect-ratio: 3 / 1; max-width: var(--wrap); margin: 0 auto; }
+/* A 3:1 crop of a 3:2 source takes a middle slice, which lands on torsos and
+   cuts heads off. Biasing the window up keeps faces in frame. */
+.photo-strip .photo-band img { object-position: center 38%; }
+@media (max-width: 640px) {
+  .photo-band { aspect-ratio: 4 / 3; }
+  .photo-strip .photo-band { aspect-ratio: 16 / 9; }
+}
 .svc-why h2 { margin: .8rem 0 1.1rem; }
 .svc-why .btn { margin-top: 1.4rem; }
 
