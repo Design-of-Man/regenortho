@@ -113,6 +113,38 @@ def page_lastmod(path):
     return _git_dates.get(path, SITE_UPDATED)
 
 
+def hero_words(html, delay=0.30, step=0.055):
+    """Wrap each word of a heading in a mask span so the line rises word by word.
+
+    Inline tags (the <em> accent) pass through untouched, so the italic and the
+    stagger compose instead of fighting over the same element. Whitespace stays
+    a real space between the spans — that is what keeps screen readers announcing
+    the heading as one sentence instead of seven fragments.
+
+    Emitted at build time rather than split in JS on load: the markup is already
+    in the HTML, so there is no reflow when the script runs and no CLS.
+    """
+    out, i = [], 0
+    for part in re.split(r"(<[^>]+>)", html):
+        if not part:
+            continue
+        if part.startswith("<"):
+            out.append(part)
+            continue
+        for tok in re.split(r"(\s+)", part):
+            if not tok:
+                continue
+            if tok.isspace():
+                out.append(" ")
+            else:
+                out.append(
+                    f'<span class="hw" style="--wi:{delay + i * step:.3f}s">'
+                    f'<span class="hw-i">{tok}</span></span>'
+                )
+                i += 1
+    return "".join(out)
+
+
 _dim_cache = {}
 
 
@@ -1503,21 +1535,21 @@ def build_home():
   </div>
   <div class="hero-inner">
     <div class="hero-copy">
-      <p class="eyebrow hero-eyebrow h-rise" style="--hd:.5s">{TAGLINE}</p>
-      <h1 class="h-rise" style="--hd:.65s">Where surgery meets <em>innovative regeneration</em></h1>
-      <p class="lede h-rise" style="--hd:.82s">Personalized orthopedic, podiatric, and regenerative care in Palm Beach Gardens — led by board-certified surgeons with over 40 years of combined experience.</p>
-      <div class="hero-cta-row h-rise" style="--hd:1s">
+      <p class="eyebrow hero-eyebrow h-rise" style="--hd:.15s">{TAGLINE}</p>
+      <h1 class="hero-h1">{hero_words("Where surgery meets <em>innovative regeneration</em>")}</h1>
+      <p class="lede h-rise" style="--hd:.62s">Personalized orthopedic, podiatric, and regenerative care in Palm Beach Gardens — led by board-certified surgeons with over 40 years of combined experience.</p>
+      <div class="hero-cta-row h-rise" style="--hd:.78s">
         <a class="btn btn-gold" href="contact.html#book">Book a Consultation</a>
         <a class="btn btn-teal" href="tel:{PHONE_TEL}">Call {PHONE_VANITY}</a>
       </div>
-      <dl class="hero-stats h-rise" style="--hd:1.18s">
+      <dl class="hero-stats h-rise" style="--hd:.92s">
         <div><dt><span class="stat-num" data-count="40">40</span>+</dt><dd>years of combined surgical experience</dd></div>
         <div><dt><span class="stat-num" data-count="10000">10,000</span>+</dt><dd>patients helped in Palm Beach</dd></div>
         <div><dt>4.9<span aria-hidden="true">★</span></dt><dd>rated on Google reviews</dd></div>
       </dl>
     </div>
   </div>
-  <div class="hero-marquee h-rise" style="--hd:1.35s" aria-hidden="true">
+  <div class="hero-marquee h-rise" style="--hd:1.05s" aria-hidden="true">
     <div class="marquee-track" data-marquee>
       <span>Orthopedics</span><span>·</span><span>Sports Medicine</span><span>·</span><span>Podiatry</span><span>·</span><span>Regenerative Medicine</span><span>·</span><span>Vein Care</span><span>·</span><span>IV Wellness</span><span>·</span><span>Concierge Care</span><span>·</span>
     </div>
@@ -1546,7 +1578,7 @@ def build_home():
 </section>
 
 <section class="section section-services" id="services">
-  <div class="section-head reveal">
+  <div class="section-head section-head--offset reveal">
     <p class="eyebrow">One Roof. Every Answer.</p>
     <h2>Specialized care, <em>seven ways</em></h2>
     <p class="section-sub">Orthopedics, podiatry, regenerative medicine, and vein care under one roof — so your plan is built around your body, not around a single specialty's toolkit.</p>
@@ -1614,7 +1646,7 @@ def build_home():
 
 <section class="section section-dark section-pathfinder" id="explore" aria-label="Explore RegenOrtho Palm Beach">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
-  <div class="section-head reveal">
+  <div class="section-head section-head--offset reveal">
     <p class="eyebrow">Find Your Path</p>
     <h2>Everything, <em>two clicks away</em></h2>
     <p class="section-sub">Fifty-plus pages of care, conditions, and answers — mapped so you never hunt for anything.</p>
@@ -1659,7 +1691,7 @@ def build_home():
   <div class="section-head reveal">
     <p class="eyebrow">@regenortho_palmbeach</p>
     <h2>Inside the clinic, <em>every week</em></h2>
-    <p class="section-sub">Optimize. Recover. Thrive. ⚡ Peptides · weight loss · IV drips · pain modalities · biologic therapies.</p>
+    <p class="section-sub">Optimize. Recover. Thrive — peptides · weight loss · IV drips · pain modalities · biologic therapies.</p>
   </div>
   <div class="social-rail" data-marquee-rail>
     <div class="social-track" data-marquee>
@@ -3110,6 +3142,7 @@ def build_legal_and_404():
       <a class="btn btn-gold" href="index.html">Go to the homepage</a>
       <a class="btn btn-ghost-light" href="services/index.html">Browse services</a>
       <a class="btn btn-ghost-light" href="contact.html#book">Book a consultation</a>
+      <a class="btn btn-ghost-light" href="tel:{PHONE_TEL}">Call {PHONE_VANITY}</a>
     </div>
   </div>
 </section>

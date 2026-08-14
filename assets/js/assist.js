@@ -234,7 +234,7 @@
 
   function greet() {
     typing(function () {
-      say("Welcome to RegenOrtho Palm Beach 👋\nI can answer common questions instantly, or take your appointment request and send it straight to our front desk.");
+      say("Welcome to RegenOrtho Palm Beach.\nI can answer common questions instantly, or take your appointment request and send it straight to our front desk.");
       menuChips();
     }, 500);
   }
@@ -244,7 +244,7 @@
     mode = "ask";
     inputWrap.hidden = false;
     typing(function () {
-      say("Ask me anything about our services, pricing, insurance, hours, or the doctors — I'll answer from our official info.\nType your question below 👇");
+      say("Ask me anything about our services, pricing, insurance, hours, or the doctors — I'll answer from our official info.\nType your question below.");
       input.focus({ preventScroll: true });
     });
   }
@@ -317,7 +317,7 @@
   function finishBooking() {
     inputWrap.hidden = true;
     typing(function () {
-      say("Here's what I'll send to the front desk:<br><strong>" + escapeHtml(draft.name) + "</strong><br>📞 " + escapeHtml(draft.phone) + "<br>✉️ " + escapeHtml(draft.email) + "<br>🏥 " + escapeHtml(draft.service) + "<br>🗓 " + escapeHtml(draft.timing));
+      say("Here's what I'll send to the front desk:<br><strong>" + escapeHtml(draft.name) + "</strong><br>Phone: " + escapeHtml(draft.phone) + "<br>Email: " + escapeHtml(draft.email) + "<br>Service: " + escapeHtml(draft.service) + "<br>Timing: " + escapeHtml(draft.timing));
       chips([
         { label: "Send it ✓", gold: true, go: deliver },
         { label: "Start over", go: startBooking },
@@ -344,7 +344,7 @@
       }).then(function (r) {
         if (!r.ok) throw new Error("http " + r.status);
         m.remove();
-        say("Sent! 🎉 Our team will reach out to confirm your appointment — usually within one business day.<br>Need us sooner? Call <a href=\"tel:" + PHONE_TEL + "\">" + PHONE + "</a>.");
+        say("Sent. Our team will reach out to confirm your appointment — usually within one business day.<br>Need us sooner? Call <a href=\"tel:" + PHONE_TEL + "\">" + PHONE + "</a>.");
         localStorage.removeItem(LS_DRAFT);
         draft = {};
         mode = "menu";

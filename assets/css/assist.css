@@ -5,9 +5,9 @@
   position: fixed; right: 1rem; bottom: 1rem; z-index: 85;
   display: inline-flex; align-items: center; gap: .55rem;
   background: #092D5C; color: #fff; border: 1px solid rgba(253, 201, 41, .5);
-  font: 800 .92rem/1 "Manrope", sans-serif; padding: .9rem 1.3rem; border-radius: 999px;
+  font: 800 var(--t-md)/1 "Manrope", sans-serif; padding: .9rem 1.3rem; border-radius: 999px;
   cursor: pointer; box-shadow: 0 14px 34px -10px rgba(4, 16, 31, .55);
-  transition: transform .25s cubic-bezier(.22, .61, .21, 1), background .25s;
+  transition: transform .25s cubic-bezier(.22, .61, .21, 1), background .25s var(--ease);
 }
 .rga-launch:hover { transform: translateY(-2px); background: #12457F; }
 .rga-launch svg { flex-shrink: 0; }
@@ -33,13 +33,13 @@ body.nav-locked .rga-launch { display: none; }
 }
 .rga-avatar { width: 40px; height: 40px; border-radius: 50%; background: #FDC929; display: grid; place-items: center; flex-shrink: 0; }
 .rga-head-info { flex: 1; min-width: 0; }
-.rga-head-info strong { display: block; font: 700 .98rem/1.25 "Fraunces", serif; }
-.rga-head-info span { font-size: .74rem; color: #A9BCCE; }
+.rga-head-info strong { display: block; font: 700 var(--t-md)/1.25 "Fraunces", serif; }
+.rga-head-info span { font-size: var(--t-2xs); color: #A9BCCE; }
 .rga-close { background: none; border: 0; color: #A9BCCE; cursor: pointer; padding: .4rem; border-radius: 8px; line-height: 0; }
 .rga-close:hover { color: #FDC929; }
 
 .rga-log { flex: 1; overflow-y: auto; padding: 1.1rem; display: flex; flex-direction: column; gap: .7rem; overscroll-behavior: contain; }
-.rga-msg { max-width: 86%; padding: .7rem .95rem; border-radius: 16px; font-size: .9rem; line-height: 1.5; white-space: pre-line; overflow-wrap: break-word; }
+.rga-msg { max-width: 86%; padding: .7rem .95rem; border-radius: 16px; font-size: var(--t-md); line-height: 1.5; white-space: pre-line; overflow-wrap: break-word; }
 .rga-msg a { color: inherit; font-weight: 700; }
 .rga-msg-bot { background: #fff; border: 1px solid #DCD5C6; border-bottom-left-radius: 6px; align-self: flex-start; color: #101826; }
 .rga-msg-user { background: #092D5C; color: #fff; border-bottom-right-radius: 6px; align-self: flex-end; }
@@ -52,8 +52,8 @@ body.nav-locked .rga-launch { display: none; }
 .rga-chips { display: flex; flex-wrap: wrap; gap: .45rem; align-self: flex-start; max-width: 100%; }
 .rga-chip {
   border: 1px solid #092D5C; color: #092D5C; background: #fff; border-radius: 999px;
-  font: 700 .8rem/1.2 "Manrope", sans-serif; padding: .5rem .95rem; cursor: pointer;
-  transition: background .2s, color .2s, transform .2s;
+  font: 700 var(--t-xs)/1.2 "Manrope", sans-serif; padding: .5rem .95rem; cursor: pointer;
+  transition: background .2s var(--ease), color .2s var(--ease), transform .2s var(--ease);
 }
 .rga-chip:hover { background: #092D5C; color: #FDC929; transform: translateY(-1px); }
 .rga-chip-gold { background: #FDC929; border-color: #FDC929; color: #092D5C; }
@@ -62,15 +62,15 @@ body.nav-locked .rga-launch { display: none; }
 .rga-input { display: flex; gap: .5rem; padding: .8rem; border-top: 1px solid #DCD5C6; background: #fff; flex-shrink: 0; }
 .rga-input input {
   flex: 1; border: 1px solid #DCD5C6; border-radius: 999px; padding: .7rem 1.05rem;
-  font: 500 .92rem/1.3 "Manrope", sans-serif; color: #101826; background: #F9F7F2; min-width: 0;
+  font: 500 var(--t-md)/1.3 "Manrope", sans-serif; color: #101826; background: #F9F7F2; min-width: 0;
 }
 .rga-input input:focus { outline: 2px solid #FDC929; border-color: #FDC929; }
 .rga-send {
   width: 44px; height: 44px; border-radius: 50%; border: 0; background: #FDC929; color: #092D5C;
-  display: grid; place-items: center; cursor: pointer; flex-shrink: 0; transition: transform .2s, background .2s;
+  display: grid; place-items: center; cursor: pointer; flex-shrink: 0; transition: transform .2s var(--ease), background .2s var(--ease);
 }
 .rga-send:hover { transform: scale(1.06); }
-.rga-fine { font-size: .68rem; color: #7C8B98; text-align: center; padding: 0 .9rem .6rem; background: #fff; flex-shrink: 0; }
+.rga-fine { font-size: var(--t-3xs); color: #7C8B98; text-align: center; padding: 0 .9rem .6rem; background: #fff; flex-shrink: 0; }
 
 /* Phones get a full sheet pinned to the VISUAL viewport, not the layout one.
    iOS does not shrink the layout viewport when the keyboard opens, so a
