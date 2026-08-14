@@ -154,6 +154,75 @@ def img_dims(path, fallback=(1200, 630)):
     return dims
 
 
+def photo_figure(img, alt, depth=0, cls="", delay=None):
+    """A `.svc-photo` figure for any page — the treatment service pages already use.
+
+    Width/height come from img_dims() rather than a hardcoded pair: outside
+    `.svc-intro-grid` the figure is auto-height, so those attributes are what
+    reserves the box before the image lands. Declaring a portrait photo as 3:2
+    would shift the paragraph under it on load.
+
+    `alt` is required — every page here is audited for it, and an image with no
+    alt is a WCAG failure and a lost image-search entry in one.
+    """
+    path = f"assets/media/{img}"
+    w, h = img_dims(path, fallback=(1200, 800))
+    style = f' style="--d:{delay}"' if delay else ""
+    return (f'<figure class="svc-photo reveal{cls}"{style}>'
+            f'<img src="{"../" * depth}{path}?v={asset_v(path)}" alt="{alt}" '
+            f'width="{w}" height="{h}" loading="lazy" decoding="async"></figure>')
+
+
+# Cash-pay surfaces that carry the offer. The IV Lounge page covers the whole
+# 12-item drip menu, since those cards live on it. Specialty infusions (IVIG,
+# Krystexxa, Ocrevus, Ultomiris) are deliberately absent: they are prescription
+# therapies billed through insurance, not cash-pay, and a discount prompt on a
+# prescription drug page is the wrong offer to the wrong person.
+OFFER_SERVICES = {"peptide-therapy", "medical-weight-loss"}
+
+
+def offer_modal(depth=0):
+    """The cash-pay offer modal — 25% off a first service.
+
+    Wording matches what the practice already publishes on regenorthopb.com, so
+    nothing here is a new commitment. Do NOT add terms (expiry, "new patients
+    only", exclusions) unless the practice states them: an invented condition on
+    a published discount is a fact violation the same as an invented price.
+
+    Email only. See the note at the top of offer.js before adding any field.
+    """
+    p = "../" * depth
+    # "light" here means FOR light backgrounds — this is the navy wordmark, and
+    # the panel is porcelain. logo-dark.png is the white one and vanishes on it.
+    logo = "assets/media/logo-light.png"
+    return f"""<div class="offer-modal" data-offer data-offer-email="{EMAIL}" hidden
+     role="dialog" aria-modal="true" aria-labelledby="offer-h">
+  <div class="offer-panel" tabindex="-1">
+    <button class="offer-x" type="button" data-offer-close aria-label="Close and continue to booking">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <img class="offer-logo" src="{p}{logo}?v={asset_v(logo)}" alt="RegenOrtho Palm Beach" width="{img_dims(logo)[0]}" height="{img_dims(logo)[1]}">
+    <h2 id="offer-h">25% off your <em>first service</em></h2>
+    <p class="offer-sub">Drop your email and we'll send your code. Then pick a time that suits you — the booking form is one click away.</p>
+    <form data-offer-form novalidate>
+      <label class="sr-only" for="offer-email">Email address</label>
+      <input id="offer-email" data-offer-input type="email" name="email" placeholder="Email address"
+             autocomplete="email" required>
+      <button class="btn btn-gold" type="submit">Send my code</button>
+    </form>
+    <p class="offer-status" data-offer-status role="status" aria-live="polite"></p>
+    <button class="offer-skip" type="button" data-offer-close>No thanks — just take me to booking</button>
+  </div>
+</div>
+"""
+
+
+def photo_strip(img, alt, depth=0):
+    """A single full-width photo band — for pages that are otherwise all text."""
+    return (f'<section class="section photo-strip">'
+            f'{photo_figure(img, alt, depth=depth, cls=" photo-band")}</section>')
+
+
 # ---------------------------------------------------------------------------
 # Shared chrome
 # ---------------------------------------------------------------------------
@@ -346,13 +415,6 @@ def nav(depth=0, current=""):
           </ul>
         </li>
         <li><a class="nav-link" href="{p}iv-therapy.html">IV Lounge</a></li>
-        <li class="has-drop"><button class="drop-btn" aria-expanded="false">Patient Forms<svg viewBox="0 0 12 8" width="10" height="7" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 1.5 6 6.5 11 1.5"/></svg></button>
-          <ul class="drop">
-            <li><a href="{p}forms/index.html">All patient forms</a></li>
-            <li><a href="{p}forms/new-patient.html">New Patient Intake Form</a></li>
-            <li><a href="{p}forms/peptide-glp-questionnaire.html">Peptide &amp; GLP-1 Questionnaire</a></li>
-          </ul>
-        </li>
         <li><a class="nav-link" href="{p}blog/index.html">Blog</a></li>
         <li><a class="nav-link" href="{p}faq.html">FAQ</a></li>
         <li><a class="nav-link" href="{p}contact.html">Contact</a></li>
@@ -370,11 +432,12 @@ def footer(depth=0, extra_js="", analytics=True):
     extra_js_tag = ""
     if extra_js:
         extra_js_tag = f'<script src="{p}{extra_js}?v={asset_v(extra_js)}" defer></script>\n'
-    # Vercel Web Analytics — cookieless, no consent banner needed. Deliberately
-    # NOT emitted on /forms/* (analytics=False there): those pages ask about
-    # health, and per the HIPAA notes in README.md no tracking script may load
-    # on them. 404s harmlessly until Analytics is enabled in the Vercel
-    # dashboard (Project → Analytics → Enable).
+    # Vercel Web Analytics — cookieless, so no consent banner is needed. 404s
+    # harmlessly until Analytics is enabled in the Vercel dashboard
+    # (Project → Analytics → Enable). The analytics=False switch is kept for
+    # any future page that collects health information: no tracking script may
+    # load on one, because a page view of a condition-specific URL tied to an
+    # IP address is the exact pattern regulators have pursued.
     analytics_tag = ""
     if analytics:
         analytics_tag = '<script defer src="/_vercel/insights/script.js"></script>\n'
@@ -400,7 +463,6 @@ def footer(depth=0, extra_js="", analytics=True):
         <li><a href="{p}services/index.html">Our Services</a></li>
         <li><a href="{p}iv-therapy.html">IV Therapy Lounge</a></li>
         <li><a href="{p}patient-resources.html">Patient Resources</a></li>
-        <li><a href="{p}forms/index.html">Patient Forms</a></li>
         <li><a href="{p}faq.html">FAQ</a></li>
         <li><a href="{p}blog/index.html">Blog</a></li>
         <li><a href="{p}contact.html">Contact Us</a></li>
@@ -442,7 +504,14 @@ def footer(depth=0, extra_js="", analytics=True):
 """
 
 
-def page_hero(eyebrow, title, lede, crumbs_html="", cta=True, depth=0):
+def page_hero(eyebrow, title, lede, crumbs_html="", cta=True, depth=0, video=None):
+    """Interior page hero. `video` is a rendition prefix in assets/video/ —
+    "bag" expects bag-poster.jpg, bag-hd.mp4/webm and bag-mobile.mp4/webm.
+
+    The markup carries NO <source> children on purpose: main.js attaches exactly
+    one pair from the data-* attributes, so phones never fetch the desktop file
+    and nothing downloads at all under reduced-motion or Save-Data.
+    """
     p = "../" * depth
     cta_html = ""
     if cta:
@@ -450,9 +519,23 @@ def page_hero(eyebrow, title, lede, crumbs_html="", cta=True, depth=0):
       <a class="btn btn-gold" href="{p}contact.html#book">Book a Consultation</a>
       <a class="btn btn-ghost-light" href="tel:{PHONE_TEL}">Call {PHONE_VANITY}</a>
     </div>"""
-    return f"""<section class="page-hero">
+    video_html = ""
+    if video:
+        v = f"assets/video/{video}"
+        video_html = f"""<div class="hero-video-slot">
+    <video autoplay muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"
+           poster="{p}{v}-poster.jpg?v={asset_v(f'{v}-poster.jpg')}"
+           data-hero-video
+           data-mp4-hd="{p}{v}-hd.mp4?v={asset_v(f'{v}-hd.mp4')}"
+           data-webm-hd="{p}{v}-hd.webm?v={asset_v(f'{v}-hd.webm')}"
+           data-mp4-mobile="{p}{v}-mobile.mp4?v={asset_v(f'{v}-mobile.mp4')}"
+           data-webm-mobile="{p}{v}-mobile.webm?v={asset_v(f'{v}-mobile.webm')}"></video>
+  </div>
+  <div class="hero-video-scrim" aria-hidden="true"></div>
+  """
+    return f"""<section class="page-hero{' has-video' if video else ''}">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
-  <div class="page-hero-inner reveal">
+  {video_html}<div class="page-hero-inner reveal">
     {crumbs_html}
     <p class="eyebrow">{eyebrow}</p>
     <h1>{title}</h1>
@@ -688,23 +771,34 @@ IV_MENU = [
     {"name": 'All-Inclusive', "short": "All-Inclusive", "cat": "wellness", "ingredients": "Every add-in on the menu", "price": 399, "bag": "bag-all-inclusive.png", "desc": 'Comprehensive full-body infusion delivering vitamins, minerals, amino acids, antioxidants, and hydration for total wellness optimization.'},
 ]
 
+# The photo on each drug page shows the SUITE, never a drug being administered —
+# these are prescription therapies and a photo implying "this is your Ocrevus
+# infusion" is a claim we cannot make from a stock frame. Alt text says the room.
 INFUSIONS = [
     {"slug": "ivig", "name": "IVIG (Intravenous Immunoglobulin)",
+     "img": "iv-lounge-2.jpg",
+     "img_alt": "A clinician reviewing a patient's chart during an intravenous infusion",
      "title": "IVIG Infusion Therapy Palm Beach Gardens | RegenOrtho",
      "desc": "Physician-supervised IVIG (intravenous immunoglobulin) infusion therapy in a private Palm Beach Gardens suite. Insurance coordination and flexible scheduling.",
      "lede": "Intravenous immunoglobulin therapy delivered in a private, clinician-supervised infusion suite — without the hospital.",
      "body": "IVIG (intravenous immunoglobulin) is a physician-prescribed infusion used to support patients with certain immune-mediated and neurological conditions. Our infusion center administers IVIG in a calm, private suite with clinical monitoring throughout your visit, coordinating directly with your referring physician on protocol, frequency, and follow-up."},
     {"slug": "krystexxa", "name": "Krystexxa Infusion Therapy",
+     "img": "palm-beach-aerial.jpg",
+     "img_alt": "A patient rehydrating beside an IV line during a treatment session",
      "title": "Krystexxa Infusion Therapy Palm Beach Gardens | RegenOrtho",
      "desc": "Krystexxa (pegloticase) infusion therapy for uncontrolled gout, administered under physician supervision in our Palm Beach Gardens infusion suite.",
      "lede": "Physician-supervised Krystexxa (pegloticase) infusions for chronic, uncontrolled gout — in a private outpatient setting.",
      "body": "Krystexxa is an infusion medication prescribed for adults with chronic gout that has not responded to conventional urate-lowering therapy. Treatment is administered in our monitored infusion suite, with pre-infusion screening and coordination with your prescribing physician at every step."},
     {"slug": "ocrevus", "name": "Ocrevus Treatment",
+     "img": "clinic-interior.jpg",
+     "img_alt": "The treatment suite at RegenOrtho Palm Beach in Palm Beach Gardens",
      "title": "Ocrevus Infusion Palm Beach Gardens | RegenOrtho Infusion Center",
      "desc": "Ocrevus (ocrelizumab) infusion treatment administered under clinical supervision in a private Palm Beach Gardens suite, coordinated with your neurologist.",
      "lede": "Ocrevus (ocrelizumab) infusions coordinated with your neurologist and delivered in a private, monitored suite.",
      "body": "Ocrevus is a prescription infusion used in the management of certain forms of multiple sclerosis. Our team works with your neurologist's treatment plan, provides pre-infusion screening, and monitors you throughout each visit in a comfortable outpatient environment."},
     {"slug": "ultomiris", "name": "Ultomiris Infusion Therapy",
+     "img": "clinic-lounge.jpg",
+     "img_alt": "Recovery seating in the RegenOrtho Palm Beach treatment suite",
      "title": "Ultomiris Infusion Therapy Palm Beach Gardens | RegenOrtho",
      "desc": "Ultomiris (ravulizumab) infusion therapy in a private, physician-supervised Palm Beach Gardens outpatient suite with insurance coordination.",
      "lede": "Ultomiris (ravulizumab) infusion therapy in a private outpatient suite, with clinical monitoring and insurance coordination.",
@@ -966,8 +1060,8 @@ SERVICES = [
         "eyebrow": "Mako Robotic-Assisted Surgery",
         "h1": "Mako Robotic-Assisted Total Knee Replacement",
         "lede": "State-of-the-art robotic-arm assisted knee replacement with 3D CT-based planning and haptic guidance — improving surgical accuracy to help you get back to your active life sooner.",
-        "img": "knee-implant.jpg",
-        "img_alt": "Knee implant model illustrating robotic-assisted total knee replacement",
+        "img": "mako-system.jpg",
+        "img_alt": "The Stryker Mako robotic-arm system used for total knee replacement at RegenOrtho Palm Beach",
         "why": [
             "3D CT-based planning personalizes implant placement to your anatomy",
             "Haptic guidance (AccuStop™) keeps bone cuts within your personalized plan",
@@ -1004,8 +1098,8 @@ SERVICES = [
         "eyebrow": "Neuropathy Restoration Program™",
         "h1": "A Comprehensive Nerve Repair & Regenerative Therapy Program",
         "lede": "Reduce burning, tingling, and numbness. Improve nerve function and mobility. Non-surgical, personalized treatment plans that target the root cause of nerve damage — not just the symptoms.",
-        "img": "neuro-exam.jpg",
-        "img_alt": "Clinician performing a neuropathy evaluation on a patient's foot",
+        "img": "podiatry-exam.jpg",
+        "img_alt": "Probe-based therapy applied to a patient's leg at RegenOrtho Palm Beach",
         "why": [
             "Targets the root cause of nerve damage, not just symptom masking",
             "IV-enhanced program pairing systemic support with local treatment",
@@ -1044,8 +1138,8 @@ SERVICES = [
         "eyebrow": "Physician-Supervised Weight Loss",
         "h1": "Physician-Supervised Medical Weight Loss",
         "lede": "Achieve sustainable weight loss with personalized, medically guided treatment designed to support your overall health, mobility, and long-term wellness — plans starting at $239/month.",
-        "img": "weightloss.jpg",
-        "img_alt": "Physician-supervised medical weight loss consultation in Palm Beach Gardens",
+        "img": "glp1-vial.jpg",
+        "img_alt": "A GLP-1 prescription vial from the RegenOrtho Palm Beach medical weight-loss program",
         "why": [
             "Doctor-led weight loss programs with ongoing medical monitoring",
             "Personalized treatment and dosing plans",
@@ -1124,8 +1218,8 @@ SERVICES = [
         "eyebrow": "Concierge & Cash-Pay Services",
         "h1": "Private Concierge & Direct-Pay Care",
         "lede": "Private, direct-pay care offering same-day diagnostics, tailored treatment planning, private suites, and transparent bundled pricing for streamlined, personalized recovery.",
-        "img": "clinic-lounge.jpg",
-        "img_alt": "Private concierge lounge inside RegenOrtho Palm Beach",
+        "img": "svc-concierge.jpg",
+        "img_alt": "A clinician assessing a patient's knee one-to-one at RegenOrtho Palm Beach",
         "why": [
             "Direct access to board-certified specialists with one-on-one consultations",
             "Same-day diagnostic workup and treatment planning for urgent needs",
@@ -1164,7 +1258,7 @@ CONDITIONS = [
      "desc": "Knee pain treatment in Palm Beach Gardens — from PRP and joint preservation to the MISHA shock absorber and Mako robotic knee replacement. Same-week visits.",
      "h1": "Knee Pain, Treated at Every Stage",
      "lede": "From early arthritis to bone-on-bone — a full spectrum of knee care under one roof, so your treatment matches your stage, not a one-size-fits-all protocol.",
-     "img": "knee-implant.jpg",
+     "img": "weightloss.jpg",
      "symptoms": ["Pain on stairs, standing, or first steps in the morning", "Swelling or stiffness after activity", "Instability, catching, or giving way", "Deep aching in the inner (medial) knee", "Pain that has outlasted rest, meds, or injections"],
      "body": "Knee pain is the most common reason patients walk through our doors — and the mistake most practices make is offering only the treatment they happen to sell. Because RegenOrtho Palm Beach spans orthopedic surgery, regenerative medicine, and advanced non-surgical therapies, your plan starts with your knee's actual stage: joint-preserving therapy and biologics when the joint can still be protected, the MISHA implantable shock absorber when medial arthritis needs unloading but you're not ready for replacement, and Mako robotic-assisted total knee replacement when the joint is truly at end stage.",
      "services": ["orthopedic-sports-medicine", "regenerative-medicine-orthobiologics", "misha-knee-system", "mako-robotic-knee-replacement"],
@@ -1241,7 +1335,7 @@ CONDITIONS = [
      "desc": "Plantar fasciitis and heel pain treatment in Palm Beach Gardens — EPAT shockwave, custom orthotics, and gait correction from a board-certified podiatrist.",
      "h1": "Heel Pain That Finally Gets Better",
      "lede": "Those first steps in the morning shouldn't be the hardest part of your day.",
-     "img": "podiatry-exam.jpg",
+     "img": "svc-podiatry.jpg",
      "symptoms": ["Stabbing heel pain with the first steps of the morning", "Pain after — not during — activity", "Tenderness along the arch or heel", "Pain that improves briefly then returns", "Months of failed home remedies"],
      "body": "Plantar fasciitis is among the most common — and most stubbornly mistreated — foot problems. Our protocol combines proven therapies: biomechanical gait correction and same-day custom orthotics fabricated onsite to offload the fascia, EPAT shockwave therapy to stimulate healing in chronic cases, and tailored stretching and loading plans that prevent recurrence. Patient outcomes speak for themselves — including patients whose plantar fasciitis resolved fully under Dr. Cedeno's care.",
      "services": ["podiatric-medicine-foot-ankle-surgery", "advanced-non-surgical-therapies"],
@@ -1252,7 +1346,7 @@ CONDITIONS = [
      "desc": "Peripheral neuropathy treatment in Palm Beach Gardens — an IV-enhanced regenerative program targeting burning, tingling, and numbness at the root cause.",
      "h1": "Burning, Tingling, Numbness — Addressed at the Root",
      "lede": "Neuropathy symptoms occur when damaged nerves fail to send proper signals. Masking them isn't a plan — repairing the environment they live in is.",
-     "img": "neuro-exam.jpg",
+     "img": "podiatry-exam.jpg",
      "symptoms": ["Burning or tingling in the feet or hands", "Numbness or loss of sensation", "Sharp, shooting, or electric pain", "Weakness or balance instability", "Symptoms worse at night"],
      "body": "The Neuropathy Restoration Program is the practice's comprehensive answer to peripheral nerve damage: advanced diagnostics to distinguish compression from metabolic causes, IV therapy with B12 to nourish nerves systemically, regenerative injections to reduce inflammation at the source, cold laser to stimulate repair, therapeutic ultrasound to improve circulation, and customized peptide protocols. The program is structured with defined pathways after completion — maintenance for responders, escalation for partial response, and targeted evaluation for persistent focal nerve issues.",
      "services": ["neuropathy-program", "podiatric-medicine-foot-ankle-surgery", "iv-lounge"],
@@ -1279,29 +1373,49 @@ PATHWAYS = [
     ("IV Therapy &amp; Wellness", "Infusions, IM shots &amp; concierge wellness memberships.", "from $149/mo", "iv-therapy.html"),
 ]
 
+# Every location page shows the SAME clinic — there is one office, in Palm Beach
+# Gardens. The photo rotates so eight pages don't look copy-pasted, but the alt
+# text always names Palm Beach Gardens: "our Jupiter office" would be a plain
+# factual misstatement, and these pages already rank for city terms.
 LOCATIONS = [
     {"slug": "jupiter", "city": "Jupiter",
+     "img": "iv-nurse.jpg",
+     "img_alt": "A therapist guiding a patient through knee mobility work at RegenOrtho Palm Beach",
      "blurb": "Just down the road from Jupiter's beaches, golf communities, and active neighborhoods — many of our sports medicine, foot & ankle, and vein patients make the short trip south along US-1 or I-95 to our Palm Beach Gardens clinic.",
      "angle": "Jupiter is one of the most active communities in South Florida — tennis, golf, boating, running. When injuries or joint pain interrupt that lifestyle, our board-certified specialists are minutes away."},
     {"slug": "north-palm-beach", "city": "North Palm Beach",
+     "img": "clinic-interior.jpg",
+     "img_alt": "Inside the RegenOrtho Palm Beach clinic on Prosperity Farms Road in Palm Beach Gardens",
      "blurb": "Our clinic sits on Prosperity Farms Road at the edge of North Palm Beach — for most Village residents we're one of the closest orthopedic and vein practices there is.",
      "angle": "From the North Palm Beach Country Club to the marinas, this is a community that stays on its feet. We help keep it that way with same-week orthopedic access and concierge-level care."},
     {"slug": "juno-beach", "city": "Juno Beach",
+     "img": "ultrasound-guided.jpg",
+     "img_alt": "A patient consultation with a physician at RegenOrtho Palm Beach",
      "blurb": "A short drive down US-1 from Juno Beach's pier and oceanfront neighborhoods, our Palm Beach Gardens clinic serves Juno Beach residents with orthopedic, podiatric, regenerative, and vein care.",
      "angle": "Beach walkers and pier regulars know what heel pain and joint stiffness can steal. Our specialists treat both — often without surgery."},
     {"slug": "tequesta", "city": "Tequesta",
+     "img": "anatomy-sketch.jpg",
+     "img_alt": "A clinician performing a diagnostic ultrasound scan at RegenOrtho Palm Beach",
      "blurb": "Tequesta residents reach us with an easy drive south — worth it for board-certified specialists in orthopedics, podiatry, vein care, and regenerative medicine under one roof.",
      "angle": "For a village built around the water — boating, fishing, paddling — mobility is everything. We offer Tequesta patients concierge access and personalized treatment plans."},
     {"slug": "palm-beach", "city": "Palm Beach",
+     "img": "clinic-lounge.jpg",
+     "img_alt": "The recovery lounge at the RegenOrtho Palm Beach clinic in Palm Beach Gardens",
      "blurb": "Palm Beach residents expect a concierge standard of medicine. Our private suites, same-day diagnostics, and direct-pay bundled pricing were designed for exactly that expectation.",
      "angle": "Discreet, efficient, and personal — concierge orthopedic and regenerative care matched to Palm Beach standards, twenty minutes from the island."},
     {"slug": "west-palm-beach", "city": "West Palm Beach",
+     "img": "recovery-stretch.jpg",
+     "img_alt": "Clinical staff supporting a patient through assisted walking during recovery",
      "blurb": "From downtown West Palm Beach, our Palm Beach Gardens clinic is a straight shot north on I-95 — with the full breadth of orthopedic, podiatric, regenerative, vein, and IV wellness care waiting at the other end.",
      "angle": "West Palm Beach professionals and families choose us for direct specialist access, same-day injury consultations, and treatment plans that don't default to surgery."},
     {"slug": "singer-island", "city": "Singer Island",
+     "img": "exam-room.jpg",
+     "img_alt": "Preparing a platelet-rich plasma sample for a regenerative injection",
      "blurb": "Singer Island and Palm Beach Shores residents cross the bridge to reach our Prosperity Farms Road clinic — for vein care, foot & ankle treatment, joint preservation, and IV wellness.",
      "angle": "Island living is walking living. When heel pain, veins, or joints start protesting, our specialists get you back to the beach path."},
     {"slug": "lake-park", "city": "Lake Park",
+     "img": "clinic-lounge.jpg",
+     "img_alt": "The recovery lounge at the RegenOrtho Palm Beach clinic in Palm Beach Gardens",
      "blurb": "Lake Park sits minutes from our clinic — making RegenOrtho Palm Beach a natural choice for orthopedic urgencies, foot and ankle care, and ongoing joint treatment.",
      "angle": "Quick to reach and quick to respond: same-day injury consultations and a full regenerative toolkit, right up the road from Lake Park."},
 ]
@@ -1792,7 +1906,8 @@ def build_services():
 </section>
 {cta_band(d, heading=svc['cta'], sub=svc['cta_sub'])}
 </main>
-{footer(d)}"""
+{offer_modal(d) if svc['slug'] in OFFER_SERVICES else ''}
+{footer(d, extra_js="assets/js/offer.js" if svc['slug'] in OFFER_SERVICES else "")}"""
         schema = (
             therapy_schema(svc)
             + faq_schema(svc["faqs"])
@@ -1830,12 +1945,12 @@ def build_services():
   <div class="svc-grid svc-grid-3">{tiles}
     <a class="svc-card reveal" href="../iv-therapy.html">
       <span class="svc-num" aria-hidden="true">{len(SERVICES) + 1:02d}</span>
-      <span class="svc-media"><img src="../assets/media/iv-hero.jpg?v={asset_v('assets/media/iv-hero.jpg')}" alt="" width="640" height="420" loading="lazy"></span>
+      <span class="svc-media"><img src="../assets/media/og-iv-lounge.jpg?v={asset_v('assets/media/og-iv-lounge.jpg')}" alt="" width="640" height="420" loading="lazy"></span>
       <span class="svc-body"><strong>IV Recovery &amp; Wellness Lounge</strong><span>Twelve clinician-supervised drips — hydration, immunity, NAD⁺, athletic recovery…</span><em class="svc-more">Explore <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></span>
     </a>
     <a class="svc-card reveal" href="../infusions/index.html">
       <span class="svc-num" aria-hidden="true">{len(SERVICES) + 2:02d}</span>
-      <span class="svc-media"><img src="../assets/media/infusion-room.jpg?v={asset_v('assets/media/infusion-room.jpg')}" alt="" width="640" height="420" loading="lazy"></span>
+      <span class="svc-media"><img src="../assets/media/iv-lounge-2.jpg?v={asset_v('assets/media/iv-lounge-2.jpg')}" alt="" width="640" height="420" loading="lazy"></span>
       <span class="svc-body"><strong>Specialty Infusion Center</strong><span>IVIG, Krystexxa, Ocrevus &amp; Ultomiris in a private, monitored outpatient suite…</span><em class="svc-more">Explore <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></span>
     </a>
   </div>
@@ -1977,6 +2092,7 @@ def build_locations():
     <div class="loc-main reveal">
       <h2>Care for {city} residents — minutes away in Palm Beach Gardens</h2>
       <p>{loc['blurb']}</p>
+      {photo_figure(loc['img'], loc['img_alt'], depth=d, cls=" photo-band")}
       <p>Our clinic at {ADDRESS_STREET}, {ADDRESS_CITY} brings together <strong>Dr. Marc Matarazzo, MD</strong> — a board-certified, fellowship-trained orthopedic surgeon with more than 23 years of experience in sports medicine and minimally invasive arthroscopic surgery — and <strong>Dr. Orlando Cedeno, DPM</strong>, board certified in foot surgery by the American Board of Foot &amp; Ankle Surgery with advanced expertise in vein care. Around them: an IV wellness lounge, regenerative medicine program, advanced non-surgical therapies, and concierge-level coordination.</p>
       <h2>What {city} patients come to us for</h2>
       <div class="treat-grid">{svc_list}</div>
@@ -2392,7 +2508,7 @@ def build_iv():
     crumbs_html = crumbs([("", "IV Therapy Lounge")], depth=d)
     body = f"""{nav(d)}
 <main id="main">
-{page_hero("The IV Lounge", "Repair. Rehydrate. Renew.", "Revitalize your body and restore essential nutrients with IV treatments performed by our medical team — in a lounge designed for comfort, not a hospital corridor.", crumbs_html, depth=d)}
+{page_hero("The IV Lounge", "Repair. Rehydrate. Renew.", "Revitalize your body and restore essential nutrients with IV treatments performed by our medical team — in a lounge designed for comfort, not a hospital corridor.", crumbs_html, depth=d, video="bag")}
 <section class="section section-dark section-drips" id="menu">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="section-head reveal"><p class="eyebrow">The Menu</p><h2>Twelve formulas, <em>one goal: you at 100%</em></h2>
@@ -2435,12 +2551,13 @@ def build_iv():
 </section>
 {cta_band(d, heading="Feel better <em>today</em>", sub="Visit our infusion lounge for clinically guided IV therapy tailored to recovery, immune support, energy, and metabolic health.")}
 </main>
-{footer(d)}"""
+{offer_modal(d)}
+{footer(d, extra_js="assets/js/offer.js")}"""
     schema = offers + faq_schema(IV_FAQS) + breadcrumb_schema([("", "Home"), ("iv-therapy.html", "IV Therapy")])
     page = head("IV Therapy Palm Beach Gardens | Drip Lounge & NAD+ | RegenOrtho",
                 "IV therapy in Palm Beach Gardens: hydration, immune boost, NAD+ 500mg, athletic recovery & more — clinician-supervised drips from $189 in a private lounge.",
                 depth=d, canonical="iv-therapy.html", webpage_type="MedicalWebPage", speakable=True,
-                og_image="assets/media/iv-hero.jpg",
+                og_image="assets/media/og-iv-lounge.jpg",
                 extra_schema=schema) + '<body class="page-iv">\n' + body
     write("iv-therapy.html", page)
 
@@ -2461,7 +2578,7 @@ def build_infusions():
 {page_hero("Specialty Infusion Center", "Hospital-Grade Infusions. Boutique Setting.", "Physician-prescribed specialty infusions — IVIG, Krystexxa, Ocrevus, and Ultomiris — administered in a private, monitored outpatient suite with insurance coordination and flexible scheduling.", crumbs_html, depth=d)}
 <section class="section">
   <div class="svc-intro-grid">
-    <figure class="svc-photo reveal"><img src="../assets/media/infusion-room.jpg?v={asset_v('assets/media/infusion-room.jpg')}" alt="Private infusion suite at RegenOrtho Palm Beach" width="700" height="470"></figure>
+    <figure class="svc-photo reveal"><img src="../assets/media/iv-lounge-2.jpg?v={asset_v('assets/media/iv-lounge-2.jpg')}" alt="A clinician reviewing a patient's chart during an intravenous infusion" width="700" height="470"></figure>
     <div class="svc-why reveal" style="--d:120ms">
       <p class="eyebrow">Why infuse here</p>
       <h2>The alternative to the <em>hospital chair</em></h2>
@@ -2486,7 +2603,7 @@ def build_infusions():
     page = head("Specialty Infusion Center Palm Beach Gardens | RegenOrtho",
                 "IVIG, Krystexxa, Ocrevus & Ultomiris infusions in a private Palm Beach Gardens outpatient suite — clinician-monitored with insurance coordination.",
                 depth=d, canonical="infusions/index.html", webpage_type="MedicalWebPage", speakable=True,
-                og_image="assets/media/infusion-room.jpg",
+                og_image="assets/media/iv-lounge-2.jpg",
                 extra_schema=schema) + '<body class="page-infusions">\n' + body
     write("infusions/index.html", page)
 
@@ -2501,6 +2618,7 @@ def build_infusions():
     <div class="cond-main reveal">
       <h2>About this therapy</h2>
       <p>{inf['body']}</p>
+      {photo_figure(inf['img'], inf['img_alt'], depth=d, cls=" photo-band")}
       <h2>What every infusion visit includes</h2>
       <ul class="check-list">
         <li>Pre-infusion screening and vitals check</li>
@@ -2540,7 +2658,7 @@ def build_infusions():
         page = head(inf["title"], inf["desc"], depth=d,
                     canonical=f"infusions/{inf['slug']}.html",
                     webpage_type="MedicalWebPage", speakable=True,
-                    og_image="assets/media/infusion-room.jpg",
+                    og_image="assets/media/iv-lounge-2.jpg",
                     extra_schema=schema) + '<body class="page-infusion">\n' + body
         write(f"infusions/{inf['slug']}.html", page)
 
@@ -2567,6 +2685,7 @@ def build_faq():
     body = f"""{nav(d)}
 <main id="main">
 {page_hero("Patient Guide & Answers", "Frequently Asked Questions", "Everything patients ask us — about getting started, our services, insurance, and what to expect — in one searchable place. Can't find your answer? Call 833-STEM561 and a real person will help.", crumbs_html, depth=d)}
+{photo_strip("ultrasound-guided.jpg", "A patient talking through treatment options with a physician at RegenOrtho Palm Beach", depth=d)}
 <section class="section faq-section">
   <div class="faq-tools reveal">
     <label class="faq-search"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15zM21 21l-5-5"/></svg>
@@ -2596,6 +2715,7 @@ def build_contact():
     body = f"""{nav(d)}
 <main id="main">
 {page_hero("Contact Us", "Your Health Journey Starts Here", "We're here to answer your questions, guide your treatment options, and help you take the next step toward recovery and wellness.", crumbs_html, cta=False, depth=d)}
+{photo_strip("clinic-interior.jpg", "Inside the RegenOrtho Palm Beach clinic on Prosperity Farms Road in Palm Beach Gardens", depth=d)}
 <section class="section" id="book">
   <div class="contact-grid">
     <div class="contact-info reveal">
@@ -2679,6 +2799,7 @@ def build_resources():
     body = f"""{nav(d)}
 <main id="main">
 {page_hero("Patient Resources", "Confident, Informed, Supported", "Answers to common questions, guidance through the treatment process, and helpful tips for before and after your visits — all in one place.", crumbs_html, depth=d)}
+{photo_strip("clinic-lounge.jpg", "The recovery lounge at the RegenOrtho Palm Beach clinic in Palm Beach Gardens", depth=d)}
 <section class="section">
   <div class="res-grid">
     <article class="res-card reveal"><span class="res-num" aria-hidden="true">01</span>
@@ -2695,7 +2816,7 @@ def build_resources():
       <h2>Preparing for Your Appointment</h2>
       <p>Your time with our specialists is valuable. Arriving prepared ensures you get the most out of your visit.</p>
       <ul class="check-list"><li>Bring a list of medications</li><li>Wear comfortable clothing for exams</li><li>Note any recent symptoms or health changes</li></ul>
-      <p style="margin-top:1rem;"><a href="forms/index.html">Complete your patient forms before you arrive →</a></p>
+      <p style="margin-top:1rem;"><a href="contact.html#book">Request an appointment →</a></p>
     </article>
     <article class="res-card reveal" style="--d:270ms"><span class="res-num" aria-hidden="true">04</span>
       <h2>Post-Treatment Care</h2>
@@ -2730,15 +2851,6 @@ def build_resources():
     write("patient-resources.html", page)
 
 
-# ---------------------------------------------------------------------------
-# Patient forms
-#
-# HIPAA: these pages collect protected health information, so they are built to
-# keep it in the patient's browser. Nothing is POSTed, no third-party form
-# service is involved, and no analytics/tracking script is loaded on them.
-# On finish the answers become a printable summary the patient saves or brings
-# in. Read the HIPAA NOTES section of README.md before changing that.
-# ---------------------------------------------------------------------------
 
 def _field(f, depth=0):
     """Render one field. Clinical inputs default to autocomplete=off so the
@@ -2811,163 +2923,6 @@ def _section(s, depth=0):
       {fields}
     </div>
   </section>"""
-
-
-def build_forms():
-    from forms_content import FORMS
-    d = 1
-
-    # ---- hub -------------------------------------------------------------
-    def _steps(f):
-        return len(f["sections"]) + 1          # +1 for the acknowledgment step
-
-    cards = "".join(f"""<article class="form-card reveal" style="--d:{i * 110}ms">
-      <span class="form-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">{f['card']['icon']}</svg></span>
-      <h2><a href="{f['slug']}.html">{f['name']}</a></h2>
-      <p class="form-card-who">{f['card']['for_who']}</p>
-      <ul class="form-card-list">{"".join(f'<li>{c}</li>' for c in f['card']['covers'])}</ul>
-      <p class="form-card-meta"><span>{_steps(f)} sections</span><span>Save or resume anytime</span></p>
-      <span class="form-card-go"><span class="btn btn-gold" aria-hidden="true">Start the form</span></span>
-    </article>""" for i, f in enumerate(FORMS))
-
-    hub_crumbs = crumbs([("", "Patient Forms")], depth=d)
-    hub_body = f"""{nav(d)}
-<main id="main">
-{page_hero("Before Your Visit", "Patient Forms", "Complete your paperwork at home, in your own time. Both forms fill out right in your browser — your answers never leave your device until you choose to share them with us.", hub_crumbs, cta=False, depth=d)}
-<section class="section form-hub">
-  <div class="form-card-grid">{cards}</div>
-</section>
-
-<section class="section section-tint form-how">
-  <div class="section-head reveal">
-    <p class="eyebrow">How it works</p>
-    <h2>Three steps, <em>no account needed</em></h2>
-  </div>
-  <ol class="form-steps-strip">
-    <li class="reveal"><span class="fs-num" aria-hidden="true">1</span>
-      <strong>Fill it out</strong>
-      <span>Work through it a section at a time. Skip around, stop, come back — nothing is locked.</span></li>
-    <li class="reveal" style="--d:100ms"><span class="fs-num" aria-hidden="true">2</span>
-      <strong>Print or save it</strong>
-      <span>Finishing builds a clean summary. Print it, save it as a PDF, or download it as a text file.</span></li>
-    <li class="reveal" style="--d:200ms"><span class="fs-num" aria-hidden="true">3</span>
-      <strong>Bring it with you</strong>
-      <span>Hand it to our front desk when you arrive. That's it — you skip the clipboard entirely.</span></li>
-  </ol>
-</section>
-
-<section class="section form-privacy-section">
-  <div class="privacy-panel reveal">
-    <div class="privacy-panel-head">
-      <span class="privacy-shield" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4.5 6v5.5c0 4.4 3.1 8.4 7.5 9.5 4.4-1.1 7.5-5.1 7.5-9.5V6L12 3Z"/><path d="m8.8 12.2 2.2 2.2 4.2-4.4"/></svg></span>
-      <div>
-        <p class="eyebrow">Your privacy</p>
-        <h2>How we protect what you write here</h2>
-      </div>
-    </div>
-    <div class="privacy-grid">
-      <div><strong>Nothing is transmitted</strong><p>These forms don't send your answers over the internet. Everything you type stays in your browser.</p></div>
-      <div><strong>No tracking on form pages</strong><p>We don't load analytics, advertising, or session-recording scripts on any page that asks about your health.</p></div>
-      <div><strong>You choose how it reaches us</strong><p>When you finish, the form builds a summary you print, save as a PDF, or bring to your appointment.</p></div>
-      <div><strong>Saving is opt-in</strong><p>Your progress is only kept on your device if you switch it on — and a single button erases it.</p></div>
-    </div>
-    <p class="privacy-foot">Questions about your privacy? Read our <a href="../privacy-policy.html">privacy policy</a>, or call us at <a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a>.</p>
-  </div>
-</section>
-{cta_band(d, heading="Prefer to fill these out <em>with us?</em>", sub="Arrive fifteen minutes early and our front desk will walk you through everything on a practice tablet. Either way works.")}
-</main>
-{footer(d, analytics=False)}"""
-    hub = head("Patient Forms | RegenOrtho Palm Beach",
-               "Complete RegenOrtho Palm Beach patient forms at home — the new patient intake and peptide & GLP-1 questionnaire, filled out privately in your browser.",
-               depth=d, canonical="forms/index.html", extra_css="assets/css/forms.css",
-               extra_schema=breadcrumb_schema([("", "Home"), ("forms/index.html", "Patient Forms")])
-               ) + '<body class="page-forms">\n' + hub_body
-    write("forms/index.html", hub)
-
-    # ---- the forms themselves -------------------------------------------
-    for f in FORMS:
-        secs = "\n  ".join(_section(s, d) for s in f["sections"])
-        steps = "".join(
-            f'<li><button type="button" class="f-step" data-goto="{i}">'
-            f'<span aria-hidden="true">{s["n"]}</span>'
-            f'<span class="f-step-name">{s["title"]}</span></button></li>'
-            for i, s in enumerate(f["sections"])
-        )
-        n_secs = len(f["sections"])
-        steps += (f'<li><button type="button" class="f-step" data-goto="{n_secs}">'
-                  f'<span aria-hidden="true">{n_secs + 1:02d}</span>'
-                  f'<span class="f-step-name">Acknowledgment</span></button></li>')
-        c = crumbs([("forms/index.html", "Patient Forms"), ("", f["plain_name"])], depth=d)
-        body = f"""{nav(d)}
-<main id="main">
-{page_hero("Patient Forms", f['name'], f['lede'], c, cta=False, depth=d)}
-<section class="section form-section">
-  <div class="form-shell">
-    <nav class="f-steps" aria-label="Form sections">
-      <ol>{steps}</ol>
-    </nav>
-    <div class="form-main">
-      <div class="f-privacy">
-        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" d="M12 3 4.5 6v5.5c0 4.4 3.1 8.4 7.5 9.5 4.4-1.1 7.5-5.1 7.5-9.5V6L12 3Z"/><path fill="none" stroke="currentColor" stroke-width="1.7" d="m8.8 12.2 2.2 2.2 4.2-4.4"/></svg>
-        <p><strong>This form stays on your device.</strong> Your answers are not sent anywhere when you press Finish — the form builds a summary you print, save as a PDF, or bring with you. We load no tracking scripts on this page.</p>
-      </div>
-
-      <form id="patient-form" class="patient-form" data-form="{f['slug']}" novalidate autocomplete="off">
-        <p class="f-required-note">Fields marked <span class="req" aria-hidden="true">*</span><span class="sr-only">with an asterisk</span> are required.</p>
-        <div class="f-errors" role="alert" hidden></div>
-        {secs}
-        <section class="f-sec" data-step aria-labelledby="sec-ack" hidden>
-          <p class="f-sec-num" aria-hidden="true">{n_secs + 1:02d}</p>
-          <h2 id="sec-ack" tabindex="-1">Patient Acknowledgment</h2>
-          <div class="f-fields">
-            <p class="f-ack-text">{f['ack']}</p>
-            <fieldset class="f-checks f-ack">
-              <legend class="sr-only">Acknowledgment</legend>
-              <span class="f-check">
-                <input type="checkbox" id="acknowledgment" name="acknowledgment" value="Acknowledged" required aria-required="true">
-                <label for="acknowledgment">I acknowledge and agree to the above statement <span class="req" aria-hidden="true">*</span></label>
-              </span>
-            </fieldset>
-            <p class="f-save-opt">
-              <span class="f-check">
-                <input type="checkbox" id="save-local">
-                <label for="save-local">Save my progress in this browser</label>
-              </span>
-              <span class="f-hint">Only turn this on if this device is yours — your answers will stay in this browser until you erase them.</span>
-            </p>
-          </div>
-        </section>
-
-        <div class="f-nav">
-          <button type="button" class="btn btn-ghost" data-prev hidden>Back</button>
-          <p class="f-progress" aria-live="polite">Section <span data-cur>1</span> of {n_secs + 1}</p>
-          <button type="button" class="btn btn-gold" data-next>Continue</button>
-          <button type="submit" class="btn btn-gold" data-finish hidden>Finish &amp; review</button>
-        </div>
-      </form>
-
-      <div class="f-done" hidden>
-        <h2 tabindex="-1">Your {f['plain_name']} is ready</h2>
-        <p>Nothing has been sent. Print this summary or save it as a PDF, then bring it to your appointment or hand it to our front desk — whichever is easier.</p>
-        <div class="f-done-actions">
-          <button type="button" class="btn btn-gold" data-print>Print / save as PDF</button>
-          <button type="button" class="btn btn-ghost" data-download>Download as a text file</button>
-          <button type="button" class="btn btn-ghost" data-edit>Go back and edit</button>
-        </div>
-        <div class="f-summary" id="form-summary"></div>
-        <p class="f-erase-row"><button type="button" class="f-erase" data-erase>Erase my answers from this device</button></p>
-      </div>
-    </div>
-  </div>
-</section>
-</main>
-{footer(d, extra_js="assets/js/forms.js", analytics=False)}"""
-        page = head(f["title"], f["desc"], depth=d, canonical=f"forms/{f['slug']}.html",
-                    extra_css="assets/css/forms.css",
-                    extra_schema=breadcrumb_schema([("", "Home"), ("forms/index.html", "Patient Forms"),
-                                                    (f"forms/{f['slug']}.html", f["plain_name"])])
-                    ) + '<body class="page-form">\n' + body
-        write(f"forms/{f['slug']}.html", page)
 
 
 _BLOG_SEO_TITLES = {'knee-shoulder-hip-pain-without-surgery': 'Joint Pain Without Surgery | RegenOrtho Palm Beach', 'prp-therapy-knee-osteoarthritis': 'PRP for Knee Osteoarthritis | RegenOrtho Palm Beach', 'regenerative-medicine-vs-joint-replacement': 'Regeneration vs Replacement | RegenOrtho Palm Beach', 'five-pillar-concierge-orthopedic-recovery': 'Concierge Orthopedic Recovery | RegenOrtho Palm Beach', 'orthopedic-sports-medicine-pain-free-living': 'Orthopedics & Sports Medicine | RegenOrtho Palm Beach', 'regenerative-medicine-future-of-healing': 'Regenerative Medicine Explained | RegenOrtho Palm Beach', 'healing-without-surgery': 'Healing Without Surgery | RegenOrtho Palm Beach Blog', 'minimally-invasive-foot-ankle-surgery': 'Minimally Invasive Foot Surgery | RegenOrtho Palm Beach', 'modern-vein-care-varicose-spider-veins': 'Modern Varicose Vein Care | RegenOrtho Palm Beach Blog', 'iv-therapy-recovery-wellness': 'IV Therapy for Recovery | RegenOrtho Palm Beach Blog'}
@@ -3081,10 +3036,8 @@ def build_legal_and_404():
     <p>The content on this website is provided for general information about our practice and services. It is not medical advice and does not create a doctor–patient relationship. For medical questions, please contact our office or consult a qualified healthcare provider.</p>
     <h2>Appointment requests &amp; forms</h2>
     <p>Information you submit through appointment request forms or the site assistant is used only to contact you about scheduling and your care, and is transmitted to our front desk email. Please do not include detailed medical history, insurance numbers, or other sensitive records in web forms — we will collect anything needed through secure channels during intake.</p>
-    <h2>Patient forms</h2>
-    <p>The new patient intake form and the peptide &amp; GLP-1 questionnaire on this site work differently from the appointment request forms above: <strong>they do not transmit anything.</strong> Everything you type stays in your own browser. When you finish, the form assembles your answers into a summary that you print, save as a PDF, or download — you decide how and when it reaches us. Your progress is stored on your device only if you switch that option on, and the "Erase my answers" button removes it.</p>
     <h2>Analytics</h2>
-    <p>This site may use privacy-friendly, cookieless analytics to understand aggregate site usage. We do not load analytics, advertising, or session-recording scripts on the patient form pages. We do not sell visitor information.</p>
+    <p>This site may use privacy-friendly, cookieless analytics to understand aggregate site usage. We do not sell visitor information.</p>
     <h2>Emergencies</h2>
     <p>If you are experiencing a medical emergency, call 911 or go to the nearest emergency room. This website and its assistant are not monitored in real time.</p>
     <h2>Questions</h2>
@@ -3129,8 +3082,6 @@ def build_meta():
     from blog_content import BLOG_POSTS
     pages = ["index.html", "about.html", "contact.html", "faq.html", "iv-therapy.html",
              "patient-resources.html", "privacy-policy.html", "terms.html",
-             "forms/index.html", "forms/new-patient.html",
-             "forms/peptide-glp-questionnaire.html",
              "services/index.html", "infusions/index.html", "blog/index.html",
              "providers/dr-marc-matarazzo.html", "providers/dr-orlando-cedeno.html",
              "providers/emily-bahnick.html"]
@@ -3155,8 +3106,6 @@ def build_meta():
             return "0.8", "monthly"
         if u.startswith("blog/"):
             return "0.6", "yearly"
-        if u.startswith("forms/"):
-            return "0.5", "yearly"
         return "0.3", "yearly"
 
     # The lead image per page, declared to Google Images. Only pages whose hero
@@ -3169,6 +3118,12 @@ def build_meta():
         if c.get("img"):
             page_images[f"conditions/{c['slug']}.html"] = (
                 f"assets/media/{c['img']}", c.get("img_alt") or c["name"])
+    for loc in LOCATIONS:
+        page_images[f"locations/{loc['slug']}.html"] = (
+            f"assets/media/{loc['img']}", loc["img_alt"])
+    for inf in INFUSIONS:
+        page_images[f"infusions/{inf['slug']}.html"] = (
+            f"assets/media/{inf['img']}", inf["img_alt"])
 
     rows = []
     for u in pages:
@@ -3348,7 +3303,6 @@ the plan, and most are billed through insurance where covered.
 - Hours: {HOURS}
 - Instagram: {INSTAGRAM}
 - Specialists: Dr. Marc Matarazzo, MD (board-certified sports medicine & orthopedic surgeon, 23+ years, MAKO-certified); Dr. Orlando Cedeno, DPM (board-certified podiatric surgeon & vein specialist); Emily Bahnick, MSN, RN (IV infusion nurse & care coordinator).
-- Patient forms: {BASE}/forms/ — new patient intake and peptide/GLP-1 questionnaire, completed privately in the browser (nothing transmitted).
 - New patients accepted; no referral required; most major insurance accepted; concierge/direct-pay bundles available.
 
 ## Services
@@ -3410,7 +3364,6 @@ def main():
     build_faq()
     build_contact()
     build_resources()
-    build_forms()
     build_blog()
     build_legal_and_404()
     build_meta()

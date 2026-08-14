@@ -31,14 +31,42 @@ Static site, 56 pages, generated — do not edit HTML files directly.
   scroll-behavior:auto because the site's global smooth scrolling turns
   scrollTo() into an animation that lands elsewhere. Panel z-index is 95 — it
   must outrank the fixed site header (90) now that the sheet starts at top:0.
+- IV LOUNGE HERO is a VIDEO BAND with the copy BELOW it, not an overlay.
+  `page_hero(video="bag")` plays the practice's branded bag film. Two overlay
+  treatments were built and rejected: a navy scrim (the film is a white studio shot,
+  luma ~222, so carrying white copy took .9 alpha — it erased the footage and washed
+  the section blue) and then navy copy on the bare film (the bag CARRIES the RegenOrtho
+  wordmark, so it collided with the H1, and with the header mark that is the brand three
+  times in one viewport). No scrim or crop fixes that: the film is 2.12:1 in a wider box,
+  so cover crops vertically only and the wordmark cannot be framed out.
+  So: `.page-hero.has-video .hero-video-slot` is `position: relative` with an explicit
+  `height` — NOT `min-height`, which does not cap it because `.page-hero` grows to fit
+  its content. `padding-top: 0` lets the film run full bleed under the transparent
+  header; `.page-hero-inner` carries its own top padding. `.hero-video-scrim` is
+  `display: none` — nothing sits over the film now. The mobile band is deliberately
+  taller (82vw) to keep the bag's wordmark clear of the header's.
+  The copy block below is LIGHT: navy H1/lede, bronze eyebrow, navy crumbs, inverted
+  `.btn-ghost-light`. It must stay inside `<section class="page-hero">` — `speakable=True`
+  targets `.page-hero h1` and `.page-hero .lede`.
+  Because the header sits over a white film, `body.page-iv:not(.nav-locked)
+  .site-header:not(.is-stuck)` swaps in the navy wordmark and navy nav links; both guards
+  matter, since `.is-stuck` and the open mobile menu paint their own navy.
+- `assets/js/offer.js` + `offer_modal()` in build.py — the cash-pay offer modal
+  ("25% off your first service"). Shows on the IV Lounge (which carries the whole
+  12-item drip menu), peptide therapy and medical weight loss — the set is
+  `OFFER_SERVICES` plus the IV page. NOT on the specialty infusion pages: IVIG,
+  Krystexxa, Ocrevus and Ultomiris are prescription therapies billed through
+  insurance, and a discount prompt does not belong on them. It intercepts clicks
+  on `contact.html#book` links, but dismissing OR submitting both continue to
+  that destination — the offer must never sit between a visitor and the
+  appointment request. Once per visitor per 30 days via localStorage. The
+  wording matches what the practice already publishes; do not add terms
+  (expiry, "new patients only", exclusions) they have not stated. Email only —
+  never add a symptom, condition or medication field.
 - `assets/js/assist.js` — concierge assistant. SET ANSWERS only (FAQ array) — no AI, no
   external API, no medical advice; route unknowns to 833-783-6561. Leads deliver via
   FormSubmit (formsubmit.co/ajax/info@regenorthopalmbeach.com) with a localStorage retry queue.
   Never put secret keys in it.
-- `assets/js/forms.js` + `assets/css/forms.css` + `forms_content.py` — the two patient
-  forms (`/forms/new-patient.html`, `/forms/peptide-glp-questionnaire.html`). Questions are
-  declarative in `forms_content.py`; the renderer (`_field`/`_section`/`build_forms` in
-  build.py) generates markup, validation, the step rail, the summary and the print sheet.
 
 ## Business facts (canonical)
 - RegenOrtho Palm Beach · "The Regeneration of Orthopedics"
@@ -191,6 +219,12 @@ CSS coastline scene stays underneath as the no-video fallback. asset_v() returns
 - Default card is `assets/media/og-team.jpg` — the care-team photo cropped to 1200×630
   from `assets/team/team-group.jpg`. Pages that pass their own `og_image=` keep theirs.
   Re-crop with Pillow from the team photo if the roster photo is replaced.
+- The IV Lounge page uses its own card, `assets/media/og-iv-lounge.jpg` — a 1200x630
+  crop of `clinic-lounge.jpg`, which is a REAL photo of the practice's recovery lounge.
+  It replaced `iv-hero.jpg`, which carried a stock agency's repeating watermark and was
+  live as that page's og:image, twitter:image and schema `primaryImageOfPage`. That file
+  is deleted; do not restore it from history. Cropped with a one-off Pillow script in the
+  scratchpad — Pillow must never be imported by build.py.
 - `og:image:width/height` come from `img_dims()`, a stdlib JPEG/PNG header reader — they
   used to be hardcoded 1200×630 while service/condition pages shipped 1400×933 photos,
   which makes scrapers lay the card out wrong. Never hardcode them again.
@@ -205,26 +239,35 @@ CSS coastline scene stays underneath as the no-video fallback. asset_v() returns
 
 ## Analytics
 - Vercel Web Analytics (cookieless, no consent banner) is emitted by `footer()` on every
-  page EXCEPT `/forms/*` — those three pages pass `analytics=False` per the HIPAA rule
-  below. Never widen the exclusion away or add any other tracker to form pages.
+  page. `footer(analytics=False)` still exists and MUST be used on any future page that
+  asks about health — see "No PHI on this site" below.
 - The tag 404s harmlessly until Web Analytics is switched on in the Vercel dashboard
   (regenortho project → Analytics → Enable) — that toggle is the one manual step.
 - Homepage LCP: `head(preload_hero=True)` (homepage only) preloads the hero poster with
   `fetchpriority=high`; the video itself stays `preload="none"` with JS-attached sources.
 
-## Patient forms — HIPAA (do not regress)
-These two pages collect PHI, so they are built to keep it in the browser. `forms.js` has
-NO fetch/XHR/beacon/third-party SDK — Finish renders an on-page summary the patient prints,
-saves as PDF, or downloads. No analytics or tracking script may be added to `/forms/*`.
-localStorage persistence is opt-in (unchecked by default) with an Erase button — never
-flip that default; these are often shared devices. `vercel.json` sets `no-store` +
-`noarchive` for `/forms/*`. Do NOT point these at FormSubmit, Formspree, Zapier, a Google
-Form, or a plain mailbox: electronic delivery needs a HIPAA-eligible destination under a
-signed BAA plus encryption, access controls, audit logging and a retention schedule — and
-the on-page notice and privacy policy both promise nothing is transmitted, so they must be
-rewritten in the same change. Full checklist in README.md → "Patient forms & HIPAA".
-The site's other forms (contact, assistant) may keep using FormSubmit — they collect
-contact details and a reason for calling, not clinical history.
+## No PHI on this site (do not regress)
+
+The patient forms — `/forms/new-patient.html`, `/forms/peptide-glp-questionnaire.html`
+and the `/forms/` hub — were REMOVED at the client's request. The site now collects a
+name, phone, email and a reason for calling, and nothing else. That is the whole reason
+the contact form and the assistant may keep using FormSubmit: they take contact details,
+not clinical history.
+
+If a form that asks about health, medication, symptoms or history is ever added back,
+it changes the site's risk profile and the following all apply again:
+
+- The destination must be HIPAA-eligible under a signed Business Associate Agreement.
+  NOT FormSubmit, Formspree, Zapier, a Google Form, or a plain mailbox.
+- No analytics, ad pixel or session-recording script on that page —
+  `footer(analytics=False)`. A page view of a condition-specific URL tied to an IP
+  address is the exact pattern regulators have pursued.
+- `vercel.json` needs `Cache-Control: no-store` + `X-Robots-Tag: noarchive` for it.
+- The privacy policy has to be rewritten in the same change.
+
+The prior implementation kept PHI in the browser and transmitted nothing; if that
+pattern is wanted again, recover `forms_content.py`, `assets/js/forms.js`,
+`assets/css/forms.css` and `build_forms()` from git history rather than rewriting them.
 
 ## Facts discipline
 All claims/credentials/prices/reviews are from the practice's own published content. Never

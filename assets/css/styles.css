@@ -150,6 +150,22 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
 .brand img { width: 184px; height: auto; }
 .brand-light { display: none; }
 
+/* The header is transparent until .is-stuck, so on a page whose hero is LIGHT
+   (the IV Lounge, whose bag film is a white studio shot) the white wordmark and
+   #EAF1F8 links vanish into it. Swap to the navy mark and navy links while the
+   header is still over the hero; .is-stuck paints its own navy background and
+   must keep the light treatment, hence :not(.is-stuck) on every rule.
+   body.nav-locked also paints navy, so the open mobile menu is excluded too. */
+body.page-iv:not(.nav-locked) .site-header:not(.is-stuck) .brand-dark { display: none; }
+body.page-iv:not(.nav-locked) .site-header:not(.is-stuck) .brand-light { display: block; }
+body.page-iv:not(.nav-locked) .site-header:not(.is-stuck) .nav-link,
+body.page-iv:not(.nav-locked) .site-header:not(.is-stuck) .drop-btn { color: var(--navy-900); }
+body.page-iv:not(.nav-locked) .site-header:not(.is-stuck) .nav-link:hover,
+body.page-iv:not(.nav-locked) .site-header:not(.is-stuck) .drop-btn:hover,
+body.page-iv:not(.nav-locked) .site-header:not(.is-stuck) .drop-btn[aria-expanded="true"] { color: var(--bronze-text); }
+body.page-iv:not(.nav-locked) .site-header:not(.is-stuck) .nav-toggle {
+  color: var(--navy-900); border-color: rgba(9, 45, 92, .35); }
+
 .main-nav { justify-self: center; }
 .header-cta { justify-self: end; white-space: nowrap; }
 .nav-menu { display: flex; align-items: center; gap: .15rem; list-style: none; }
@@ -803,7 +819,54 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
 
 .page-hero { position: relative; background: linear-gradient(178deg, var(--navy-900) 0%, var(--navy-950) 100%); color: #E7EFF7;
   padding: calc(var(--header-h) + clamp(1.6rem, 4vh, 2.6rem)) 1.2rem clamp(2.8rem, 7vh, 4.6rem); overflow: hidden; }
-.page-hero-inner { position: relative; max-width: var(--wrap); margin: 0 auto; }
+.page-hero-inner { position: relative; z-index: 2; max-width: var(--wrap); margin: 0 auto; }
+/* Video-backed interior hero (IV Lounge) — a LIGHT hero, deliberately.
+   The bag film is a white studio shot: frame one is near-blank white and the
+   clip averages luma ~222. Darkening it enough to carry white copy took a navy
+   scrim at .9 alpha, which erased the footage and washed the whole section
+   blue. Flipping the copy to navy is the treatment this film actually wants —
+   navy reads about 10:1 on it where white reads about 1.2:1.
+   Do NOT reintroduce a dark scrim here. If legibility needs help, weight the
+   white veil below; and judge it against the FOOTAGE, because axe measures the
+   CSS background underneath the video and passes either way. */
+.page-hero.has-video { background: #fff; color: var(--navy-900); padding-top: 0; }
+/* BAND, not an overlay. The bag carries the RegenOrtho wordmark, so any copy
+   laid over the film collides with it — and with the header's wordmark that is
+   the brand three times in one viewport. The film is 2.12:1 in a wider box, so
+   cover crops vertically only and the wordmark cannot be framed out of the copy
+   column. Overlaying was tried twice and rejected; this stops overlaying.
+   `height`, NOT `min-height`: .page-hero grows to fit its content, so a
+   min-height leaves the video zoomed instead of capping the band. */
+.page-hero.has-video .hero-video-slot {
+  position: relative; inset: auto; height: min(46vw, 58vh); }
+/* Nothing sits over the film now except the transparent header, and frame one
+   is near-white up top where the navy nav reads fine. The veil has no job. */
+.page-hero.has-video .hero-video-scrim { display: none; }
+/* The section's top padding moved to the copy block so the film can run full
+   bleed up behind the header. */
+.page-hero.has-video .page-hero-inner { padding-top: clamp(2rem, 5vh, 3.2rem); }
+/* The aurora blobs are #12457F / #0E3A6E — the residual blue once the scrim is
+   gone, so this hero does without them. */
+.page-hero.has-video .aurora { display: none; }
+.page-hero.has-video h1 { color: var(--navy-900); }
+.page-hero.has-video .lede { color: var(--navy-900); }
+.page-hero.has-video .eyebrow { color: var(--bronze-text); }
+.page-hero.has-video .crumbs a { color: rgba(9, 45, 92, .72); }
+.page-hero.has-video .crumbs a:hover { color: var(--bronze-text); }
+.page-hero.has-video .crumbs [aria-current] { color: var(--bronze-text); }
+.page-hero.has-video .crumbs li:not(:last-child)::after { color: rgba(9, 45, 92, .45); }
+/* .btn-gold is unchanged and still reads; the ghost button is built for dark
+   backgrounds and has to invert. */
+.page-hero.has-video .btn-ghost-light {
+  border-color: rgba(9, 45, 92, .5); color: var(--navy-900); background: rgba(255, 255, 255, .5); }
+.page-hero.has-video .btn-ghost-light:hover {
+  border-color: var(--navy-900); color: var(--navy-900); background: rgba(255, 255, 255, .8); }
+@media (max-width: 900px) {
+  /* Taller than the desktop ratio for two reasons: a vw-driven band turns into
+     a letterbox sliver on a phone, and the bag's own wordmark needs clearance
+     from the header's — at 64vw the two sat within about 80px of each other. */
+  .page-hero.has-video .hero-video-slot { height: min(82vw, 48vh); }
+}
 .page-hero h1 { color: #fff; margin: .9rem 0 1rem; max-width: 22ch; }
 .page-hero .lede { max-width: 62ch; }
 .crumbs { margin-bottom: 1.4rem; font-size: .8rem; }
@@ -813,12 +876,69 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
 .crumbs a:hover { color: var(--gold); }
 .crumbs [aria-current] { color: var(--gold); font-weight: 700; }
 
+/* --------------------------- cash-pay offer modal ------------------------ */
+/* z-index 96 clears the assistant panel (95), which clears the header (90). */
+.offer-modal { position: fixed; inset: 0; z-index: 96; display: grid; place-items: center;
+  padding: 1.2rem; background: rgba(4, 16, 31, .62); backdrop-filter: blur(3px);
+  animation: offerIn .22s var(--ease) both; }
+.offer-modal[hidden] { display: none; }
+@keyframes offerIn { from { opacity: 0; } }
+body.offer-open { overflow: hidden; }
+.offer-panel { position: relative; width: min(30rem, 100%); max-height: 92vh; overflow-y: auto;
+  background: var(--porcelain, #F9F7F2); color: var(--navy-900, #092D5C);
+  border-radius: var(--r-lg); padding: 2.4rem 1.9rem 1.7rem; text-align: center;
+  box-shadow: 0 30px 70px rgba(4, 16, 31, .42); animation: offerPop .26s var(--ease) both; }
+@keyframes offerPop { from { opacity: 0; transform: translateY(14px) scale(.97); } }
+.offer-logo { width: clamp(9rem, 42%, 12rem); height: auto; margin: 0 auto .9rem; display: block; }
+.offer-panel h2 { font-size: clamp(1.5rem, 4.4vw, 1.95rem); margin: 0 0 .5rem; }
+.offer-sub { font-size: .93rem; line-height: 1.55; margin: 0 0 1.3rem; }
+.offer-panel form { display: flex; flex-direction: column; gap: .7rem; }
+.offer-panel input { width: 100%; padding: .85rem 1rem; font: inherit; font-size: 1rem;
+  color: inherit; background: #fff; border: 1px solid rgba(9, 45, 92, .28); border-radius: 10px; }
+.offer-panel input:focus-visible { outline: 3px solid var(--gold); outline-offset: 1px; }
+.offer-panel .btn { width: 100%; justify-content: center; }
+/* Bronze, not a light grey: this line carries the send failure message and has
+   to stay AA on porcelain. */
+.offer-status { min-height: 1.2em; margin: .8rem 0 0; font-size: .85rem; color: var(--bronze, #74590A); }
+.offer-skip { margin-top: .9rem; padding: .3rem; font: inherit; font-size: .82rem;
+  color: rgba(9, 45, 92, .72); background: none; border: 0; text-decoration: underline;
+  cursor: pointer; }
+.offer-skip:hover { color: var(--navy-900, #092D5C); }
+.offer-x { position: absolute; top: .6rem; right: .6rem; display: grid; place-items: center;
+  width: 2.4rem; height: 2.4rem; color: var(--navy-900, #092D5C); background: none;
+  border: 0; border-radius: 50%; cursor: pointer; }
+.offer-x:hover { background: rgba(9, 45, 92, .09); }
+@media (prefers-reduced-motion: reduce) {
+  .offer-modal, .offer-panel { animation: none; }
+}
+
 /* ------------------------------ service page ----------------------------- */
 
 .svc-intro-grid, .provider-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2.6rem; align-items: center; max-width: var(--wrap); margin: 0 auto; }
 .svc-photo { position: relative; border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-lg); }
 .svc-photo::after { content: ""; position: absolute; inset: 0; border: 1px solid rgba(9, 45, 92, .18); border-radius: var(--r-lg); translate: 10px 10px; pointer-events: none; }
 .svc-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+/* A .svc-photo used OUTSIDE .svc-intro-grid — in a text column or on its own.
+   There the figure is auto-height, so `height: 100%` on the img resolves to
+   nothing and a portrait source runs the full length of the page. Pinning the
+   ratio here keeps every band the same shape whatever the source is; the
+   offset ::after border is dropped because a full-width band has no column
+   beside it for the offset to read against. */
+.photo-band { aspect-ratio: 16 / 9; margin: 1.6rem 0 2rem; }
+.photo-band::after { display: none; }
+/* A strip sits directly under the page hero, so it is deliberately letterboxed:
+   at 16/9 it filled the viewport and pushed the page's actual content — the FAQ
+   search, the contact form — below the fold. */
+.photo-strip { padding-top: 1.6rem; padding-bottom: 0; }
+.photo-strip .photo-band { aspect-ratio: 3 / 1; max-width: var(--wrap); margin: 0 auto; }
+/* A 3:1 crop of a 3:2 source takes a middle slice, which lands on torsos and
+   cuts heads off. Biasing the window up keeps faces in frame. */
+.photo-strip .photo-band img { object-position: center 38%; }
+@media (max-width: 640px) {
+  .photo-band { aspect-ratio: 4 / 3; }
+  .photo-strip .photo-band { aspect-ratio: 16 / 9; }
+}
 .svc-why h2 { margin: .8rem 0 1.1rem; }
 .svc-why .btn { margin-top: 1.4rem; }
 

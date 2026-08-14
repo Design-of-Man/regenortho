@@ -88,7 +88,7 @@
     },
     {
       "source": "/peptide-glp-questionnaire",
-      "destination": "/services/medical-weight-loss.html",
+      "destination": "/contact.html#book",
       "permanent": true
     },
     {
@@ -188,7 +188,7 @@
     },
     {
       "source": "/new-patient-intake",
-      "destination": "/patient-resources.html",
+      "destination": "/contact.html#book",
       "permanent": true
     },
     {
@@ -285,6 +285,16 @@
       "source": "/wp-json/:path*",
       "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/forms",
+      "destination": "/contact.html#book",
+      "permanent": true
+    },
+    {
+      "source": "/forms/:path*",
+      "destination": "/contact.html#book",
+      "permanent": true
     }
   ],
   "headers": [
@@ -298,19 +308,6 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=3600"
-        }
-      ]
-    },
-    {
-      "source": "/forms/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-store, max-age=0, must-revalidate"
-        },
-        {
-          "key": "X-Robots-Tag",
-          "value": "noarchive"
         }
       ]
     },
