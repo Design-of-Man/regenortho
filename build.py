@@ -1218,8 +1218,8 @@ SERVICES = [
         "eyebrow": "Concierge & Cash-Pay Services",
         "h1": "Private Concierge & Direct-Pay Care",
         "lede": "Private, direct-pay care offering same-day diagnostics, tailored treatment planning, private suites, and transparent bundled pricing for streamlined, personalized recovery.",
-        "img": "clinic-lounge.jpg",
-        "img_alt": "Private concierge lounge inside RegenOrtho Palm Beach",
+        "img": "svc-concierge.jpg",
+        "img_alt": "A clinician assessing a patient's knee one-to-one at RegenOrtho Palm Beach",
         "why": [
             "Direct access to board-certified specialists with one-on-one consultations",
             "Same-day diagnostic workup and treatment planning for urgent needs",
@@ -1945,7 +1945,7 @@ def build_services():
   <div class="svc-grid svc-grid-3">{tiles}
     <a class="svc-card reveal" href="../iv-therapy.html">
       <span class="svc-num" aria-hidden="true">{len(SERVICES) + 1:02d}</span>
-      <span class="svc-media"><img src="../assets/media/iv-hero.jpg?v={asset_v('assets/media/iv-hero.jpg')}" alt="" width="640" height="420" loading="lazy"></span>
+      <span class="svc-media"><img src="../assets/media/og-iv-lounge.jpg?v={asset_v('assets/media/og-iv-lounge.jpg')}" alt="" width="640" height="420" loading="lazy"></span>
       <span class="svc-body"><strong>IV Recovery &amp; Wellness Lounge</strong><span>Twelve clinician-supervised drips — hydration, immunity, NAD⁺, athletic recovery…</span><em class="svc-more">Explore <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></span>
     </a>
     <a class="svc-card reveal" href="../infusions/index.html">
@@ -2557,7 +2557,7 @@ def build_iv():
     page = head("IV Therapy Palm Beach Gardens | Drip Lounge & NAD+ | RegenOrtho",
                 "IV therapy in Palm Beach Gardens: hydration, immune boost, NAD+ 500mg, athletic recovery & more — clinician-supervised drips from $189 in a private lounge.",
                 depth=d, canonical="iv-therapy.html", webpage_type="MedicalWebPage", speakable=True,
-                og_image="assets/media/iv-hero.jpg",
+                og_image="assets/media/og-iv-lounge.jpg",
                 extra_schema=schema) + '<body class="page-iv">\n' + body
     write("iv-therapy.html", page)
 

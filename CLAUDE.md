@@ -219,6 +219,12 @@ CSS coastline scene stays underneath as the no-video fallback. asset_v() returns
 - Default card is `assets/media/og-team.jpg` — the care-team photo cropped to 1200×630
   from `assets/team/team-group.jpg`. Pages that pass their own `og_image=` keep theirs.
   Re-crop with Pillow from the team photo if the roster photo is replaced.
+- The IV Lounge page uses its own card, `assets/media/og-iv-lounge.jpg` — a 1200x630
+  crop of `clinic-lounge.jpg`, which is a REAL photo of the practice's recovery lounge.
+  It replaced `iv-hero.jpg`, which carried a stock agency's repeating watermark and was
+  live as that page's og:image, twitter:image and schema `primaryImageOfPage`. That file
+  is deleted; do not restore it from history. Cropped with a one-off Pillow script in the
+  scratchpad — Pillow must never be imported by build.py.
 - `og:image:width/height` come from `img_dims()`, a stdlib JPEG/PNG header reader — they
   used to be hardcoded 1200×630 while service/condition pages shipped 1400×933 photos,
   which makes scrapers lay the card out wrong. Never hardcode them again.
