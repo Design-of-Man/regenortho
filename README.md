@@ -116,10 +116,16 @@ To deploy:
    already on every page except `/forms/*`; it 404s silently until the toggle is flipped.
 6. Submit `sitemap.xml` in Google Search Console and update the Google Business Profile
    website link.
-7. **Click the FormSubmit activation email on the first lead — STILL PENDING as of 2026-08-15.**
-   Until it is clicked, both lead paths fail. Submit one live test through the contact form
-   AND one through the assistant, then confirm both land in info@regenorthopalmbeach.com
-   (check spam). Record the activation date here when done.
+7. **Click the FormSubmit activation email — CONFIRMED NOT ACTIVATED as of 2026-08-15.**
+   A live POST to `formsubmit.co/ajax/info@regenorthopalmbeach.com` on 2026-08-15 returned:
+   `"This form needs Activation. We've sent you an email containing an 'Activate Form' link."`
+   That request triggered the activation email, so it is sitting in
+   info@regenorthopalmbeach.com now (check spam — it comes from FormSubmit).
+   Until someone clicks it, **every lead is lost**: the contact form shows its error state
+   and queues locally, the assistant does the same, and nothing reaches the practice.
+   Activation is per recipient address, so one click covers both the contact form and the
+   assistant. After clicking, submit one real test through each and confirm receipt.
+   Record the activation date here: ________
 
 To hand the whole thing to the practice, transfer this repo to their GitHub account and
 re-import it under their own Vercel account — nothing in the code needs to change.
