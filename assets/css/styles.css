@@ -596,8 +596,10 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
 .section-foot a:not(.btn) { font-weight: 700; color: var(--navy-800); }
 
 /* reveal-on-scroll */
-.reveal { opacity: 0; transform: translateY(26px); transition: opacity .8s var(--ease), transform .8s var(--ease); transition-delay: var(--d, 0ms); }
-.reveal.is-in { opacity: 1; transform: none; }
+/* Gated on .js: if main.js never runs, content must still be visible.
+   An animation that fails closed hides the whole page — do not un-gate this. */
+.js .reveal { opacity: 0; transform: translateY(26px); transition: opacity .8s var(--ease), transform .8s var(--ease); transition-delay: var(--d, 0ms); }
+.js .reveal.is-in { opacity: 1; transform: none; }
 
 /* ------------------------------ service cards ---------------------------- */
 
@@ -1174,7 +1176,7 @@ body.nav-locked .mobile-call { display: none !important; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
-  .reveal { opacity: 1; transform: none; }
+  .js .reveal { opacity: 1; transform: none; }
   .h-rise { animation: none; opacity: 1; }
   .hero-scene { animation: none; }
   .bm-node { opacity: 1; transition: none; }
@@ -1188,3 +1190,26 @@ body.nav-locked .mobile-call { display: none !important; }
 @media print {
   .topbar, .site-header, .site-footer, .mobile-call, .cta-band, .hero-marquee { display: none; }
 }
+
+/* Testimonial results-vary line. Required wherever reviews run: several of the
+   published quotes describe a specific clinical outcome. */
+.quote-disclaimer {
+  max-width: 62ch;
+  margin: 1.75rem auto 0;
+  padding: 0 1.25rem;
+  text-align: center;
+  font-size: .8125rem;
+  line-height: 1.6;
+  color: var(--bronze);
+  opacity: .85;
+}
+.section-dark .quote-disclaimer,
+.section-quotes .quote-disclaimer { color: rgba(255,255,255,.62); }
+
+/* Regulatory notice on the biologic/cellular therapy pages. Legible, not buried:
+   it is the practice's approved language and patients are meant to read it. */
+.section-disclaimer { padding-block: clamp(2rem, 5vw, 3.25rem); }
+.section-disclaimer .container { border: 1px solid rgba(9,45,92,.16); border-radius: 14px;
+  background: rgba(9,45,92,.035); padding: clamp(1.25rem, 3vw, 2rem); }
+.disclaimer-title { font-size: 1rem; letter-spacing: .02em; margin: 0 0 .6rem; color: var(--navy); }
+.disclaimer-body { margin: 0; font-size: .8125rem; line-height: 1.7; color: var(--bronze); }

@@ -37,6 +37,31 @@
       "permanent": true
     },
     {
+      "source": "/our-services/regenerative-medicine-orthobiologic-therapies/exosome-therapy",
+      "destination": "/services/exosome-therapy.html",
+      "permanent": true
+    },
+    {
+      "source": "/our-services/regenerative-medicine-orthobiologic-therapies/mesenchymal-stem-cell-therapy",
+      "destination": "/services/mesenchymal-stem-cell-therapy.html",
+      "permanent": true
+    },
+    {
+      "source": "/our-services/regenerative-medicine-orthobiologic-therapies/whartons-jelly-therapy",
+      "destination": "/services/whartons-jelly-therapy.html",
+      "permanent": true
+    },
+    {
+      "source": "/our-services/regenerative-medicine-orthobiologic-therapies/muse-infused-rpa-therapy",
+      "destination": "/services/muse-infused-rpa-therapy.html",
+      "permanent": true
+    },
+    {
+      "source": "/our-services/regenerative-medicine-orthobiologic-therapies/traditional-muse-cell-therapy",
+      "destination": "/services/traditional-muse-cell-therapy.html",
+      "permanent": true
+    },
+    {
       "source": "/our-services/regenerative-medicine-orthobiologic-therapies",
       "destination": "/services/regenerative-medicine-orthobiologics.html",
       "permanent": true

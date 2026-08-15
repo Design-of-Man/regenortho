@@ -131,6 +131,11 @@
       });
     }, { threshold: 0.12, rootMargin: "0px 0px -5% 0px" });
     revealEls.forEach(function (el) { io.observe(el); });
+    // Failsafe: anything still unrevealed after 4s gets shown regardless. A
+    // missed IntersectionObserver callback must never leave content invisible.
+    setTimeout(function () {
+      revealEls.forEach(function (el) { el.classList.add("is-in"); });
+    }, 4000);
   }
 
   /* ----------------------------------------------------------- counters */
@@ -335,4 +340,66 @@
       if (window.RGAssist && window.RGAssist.open) window.RGAssist.open();
     });
   });
+
+  /* ------------------------------------------------ appointment request
+
+     The form keeps its action/method so it still submits with JS disabled —
+     FormSubmit's own page is a poor experience but it is better than a dead
+     button. With JS, we intercept: the visitor stays on the site, sees a real
+     confirmation, and a failed send is queued by RGLead instead of vanishing.
+     Never point this at the patient intake forms; see assets/js/lead.js.      */
+  var leadForm = document.querySelector(".contact-form");
+  if (leadForm && window.RGLead) {
+    var status = leadForm.querySelector("[data-form-status]");
+    var submitBtn = leadForm.querySelector('button[type="submit"]');
+    var btnLabel = submitBtn ? submitBtn.textContent : "";
+
+    function setStatus(kind, html) {
+      if (!status) return;
+      status.className = "form-status is-" + kind;
+      status.innerHTML = html;
+      status.hidden = false;
+    }
+
+    leadForm.addEventListener("submit", function (e) {
+      // Let the browser surface its own required-field messages first.
+      if (!leadForm.checkValidity()) return;
+      e.preventDefault();
+
+      // A filled honeypot means a bot. Show the success state so it learns
+      // nothing, and send nothing.
+      var honey = leadForm.querySelector('[name="_honey"]');
+      if (honey && honey.value) {
+        leadForm.hidden = true;
+        setStatus("ok", "<h3>Request received</h3><p>Our team will reach out to confirm.</p>");
+        return;
+      }
+
+      var data = new FormData(leadForm);
+      var payload = {};
+      data.forEach(function (v, k) { payload[k] = v; });
+      payload.submitted_at = new Date().toLocaleString();
+      payload.source = "regenorthopb.com contact form";
+
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Sending…"; }
+      setStatus("pending", "Sending your request…");
+
+      window.RGLead.send(payload).then(function () {
+        leadForm.hidden = true;
+        setStatus("ok",
+          "<h3>Request received — thank you.</h3>" +
+          "<p>Our team will reach out to confirm your appointment, usually within one business day. " +
+          "Need us sooner? Call <a href=\"tel:+18337836561\">833-783-6561</a>.</p>");
+        if (status && status.scrollIntoView) status.scrollIntoView({ block: "center" });
+      }).catch(function () {
+        // RGLead.send has already queued it; it retries on the next page load.
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = btnLabel; }
+        setStatus("err",
+          "<h3>We couldn’t send that just now.</h3>" +
+          "<p>Your request is saved on this device and will retry automatically. " +
+          "To lock in a time right away, call <a href=\"tel:+18337836561\">833-783-6561</a> " +
+          "or email <a href=\"mailto:info@regenorthopalmbeach.com\">info@regenorthopalmbeach.com</a>.</p>");
+      });
+    });
+  }
 })();

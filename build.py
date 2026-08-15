@@ -29,7 +29,7 @@ BASE = "https://www.regenorthopb.com"
 # Canonicals, schema @ids and sitemap all stay on BASE — only the share card moves.
 SHARE_BASE = "https://regenortho-mu.vercel.app"
 SITE_LAUNCHED = "2026-07-30"
-SITE_UPDATED = "2026-08-03"
+SITE_UPDATED = "2026-08-15"
 # IndexNow key (public by design — it must be served at /{key}.txt to prove
 # ownership). Ping Bing/Yandex on content changes; see README.
 INDEXNOW_KEY = "a7f3c1e94b2d48f6ae05d7c318b6f240"
@@ -37,6 +37,7 @@ INDEXNOW_KEY = "a7f3c1e94b2d48f6ae05d7c318b6f240"
 NAME = "RegenOrtho Palm Beach"
 TAGLINE = "The Regeneration of Orthopedics"
 PHONE_DISPLAY = "833-783-6561"
+FAX_DISPLAY = "561-807-5161"
 PHONE_VANITY = "833-STEM561"
 PHONE_TEL = "+18337836561"
 EMAIL = "info@regenorthopalmbeach.com"
@@ -163,13 +164,31 @@ def img_dims(path, fallback=(1200, 630)):
 # in the org schema, so nothing is lost.
 def head(title, desc, depth=0, canonical="", og_image="assets/media/og-team.jpg",
          page_type="website", extra_schema="", preload_hero=False, extra_css="",
-         webpage_type="WebPage", speakable=False):
+         webpage_type="WebPage", speakable=False, noindex=False):
     p = "../" * depth
     canonical_url = f"{BASE}/{canonical}" if canonical else f"{BASE}/"
     og_url = f"{SHARE_BASE}/{og_image}?v={asset_v(og_image)}"
     og_w, og_h = img_dims(og_image)
     og_alt = (OG_TEAM_ALT if og_image == "assets/media/og-team.jpg" else title)
     og_type = "image/png" if og_image.lower().endswith(".png") else "image/jpeg"
+    # Indexable pages ask for full-length snippets and large image previews —
+    # without max-snippet:-1 the engines cap snippet length, and that snippet is
+    # what feeds AI Overviews and chat answers.
+    # noindex is for pages that must never rank: the 404 (a soft-404 that says
+    # "index, follow" can get itself indexed and compete with real pages) and the
+    # post-submit thank-you page.
+    if noindex:
+        robots_meta = (
+            '<meta name="robots" content="noindex, follow">\n'
+            '<meta name="googlebot" content="noindex, follow">'
+        )
+    else:
+        _directives = "index, follow, max-snippet:-1, max-image-preview:large"
+        robots_meta = (
+            f'<meta name="robots" content="{_directives}, max-video-preview:-1">\n'
+            f'<meta name="googlebot" content="{_directives}, max-video-preview:-1">\n'
+            f'<meta name="bingbot" content="{_directives}">'
+        )
     schema = org_schema()
     # MedicalWebPage on clinical pages (services, conditions, infusions): it tells
     # Google and the AI crawlers the page is health content about a named entity
@@ -243,11 +262,7 @@ def head(title, desc, depth=0, canonical="", og_image="assets/media/og-team.jpg"
 <meta name="theme-color" content="#071A38">
 <meta name="color-scheme" content="light dark">
 <meta name="format-detection" content="telephone=no">
-<!-- Let Google/Bing use full-length snippets and large image previews. Without
-     this they cap snippet length, which is what feeds AI Overviews and chat answers. -->
-<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large">
+{robots_meta}
 <meta name="geo.region" content="US-FL">
 <meta name="geo.placename" content="Palm Beach Gardens">
 <meta name="geo.position" content="{GEO_LAT};{GEO_LNG}">
@@ -256,6 +271,7 @@ def head(title, desc, depth=0, canonical="", og_image="assets/media/og-team.jpg"
 <link rel="icon" type="image/png" sizes="16x16" href="{p}assets/media/favicon-16.png?v=1">
 <link rel="apple-touch-icon" href="{p}assets/media/apple-touch-icon.png?v=1">
 <link rel="manifest" href="{p}site.webmanifest">
+<script>document.documentElement.classList.add("js")</script>
 <link rel="preload" href="{p}assets/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{p}assets/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin>
 {hero_preload}<link rel="stylesheet" href="{p}assets/css/styles.css?v={asset_v('assets/css/styles.css')}">
@@ -280,6 +296,11 @@ SERVICES_NAV = [
     ("services/medical-weight-loss.html", "Medical Weight Loss & GLP-1"),
     ("services/concierge-care.html", "Concierge & Direct-Pay Care"),
     ("infusions/index.html", "Specialty Infusion Center"),
+    ("services/mesenchymal-stem-cell-therapy.html", "Mesenchymal Stem Cell Therapy"),
+    ("services/exosome-therapy.html", "Exosome Therapy"),
+    ("services/whartons-jelly-therapy.html", "Wharton\u2019s Jelly Therapy"),
+    ("services/traditional-muse-cell-therapy.html", "Traditional Muse Cell Therapy"),
+    ("services/muse-infused-rpa-therapy.html", "MUSE-Infused RPA Therapy"),
 ]
 
 CONDITIONS_NAV = [
@@ -365,7 +386,7 @@ def nav(depth=0, current=""):
 """
 
 
-def footer(depth=0, extra_js="", analytics=True):
+def footer(depth=0, extra_js="", analytics=True, assist=True):
     p = "../" * depth
     extra_js_tag = ""
     if extra_js:
@@ -378,6 +399,22 @@ def footer(depth=0, extra_js="", analytics=True):
     analytics_tag = ""
     if analytics:
         analytics_tag = '<script defer src="/_vercel/insights/script.js"></script>\n'
+    # The concierge assistant is held to the SAME rule as analytics, and for the
+    # same reason: it POSTs whatever a visitor types to FormSubmit, which is not
+    # a HIPAA-eligible destination under a BAA. It never reads the intake form's
+    # DOM, so nothing leaks today — but a chat widget that transmits offsite has
+    # no business on a page asking for medical history, and leaving it there
+    # invites someone to paste symptoms into it. Off on /forms/* (assist=False).
+    lead_tag = ""
+    if assist:
+        lead_tag = (
+            f'<script src="{p}assets/js/lead.js?v={asset_v("assets/js/lead.js")}"></script>\n'
+        )
+    assist_tag = ""
+    if assist:
+        assist_tag = (
+            f'<script src="{p}assets/js/assist.js?v={asset_v("assets/js/assist.js")}" defer></script>\n'
+        )
     svc = "\n".join(
         f'<li><a href="{p}{href}">{label}</a></li>' for href, label in SERVICES_NAV[:8]
     )
@@ -435,8 +472,8 @@ def footer(depth=0, extra_js="", analytics=True):
   </div>
   <a class="mobile-call" href="tel:{PHONE_TEL}"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8c1.5 2.9 3.7 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .7-.2 1l-2.3 2.2z"/></svg>Call Now</a>
 </footer>
-<script src="{p}assets/js/main.js?v={asset_v('assets/js/main.js')}"></script>
-<script src="{p}assets/js/assist.js?v={asset_v('assets/js/assist.js')}" defer></script>
+{lead_tag}<script src="{p}assets/js/main.js?v={asset_v('assets/js/main.js')}"></script>
+{assist_tag}
 {analytics_tag}{extra_js_tag}</body>
 </html>
 """
@@ -519,6 +556,7 @@ def org_schema():
                       "url": f"{BASE}/assets/media/og-team.jpg",
                       "caption": OG_TEAM_ALT},
             "telephone": "+1-833-783-6561",
+            "faxNumber": "+1-561-807-5161",
             "email": EMAIL,
             "priceRange": "$$",
             "currenciesAccepted": "USD",
@@ -628,27 +666,43 @@ TEAM = [
     {
         "slug": "emily-bahnick",
         "name": "Emily Bahnick, MSN, RN",
-        "role": "IV Infusion Nurse & Care Coordinator",
+        "role": "Clinical Coordinator & IV Infusion Nurse",
         "photo": "team/emily-bahnick.jpg",
-        "short": "Registered nurse with MSN and BSN degrees and more than 10 years of experience — your IV infusion nurse and care coordinator, focused on longevity, reducing reliance on pharmaceuticals, and healing from within.",
+        "short": "Registered nurse with MSN and BSN degrees and more than 10 years of experience — your clinical coordinator and IV infusion nurse, focused on longevity, reducing reliance on pharmaceuticals, and healing from within.",
         "stats": ["10+ years experience", "MSN · BSN", "Registered Nurse"],
     },
 ]
 
 SUPPORT_TEAM = [
-    {"name": "Dr. Michael Carpino", "role": "Concierge Provider", "photo": "team/michael-carpino.jpg"},
 ]
 
+# Verbatim Google reviews, curated and cleared by Emily Bahnick (Clinical
+# Coordinator) on 2026-08-12. Rules that come with this list — do not relax them:
+#   · Attribution is first name + last initial. Never a full name, never a photo.
+#   · Reviews naming Dr. Buzas or Dr. Merritt are EXCLUDED — both are former
+#     providers and none of those 19 reviews may run in patient-facing marketing.
+#   · Quotes are reproduced as posted. Typos may be silently corrected (noted
+#     below where they were); never reword, merge, or change meaning.
+#   · Outcome-specific quotes carry a results-vary line where they appear.
+# Lauren K.'s review is deliberately absent: the owner response suggests the
+# truncated portion names Dr. Buzas. It can be added once the full text is
+# checked on the profile.
 TESTIMONIALS = [
-    ("RegenOrtho Palm Beach gave me my life back. Their regenerative therapy helped me avoid surgery, and I feel stronger every day.", "Sarah W.", "Patient testimonial"),
-    ("The team is so caring and professional. They explained every step and made sure I was comfortable throughout my treatment.", "Michael R.", "Patient testimonial"),
-    ("I was struggling with chronic knee pain. Within weeks of my procedure here, I noticed a huge improvement. Highly recommend!", "Linda T.", "Patient testimonial"),
-    ("From the moment I walked in, I felt supported. They truly deliver personalized care with advanced techniques.", "James K.", "Patient testimonial"),
-    ("Very professional service. The staff and doctor were very accommodating to my needs. I felt comfortable, well cared for and well informed.", "Al Franc", "Posted on Google"),
-    ("Dr Cendeno was very knowledgeable, he took the time to explain my diagnosis in detail and answered all my questions. Office staff was welcoming and kind.", "Erika S.", "Posted on Google"),
-    ("My experience was one of the best as i followed Dr Cedeno instructions and his treatment my plantar fasciitis issue has been resolved. Both locations are easy to find and the staff are very friendly knowledgeable and kind. If you have any type of discomfort or feet pain this is definitely the doctor for you!", "Veronica “Roni” Lee", "Posted on Google"),
-    ("I am so Thankful I found this practice. I was very happy with the prompt appointment scheduled. The staff is friendly, the Dr as well made me feel comfortable. The pain is much better. I am able to increase my activity.", "Michelle Legere", "Posted on Google"),
+    ("Dr Cedeno and his team are simply the best. You can tell through their practices that they truly care for patients which is hard to find these days! I highly recommend them for services.", "Nikki M.", "Posted on Google"),
+    ("Great office Dr Cedeno is knowledgeable friendly and has many treatments for foot issues. I would highly recommend this practice for foot issues.", "Lisa M.", "Posted on Google"),
+    ("Very professional service. The staff and doctor were very accommodating to my needs. I felt comfortable, well cared for and well informed.", "Al F.", "Posted on Google"),
+    # Reviewer wrote "Cendeno"; misspelling corrected per the usage notes.
+    ("Dr Cedeno was very knowledgeable, he took the time to explain my diagnosis in detail and answered all my questions. Office staff was welcoming and kind.", "Erika S.", "Posted on Google"),
+    ("My experience was one of the best as i followed Dr Cedeno instructions and his treatment my plantar fasciitis issue has been resolved. Both locations are easy to find and the staff are very friendly knowledgeable and kind.", "Veronica L.", "Posted on Google"),
+    ("Everyone in the office were extremely nice and helpful. The Doctor answered all my questions was very professional", "Joseph S.", "Posted on Google"),
+    # Original reads "Wo derful"; typo corrected.
+    ("Absolutely terrific! Wonderful care and organized.", "Naomi G.", "Posted on Google"),
+    ("Excellent experience!! In and out in 30min!", "Jose F.", "Posted on Google"),
 ]
+
+# Shown wherever testimonials run, because several describe specific results.
+TESTIMONIAL_DISCLAIMER = ("Individual results vary. Testimonials reflect one patient\u2019s "
+                          "experience and are not a guarantee of outcome.")
 
 def _assoc_w(img):
     """Rendered width of a 54px-tall association logo, from its real aspect ratio.
@@ -1215,7 +1269,7 @@ CONDITIONS = [
      "faqs": [("How fast can I be seen after an injury?", "We offer same-day injury consultations whenever possible — call the office and acute injuries are prioritized."),
               ("Do you treat weekend athletes or just competitive ones?", "Both — the same diagnostic rigor and recovery structure applies whether you're chasing a championship or a personal best.")]},
     {"slug": "tendon-ligament-injuries", "name": "Tendon & Ligament Injuries",
-     "title": "Tendon & Ligament Injury Care Palm Beach Gardens",
+     "title": "Tendon & Ligament Injury Treatment | RegenOrtho Palm Beach",
      "desc": "Tendonitis, tendinopathy, and ligament injury treatment in Palm Beach Gardens — EPAT shockwave, PRP, and guided rehabilitation for soft-tissue problems.",
      "h1": "Stubborn Tendon & Ligament Problems, Solved",
      "lede": "Chronic tendon pain rarely heals by resting harder — it responds to therapies that actually change the tissue.",
@@ -1226,7 +1280,7 @@ CONDITIONS = [
      "faqs": [("Why didn't rest fix my tendon pain?", "Chronic tendinopathy is degenerative rather than purely inflammatory — the tissue needs a stimulus to remodel, which is what shockwave, biologics, and progressive loading provide."),
               ("How many shockwave sessions do tendons need?", "Most protocols involve a short series of weekly sessions; your specialist will set expectations at your evaluation.")]},
     {"slug": "foot-ankle-pain", "name": "Foot & Ankle Pain",
-     "title": "Foot & Ankle Pain Treatment Palm Beach Gardens",
+     "title": "Foot & Ankle Pain Treatment Palm Beach Gardens | RegenOrtho",
      "desc": "Foot and ankle pain care in Palm Beach Gardens — bunions, hammertoes, sprains, fractures, and nerve pain treated by a board-certified podiatric surgeon.",
      "h1": "Foot & Ankle Pain, Treated at the Source",
      "lede": "Twenty-six bones, thirty-three joints — and one board-certified surgical specialist to figure out which one is ruining your day.",
@@ -1583,11 +1637,11 @@ def build_home():
       </span>
     </a>
     <a class="doc-card reveal" href="providers/emily-bahnick.html" style="--d:240ms">
-      <span class="doc-photo"><img src="assets/team/emily-bahnick.jpg?v={asset_v('assets/team/emily-bahnick.jpg')}" alt="Emily Bahnick, MSN, RN — IV infusion nurse and care coordinator at RegenOrtho Palm Beach" width="450" height="560" loading="lazy"></span>
+      <span class="doc-photo"><img src="assets/team/emily-bahnick.jpg?v={asset_v('assets/team/emily-bahnick.jpg')}" alt="Emily Bahnick, MSN, RN — clinical coordinator and IV infusion nurse at RegenOrtho Palm Beach" width="450" height="560" loading="lazy"></span>
       <span class="doc-body">
         <strong>Emily Bahnick, MSN, RN</strong>
-        <span class="doc-role">IV Infusion Nurse &amp; Care Coordinator</span>
-        <span class="doc-bio">Your IV infusion nurse and care coordinator — passionate about regenerative health, focused on longevity, reducing reliance on pharmaceuticals, and healing from deep within through modern, innovative medicine.</span>
+        <span class="doc-role">Clinical Coordinator &amp; IV Infusion Nurse</span>
+        <span class="doc-bio">Your clinical coordinator and IV infusion nurse — passionate about regenerative health, focused on longevity, reducing reliance on pharmaceuticals, and healing from deep within through modern, innovative medicine.</span>
         <span class="doc-stats"><span>10+ years experience</span><span>MSN &middot; BSN</span><span>Registered Nurse</span></span>
         <em class="svc-more">Meet Emily <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em>
       </span>
@@ -1610,6 +1664,7 @@ def build_home():
     {quotes_html}
     <div class="quote-dots" role="tablist" aria-label="Choose testimonial"></div>
   </div>
+  <p class="quote-disclaimer reveal">{TESTIMONIAL_DISCLAIMER}</p>
 </section>
 
 <section class="section section-dark section-pathfinder" id="explore" aria-label="Explore RegenOrtho Palm Beach">
@@ -1696,6 +1751,209 @@ def build_home():
 # Published monthly starting prices, quoted verbatim from the service pages
 # ("Plans starting at $239/month", "Programs from $249 per month"). Only these two
 # services publish a price, so only these two get an offer — never infer one.
+# ---------------------------------------------------------------------------
+# Cellular & biologic therapy pages
+#
+# EVERY clinical sentence below is taken from the practice's own "Biologic &
+# cellular therapies" brochure (Muse cells brochure redesign, Aug 2026), which
+# Dr. Matarazzo and Dr. Cedeno approved. Do not add a mechanism, an indication,
+# an outcome or a price that is not on that brochure — these are stem-cell
+# pages, and FDA's position is that no regenerative product is approved for
+# orthopedic conditions. BIOLOGIC_DISCLAIMER is reproduced verbatim from the
+# brochure footer and must render on every one of these pages.
+#
+# These five slugs also back-fill the old WordPress URLs under
+# /our-services/regenerative-medicine-orthobiologic-therapies/ — see vercel.json.
+# ---------------------------------------------------------------------------
+
+BIOLOGIC_DISCLAIMER = (
+    "None of the therapies described are FDA-approved to treat, cure or prevent any disease or "
+    "condition, and they are not a substitute for indicated surgical care. Composition and mechanism "
+    "characteristics are drawn from published literature and supplier documentation, not from "
+    "RegenOrtho Palm Beach outcomes. Cellular products are HCT/Ps from accredited U.S. suppliers; per "
+    "21 C.F.R. §1271.3(d) cell factors such as RPA are not classified as HCT/Ps. Donors are U.S.-based, "
+    "screened and tested by third-party CLIA laboratories. Individual results vary and no outcome is "
+    "guaranteed. This material is general education, not medical advice. Services are self-pay and are "
+    "not covered by insurance or Medicare."
+)
+
+# Shared across all five: the brochure's "The process" panel.
+_BIO_STEPS = [
+    ("Evaluation", "Exam, imaging review, and a candidacy discussion — we confirm whether a biologic is a reasonable option for you before anything is scheduled."),
+    ("Plan", "Your physician selects the biologic, the route, and the target site."),
+    ("Procedure", "Image-guided injection or IV push, typically under an hour."),
+    ("Recovery &amp; follow-up", "Most patients resume light activity quickly, with progress checks over the weeks ahead."),
+]
+
+# The brochure's "Commonly explored for" list.
+_BIO_WHY = [
+    "Physician-performed and ultrasound-guided",
+    "U.S. tissue source — donors screened and tested by third-party CLIA laboratories",
+    "Commonly explored for knee, shoulder, hip, ankle and foot osteoarthritis",
+    "Chronic tendon and ligament injuries, plantar fasciitis and other foot conditions",
+    "Considered by patients hoping to delay or avoid surgery",
+]
+
+_BIO_PRICING = [
+    ("What does it cost?", "The consultation and imaging review is $300, credited toward treatment if you proceed. Joint-directed treatment starts at $2,500 per joint. Muse, RPA and multi-joint plans are quoted at your consult. These services are self-pay — they are not covered by insurance or Medicare."),
+    ("Is this covered by insurance?", "No. Biologic and cellular therapies are self-pay and are not covered by insurance or Medicare. Our team gives you the full cost in writing before you commit to anything."),
+]
+
+_BIO_CONDS = ["knee-pain", "shoulder-pain", "hip-pain", "arthritis-joint-pain",
+              "tendon-ligament-injuries", "foot-ankle-pain", "plantar-fasciitis"]
+
+CELLULAR_SERVICES = [
+    {
+        "slug": "mesenchymal-stem-cell-therapy",
+        "name": "Mesenchymal Stem Cell Therapy",
+        "nav": "Mesenchymal Stem Cell Therapy",
+        "title": "Mesenchymal Stem Cell Therapy Palm Beach Gardens | RegenOrtho",
+        "desc": "Physician-performed, ultrasound-guided mesenchymal stem cell therapy in Palm Beach Gardens for joint, tendon and soft-tissue conditions. U.S. tissue source, self-pay.",
+        "eyebrow": "Biologic &amp; Cellular Therapies",
+        "h1": "Mesenchymal Stem Cell Therapy",
+        "lede": "Multipotent cells from umbilical cord tissue, placed into the joint or tendon under ultrasound guidance — or infused.",
+        "img": "svc-regen.jpg",
+        "img_alt": "Ultrasound-guided cellular therapy injection at RegenOrtho Palm Beach in Palm Beach Gardens",
+        "why": _BIO_WHY,
+        "expertise": [
+            ("What mesenchymal stem cells are", "Multipotent cells derived from umbilical cord tissue. In the published literature they work mainly by paracrine signaling — releasing factors that influence the surrounding tissue rather than replacing it."),
+            ("How it is delivered", "Intra-articular injection into the joint under ultrasound guidance, or IV infusion, depending on the target and the plan your physician selects."),
+            ("Where the tissue comes from", "Cellular products are HCT/Ps from accredited U.S. suppliers. Donors are U.S.-based, screened and tested by third-party CLIA laboratories."),
+            ("Commonly explored for", "Knee, shoulder, hip, ankle and foot osteoarthritis; chronic tendon and ligament injuries; plantar fasciitis and other foot conditions; persistent joint pain and stiffness."),
+        ],
+        "steps": _BIO_STEPS,
+        "faqs": [
+            ("What are mesenchymal stem cells?", "Multipotent cells from umbilical cord tissue. According to published literature they act mainly by paracrine signaling — releasing growth factors and cytokines that influence the surrounding tissue."),
+            ("How are they given?", "Either as an intra-articular injection into the joint under ultrasound guidance, or as an IV infusion. Your physician selects the route and the target site at your planning visit."),
+            ("Is this FDA-approved?", "No. No regenerative product is FDA-approved to treat, cure or prevent any disease or condition, and these therapies are not a substitute for indicated surgical care. We will walk you through what is and is not established before you decide."),
+        ] + _BIO_PRICING,
+        "cta": "Find out if this is <em>right for you</em>",
+        "cta_sub": "Book a consultation and imaging review — $300, credited toward treatment. Same-week appointments are typically available.",
+        "conditions": _BIO_CONDS,
+        "disclaimer": BIOLOGIC_DISCLAIMER,
+    },
+    {
+        "slug": "exosome-therapy",
+        "name": "Exosome Therapy",
+        "nav": "Exosome Therapy",
+        "title": "Exosome Therapy Palm Beach Gardens | RegenOrtho Palm Beach",
+        "desc": "Ultrasound-guided exosome therapy in Palm Beach Gardens for joint and tendon conditions — cell-free signaling vesicles, physician-performed. Self-pay, U.S. tissue source.",
+        "eyebrow": "Biologic &amp; Cellular Therapies",
+        "h1": "Exosome Therapy",
+        "lede": "Cell-signaling vesicles carrying growth factors that direct the body’s own repair response.",
+        "img": "svc-regen.jpg",
+        "img_alt": "Preparing an exosome preparation for ultrasound-guided injection at RegenOrtho Palm Beach",
+        "why": _BIO_WHY,
+        "expertise": [
+            ("What exosomes are", "Cell-free vesicles, 30–150 nanometres across, carrying growth factors. They are signaling components — not living cells."),
+            ("How they work", "By paracrine signaling: the vesicles deliver factors that direct the body’s own repair response in the tissue around them."),
+            ("How it is delivered", "Intra-articular injection into the joint, or peritendinous placement alongside a tendon — under ultrasound guidance in both cases."),
+            ("Commonly explored for", "Osteoarthritis of the knee, shoulder, hip, ankle and foot; chronic tendon and ligament injuries; persistent joint pain and stiffness."),
+        ],
+        "steps": _BIO_STEPS,
+        "faqs": [
+            ("What is exosome therapy?", "Exosomes are cell-free vesicles, roughly 30–150 nanometres across, that carry growth factors. They are signaling components rather than living cells, and in published literature they act by paracrine signaling."),
+            ("How is it delivered?", "As an intra-articular injection into the joint or a peritendinous injection alongside a tendon, placed under ultrasound guidance."),
+            ("Are exosome products FDA-approved?", "No. There are no FDA-approved exosome products, and none of the therapies we describe are FDA-approved to treat, cure or prevent any disease or condition. They are not a substitute for indicated surgical care."),
+        ] + _BIO_PRICING,
+        "cta": "Find out if this is <em>right for you</em>",
+        "cta_sub": "Book a consultation and imaging review — $300, credited toward treatment. Same-week appointments are typically available.",
+        "conditions": _BIO_CONDS,
+        "disclaimer": BIOLOGIC_DISCLAIMER,
+    },
+    {
+        "slug": "whartons-jelly-therapy",
+        "name": "Wharton’s Jelly Therapy",
+        "nav": "Wharton’s Jelly Therapy",
+        "title": "Wharton’s Jelly Therapy Palm Beach Gardens | RegenOrtho",
+        "desc": "Wharton’s jelly therapy in Palm Beach Gardens — umbilical cord tissue valued for its growth factors, cytokines and matrix proteins. Ultrasound-guided and self-pay.",
+        "eyebrow": "Biologic &amp; Cellular Therapies",
+        "h1": "Wharton’s Jelly Therapy",
+        "lede": "Gel-like cord tissue, valued for its growth factors, cytokines and matrix proteins.",
+        "img": "svc-regen.jpg",
+        "img_alt": "Ultrasound-guided biologic injection into a joint at RegenOrtho Palm Beach",
+        "why": _BIO_WHY,
+        "expertise": [
+            ("What Wharton’s jelly is", "The gel-like connective tissue of the umbilical cord, valued for its growth factors, cytokines and matrix proteins."),
+            ("How it works", "The preparation contains umbilical cord-derived mesenchymal stem cells and acts mainly by paracrine signaling, per the published literature."),
+            ("How it is delivered", "Intra-articular injection into the joint, or placement into soft tissue — under ultrasound guidance."),
+            ("Commonly explored for", "Joint osteoarthritis, chronic tendon and ligament injuries, plantar fasciitis and other foot conditions, and persistent joint pain and stiffness."),
+        ],
+        "steps": _BIO_STEPS,
+        "faqs": [
+            ("What is Wharton’s jelly?", "The gel-like tissue of the umbilical cord. It is valued for its growth factors, cytokines and matrix proteins, and the preparation contains umbilical cord-derived mesenchymal stem cells."),
+            ("How is it different from a plain stem cell injection?", "Wharton’s jelly is the cord’s matrix tissue rather than an isolated cell product, so it brings matrix proteins alongside the cells. Both act mainly by paracrine signaling. Your physician will explain which fits your target site."),
+            ("Where does the tissue come from?", "From accredited U.S. suppliers, as HCT/Ps. Donors are U.S.-based, screened and tested by third-party CLIA laboratories."),
+        ] + _BIO_PRICING,
+        "cta": "Find out if this is <em>right for you</em>",
+        "cta_sub": "Book a consultation and imaging review — $300, credited toward treatment. Same-week appointments are typically available.",
+        "conditions": _BIO_CONDS,
+        "disclaimer": BIOLOGIC_DISCLAIMER,
+    },
+    {
+        "slug": "traditional-muse-cell-therapy",
+        "name": "Traditional Muse Cell Therapy",
+        "nav": "Traditional Muse Cell Therapy",
+        "title": "Muse Cell Therapy Palm Beach Gardens | RegenOrtho Palm Beach",
+        "desc": "Traditional Muse cell therapy in Palm Beach Gardens — the live-cell preparation of a rare, stress-enduring stem cell subpopulation. Physician-performed and self-pay.",
+        "eyebrow": "Biologic &amp; Cellular Therapies",
+        "h1": "Traditional Muse Cell Therapy",
+        "lede": "The live-cell preparation of Muse cells — a rare, stress-enduring subpopulation of mesenchymal stem cells. Newly available at RegenOrtho Palm Beach.",
+        "img": "svc-regen.jpg",
+        "img_alt": "Muse cell preparation for infusion at RegenOrtho Palm Beach in Palm Beach Gardens",
+        "why": _BIO_WHY,
+        "expertise": [
+            ("What Muse cells are", "Multilineage-differentiating stress-enduring cells — a rare subpopulation of mesenchymal stem cells discovered at Tohoku University among cells that survived hypoxia, low temperature and enzymatic stress. They are stress-resistant, highly pluripotent and non-tumorigenic."),
+            ("What makes the traditional preparation different", "This is the live-cell form. Muse cells migrate toward injured tissue, where a portion engraft and differentiate into functional cells — cell replacement as well as signaling."),
+            ("How it is delivered", "IV push or targeted injection, depending on whether the goal is systemic or a specific joint or tendon."),
+            ("Cellular, not acellular", "Traditional Muse is the living-cell option. If an acellular, non-DNA preparation is a better fit, your physician may discuss MUSE-Infused RPA instead."),
+        ],
+        "steps": _BIO_STEPS,
+        "faqs": [
+            ("What are Muse cells?", "Multilineage-differentiating stress-enduring cells — a rare subpopulation of mesenchymal stem cells, identified at Tohoku University among cells that survived hypoxia, low temperature and enzymatic stress. They are described as stress-resistant, highly pluripotent and non-tumorigenic."),
+            ("How does traditional Muse differ from MUSE-Infused RPA?", "Traditional Muse is the live-cell preparation — the cells migrate toward injured tissue and a portion engraft and differentiate. MUSE-Infused RPA is acellular and non-DNA: the protein fraction only, signaling rather than cell replacement."),
+            ("How is it given?", "IV push or targeted injection. Your physician selects the route at your planning visit."),
+            ("Is Muse cell therapy FDA-approved?", "No. None of the therapies described are FDA-approved to treat, cure or prevent any disease or condition, and they are not a substitute for indicated surgical care. Muse and RPA plans are quoted at consultation."),
+        ] + _BIO_PRICING,
+        "cta": "Find out if this is <em>right for you</em>",
+        "cta_sub": "Book a consultation and imaging review — $300, credited toward treatment. Muse plans are quoted at consult.",
+        "conditions": _BIO_CONDS,
+        "disclaimer": BIOLOGIC_DISCLAIMER,
+    },
+    {
+        "slug": "muse-infused-rpa-therapy",
+        "name": "MUSE-Infused RPA Therapy",
+        "nav": "MUSE-Infused RPA Therapy",
+        "title": "MUSE-Infused RPA Therapy Palm Beach Gardens | RegenOrtho",
+        "desc": "MUSE-Infused RPA therapy in Palm Beach Gardens — an acellular, non-DNA protein array of 80+ proteins with a 20% Muse protein enhancement. Physician-performed, self-pay.",
+        "eyebrow": "Biologic &amp; Cellular Therapies",
+        "h1": "MUSE-Infused RPA Therapy",
+        "lede": "Regenerative Protein Array™ technology combined with the protein fraction extracted from Muse cells — acellular, non-DNA signaling. Newly available at RegenOrtho Palm Beach.",
+        "img": "svc-regen.jpg",
+        "img_alt": "Acellular protein array preparation for infusion at RegenOrtho Palm Beach",
+        "why": _BIO_WHY,
+        "expertise": [
+            ("What MUSE-Infused RPA is", "Regenerative Protein Array™ technology combined with the protein fraction extracted from Muse cells — 0.50 mg of RPA with a 20% Muse protein enhancement."),
+            ("Acellular and non-DNA", "Signaling components rather than living cells. The proteins are naturally emitted from placenta and cord tissue over a 30-day incubation."),
+            ("How it works", "Direct protein signaling. The array carries 80+ proteins and is characterised in the literature as anti-inflammatory, angiogenic and cytoprotective."),
+            ("How it is delivered", "IV push or targeted injection, depending on whether the goal is systemic or a specific site."),
+        ],
+        "steps": _BIO_STEPS,
+        "faqs": [
+            ("What is MUSE-Infused RPA?", "Regenerative Protein Array™ technology combined with the protein fraction extracted from Muse cells — 0.50 mg of RPA with a 20% Muse protein enhancement. It carries 80+ proteins."),
+            ("Does it contain living cells?", "No. It is acellular and non-DNA — signaling components rather than living cells. The proteins are naturally emitted from placenta and cord tissue over a 30-day incubation."),
+            ("How does it work?", "By direct protein signaling. In the published literature the array is characterised as anti-inflammatory, angiogenic and cytoprotective. Per 21 C.F.R. §1271.3(d), cell factors such as RPA are not classified as HCT/Ps."),
+            ("How is it given?", "IV push or targeted injection. RPA plans are quoted at your consultation."),
+        ] + _BIO_PRICING,
+        "cta": "Find out if this is <em>right for you</em>",
+        "cta_sub": "Book a consultation and imaging review — $300, credited toward treatment. RPA plans are quoted at consult.",
+        "conditions": _BIO_CONDS,
+        "disclaimer": BIOLOGIC_DISCLAIMER,
+    },
+]
+
+SERVICES += CELLULAR_SERVICES
+
 SERVICE_FROM_PRICE = {
     "medical-weight-loss": 239,
     "peptide-therapy": 249,
@@ -1761,6 +2019,14 @@ def build_services():
             for c in svc.get("conditions", []) if any(x["slug"] == c for x in CONDITIONS)
         )
         conds_html = f"""<aside class="cond-links reveal"><h2>Conditions this helps</h2><ul>{conds}</ul></aside>""" if conds else ""
+        # Regulatory notice, verbatim from the practice's approved brochure. Any
+        # service carrying a "disclaimer" key must render it on the page.
+        disclaimer_html = (
+            f"""<section class="section section-disclaimer"><div class="container narrow">
+  <h2 class="disclaimer-title">Important information about these therapies</h2>
+  <p class="disclaimer-body">{svc['disclaimer']}</p>
+</div></section>""" if svc.get("disclaimer") else ""
+        )
         crumbs_html = crumbs([("services/index.html", "Services"), ("", svc["name"])], depth=d)
         body = f"""{nav(d)}
 <main id="main">
@@ -1790,6 +2056,7 @@ def build_services():
   <div class="faq-list">{faqs}</div>
   <p class="section-foot"><a href="../faq.html">Browse the full FAQ →</a></p>
 </section>
+{disclaimer_html}
 {cta_band(d, heading=svc['cta'], sub=svc['cta_sub'])}
 </main>
 {footer(d)}"""
@@ -2224,22 +2491,22 @@ def build_providers():
 def build_emily():
     provider_page(
         "emily-bahnick", "Emily Bahnick, MSN, RN",
-        "IV Infusion Nurse & Care Coordinator",
+        "Clinical Coordinator & IV Infusion Nurse",
         "team/emily-bahnick.jpg",
         [
             "Passionate about regenerative health for both people and animals, Emily tailors every care plan to the patient — focused on longevity, reducing reliance on pharmaceuticals, and healing from deep within through modern, innovative medicine.",
-            "As the practice's IV infusion nurse and care coordinator, Emily is the clinician most patients see the most. She reviews your pre-treatment medical screen, helps match the infusion formula to your goals, administers and monitors your drip in the lounge, and keeps the details of your care moving between visits.",
+            "As the practice's clinical coordinator and IV infusion nurse, Emily is the clinician most patients see the most. She reviews your pre-treatment medical screen, helps match the infusion formula to your goals, administers and monitors your drip in the lounge, and keeps the details of your care moving between visits.",
             "Emily holds both MSN and BSN nursing degrees and brings more than ten years of nursing experience to RegenOrtho Palm Beach.",
         ],
         [
             "MSN &amp; BSN — advanced nursing degrees",
             "Registered Nurse (RN)",
             "10+ years of nursing experience",
-            "IV infusion nurse &amp; care coordinator",
+            "clinical coordinator &amp; IV infusion nurse",
             "Focused on longevity and regenerative health",
         ],
         "Emily Bahnick, MSN, RN | IV Infusion Nurse Palm Beach Gardens",
-        "Meet Emily Bahnick, MSN, RN — the IV infusion nurse and care coordinator at RegenOrtho Palm Beach in Palm Beach Gardens, with 10+ years of nursing experience.",
+        "Meet Emily Bahnick, MSN, RN — clinical coordinator and IV infusion nurse at RegenOrtho Palm Beach in Palm Beach Gardens, with 10+ years of nursing experience.",
         [
             ("../iv-therapy.html", "IV Recovery & Wellness Lounge"),
             ("../infusions/index.html", "Specialty Infusion Center"),
@@ -2312,7 +2579,7 @@ def build_about():
 <section class="section">
   <div class="section-head reveal"><p class="eyebrow">Our Team</p><h2>The people <em>behind your recovery</em></h2></div>
   <figure class="team-hero reveal">
-    <img src="assets/team/team-group.jpg?v={asset_v('assets/team/team-group.jpg')}" alt="The RegenOrtho Palm Beach care team at the Palm Beach Gardens clinic" width="1300" height="1304">
+    <img src="assets/team/team-group.jpg?v={asset_v('assets/team/team-group.jpg')}" alt="The RegenOrtho Palm Beach care team at the Palm Beach Gardens clinic" width="872" height="1160">
     <figcaption>Orthopedic, podiatric, regenerative, and vein care — one team, one roof, in Palm Beach Gardens.</figcaption>
   </figure>
   <div class="team-gallery">{gallery}</div>
@@ -2320,6 +2587,7 @@ def build_about():
 <section class="section section-tint">
   <div class="section-head reveal"><p class="eyebrow">What Our Patients Say</p><h2>Trusted by <em>your neighbors</em></h2></div>
   <div class="quote-grid">{quotes}</div>
+  <p class="quote-disclaimer reveal">{TESTIMONIAL_DISCLAIMER}</p>
 </section>
 <section class="section">
   <div class="section-head reveal"><p class="eyebrow">Patient Guide &amp; Answers</p><h2>Good to <em>know</em></h2></div>
@@ -2420,7 +2688,7 @@ def build_iv():
 </section>
 <section class="section">
   <div class="nurse-credit reveal">
-    <figure class="nurse-photo"><img src="assets/team/emily-bahnick.jpg?v={asset_v('assets/team/emily-bahnick.jpg')}" alt="Emily Bahnick, MSN, RN — IV infusion nurse at RegenOrtho Palm Beach" width="360" height="450" loading="lazy"></figure>
+    <figure class="nurse-photo"><img src="assets/team/emily-bahnick.jpg?v={asset_v('assets/team/emily-bahnick.jpg')}" alt="Emily Bahnick, MSN, RN — clinical coordinator and IV infusion nurse at RegenOrtho Palm Beach" width="360" height="450" loading="lazy"></figure>
     <div class="nurse-copy">
       <p class="eyebrow">Your infusion nurse</p>
       <h2>Every drip placed by <em>Emily Bahnick, MSN, RN</em></h2>
@@ -2604,6 +2872,7 @@ def build_contact():
       <ul class="contact-list">
         <li><strong>Call or text</strong><a href="tel:{PHONE_TEL}">{PHONE_VANITY} · {PHONE_DISPLAY}</a></li>
         <li><strong>Email</strong><a href="mailto:{EMAIL}">{EMAIL}</a></li>
+        <li><strong>Fax</strong><span>{FAX_DISPLAY}</span></li>
         <li><strong>Visit</strong><a href="{MAP_URL}" rel="noopener" target="_blank">{ADDRESS_STREET}<br>{ADDRESS_CITY}, {ADDRESS_STATE} {ADDRESS_ZIP}</a></li>
         <li><strong>Office hours</strong><span>{HOURS}</span></li>
       </ul>
@@ -2613,9 +2882,15 @@ def build_contact():
         <button class="btn btn-navy" data-open-assist>Open the assistant</button>
       </div>
     </div>
+    <p class="form-status" data-form-status hidden role="status" aria-live="polite"></p>
+    <!-- action/method stay so the form still works with JS off; main.js intercepts
+         and posts through RGLead (on-page confirmation + retry queue). _next is the
+         no-JS landing page — without it FormSubmit dumps the visitor on its own
+         generic thank-you and they leave the site entirely. -->
     <form class="contact-form reveal" style="--d:120ms" action="https://formsubmit.co/{EMAIL}" method="POST">
       <h2 class="form-title">Request an appointment</h2>
       <input type="hidden" name="_subject" value="New appointment request — regenorthopb.com">
+      <input type="hidden" name="_next" value="{BASE}/thank-you.html">
       <input type="hidden" name="_captcha" value="false">
       <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
       <div class="form-row">
@@ -2645,8 +2920,8 @@ def build_contact():
            The warning sits with the field, not under the button, so it is read first. -->
       <label>Message<textarea name="message" rows="4" placeholder="Which service you're interested in, and when you'd like to come in."></textarea></label>
       <p class="form-fine form-fine-inline">Please don't include medical history or symptoms here — we'll take that securely at your visit.</p>
-      <button class="btn btn-gold btn-block" type="submit">Book Appointment</button>
-      <p class="form-fine">Submitting sends your request straight to our front desk. For anything urgent, call {PHONE_DISPLAY}.</p>
+      <button class="btn btn-gold btn-block" type="submit">Request a Consultation</button>
+      <p class="form-fine">Your request goes straight to our front desk and we’ll call within one business day to confirm. For urgent or life-threatening symptoms, call 911 or seek emergency care.</p>
     </form>
   </div>
 </section>
@@ -2876,10 +3151,11 @@ def build_forms():
 </section>
 {cta_band(d, heading="Prefer to fill these out <em>with us?</em>", sub="Arrive fifteen minutes early and our front desk will walk you through everything on a practice tablet. Either way works.")}
 </main>
-{footer(d, analytics=False)}"""
+{footer(d, analytics=False, assist=False)}"""
     hub = head("Patient Forms | RegenOrtho Palm Beach",
                "Complete RegenOrtho Palm Beach patient forms at home — the new patient intake and peptide & GLP-1 questionnaire, filled out privately in your browser.",
                depth=d, canonical="forms/index.html", extra_css="assets/css/forms.css",
+               noindex=True,
                extra_schema=breadcrumb_schema([("", "Home"), ("forms/index.html", "Patient Forms")])
                ) + '<body class="page-forms">\n' + hub_body
     write("forms/index.html", hub)
@@ -2961,8 +3237,9 @@ def build_forms():
   </div>
 </section>
 </main>
-{footer(d, extra_js="assets/js/forms.js", analytics=False)}"""
+{footer(d, extra_js="assets/js/forms.js", analytics=False, assist=False)}"""
         page = head(f["title"], f["desc"], depth=d, canonical=f"forms/{f['slug']}.html",
+                    noindex=True,
                     extra_css="assets/css/forms.css",
                     extra_schema=breadcrumb_schema([("", "Home"), ("forms/index.html", "Patient Forms"),
                                                     (f"forms/{f['slug']}.html", f["plain_name"])])
@@ -3117,8 +3394,44 @@ def build_legal_and_404():
 {footer(0)}"""
     page = head("Page Not Found | RegenOrtho Palm Beach",
                 "The page you're looking for could not be found. Explore RegenOrtho Palm Beach services, conditions, and booking.",
-                depth=0, canonical="404.html") + '<body class="page-404">\n' + body
+                depth=0, canonical="404.html", noindex=True) + '<body class="page-404">\n' + body
     write("404.html", page)
+
+    # Where the contact form lands when JavaScript is off (its _next target).
+    # With JS the visitor never gets here — main.js renders the confirmation in
+    # place. noindex: a thank-you page has nothing to rank for and, if indexed,
+    # sends people who never submitted anything into a dead end.
+    body = f"""{nav(0)}
+<main id="main">
+<section class="page-hero">
+  <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+  <div class="page-hero-inner reveal">
+    <p class="eyebrow">Request received</p>
+    <h1>Thank you — we’ve got <em>your request</em></h1>
+    <p class="lede">Our team will reach out to confirm your appointment, usually within one business day. If you need us sooner, call {PHONE_VANITY} — {PHONE_DISPLAY}.</p>
+    <div class="hero-cta-row">
+      <a class="btn btn-gold" href="tel:{PHONE_TEL}">Call {PHONE_DISPLAY}</a>
+      <a class="btn btn-ghost-light" href="forms/index.html">Fill out your intake form</a>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="container narrow reveal">
+    <h2>While you wait</h2>
+    <p>Completing your paperwork ahead of time makes the first visit considerably shorter. Both forms fill out in your browser and nothing is transmitted — you print the summary or save it as a PDF and bring it in.</p>
+    <ul class="tick-list">
+      <li><a href="forms/new-patient.html">New patient intake form</a></li>
+      <li><a href="forms/peptide-glp-questionnaire.html">Peptide &amp; GLP-1 questionnaire</a></li>
+      <li><a href="patient-resources.html">Patient resources and guides</a></li>
+    </ul>
+  </div>
+</section>
+</main>
+{footer(0)}"""
+    page = head("Thank You | RegenOrtho Palm Beach",
+                "Thanks for your appointment request — the RegenOrtho Palm Beach team will reach out to confirm, usually within one business day.",
+                depth=0, canonical="thank-you.html", noindex=True) + '<body class="page-legal">\n' + body
+    write("thank-you.html", page)
 
 
 # ---------------------------------------------------------------------------
@@ -3127,10 +3440,11 @@ def build_legal_and_404():
 
 def build_meta():
     from blog_content import BLOG_POSTS
+    # NOTE: /forms/* is deliberately absent. Those pages are noindex (they ask for
+    # medical history) and a noindex page in the sitemap is a contradiction Google
+    # reports as an error. They stay reachable from the nav and the thank-you page.
     pages = ["index.html", "about.html", "contact.html", "faq.html", "iv-therapy.html",
              "patient-resources.html", "privacy-policy.html", "terms.html",
-             "forms/index.html", "forms/new-patient.html",
-             "forms/peptide-glp-questionnaire.html",
              "services/index.html", "infusions/index.html", "blog/index.html",
              "providers/dr-marc-matarazzo.html", "providers/dr-orlando-cedeno.html",
              "providers/emily-bahnick.html"]
@@ -3259,12 +3573,21 @@ Sitemap: {BASE}/sitemap.xml
     # the two services with a "from" price and the IV menu. The closing note exists
     # so an agent does not fill the gaps with an invented figure for the services
     # that quote at consultation.
+    infusion_links = "\n".join(
+        f"- {i['name']}: {BASE}/infusions/{i['slug']}.html" for i in INFUSIONS)
     iv_rows = "\n".join(
         f"| {html.unescape(m['name'])} | ${m['price']} | {m['ingredients'].replace('&amp;', '&')} |"
         for m in IV_MENU)
+    _bio_slugs = {c["slug"] for c in CELLULAR_SERVICES}
     unpriced = "\n".join(
         f"- {s['name']}: {BASE}/services/{s['slug']}.html"
-        for s in SERVICES if s["slug"] not in SERVICE_FROM_PRICE)
+        for s in SERVICES
+        if s["slug"] not in SERVICE_FROM_PRICE and s["slug"] not in _bio_slugs)
+    # Biologics publish two figures on every one of their pages, so they belong
+    # with the published prices, not behind the do-not-infer fence.
+    bio_rows = "\n".join(
+        f"| {html.unescape(c['name'])} | Consult $300 · treatment from $2,500 per joint | {BASE}/services/{c['slug']}.html |"
+        for c in CELLULAR_SERVICES)
     write("pricing.md", f"""# Pricing — {NAME}
 
 Palm Beach Gardens, FL. Last updated from the published pages on each build.
@@ -3280,6 +3603,21 @@ consultation — see "Quoted at consultation" below.
 | Medical Weight Loss & GLP-1 | from $239/month | Plan depends on medication and monitoring your physician recommends. |
 | Peptide Therapy | from $249/month | Protocol and cost set at consultation based on your goals. |
 | IV Recovery & Wellness Lounge | $189–$499 per infusion | Per-formula prices below. |
+| Biologic & cellular therapies | consult $300, treatment from $2,500 per joint | Consult fee is credited toward treatment. Per-therapy links below. |
+
+## Biologic & cellular therapies
+
+Self-pay only — these are NOT covered by insurance or Medicare. The $300
+consultation and imaging review is credited toward treatment. Joint-directed
+treatment starts at $2,500 per joint. Muse, RPA and multi-joint plans are
+quoted at consultation — do not infer a figure for those.
+
+None of these therapies are FDA-approved to treat, cure or prevent any disease
+or condition, and they are not a substitute for indicated surgical care.
+
+| Therapy | Price | Page |
+| --- | --- | --- |
+{bio_rows}
 
 ## IV infusion menu
 
@@ -3347,14 +3685,21 @@ the plan, and most are billed through insurance where covered.
 - Email: {EMAIL}
 - Hours: {HOURS}
 - Instagram: {INSTAGRAM}
-- Specialists: Dr. Marc Matarazzo, MD (board-certified sports medicine & orthopedic surgeon, 23+ years, MAKO-certified); Dr. Orlando Cedeno, DPM (board-certified podiatric surgeon & vein specialist); Emily Bahnick, MSN, RN (IV infusion nurse & care coordinator).
+- Specialists: Dr. Marc Matarazzo, MD (board-certified sports medicine & orthopedic surgeon, 23+ years, MAKO-certified); Dr. Orlando Cedeno, DPM (board-certified podiatric surgeon & vein specialist); Emily Bahnick, MSN, RN (clinical coordinator & IV infusion nurse).
+
+## Providers
+- Dr. Marc Matarazzo, MD — orthopedic & sports medicine: {BASE}/providers/dr-marc-matarazzo.html
+- Dr. Orlando Cedeno, DPM — podiatric surgery, vein & regenerative medicine: {BASE}/providers/dr-orlando-cedeno.html
+- Emily Bahnick, MSN, RN — clinical coordinator & IV infusion nurse: {BASE}/providers/emily-bahnick.html
 - Patient forms: {BASE}/forms/ — new patient intake and peptide/GLP-1 questionnaire, completed privately in the browser (nothing transmitted).
-- New patients accepted; no referral required; most major insurance accepted; concierge/direct-pay bundles available.
+- New patients accepted; no referral required; most major insurance accepted for medical care. Biologic/cellular therapies, IV drips and concierge care are self-pay and not covered by insurance or Medicare.
 
 ## Services
 {svc_lines}
 - IV Recovery & Wellness Lounge: {BASE}/iv-therapy.html — 12 clinician-supervised infusions, $189–$499.
 - Specialty Infusion Center: {BASE}/infusions/index.html — IVIG, Krystexxa, Ocrevus, Ultomiris.
+{infusion_links}
+- Biologic & cellular therapies are self-pay and NOT covered by insurance or Medicare: consult $300 (credited toward treatment), joint-directed treatment from $2,500 per joint, Muse/RPA/multi-joint quoted at consult. None are FDA-approved to treat, cure or prevent any disease or condition.
 
 ## Conditions treated
 {cond_lines}

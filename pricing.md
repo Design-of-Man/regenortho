@@ -13,6 +13,25 @@ consultation — see "Quoted at consultation" below.
 | Medical Weight Loss & GLP-1 | from $239/month | Plan depends on medication and monitoring your physician recommends. |
 | Peptide Therapy | from $249/month | Protocol and cost set at consultation based on your goals. |
 | IV Recovery & Wellness Lounge | $189–$499 per infusion | Per-formula prices below. |
+| Biologic & cellular therapies | consult $300, treatment from $2,500 per joint | Consult fee is credited toward treatment. Per-therapy links below. |
+
+## Biologic & cellular therapies
+
+Self-pay only — these are NOT covered by insurance or Medicare. The $300
+consultation and imaging review is credited toward treatment. Joint-directed
+treatment starts at $2,500 per joint. Muse, RPA and multi-joint plans are
+quoted at consultation — do not infer a figure for those.
+
+None of these therapies are FDA-approved to treat, cure or prevent any disease
+or condition, and they are not a substitute for indicated surgical care.
+
+| Therapy | Price | Page |
+| --- | --- | --- |
+| Mesenchymal Stem Cell Therapy | Consult $300 · treatment from $2,500 per joint | https://www.regenorthopb.com/services/mesenchymal-stem-cell-therapy.html |
+| Exosome Therapy | Consult $300 · treatment from $2,500 per joint | https://www.regenorthopb.com/services/exosome-therapy.html |
+| Wharton’s Jelly Therapy | Consult $300 · treatment from $2,500 per joint | https://www.regenorthopb.com/services/whartons-jelly-therapy.html |
+| Traditional Muse Cell Therapy | Consult $300 · treatment from $2,500 per joint | https://www.regenorthopb.com/services/traditional-muse-cell-therapy.html |
+| MUSE-Infused RPA Therapy | Consult $300 · treatment from $2,500 per joint | https://www.regenorthopb.com/services/muse-infused-rpa-therapy.html |
 
 ## IV infusion menu
 

@@ -116,7 +116,10 @@ To deploy:
    already on every page except `/forms/*`; it 404s silently until the toggle is flipped.
 6. Submit `sitemap.xml` in Google Search Console and update the Google Business Profile
    website link.
-7. Click the FormSubmit activation email on the first lead.
+7. **Click the FormSubmit activation email on the first lead — STILL PENDING as of 2026-08-15.**
+   Until it is clicked, both lead paths fail. Submit one live test through the contact form
+   AND one through the assistant, then confirm both land in info@regenorthopalmbeach.com
+   (check spam). Record the activation date here when done.
 
 To hand the whole thing to the practice, transfer this repo to their GitHub account and
 re-import it under their own Vercel account — nothing in the code needs to change.
