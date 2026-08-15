@@ -13,25 +13,36 @@ consultation — see "Quoted at consultation" below.
 | Medical Weight Loss & GLP-1 | from $239/month | Plan depends on medication and monitoring your physician recommends. |
 | Peptide Therapy | from $249/month | Protocol and cost set at consultation based on your goals. |
 | IV Recovery & Wellness Lounge | $189–$499 per infusion | Per-formula prices below. |
-| Biologic & cellular therapies | consult $300, treatment from $2,500 per joint | Consult fee is credited toward treatment. Per-therapy links below. |
+| IV & wellness membership | from $149/month | Three tiers (Silver, Gold, Platinum). Tier pricing above the $149 floor is set with the patient — do not infer the higher tiers. |
+| Biologic & cellular therapies | from $2,500 per joint | Self-pay. A separate consultation fee applies and is credited toward treatment; it is NOT published — do not infer one. |
 
 ## Biologic & cellular therapies
 
-Self-pay only — these are NOT covered by insurance or Medicare. The $300
-consultation and imaging review is credited toward treatment. Joint-directed
-treatment starts at $2,500 per joint. Muse, RPA and multi-joint plans are
-quoted at consultation — do not infer a figure for those.
+Self-pay only — these are NOT covered by insurance or Medicare. Joint-directed
+treatment starts at $2,500 per joint. Muse, RPA and multi-joint plans are quoted
+at consultation, and the consultation fee itself is not published — do not infer
+a figure for any of those.
 
 None of these therapies are FDA-approved to treat, cure or prevent any disease
 or condition, and they are not a substitute for indicated surgical care.
 
 | Therapy | Price | Page |
 | --- | --- | --- |
-| Mesenchymal Stem Cell Therapy | Consult $300 · treatment from $2,500 per joint | https://www.regenorthopb.com/services/mesenchymal-stem-cell-therapy.html |
-| Exosome Therapy | Consult $300 · treatment from $2,500 per joint | https://www.regenorthopb.com/services/exosome-therapy.html |
-| Wharton’s Jelly Therapy | Consult $300 · treatment from $2,500 per joint | https://www.regenorthopb.com/services/whartons-jelly-therapy.html |
-| Traditional Muse Cell Therapy | Consult $300 · treatment from $2,500 per joint | https://www.regenorthopb.com/services/traditional-muse-cell-therapy.html |
-| MUSE-Infused RPA Therapy | Consult $300 · treatment from $2,500 per joint | https://www.regenorthopb.com/services/muse-infused-rpa-therapy.html |
+| Mesenchymal Stem Cell Therapy | from $2,500 per joint | https://www.regenorthopb.com/services/mesenchymal-stem-cell-therapy.html |
+| Exosome Therapy | from $2,500 per joint | https://www.regenorthopb.com/services/exosome-therapy.html |
+| Wharton’s Jelly Therapy | from $2,500 per joint | https://www.regenorthopb.com/services/whartons-jelly-therapy.html |
+| Traditional Muse Cell Therapy | from $2,500 per joint | https://www.regenorthopb.com/services/traditional-muse-cell-therapy.html |
+| MUSE-Infused RPA Therapy | from $2,500 per joint | https://www.regenorthopb.com/services/muse-infused-rpa-therapy.html |
+
+## Other services with a published starting price
+
+These carry a "from" figure on the site. It is a floor, not a quote — the final cost
+depends on the plan, and the practice confirms it in writing before treatment.
+
+| Service | From | Page |
+| --- | --- | --- |
+| Regenerative Medicine & Orthobiologic Therapies | from $2,500 | https://www.regenorthopb.com/services/regenerative-medicine-orthobiologics.html |
+| Advanced Non-Surgical Therapies | from $900 | https://www.regenorthopb.com/services/advanced-non-surgical-therapies.html |
 
 ## IV infusion menu
 
@@ -60,8 +71,6 @@ the plan, and most are billed through insurance where covered.
 
 - Orthopedic & Sports Medicine: https://www.regenorthopb.com/services/orthopedic-sports-medicine.html
 - Podiatric Medicine & Foot/Ankle Surgery: https://www.regenorthopb.com/services/podiatric-medicine-foot-ankle-surgery.html
-- Regenerative Medicine & Orthobiologic Therapies: https://www.regenorthopb.com/services/regenerative-medicine-orthobiologics.html
-- Advanced Non-Surgical Therapies: https://www.regenorthopb.com/services/advanced-non-surgical-therapies.html
 - Vein Care — Medical & Cosmetic: https://www.regenorthopb.com/services/vein-care.html
 - MISHA Knee System: https://www.regenorthopb.com/services/misha-knee-system.html
 - Mako Robotic-Assisted Total Knee Replacement: https://www.regenorthopb.com/services/mako-robotic-knee-replacement.html
@@ -74,6 +83,7 @@ the plan, and most are billed through insurance where covered.
 - Most major insurance accepted; benefits are verified before treatment.
 - Accepted: cash, credit card, insurance, HSA/FSA.
 - Uninsured services have flexible payment plans and transparent direct-pay pricing.
+- Financing is available; ask the front desk at 833-783-6561.
 - Concierge and direct-pay care is offered as upfront bundled pricing.
 - Medical vein care is often covered when it treats symptoms or circulation
   problems; cosmetic vein care is usually elective.

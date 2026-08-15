@@ -30,6 +30,14 @@ BASE = "https://www.regenorthopb.com"
 SHARE_BASE = "https://regenortho-mu.vercel.app"
 SITE_LAUNCHED = "2026-07-30"
 SITE_UPDATED = "2026-08-15"
+
+# Verified live 2026-08-15. Deliberately NOT in the org node's sameAs: the listing
+# still names a departed provider and gives Emily credentials she does not hold, and
+# sameAs would tell Google those errors are ours. Add it once corrected — the tracked
+# fix list is docs/citations-and-backlinks.md.
+JUPITERMAG_URL = ("https://www.jupitermag.com/doctors-directory/north-palm-beach-1/"
+                  "adolescent-medicine-pediatric/regenortho-palm-beach-orlando-credno-"
+                  "dpm-facfas-dr-michael-carpino-marc-f-matarazzo-md/")
 # IndexNow key (public by design — it must be served at /{key}.txt to prove
 # ownership). Ping Bing/Yandex on content changes; see README.
 INDEXNOW_KEY = "a7f3c1e94b2d48f6ae05d7c318b6f240"
@@ -1151,6 +1159,7 @@ SERVICES = [
             ("Poor Sleep &amp; Fatigue", "DSIP and Epithalon protocols supporting sleep quality and recovery — the foundation most healing depends on."),
             ("Aging Skin &amp; Hair", "GHK-Cu and PT-141 protocols for skin quality, collagen support, and aesthetic goals."),
             ("Muscle Loss", "CJC-1295 and Ipamorelin protocols supporting lean mass retention and training recovery."),
+            ("Signature Blends — KLOW, Wolverine &amp; GLOW", "Three pre-built combination protocols for patients who want a proven starting point rather than a bespoke stack. Your physician confirms which blend fits your goals and labs, and adjusts from there."),
             ("Low Immunity", "Thymosin Beta-4 and LL-37 protocols to support immune resilience."),
         ],
         "steps": [
@@ -1724,6 +1733,13 @@ def build_home():
   <p class="section-foot reveal"><a class="btn btn-navy" href="{INSTAGRAM}" rel="noopener" target="_blank">Follow on Instagram</a></p>
 </section>
 
+<section class="section section-press reveal" aria-label="In the press">
+  <div class="press-inner">
+    <p class="eyebrow">In the community</p>
+    <p class="press-line">RegenOrtho Palm Beach is listed in <a href="{JUPITERMAG_URL}" rel="noopener nofollow" target="_blank">Jupiter Magazine&rsquo;s doctors directory</a> and is a Community Benefit Partner of the Palm Beach North Wellness Collective.</p>
+  </div>
+</section>
+
 <section class="section section-assoc reveal" aria-label="Our associations">
   <p class="eyebrow assoc-eyebrow">Our Associations</p>
   <ul class="assoc-row">
@@ -1795,7 +1811,7 @@ _BIO_WHY = [
 ]
 
 _BIO_PRICING = [
-    ("What does it cost?", "The consultation and imaging review is $300, credited toward treatment if you proceed. Joint-directed treatment starts at $2,500 per joint. Muse, RPA and multi-joint plans are quoted at your consult. These services are self-pay — they are not covered by insurance or Medicare."),
+    ("What does it cost?", "Joint-directed treatment starts at $2,500 per joint. Muse, RPA and multi-joint plans are quoted at your consult, and the consultation and imaging review carries its own fee that is credited toward treatment if you proceed — the team will confirm both figures for you before anything is scheduled. These services are self-pay; they are not covered by insurance or Medicare."),
     ("Is this covered by insurance?", "No. Biologic and cellular therapies are self-pay and are not covered by insurance or Medicare. Our team gives you the full cost in writing before you commit to anything."),
 ]
 
@@ -1828,7 +1844,7 @@ CELLULAR_SERVICES = [
             ("Is this FDA-approved?", "No. No regenerative product is FDA-approved to treat, cure or prevent any disease or condition, and these therapies are not a substitute for indicated surgical care. We will walk you through what is and is not established before you decide."),
         ] + _BIO_PRICING,
         "cta": "Find out if this is <em>right for you</em>",
-        "cta_sub": "Book a consultation and imaging review — $300, credited toward treatment. Same-week appointments are typically available.",
+        "cta_sub": "Book a consultation and imaging review — the fee is credited toward treatment if you proceed. Same-week appointments are typically available.",
         "conditions": _BIO_CONDS,
         "disclaimer": BIOLOGIC_DISCLAIMER,
     },
@@ -1857,7 +1873,7 @@ CELLULAR_SERVICES = [
             ("Are exosome products FDA-approved?", "No. There are no FDA-approved exosome products, and none of the therapies we describe are FDA-approved to treat, cure or prevent any disease or condition. They are not a substitute for indicated surgical care."),
         ] + _BIO_PRICING,
         "cta": "Find out if this is <em>right for you</em>",
-        "cta_sub": "Book a consultation and imaging review — $300, credited toward treatment. Same-week appointments are typically available.",
+        "cta_sub": "Book a consultation and imaging review — the fee is credited toward treatment if you proceed. Same-week appointments are typically available.",
         "conditions": _BIO_CONDS,
         "disclaimer": BIOLOGIC_DISCLAIMER,
     },
@@ -1886,7 +1902,7 @@ CELLULAR_SERVICES = [
             ("Where does the tissue come from?", "From accredited U.S. suppliers, as HCT/Ps. Donors are U.S.-based, screened and tested by third-party CLIA laboratories."),
         ] + _BIO_PRICING,
         "cta": "Find out if this is <em>right for you</em>",
-        "cta_sub": "Book a consultation and imaging review — $300, credited toward treatment. Same-week appointments are typically available.",
+        "cta_sub": "Book a consultation and imaging review — the fee is credited toward treatment if you proceed. Same-week appointments are typically available.",
         "conditions": _BIO_CONDS,
         "disclaimer": BIOLOGIC_DISCLAIMER,
     },
@@ -1916,7 +1932,7 @@ CELLULAR_SERVICES = [
             ("Is Muse cell therapy FDA-approved?", "No. None of the therapies described are FDA-approved to treat, cure or prevent any disease or condition, and they are not a substitute for indicated surgical care. Muse and RPA plans are quoted at consultation."),
         ] + _BIO_PRICING,
         "cta": "Find out if this is <em>right for you</em>",
-        "cta_sub": "Book a consultation and imaging review — $300, credited toward treatment. Muse plans are quoted at consult.",
+        "cta_sub": "Book a consultation and imaging review — the fee is credited toward treatment. Muse plans are quoted at consult.",
         "conditions": _BIO_CONDS,
         "disclaimer": BIOLOGIC_DISCLAIMER,
     },
@@ -1946,7 +1962,7 @@ CELLULAR_SERVICES = [
             ("How is it given?", "IV push or targeted injection. RPA plans are quoted at your consultation."),
         ] + _BIO_PRICING,
         "cta": "Find out if this is <em>right for you</em>",
-        "cta_sub": "Book a consultation and imaging review — $300, credited toward treatment. RPA plans are quoted at consult.",
+        "cta_sub": "Book a consultation and imaging review — the fee is credited toward treatment. RPA plans are quoted at consult.",
         "conditions": _BIO_CONDS,
         "disclaimer": BIOLOGIC_DISCLAIMER,
     },
@@ -2695,6 +2711,17 @@ def build_iv():
       <p>Emily reviews your pre-treatment screen, helps match the formula to your goals, and monitors you through the infusion — with MSN and BSN nursing degrees and more than ten years of nursing experience behind every visit.</p>
       <a class="btn btn-navy" href="providers/emily-bahnick.html">Meet Emily</a>
     </div>
+  </div>
+</section>
+<section class="section">
+  <div class="section-head reveal">
+    <p class="eyebrow">Memberships</p>
+    <h2>For regulars, a <em>monthly plan</em></h2>
+  </div>
+  <div class="container narrow reveal">
+    <p>If you come in more than once a month, a membership costs less than paying per visit. Plans run in three tiers — <strong>Silver</strong>, <strong>Gold</strong> and <strong>Platinum</strong> — starting at <strong>$149 per month</strong>, and cover infusions and IM injections in the lounge.</p>
+    <p>Which tier fits depends on how often you come in and which formulas you use, so the team builds it with you. Call {PHONE_DISPLAY} or ask at your next visit and we will price it out — no obligation.</p>
+    <p class="form-fine">Memberships are self-pay and are not billed through insurance.</p>
   </div>
 </section>
 <section class="section section-tint">
@@ -3579,14 +3606,28 @@ Sitemap: {BASE}/sitemap.xml
         f"| {html.unescape(m['name'])} | ${m['price']} | {m['ingredients'].replace('&amp;', '&')} |"
         for m in IV_MENU)
     _bio_slugs = {c["slug"] for c in CELLULAR_SERVICES}
+    # A service the site ADVERTISES a price for must never land in the
+    # do-not-infer fence — that told assistants "no price published" while
+    # /services/ showed "from $900". Drive the fence off PATHWAYS so the two
+    # can't drift apart again.
+    _advertised = {}
+    for _nm, _sub, _price, _href in PATHWAYS:
+        if _href.startswith("services/"):
+            _advertised[_href[len("services/"):-len(".html")]] = _price
     unpriced = "\n".join(
         f"- {s['name']}: {BASE}/services/{s['slug']}.html"
         for s in SERVICES
-        if s["slug"] not in SERVICE_FROM_PRICE and s["slug"] not in _bio_slugs)
+        if s["slug"] not in SERVICE_FROM_PRICE
+        and s["slug"] not in _bio_slugs
+        and s["slug"] not in _advertised)
+    advertised_rows = "\n".join(
+        f"| {html.unescape(s['name'])} | {_advertised[s['slug']]} | {BASE}/services/{s['slug']}.html |"
+        for s in SERVICES
+        if s["slug"] in _advertised and s["slug"] not in SERVICE_FROM_PRICE)
     # Biologics publish two figures on every one of their pages, so they belong
     # with the published prices, not behind the do-not-infer fence.
     bio_rows = "\n".join(
-        f"| {html.unescape(c['name'])} | Consult $300 · treatment from $2,500 per joint | {BASE}/services/{c['slug']}.html |"
+        f"| {html.unescape(c['name'])} | from $2,500 per joint | {BASE}/services/{c['slug']}.html |"
         for c in CELLULAR_SERVICES)
     write("pricing.md", f"""# Pricing — {NAME}
 
@@ -3603,14 +3644,15 @@ consultation — see "Quoted at consultation" below.
 | Medical Weight Loss & GLP-1 | from $239/month | Plan depends on medication and monitoring your physician recommends. |
 | Peptide Therapy | from $249/month | Protocol and cost set at consultation based on your goals. |
 | IV Recovery & Wellness Lounge | $189–$499 per infusion | Per-formula prices below. |
-| Biologic & cellular therapies | consult $300, treatment from $2,500 per joint | Consult fee is credited toward treatment. Per-therapy links below. |
+| IV & wellness membership | from $149/month | Three tiers (Silver, Gold, Platinum). Tier pricing above the $149 floor is set with the patient — do not infer the higher tiers. |
+| Biologic & cellular therapies | from $2,500 per joint | Self-pay. A separate consultation fee applies and is credited toward treatment; it is NOT published — do not infer one. |
 
 ## Biologic & cellular therapies
 
-Self-pay only — these are NOT covered by insurance or Medicare. The $300
-consultation and imaging review is credited toward treatment. Joint-directed
-treatment starts at $2,500 per joint. Muse, RPA and multi-joint plans are
-quoted at consultation — do not infer a figure for those.
+Self-pay only — these are NOT covered by insurance or Medicare. Joint-directed
+treatment starts at $2,500 per joint. Muse, RPA and multi-joint plans are quoted
+at consultation, and the consultation fee itself is not published — do not infer
+a figure for any of those.
 
 None of these therapies are FDA-approved to treat, cure or prevent any disease
 or condition, and they are not a substitute for indicated surgical care.
@@ -3618,6 +3660,15 @@ or condition, and they are not a substitute for indicated surgical care.
 | Therapy | Price | Page |
 | --- | --- | --- |
 {bio_rows}
+
+## Other services with a published starting price
+
+These carry a "from" figure on the site. It is a floor, not a quote — the final cost
+depends on the plan, and the practice confirms it in writing before treatment.
+
+| Service | From | Page |
+| --- | --- | --- |
+{advertised_rows}
 
 ## IV infusion menu
 
@@ -3641,6 +3692,7 @@ the plan, and most are billed through insurance where covered.
 - Most major insurance accepted; benefits are verified before treatment.
 - Accepted: cash, credit card, insurance, HSA/FSA.
 - Uninsured services have flexible payment plans and transparent direct-pay pricing.
+- Financing is available; ask the front desk at {PHONE_DISPLAY}.
 - Concierge and direct-pay care is offered as upfront bundled pricing.
 - Medical vein care is often covered when it treats symptoms or circulation
   problems; cosmetic vein care is usually elective.
@@ -3699,7 +3751,7 @@ the plan, and most are billed through insurance where covered.
 - IV Recovery & Wellness Lounge: {BASE}/iv-therapy.html — 12 clinician-supervised infusions, $189–$499.
 - Specialty Infusion Center: {BASE}/infusions/index.html — IVIG, Krystexxa, Ocrevus, Ultomiris.
 {infusion_links}
-- Biologic & cellular therapies are self-pay and NOT covered by insurance or Medicare: consult $300 (credited toward treatment), joint-directed treatment from $2,500 per joint, Muse/RPA/multi-joint quoted at consult. None are FDA-approved to treat, cure or prevent any disease or condition.
+- Biologic & cellular therapies are self-pay and NOT covered by insurance or Medicare: joint-directed treatment from $2,500 per joint; Muse/RPA/multi-joint and the consultation fee are quoted at consult and are not published. None are FDA-approved to treat, cure or prevent any disease or condition.
 
 ## Conditions treated
 {cond_lines}
@@ -3722,6 +3774,7 @@ Only the prices below are published; everything else is quoted at consultation.
 - Most major insurance accepted; benefits are verified before treatment.
 - Payment methods: cash, credit card, insurance, HSA/FSA.
 - Uninsured services have flexible payment plans and transparent direct-pay pricing.
+- Financing is available; ask the front desk at {PHONE_DISPLAY}.
 - Concierge and direct-pay care is offered as upfront bundled pricing.
 - Medical vein care is often covered when it treats symptoms or circulation problems; cosmetic vein care is usually elective.
 

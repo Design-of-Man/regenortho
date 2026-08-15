@@ -1213,3 +1213,10 @@ body.nav-locked .mobile-call { display: none !important; }
   background: rgba(9,45,92,.035); padding: clamp(1.25rem, 3vw, 2rem); }
 .disclaimer-title { font-size: 1rem; letter-spacing: .02em; margin: 0 0 .6rem; color: var(--navy); }
 .disclaimer-body { margin: 0; font-size: .8125rem; line-height: 1.7; color: var(--bronze); }
+
+/* Press / community line above the associations strip. */
+.section-press { padding-block: clamp(1.5rem, 4vw, 2.5rem); text-align: center; }
+.section-press .press-inner { max-width: 68ch; margin: 0 auto; padding: 0 1.25rem; }
+.section-press .press-line { margin: .4rem 0 0; font-size: .9375rem; line-height: 1.7; color: var(--bronze); }
+.section-press .press-line a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.section-press .press-line a:hover { color: var(--navy); }
