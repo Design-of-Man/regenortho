@@ -2,17 +2,15 @@
    Set answers only (no AI, no external API): every reply below is served from
    the FAQ array. Keep answers factually accurate, give no medical advice, and
    route anything unknown to the front desk at 833-783-6561.
-   Appointment requests are delivered via FormSubmit to the practice inbox;
-   failures queue in localStorage and retry on the next page load. */
+   Appointment requests are delivered through window.RGLead (assets/js/lead.js),
+   which owns the endpoint and the shared retry queue — see that file. */
 (function () {
   "use strict";
 
   var PHONE = "833-783-6561";
   var PHONE_TEL = "+18337836561";
   var EMAIL = "info@regenorthopalmbeach.com";
-  var ENDPOINT = "https://formsubmit.co/ajax/" + EMAIL;
   var LS_DRAFT = "rga-draft-v1";
-  var LS_QUEUE = "rga-queue-v1";
 
   var root = depthPrefix();
   function depthPrefix() {
@@ -33,7 +31,7 @@
     { k: ["phone", "call", "number", "contact"],
       a: "Call or text us at " + PHONE + " — that's 833-STEM561. You can also email " + EMAIL + "." },
     { k: ["insurance", "covered", "coverage", "medicare", "aetna", "cigna", "united", "blue cross"],
-      a: "We work with most major insurance providers and will help verify your coverage before treatment. For uninsured services we offer flexible payment plans and transparent direct-pay packages. For your specific plan, call " + PHONE + " and our team will check for you." },
+      a: "We work with most major insurance providers and will help verify your coverage before treatment.\nSome services are self-pay and are not covered by insurance or Medicare — biologic and cellular therapies in particular. IV drips and concierge care are direct-pay too. You'll always get the cost in writing before you commit. For your specific plan, call " + PHONE + " and our team will check for you." },
     { k: ["form", "forms", "paperwork", "intake", "questionnaire", "new patient", "fill out"],
       a: "You can fill out your paperwork at home before your visit — there's a new patient intake form and a peptide & GLP-1 questionnaire at regenorthopb.com/forms.\nBoth fill out right in your browser and nothing is sent over the internet: when you finish, the form builds a summary you print, save as a PDF, or bring in. Prefer to do it here? Arrive fifteen minutes early and our front desk will set you up on a tablet." },
     { k: ["referral", "refer"],
@@ -67,7 +65,7 @@
     { k: ["foot", "ankle", "bunion", "hammertoe", "podiat", "toenail"],
       a: "Dr. Orlando Cedeno, DPM — board certified in foot surgery — treats bunions, hammertoes, sprains, fractures, toenail disorders, and gait problems, with minimally invasive in-office procedures where possible. There's also a free Foot & Ankle Guide on our Patient Resources page." },
     { k: ["doctor", "surgeon", "matarazzo", "cedeno", "who", "team", "provider", "nurse", "emily", "bahnick"],
-      a: "Our physicians: Dr. Marc Matarazzo, MD — board-certified sports medicine & orthopedic surgeon (23+ years, MAKO-certified) — and Dr. Orlando Cedeno, DPM — board-certified podiatric surgeon & vein specialist.\nEmily Bahnick, MSN, RN is our IV infusion nurse and care coordinator (MSN & BSN degrees, 10+ years of nursing experience), and Dr. Michael Carpino serves as a concierge provider." },
+      a: "Our physicians: Dr. Marc Matarazzo, MD — board-certified sports medicine & orthopedic surgeon (23+ years, MAKO-certified) — and Dr. Orlando Cedeno, DPM — board-certified podiatric surgeon & vein specialist.\nEmily Bahnick, MSN, RN is our clinical coordinator and IV infusion nurse (MSN & BSN degrees, 10+ years of nursing experience)." },
     { k: ["ivig", "krystexxa", "ocrevus", "ultomiris", "specialty infusion"],
       a: "Our Specialty Infusion Center administers physician-prescribed IVIG, Krystexxa, Ocrevus, and Ultomiris in private, monitored suites with insurance coordination. Have your prescription or referral ready and call " + PHONE + " to get scheduled." },
     { k: ["concierge", "cash", "direct pay", "same day", "membership"],
@@ -328,8 +326,13 @@
   function payload() {
     return {
       _subject: "New appointment request (site assistant) — " + draft.name,
+      // Honeypot. A real visitor never fills this — the assistant has no such
+      // field — so anything non-empty here came from a script hitting the bare
+      // JSON endpoint directly.
+      _honey: "",
       name: draft.name, phone: draft.phone, email: draft.email,
       service: draft.service, preferred_time: draft.timing,
+      submitted_at: new Date(draft.updated || Date.now()).toLocaleString(),
       source: "regenorthopb.com concierge assistant, " + location.pathname,
     };
   }
@@ -337,12 +340,9 @@
   function deliver() {
     typing(function () {
       var m = say("Sending…");
-      fetch(ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify(payload()),
-      }).then(function (r) {
-        if (!r.ok) throw new Error("http " + r.status);
+      // RGLead owns the endpoint and the retry queue (assets/js/lead.js) so the
+      // contact form and this assistant cannot drift apart or keep two queues.
+      window.RGLead.send(payload()).then(function () {
         m.remove();
         say("Sent! 🎉 Our team will reach out to confirm your appointment — usually within one business day.<br>Need us sooner? Call <a href=\"tel:" + PHONE_TEL + "\">" + PHONE + "</a>.");
         localStorage.removeItem(LS_DRAFT);
@@ -350,31 +350,13 @@
         mode = "menu";
         menuChips();
       }).catch(function () {
+        // send() has already queued it for the next page load.
         m.remove();
-        var q = load(LS_QUEUE) || [];
-        q.push(payload());
-        save(LS_QUEUE, q);
         say("I couldn't reach our system just now, so I've saved your request on this device and will retry automatically. To lock in a time right away, call <a href=\"tel:" + PHONE_TEL + "\">" + PHONE + "</a>.");
         mode = "menu";
         menuChips();
       });
     });
-  }
-
-  function retryQueue() {
-    var q = load(LS_QUEUE) || [];
-    if (!q.length) return;
-    var item = q[0];
-    fetch(ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Accept": "application/json" },
-      body: JSON.stringify(item),
-    }).then(function (r) {
-      if (!r.ok) throw new Error("http " + r.status);
-      q.shift();
-      save(LS_QUEUE, q);
-      if (q.length) retryQueue();
-    }).catch(function () {});
   }
 
   function submitInput() {
@@ -395,6 +377,5 @@
   }
 
   build();
-  retryQueue();
   window.RGAssist = { open: open, close: close };
 })();

@@ -31,10 +31,20 @@ Static site, 56 pages, generated — do not edit HTML files directly.
   scroll-behavior:auto because the site's global smooth scrolling turns
   scrollTo() into an animation that lands elsewhere. Panel z-index is 95 — it
   must outrank the fixed site header (90) now that the sheet starts at top:0.
+- `assets/js/lead.js` — THE single lead-delivery path. Owns the FormSubmit AJAX endpoint
+  and the one shared `rga-queue-v1` retry queue; exposes `window.RGLead.send/enqueue/drain`.
+  Both the contact form (main.js) and the assistant use it — never add a second queue or a
+  second endpoint. It transmits to a non-BAA third party, so it is held to the same
+  `/forms/*` exclusion as analytics and the assistant (`footer(assist=False)`).
 - `assets/js/assist.js` — concierge assistant. SET ANSWERS only (FAQ array) — no AI, no
-  external API, no medical advice; route unknowns to 833-783-6561. Leads deliver via
-  FormSubmit (formsubmit.co/ajax/info@regenorthopalmbeach.com) with a localStorage retry queue.
-  Never put secret keys in it.
+  external API, no medical advice; route unknowns to 833-783-6561. Delivers through
+  `window.RGLead`. Never put secret keys in it.
+- The contact form posts through RGLead with on-page success/error states, and keeps its
+  `action`/`method` + `_next` so it still works with JS off. Button reads "Request a
+  Consultation", not "Book Appointment" — there is no live scheduler behind it.
+- `.reveal` is gated on a `.js` class set inline in `head()`. If main.js never runs, nothing
+  is hidden. Do NOT un-gate it: an animation that fails closed hides the entire page, which
+  is exactly how the old WordPress site lost its homepage lead form.
 - `assets/js/forms.js` + `assets/css/forms.css` + `forms_content.py` — the two patient
   forms (`/forms/new-patient.html`, `/forms/peptide-glp-questionnaire.html`). Questions are
   declarative in `forms_content.py`; the renderer (`_field`/`_section`/`build_forms` in
@@ -46,8 +56,8 @@ Static site, 56 pages, generated — do not edit HTML files directly.
 - 833-STEM561 = 833-783-6561 · info@regenorthopalmbeach.com · Mon–Fri 8 AM–5 PM
 - Instagram: @regenortho_palmbeach (only real social profile — X/YouTube don't exist)
 - Dr. Marc Matarazzo, MD (ortho/sports medicine, MAKO-certified) · Dr. Orlando Cedeno, DPM
-  (podiatric surgery + vein) · Dr. Michael Carpino (concierge provider) · Emily Bahnick,
-  MSN, RN (IV infusion nurse)
+  (podiatric surgery + vein) · Emily Bahnick, MSN, RN (clinical coordinator + IV
+  infusion nurse). Dr. Michael Carpino left the practice Aug 2026 — do not re-add.
 - Palm Beach Gardens deliberately has NO location page — the homepage owns that keyword;
   8 nearby cities have /locations/ pages, linked in the header dropdown + footer.
 
@@ -225,6 +235,54 @@ the on-page notice and privacy policy both promise nothing is transmitted, so th
 rewritten in the same change. Full checklist in README.md → "Patient forms & HIPAA".
 The site's other forms (contact, assistant) may keep using FormSubmit — they collect
 contact details and a reason for calling, not clinical history.
+
+## Biologic & cellular therapy pages (do not regress)
+The five pages — exosome, mesenchymal stem cell, Wharton's jelly, traditional Muse,
+MUSE-infused RPA — are defined in `CELLULAR_SERVICES` and back-fill the old WordPress
+URLs under `/our-services/regenerative-medicine-orthobiologic-therapies/` (redirects in
+vercel.json). EVERY clinical sentence comes from the practice's approved "Biologic &
+cellular therapies" brochure (Aug 2026). Do not add a mechanism, indication, outcome or
+price that is not on that brochure. `BIOLOGIC_DISCLAIMER` is reproduced verbatim from the
+brochure footer and MUST render on every one of them — FDA's position is that no
+regenerative product is approved for orthopedic conditions. These services are self-pay:
+consult $300 (credited toward treatment), treatment from $2,500/joint, Muse/RPA/multi-joint
+quoted at consult. Never say they are insurance-covered.
+
+## Testimonials
+Curated and cleared by Emily Bahnick 2026-08-12. Attribution is first name + last initial
+only. Reviews naming Dr. Buzas or Dr. Merritt (19 of them) are former providers and may
+NEVER be published. Quotes are verbatim; typos may be silently corrected, nothing reworded
+or merged. `TESTIMONIAL_DISCLAIMER` renders wherever they appear because several describe
+a specific outcome. Still no aggregateRating.
+
+## Do NOT publish (held pending the practice's confirmation)
+These appear on printed collateral but must not go on the site as-is:
+- **Retatrutide.** The practice's own Aug 2026 website audit flags it as the single
+  highest compliance risk: FDA guidance says it cannot be used in compounding under
+  federal law and has not been found safe and effective. The trifold brochure still
+  lists it. It is deliberately absent here — do not add it, at any price, on any page.
+- **Consultation fee.** The brochure says $300 credited toward treatment; the Wellness
+  Passport insert says a $350 orthopedic consult. Two different numbers, unreconciled,
+  so no figure is published. The pages say the fee is credited toward treatment and
+  leave the amount to the front desk.
+- **GLP-1 "first month from $395"** (trifold) contradicts the site's published
+  $239/month. The site figure stands until the practice confirms which is current.
+Not held, because the site already published them and the trifold matches: shockwave &
+cold laser from $900, biologics from $2,500 per joint, and IV membership from $149/month.
+All three were in PATHWAYS with nothing behind them — $900 and $2,500 were simultaneously
+listed in pricing.md's do-not-infer fence, which told AI assistants no price existed while
+/services/ advertised one. The fence is now generated FROM PATHWAYS (`_advertised` in
+build_meta), so a service the site advertises can never land in it again. Don't hand-edit
+that list.
+
+## Citations, backlinks & sameAs
+`docs/citations-and-backlinks.md` is the working record — master NAP, the listings that
+are currently wrong, and the backlink opportunities in the pipeline. Verified 2026-08-15.
+The org node's `sameAs` is Instagram ONLY, deliberately: the Jupiter Magazine directory
+listing names a departed provider and gives Emily credentials she does not hold, the
+chamber listing has the wrong street/phone/hours plus Motion branding, and the Yelp and
+Facebook profiles are unverified. Adding a bad profile to `sameAs` propagates its errors
+into Google's entity graph. Fix the listing, then add it.
 
 ## Facts discipline
 All claims/credentials/prices/reviews are from the practice's own published content. Never
