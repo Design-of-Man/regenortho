@@ -635,9 +635,7 @@ TEAM = [
     },
 ]
 
-SUPPORT_TEAM = [
-    {"name": "Dr. Michael Carpino", "role": "Concierge Provider", "photo": "team/michael-carpino.jpg"},
-]
+SUPPORT_TEAM = []
 
 TESTIMONIALS = [
     ("RegenOrtho Palm Beach gave me my life back. Their regenerative therapy helped me avoid surgery, and I feel stronger every day.", "Sarah W.", "Patient testimonial"),
@@ -2305,9 +2303,7 @@ def build_about():
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="section-head reveal"><p class="eyebrow">Meet the Team</p><h2>Dedicated to <em>your care</em></h2></div>
   <div class="doc-grid">{team_cards}</div>
-  <div class="team-strip">
-    {support}
-  </div>
+  {f'<div class="team-strip">{support}</div>' if support else ''}
 </section>
 <section class="section">
   <div class="section-head reveal"><p class="eyebrow">Our Team</p><h2>The people <em>behind your recovery</em></h2></div>

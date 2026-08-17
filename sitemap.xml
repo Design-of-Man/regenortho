@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-  <url><loc>https://www.regenorthopb.com/</loc><lastmod>2026-08-11</lastmod><changefreq>weekly</changefreq><priority>1.0</priority><image:image><image:loc>https://www.regenorthopb.com/assets/media/og-team.jpg</image:loc><image:title>The RegenOrtho Palm Beach care team — orthopedic, podiatric, vein and regenerative specialists at the Palm Beach Gardens clinic</image:title></image:image></url>
-  <url><loc>https://www.regenorthopb.com/about.html</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.regenorthopb.com/</loc><lastmod>2026-08-17</lastmod><changefreq>weekly</changefreq><priority>1.0</priority><image:image><image:loc>https://www.regenorthopb.com/assets/media/og-team.jpg</image:loc><image:title>The RegenOrtho Palm Beach care team — orthopedic, podiatric, vein and regenerative specialists at the Palm Beach Gardens clinic</image:title></image:image></url>
+  <url><loc>https://www.regenorthopb.com/about.html</loc><lastmod>2026-08-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.regenorthopb.com/contact.html</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.regenorthopb.com/faq.html</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.regenorthopb.com/iv-therapy.html</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.regenorthopb.com/iv-therapy.html</loc><lastmod>2026-08-17</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://www.regenorthopb.com/patient-resources.html</loc><lastmod>2026-08-11</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://www.regenorthopb.com/privacy-policy.html</loc><lastmod>2026-08-11</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://www.regenorthopb.com/terms.html</loc><lastmod>2026-08-11</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
@@ -17,7 +17,7 @@
   <url><loc>https://www.regenorthopb.com/blog/index.html</loc><lastmod>2026-08-11</lastmod><changefreq>yearly</changefreq><priority>0.6</priority></url>
   <url><loc>https://www.regenorthopb.com/providers/dr-marc-matarazzo.html</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.regenorthopb.com/providers/dr-orlando-cedeno.html</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.regenorthopb.com/providers/emily-bahnick.html</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.regenorthopb.com/providers/emily-bahnick.html</loc><lastmod>2026-08-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.regenorthopb.com/services/orthopedic-sports-medicine.html</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.9</priority><image:image><image:loc>https://www.regenorthopb.com/assets/media/svc-ortho.jpg</image:loc><image:title>Orthopedic specialist examining a patient&#x27;s knee at RegenOrtho Palm Beach in Palm Beach Gardens</image:title></image:image></url>
   <url><loc>https://www.regenorthopb.com/services/podiatric-medicine-foot-ankle-surgery.html</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.9</priority><image:image><image:loc>https://www.regenorthopb.com/assets/media/svc-podiatry.jpg</image:loc><image:title>Podiatric surgeon assessing a patient&#x27;s foot health in Palm Beach Gardens</image:title></image:image></url>
   <url><loc>https://www.regenorthopb.com/services/regenerative-medicine-orthobiologics.html</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.9</priority><image:image><image:loc>https://www.regenorthopb.com/assets/media/svc-regen.jpg</image:loc><image:title>Regenerative medicine specialist preparing an orthobiologic treatment at RegenOrtho Palm Beach</image:title></image:image></url>
