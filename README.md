@@ -1,6 +1,6 @@
 # RegenOrtho Palm Beach — Website
 
-Static site for **regenorthopb.com**. 56 pages, fully generated — a complete redesign of the
+Static site for **regenorthopb.com**. 60 pages, fully generated — a complete redesign of the
 practice's WordPress site, built to be handed over and self-managed.
 
 **The Regeneration of Orthopedics** · 11380 Prosperity Farms Road, Suite 204–208, Palm Beach
@@ -106,17 +106,29 @@ To deploy:
 
 1. Import this repo into Vercel. No build step and no framework — it's static output that
    is committed, and `vercel.json` is already configured.
-2. Set the production domain to `www.regenorthopb.com`.
-3. Point DNS: `A @ → 76.76.21.21`, `CNAME www → cname.vercel-dns.com`.
-4. **Set `SHARE_BASE = BASE` in `build.py` and rebuild.** Until the domain resolves,
-   `og:image` has to point at the live `*.vercel.app` host, because link-preview
-   scrapers actually fetch that URL and fall back to a random page image if it 404s.
-   `build.py` prints a reminder on every build while the two differ.
-5. Enable Web Analytics on the Vercel project (Project → Analytics → Enable). The tag is
+2. Set the production domain to `regenorthopb.com` — the **apex, no www**. Add
+   `www.regenorthopb.com` as a redirect to it. This has to match `BASE` in `build.py`,
+   or all 60 canonicals point at a URL that 308s.
+3. Point DNS: `A @ → 76.76.21.21`, `CNAME www → cname.vercel-dns.com`. If Cloudflare
+   still fronts the domain, its proxy has to come off or it keeps serving cached
+   WordPress no matter what the DNS says.
+4. **Confirm the domain actually serves the deployment from an outside resolver before
+   the next step** — `curl -I https://regenorthopb.com/` should show Vercel, not
+   Cloudflare or the old host.
+5. **Then set `SHARE_BASE = BASE` in `build.py`, rebuild and deploy.** Do it in this
+   order: `og:image` has to resolve when a scraper fetches it, and Facebook and
+   LinkedIn cache a miss for a long time. `build.py` prints a reminder on every build
+   while the two differ. (Already done for this cutover — `SHARE_BASE = BASE` today.)
+6. Enable Web Analytics on the Vercel project (Project → Analytics → Enable). The tag is
    already on every page except `/forms/*`; it 404s silently until the toggle is flipped.
-6. Submit `sitemap.xml` in Google Search Console and update the Google Business Profile
-   website link.
-7. Click the FormSubmit activation email on the first lead.
+7. Submit `sitemap.xml` in Google Search Console and update the Google Business Profile
+   website link. Register **both** the apex and www properties — old WordPress backlinks
+   will arrive on whichever host they were built against.
+8. Click the FormSubmit activation email on the first lead. There are two independent
+   submission paths — the contact form and the assistant — so send a test through each
+   rather than waiting on a real patient.
+9. Re-scrape the homepage in Facebook's Sharing Debugger and LinkedIn's Post Inspector
+   to flush any share card cached against the old host.
 
 To hand the whole thing to the practice, transfer this repo to their GitHub account and
 re-import it under their own Vercel account — nothing in the code needs to change.
@@ -150,7 +162,7 @@ The key file `a7f3c1e94b2d48f6ae05d7c318b6f240.txt` at the site root proves doma
 ownership. It does nothing on its own — you have to ping when content changes:
 
 ```
-curl -s "https://api.indexnow.org/indexnow?url=https://www.regenorthopb.com/&key=a7f3c1e94b2d48f6ae05d7c318b6f240"
+curl -s "https://api.indexnow.org/indexnow?url=https://regenorthopb.com/&key=a7f3c1e94b2d48f6ae05d7c318b6f240"
 ```
 
 Swap `url=` for whichever page changed. Google ignores IndexNow; Bing, Yandex and
