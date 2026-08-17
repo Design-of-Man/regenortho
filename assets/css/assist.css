@@ -33,7 +33,7 @@ body.nav-locked .rga-launch { display: none; }
 }
 .rga-avatar { width: 40px; height: 40px; border-radius: 50%; background: #FDC929; display: grid; place-items: center; flex-shrink: 0; }
 .rga-head-info { flex: 1; min-width: 0; }
-.rga-head-info strong { display: block; font: 700 .98rem/1.25 "Fraunces", serif; }
+.rga-head-info strong { display: block; font: 700 .98rem/1.25 "Newsreader", serif; }
 .rga-head-info span { font-size: .74rem; color: #A9BCCE; }
 .rga-close { background: none; border: 0; color: #A9BCCE; cursor: pointer; padding: .4rem; border-radius: 8px; line-height: 0; }
 .rga-close:hover { color: #FDC929; }

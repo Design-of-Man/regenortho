@@ -256,7 +256,7 @@ def head(title, desc, depth=0, canonical="", og_image="assets/media/og-team.jpg"
 <link rel="icon" type="image/png" sizes="16x16" href="{p}assets/media/favicon-16.png?v=1">
 <link rel="apple-touch-icon" href="{p}assets/media/apple-touch-icon.png?v=1">
 <link rel="manifest" href="{p}site.webmanifest">
-<link rel="preload" href="{p}assets/fonts/fraunces-v2.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{p}assets/fonts/newsreader-v1.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{p}assets/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin>
 {hero_preload}<link rel="stylesheet" href="{p}assets/css/styles.css?v={asset_v('assets/css/styles.css')}">
 <link rel="stylesheet" href="{p}assets/css/assist.css?v={asset_v('assets/css/assist.css')}">
@@ -743,10 +743,14 @@ INFUSIONS = [
 # from the practice's own published pages — the conditions list, the inclusions
 # list and the HCT/P disclaimer are identical on each, so they live here once.
 # The disclaimer is a compliance statement: do not paraphrase or trim it.
+# "Ankle & foot arthritis" and "Plantar fasciitis" appear on the practice's own
+# pages but are deliberately omitted here: foot and ankle care is Abacoa
+# Podiatry's territory (jupiterlaser.com) and this site does not compete for
+# those terms. Do not add them back without checking that decision first.
 REGEN_TREATS = [
     "Knee osteoarthritis", "Hip osteoarthritis", "Shoulder arthritis",
-    "Ankle &amp; foot arthritis", "Chronic tendon injuries", "Ligament injuries",
-    "Plantar fasciitis", "Persistent joint pain", "Sports injuries",
+    "Chronic tendon injuries", "Ligament injuries",
+    "Persistent joint pain", "Sports injuries",
     "Inflammation management",
 ]
 

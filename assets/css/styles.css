@@ -1,19 +1,31 @@
 /* ==========================================================================
    RegenOrtho Palm Beach — design system
    Navy (#092D5C) + gold (#FDC929) from the brand mark, porcelain light field,
-   Fraunces display serif + Manrope UI sans (self-hosted, variable).
+   Newsreader display serif + Manrope UI sans (self-hosted, variable).
+
+   Newsreader replaced Fraunces: Fraunces' J and j carry a heavy ball terminal
+   that hooks below the baseline, which read as eccentric on a clinical site.
+   That shape is Fraunces' own design at every opsz and weight — it was not the
+   WONK axis — so the only fix was a different face.
+
+   Both files are instanced to wght 400–700 (the site only uses 500 and 600)
+   with opsz PINNED at 20, because the design wants one consistent cut at every
+   size rather than true optical sizing. Pinning the axis out rather than
+   overriding it in CSS cuts each file by ~65%: the pair is 98KB, against 148KB
+   for the Fraunces pair it replaced. If you ever need optical sizing back,
+   re-instance from Google Fonts leaving opsz variable and expect ~250KB.
    ========================================================================== */
 
 @font-face {
-  font-family: "Fraunces";
-  src: url("../fonts/fraunces-v2.woff2") format("woff2");
+  font-family: "Newsreader";
+  src: url("../fonts/newsreader-v1.woff2") format("woff2");
   font-weight: 400 700;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Fraunces";
-  src: url("../fonts/fraunces-italic-v2.woff2") format("woff2");
+  font-family: "Newsreader";
+  src: url("../fonts/newsreader-italic-v1.woff2") format("woff2");
   font-weight: 400 700;
   font-style: italic;
   font-display: swap;
@@ -42,7 +54,7 @@
   --line: #DCD5C6;
   --line-dark: rgba(253, 201, 41, .18);
   --white: #FFFFFF;
-  --serif: "Fraunces", Georgia, serif;
+  --serif: "Newsreader", Georgia, serif;
   --sans: "Manrope", -apple-system, "Segoe UI", sans-serif;
   --shadow-lg: 0 30px 60px -25px rgba(4, 16, 31, .35);
   --shadow-sm: 0 10px 30px -18px rgba(4, 16, 31, .35);
@@ -66,22 +78,10 @@ body {
   background: var(--porcelain);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
-  /* Fraunces carries an optical-size axis, and browsers default to
-     font-optical-sizing:auto — so a 65px heading asks for opsz ~49, which
-     thins the strokes and tightens the fit more than this design wants.
-     Pinning opsz to 20 keeps one consistent cut at every size. Inherited, so
-     it covers every element and every stylesheet. Manrope has no opsz axis,
-     so this is a no-op there, and naming only opsz leaves font-weight in
-     charge of the wght axis.
-
-     Note: the quirky glyphs (the joined "ff", the swash ampersand) came from
-     Fraunces' WONK axis, NOT from opsz — and WONK defaults to 1 upstream, so
-     an unpinned subset bakes them in. assets/fonts/fraunces-v2.woff2 is
-     instanced at WONK=0 + SOFT=0 with opsz/wght left variable. If these files
-     are ever regenerated from Google Fonts, pin WONK=0 again or the wonk
-     returns. The -v2 suffix exists because /assets/* is served immutable for
-     a year — changing a font's bytes needs a new filename. */
-  font-variation-settings: "opsz" 20;
+  /* No font-variation-settings here on purpose. Optical size is baked into the
+     Newsreader files (pinned at opsz 20 — see the @font-face note above), so
+     the axis no longer exists at runtime and a CSS override would be dead
+     weight. Weight is left to font-weight, which drives the wght axis. */
 }
 
 img { max-width: 100%; height: auto; display: block; }
