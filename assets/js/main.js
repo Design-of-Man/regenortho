@@ -96,6 +96,15 @@
         heroVid.appendChild(s2);
       }
       heroVid.load();
+      // The CSS coastline scene sits underneath as the fallback, but once the
+      // video is actually painting it's fully covered — yet its dozens of
+      // blurred, continuously-animating layers (waves, clouds, birds, sparkles)
+      // keep compositing every frame for nothing. Hiding it once playback
+      // starts removes that wasted work without touching the fallback path.
+      var heroEl = heroVid.closest(".hero");
+      heroVid.addEventListener("playing", function () {
+        if (heroEl) heroEl.classList.add("video-live");
+      }, { once: true });
       var tryPlay = function () {
         var pr = heroVid.play();
         if (pr && pr.catch) pr.catch(function () { /* autoplay veto → poster stays */ });

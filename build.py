@@ -50,8 +50,8 @@ MAP_URL = "https://maps.google.com/maps?q=RegenOrtho%20Palm%20Beach%2011380%20Pr
 # Alt for the default share card. Deliberately does not name individuals — the
 # roster is named on /about and /providers, and a share card should not be the
 # thing that gets a person's name wrong.
-OG_TEAM_ALT = ("The RegenOrtho Palm Beach care team — orthopedic, podiatric, vein and "
-               "regenerative specialists at the Palm Beach Gardens clinic")
+OG_TEAM_ALT = ("The RegenOrtho Palm Beach care team — regenerative medicine, vein care, and "
+               "IV wellness specialists at the Palm Beach Gardens clinic")
 GEO_LAT, GEO_LNG = 26.8449, -80.0693
 
 ORG_ID = f"{BASE}/#organization"
@@ -267,15 +267,11 @@ def head(title, desc, depth=0, canonical="", og_image="assets/media/og-team.jpg"
 
 
 SERVICES_NAV = [
-    ("services/orthopedic-sports-medicine.html", "Orthopedic & Sports Medicine"),
-    ("services/podiatric-medicine-foot-ankle-surgery.html", "Podiatric Medicine & Foot/Ankle Surgery"),
     ("services/regenerative-medicine-orthobiologics.html", "Regenerative Medicine & Orthobiologics"),
     ("services/advanced-non-surgical-therapies.html", "Advanced Non-Surgical Therapies"),
     ("services/peptide-therapy.html", "Peptide Therapy"),
     ("services/vein-care.html", "Vein Care — Medical & Cosmetic"),
     ("iv-therapy.html", "IV Recovery & Wellness Lounge"),
-    ("services/misha-knee-system.html", "MISHA Knee System"),
-    ("services/mako-robotic-knee-replacement.html", "Mako Robotic Knee Replacement"),
     ("services/neuropathy-program.html", "Neuropathy Restoration Program"),
     ("services/medical-weight-loss.html", "Medical Weight Loss & GLP-1"),
     ("services/concierge-care.html", "Concierge & Direct-Pay Care"),
@@ -289,8 +285,6 @@ CONDITIONS_NAV = [
     ("conditions/arthritis-joint-pain.html", "Arthritis & Joint Pain"),
     ("conditions/sports-injuries.html", "Sports Injuries"),
     ("conditions/tendon-ligament-injuries.html", "Tendon & Ligament Injuries"),
-    ("conditions/foot-ankle-pain.html", "Foot & Ankle Pain"),
-    ("conditions/plantar-fasciitis.html", "Plantar Fasciitis & Heel Pain"),
     ("conditions/peripheral-neuropathy.html", "Peripheral Neuropathy"),
     ("conditions/varicose-spider-veins.html", "Varicose & Spider Veins"),
 ]
@@ -309,9 +303,20 @@ LOCATIONS_NAV = [
 
 def nav(depth=0, current=""):
     p = "../" * depth
-    svc = "\n".join(
-        f'<li><a href="{p}{href}">{label}</a></li>' for href, label in SERVICES_NAV
-    )
+    svc_items = []
+    for href, label in SERVICES_NAV:
+        slug = href.rsplit("/", 1)[-1].removesuffix(".html")
+        kids = [s for s in SERVICES if s.get("parent") == slug]
+        if kids:
+            sub = "".join(
+                f'<li><a href="{p}services/{k["slug"]}.html">{k["nav"]}</a></li>' for k in kids
+            )
+            svc_items.append(
+                f'<li class="has-sub"><a href="{p}{href}">{label}</a><ul class="drop-sub">{sub}</ul></li>'
+            )
+        else:
+            svc_items.append(f'<li><a href="{p}{href}">{label}</a></li>')
+    svc = "\n".join(svc_items)
     cond = "\n".join(
         f'<li><a href="{p}{href}">{label}</a></li>' for href, label in CONDITIONS_NAV
     )
@@ -390,7 +395,7 @@ def footer(depth=0, extra_js="", analytics=True):
   <div class="footer-inner">
     <div class="footer-brand">
       <img src="{p}assets/media/logo-dark-nav.png?v={asset_v('assets/media/logo-dark-nav.png')}" alt="{NAME} — {TAGLINE}" width="220" height="68" loading="lazy">
-      <p>Concierge orthopedic, podiatric, regenerative, and vein care in Palm Beach Gardens — board-certified specialists helping you move better, heal faster, and live healthier.</p>
+      <p>Concierge regenerative medicine, non-surgical therapies, and vein care in Palm Beach Gardens — board-certified specialists helping you move better, heal faster, and live healthier.</p>
       <a class="footer-ig" href="{INSTAGRAM}" rel="noopener" target="_blank"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2.2c3.2 0 3.6 0 4.8.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2m0 1.8c-3.1 0-3.5 0-4.7.1-1.1.1-1.5.2-1.8.3-.5.2-.8.4-1.1.7-.3.3-.5.6-.7 1.1-.1.3-.3.7-.3 1.8-.1 1.2-.1 1.6-.1 4.7s0 3.5.1 4.7c.1 1.1.2 1.5.3 1.8.2.5.4.8.7 1.1.3.3.6.5 1.1.7.3.1.7.3 1.8.3 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1.1-.1 1.5-.2 1.8-.3.5-.2.8-.4 1.1-.7.3-.3.5-.6.7-1.1.1-.3.3-.7.3-1.8.1-1.2.1-1.6.1-4.7s0-3.5-.1-4.7c-.1-1.1-.2-1.5-.3-1.8-.2-.5-.4-.8-.7-1.1-.3-.3-.6-.5-1.1-.7-.3-.1-.7-.3-1.8-.3-1.2-.1-1.6-.1-4.7-.1M12 7.1a4.9 4.9 0 1 1 0 9.8 4.9 4.9 0 0 1 0-9.8m0 1.8a3.1 3.1 0 1 0 0 6.2 3.1 3.1 0 0 0 0-6.2m5.1-3.1a1.1 1.1 0 1 1 0 2.3 1.1 1.1 0 0 1 0-2.3"/></svg> @regenortho_palmbeach</a>
     </div>
     <nav class="footer-col" aria-label="Quick links">
@@ -509,7 +514,7 @@ def org_schema():
             "name": NAME,
             "alternateName": ["Regen Ortho", "RegenOrtho", "Regen Ortho PB"],
             "slogan": TAGLINE,
-            "description": "Concierge orthopedic, podiatric, regenerative, and vein care in Palm Beach Gardens, FL — board-certified specialists offering sports medicine, foot & ankle surgery, orthobiologic therapies, IV wellness, and minimally invasive vein treatment.",
+            "description": "Concierge regenerative orthopedic and vein care in Palm Beach Gardens, FL — board-certified specialists offering orthobiologic therapies, peptide therapy, IV wellness, and minimally invasive vein treatment.",
             "url": f"{BASE}/",
             "logo": {"@type": "ImageObject", "@id": f"{BASE}/#logo",
                      "url": f"{BASE}/assets/media/logo-dark.png",
@@ -526,14 +531,12 @@ def org_schema():
             "availableLanguage": [{"@type": "Language", "name": "English"},
                                   {"@type": "Language", "name": "Spanish"}],
             "knowsAbout": [
-                "Orthopedic surgery", "Sports medicine", "Regenerative medicine",
-                "Platelet-rich plasma therapy", "Orthobiologics", "Peptide therapy",
-                "Podiatric surgery", "Foot and ankle surgery", "Varicose vein treatment",
-                "Peripheral neuropathy", "Mako robotic knee replacement",
-                "MISHA Knee System", "GLP-1 medical weight loss", "IV infusion therapy",
+                "Regenerative medicine", "Platelet-rich plasma therapy", "Orthobiologics",
+                "Peptide therapy", "Varicose vein treatment", "Peripheral neuropathy",
+                "GLP-1 medical weight loss", "IV infusion therapy",
             ],
             "isAcceptingNewPatients": True,
-            "medicalSpecialty": ["Orthopedic surgery", "Sports medicine", "Podiatric medicine", "Regenerative medicine", "Phlebology"],
+            "medicalSpecialty": ["Regenerative medicine", "Phlebology"],
             "address": {
                 "@type": "PostalAddress",
                 "streetAddress": ADDRESS_STREET,
@@ -559,8 +562,6 @@ def org_schema():
             ],
             "sameAs": [INSTAGRAM],
             "availableService": [
-                {"@type": "MedicalTherapy", "@id": f"{BASE}/services/orthopedic-sports-medicine.html#service"},
-                {"@type": "MedicalTherapy", "@id": f"{BASE}/services/podiatric-medicine-foot-ankle-surgery.html#service"},
                 {"@type": "MedicalTherapy", "@id": f"{BASE}/services/regenerative-medicine-orthobiologics.html#service"},
                 {"@type": "MedicalTherapy", "@id": f"{BASE}/services/vein-care.html#service"},
                 {"@type": "MedicalTherapy", "@id": f"{BASE}/iv-therapy.html#service"},
@@ -635,15 +636,9 @@ TEAM = [
     },
 ]
 
-SUPPORT_TEAM = [
-    {"name": "Dr. Michael Carpino", "role": "Concierge Provider", "photo": "team/michael-carpino.jpg"},
-]
+SUPPORT_TEAM = []
 
 TESTIMONIALS = [
-    ("RegenOrtho Palm Beach gave me my life back. Their regenerative therapy helped me avoid surgery, and I feel stronger every day.", "Sarah W.", "Patient testimonial"),
-    ("The team is so caring and professional. They explained every step and made sure I was comfortable throughout my treatment.", "Michael R.", "Patient testimonial"),
-    ("I was struggling with chronic knee pain. Within weeks of my procedure here, I noticed a huge improvement. Highly recommend!", "Linda T.", "Patient testimonial"),
-    ("From the moment I walked in, I felt supported. They truly deliver personalized care with advanced techniques.", "James K.", "Patient testimonial"),
     ("Very professional service. The staff and doctor were very accommodating to my needs. I felt comfortable, well cared for and well informed.", "Al Franc", "Posted on Google"),
     ("Dr Cendeno was very knowledgeable, he took the time to explain my diagnosis in detail and answered all my questions. Office staff was welcoming and kind.", "Erika S.", "Posted on Google"),
     ("My experience was one of the best as i followed Dr Cedeno instructions and his treatment my plantar fasciitis issue has been resolved. Both locations are easy to find and the staff are very friendly knowledgeable and kind. If you have any type of discomfort or feet pain this is definitely the doctor for you!", "Veronica “Roni” Lee", "Posted on Google"),
@@ -713,89 +708,6 @@ INFUSIONS = [
 
 SERVICES = [
     {
-        "slug": "orthopedic-sports-medicine",
-        "name": "Orthopedic & Sports Medicine",
-        "nav": "Orthopedic & Sports Medicine",
-        "title": "Orthopedic Surgeon Palm Beach Gardens | Sports Medicine",
-        "desc": "Board-certified orthopedic surgery & sports medicine in Palm Beach Gardens — same-day injury consults, joint preservation, arthroscopy, recovery plans.",
-        "eyebrow": "Orthopedic & Sports Medicine",
-        "h1": "Expert Care for Joints, Injuries & Recovery",
-        "lede": "Advanced orthopedic and sports medicine solutions designed to restore mobility, treat injuries, and optimize performance with personalized, minimally invasive care.",
-        "img": "svc-ortho.jpg",
-        "img_alt": "Orthopedic specialist examining a patient's knee at RegenOrtho Palm Beach in Palm Beach Gardens",
-        "why": [
-            "Comprehensive care for orthopedic and sports-related conditions",
-            "Focus on minimally invasive and joint-preserving treatments",
-            "Immediate access to injury consultations and diagnostics",
-            "Customized recovery programs designed for long-term results",
-            "Patient-centered approach for comfort and confidence",
-        ],
-        "expertise": [
-            ("Advanced Orthopedic Evaluation & Diagnostics", "In-depth evaluations using state-of-the-art imaging and testing methods ensure accurate identification of bone, muscle, and joint conditions for effective treatment planning."),
-            ("Sports Medicine Care & Performance Optimization", "Care extends beyond injury treatment to include strength, mobility, and conditioning programs that help athletes and active individuals maximize performance and prevent future injuries."),
-            ("Arthroscopic & Minimally Invasive Surgical Techniques", "When surgery is necessary, minimally invasive procedures reduce scarring, shorten recovery, and get you back to activity with less pain."),
-            ("Joint Preservation Strategies", "Instead of jumping straight to surgery, we emphasize preserving natural joint function — regenerative therapies, advanced rehabilitation, and cartilage-protecting solutions."),
-            ("Same-Day Injury Consultations", "Timely care is critical for orthopedic injuries. Same-day consultations mean rapid diagnosis and immediate treatment options without delay."),
-            ("Concierge-Level Surgical Recovery Support", "Recovery doesn't stop after treatment — personalized post-care plans, ongoing monitoring, and guided rehabilitation ensure the smoothest healing process."),
-        ],
-        "steps": [
-            ("Consultation & Diagnosis", "Book an appointment for a full orthopedic or sports medicine evaluation."),
-            ("Personalized Treatment Plan", "Receive a care plan tailored to your injury, condition, or performance goals."),
-            ("Recovery & Support", "Continue care with guided rehabilitation and long-term wellness strategies."),
-        ],
-        "faqs": [
-            ("What conditions do orthopedic and sports medicine specialists treat?", "We treat joint pain, fractures, ligament injuries, tendon issues, arthritis, and sports-related injuries affecting muscles, bones, and joints."),
-            ("Do I need surgery for every orthopedic problem?", "No — most conditions can be managed with non-surgical treatments such as physical therapy, medication, or minimally invasive procedures."),
-            ("What is minimally invasive orthopedic surgery?", "A technique that uses small incisions and advanced tools, resulting in less pain, faster healing, and a quicker return to activity."),
-            ("Can athletes return to sports after treatment?", "Yes — our recovery programs are designed to restore strength and mobility, helping athletes safely return to their sport or activity."),
-            ("How quickly can I book an appointment for an injury?", "We offer same-day injury consultations whenever possible — call the office and we will prioritize acute injuries."),
-        ],
-        "cta": "Start Your Journey to <em>Pain-Free Living</em>",
-        "cta_sub": "Take the first step toward better mobility and faster recovery. Book your consultation today and experience personalized orthopedic and sports medicine care.",
-        "conditions": ["knee-pain", "shoulder-pain", "hip-pain", "sports-injuries", "arthritis-joint-pain", "tendon-ligament-injuries"],
-    },
-    {
-        "slug": "podiatric-medicine-foot-ankle-surgery",
-        "name": "Podiatric Medicine & Foot/Ankle Surgery",
-        "nav": "Podiatric Medicine & Foot/Ankle Surgery",
-        "title": "Podiatrist Palm Beach Gardens | Foot & Ankle Surgery",
-        "desc": "Board-certified podiatric surgeon in Palm Beach Gardens — minimally invasive foot & ankle surgery, custom orthotics, heel pain relief, and gait correction.",
-        "eyebrow": "Podiatric Medicine & Foot/Ankle Surgery",
-        "h1": "Precision Foot & Ankle Care for Active Lives",
-        "lede": "Advanced podiatric treatment using minimally invasive procedures, same-day custom orthotics, and gait correction to relieve pain and restore confident movement.",
-        "img": "svc-podiatry.jpg",
-        "img_alt": "Podiatric surgeon assessing a patient's foot health in Palm Beach Gardens",
-        "why": [
-            "Complete care for common and complex foot & ankle issues",
-            "Expertise in minimally invasive surgical procedures",
-            "Onsite custom orthotics for same-day comfort",
-            "Proven treatments for heel pain and gait correction",
-            "Comprehensive recovery programs for long-term mobility",
-        ],
-        "expertise": [
-            ("Comprehensive Podiatric Evaluation & Treatment", "Thorough clinical exams, imaging, and gait analysis identify the root cause of foot and ankle issues, combining evidence-based conservative care with targeted interventions."),
-            ("Minimally Invasive In-Office Procedures (MIS)", "In-office minimally invasive techniques correct common conditions through small incisions and local anesthesia — minimizing pain and scarring while shortening recovery."),
-            ("Sports Injury Management for Foot & Ankle", "Specialized protocols address sprains, stress fractures, and overuse injuries with focused rehabilitation, progressive strengthening, and return-to-play testing."),
-            ("Same-Day Custom Orthotics — Onsite Fabrication", "Custom orthotics are measured, manufactured, and fitted during your visit for immediate biomechanical support, better alignment, and less strain on painful structures."),
-            ("Heel Pain Treatment & Gait Correction", "Proven therapies for plantar fasciitis and heel pain combine with gait retraining, orthotic tuning, and tailored exercise plans to reduce symptoms and prevent recurrence."),
-            ("Toenail, Bunion & Hammertoe Surgical Care", "Surgical care targets deformities and chronic nail problems with techniques designed to restore function, relieve pain, and support early mobility."),
-        ],
-        "steps": [
-            ("Assessment & Diagnosis", "Comprehensive foot and ankle exam with imaging and gait review to define the problem."),
-            ("Personalized Treatment Plan", "Options tailored to your needs: therapy, orthotics, a minimally invasive procedure, or surgery."),
-            ("Recovery & Support", "Guided rehabilitation, progressive return-to-activity plans, and routine follow-ups for lasting results."),
-        ],
-        "faqs": [
-            ("What foot and ankle conditions do you treat?", "We treat heel pain, bunions, hammertoes, toenail disorders, sprains, fractures, nerve pain, and biomechanical gait problems."),
-            ("Are in-office minimally invasive procedures safe?", "Yes — with proper sterilization and local anesthesia, in-office MIS offers low complication rates and faster recovery versus more invasive surgery."),
-            ("How quickly will custom orthotics help?", "Many patients feel improved comfort immediately; full biomechanical benefits develop over days to weeks as your body adapts."),
-            ("Do you offer a free foot & ankle guide?", "Yes — download the RegenOrtho Palm Beach Foot & Ankle Guide from our Patient Resources page for prevention and care tips."),
-        ],
-        "cta": "Walk <em>Confidently</em> Again",
-        "cta_sub": "Reclaim comfortable movement — book an assessment for same-day custom orthotics, targeted treatment, and guided rehabilitation for lasting mobility.",
-        "conditions": ["foot-ankle-pain", "plantar-fasciitis", "sports-injuries", "peripheral-neuropathy"],
-    },
-    {
         "slug": "regenerative-medicine-orthobiologics",
         "name": "Regenerative Medicine & Orthobiologic Therapies",
         "nav": "Regenerative Medicine & Orthobiologics",
@@ -837,6 +749,203 @@ SERVICES = [
         "cta": "Heal Naturally. <em>Recover Stronger.</em>",
         "cta_sub": "Discover the power of regenerative medicine. Schedule your consultation today and take the first step toward natural, lasting recovery.",
         "conditions": ["knee-pain", "shoulder-pain", "arthritis-joint-pain", "tendon-ligament-injuries", "sports-injuries"],
+        "subservices": ["exosome-therapy", "mesenchymal-stem-cell-therapy", "whartons-jelly-therapy",
+                         "muse-infused-rpa-therapy", "traditional-muse-cell-therapy"],
+    },
+    {
+        "slug": "exosome-therapy",
+        "name": "Exosome Therapy",
+        "nav": "Exosome Therapy",
+        "parent": "regenerative-medicine-orthobiologics",
+        "title": "Exosome Therapy Palm Beach Gardens | RegenOrtho",
+        "desc": "Cell-free exosome therapy in Palm Beach Gardens — ultrasound-guided delivery of growth-factor-rich extracellular vesicles for joint, tendon, and soft-tissue repair.",
+        "eyebrow": "Regenerative Medicine & Orthobiologics",
+        "h1": "Advanced Cell-Free Regenerative Therapy for Pain Relief & Tissue Recovery",
+        "lede": "A cell-free treatment using naturally occurring extracellular vesicles rich in growth factors and signaling molecules to support your body's healing response, reduce inflammation, and improve mobility.",
+        "img": "cells-macro.jpg",
+        "img_alt": "Macro view of cell-signaling vesicles used in exosome therapy at RegenOrtho Palm Beach",
+        "why": [
+            "Cell-free — delivers biological signals rather than living cells",
+            "Physician-performed, ultrasound-guided precision",
+            "Supports tissue repair and helps reduce inflammation",
+            "Minimal downtime, non-surgical approach",
+            "Personalized treatment plan for every patient",
+        ],
+        "expertise": [
+            ("What Exosomes Are", "Exosomes are cell-signaling extracellular vesicles naturally released by cells, carrying growth factors, proteins, cytokines, and signaling molecules that help coordinate communication between cells."),
+            ("How It Differs From Stem Cell Therapy", "Unlike stem cell therapy, exosome therapy is cell-free — instead of delivering living cells, it delivers biological signals that encourage the body's own cells to communicate and repair."),
+            ("Ultrasound-Guided Delivery", "Exosomes are precisely delivered to the affected joint, tendon, ligament, or soft tissue under real-time ultrasound guidance for accurate placement."),
+        ],
+        "steps": [
+            ("Consultation & Imaging", "A comprehensive evaluation plus review of MRI, ultrasound, X-ray, or other diagnostic imaging to confirm candidacy."),
+            ("Ultrasound-Guided Treatment", "Exosomes are delivered directly to the affected area — most treatments are completed in under an hour."),
+            ("Recovery & Follow-Up", "Most patients resume light activity shortly after treatment, with follow-up visits to monitor healing."),
+        ],
+        "faqs": [
+            ("What is Exosome Therapy?", "A regenerative medicine treatment that uses naturally occurring extracellular vesicles containing proteins, growth factors, and signaling molecules that help support the body's healing response."),
+            ("Is the procedure painful?", "Most patients experience only minimal discomfort during treatment."),
+            ("Who is a candidate?", "Candidacy is determined after a comprehensive consultation, imaging review, and physical examination."),
+            ("Is this FDA-approved?", "Exosome therapy is not FDA-approved to treat, cure, or prevent any disease or condition and is not a substitute for indicated surgical care. Cellular products come from accredited U.S. suppliers; individual results vary and no outcome is guaranteed. This is a self-pay service and is not covered by insurance or Medicare."),
+        ],
+        "cta": "Cell-Free. <em>Signal-Driven Healing.</em>",
+        "cta_sub": "Find out if exosome therapy fits your recovery goals — consultation and imaging review is $300, credited toward treatment starting from $2,500.",
+        "conditions": ["knee-pain", "shoulder-pain", "hip-pain", "arthritis-joint-pain", "tendon-ligament-injuries", "sports-injuries"],
+    },
+    {
+        "slug": "mesenchymal-stem-cell-therapy",
+        "name": "Mesenchymal Stem Cell Therapy",
+        "nav": "Mesenchymal Stem Cell Therapy",
+        "parent": "regenerative-medicine-orthobiologics",
+        "title": "Mesenchymal Stem Cell Therapy Palm Beach Gardens | RegenOrtho",
+        "desc": "Mesenchymal stem cell therapy in Palm Beach Gardens — umbilical cord-derived cells delivered via ultrasound-guided injection to support joint and tissue healing.",
+        "eyebrow": "Regenerative Medicine & Orthobiologics",
+        "h1": "Advanced Regenerative Medicine for Joint Pain & Tissue Healing",
+        "lede": "A non-surgical approach using umbilical cord-derived mesenchymal stem cells to support the body's natural healing response, reduce pain, and improve mobility.",
+        "img": "svc-regen.jpg",
+        "img_alt": "Regenerative medicine specialist preparing mesenchymal stem cell therapy at RegenOrtho Palm Beach",
+        "why": [
+            "Umbilical cord-derived mesenchymal stem cells",
+            "Physician-performed, ultrasound-guided precision",
+            "Supports tissue repair without surgery",
+            "Personalized plan based on your diagnosis and goals",
+            "Regular follow-up to monitor healing progress",
+        ],
+        "expertise": [
+            ("How It Works", "Mesenchymal Stem Cell Therapy uses umbilical cord-derived mesenchymal stem cells to support the body's natural healing response through regenerative signaling, promoting tissue repair and reducing inflammation."),
+            ("Ultrasound-Guided Delivery", "Every treatment is performed using real-time ultrasound guidance to ensure accurate, personalized placement."),
+            ("Minimally Invasive", "Performed in-office — no surgery, no general anesthesia, with most patients returning to light activity quickly."),
+        ],
+        "steps": [
+            ("Consultation & Imaging", "Review of symptoms, medical history, and diagnostic imaging (MRI, X-ray, ultrasound) to confirm candidacy."),
+            ("Ultrasound-Guided Therapy", "Real-time ultrasound guidance ensures precise delivery to the targeted area."),
+            ("Recovery & Follow-Up", "Return to daily activities quickly, with follow-up visits to monitor healing and optimize recovery."),
+        ],
+        "faqs": [
+            ("What is Mesenchymal Stem Cell Therapy?", "A regenerative medicine treatment that uses umbilical cord-derived mesenchymal stem cells selected for their regenerative signaling properties to support the body's natural healing response."),
+            ("Is the procedure surgical?", "No — it's a minimally invasive treatment performed in the office using ultrasound guidance."),
+            ("How soon will I notice improvement?", "Recovery varies by patient — some notice improvement within weeks, others see gradual progress over the following months."),
+            ("Is this FDA-approved?", "Mesenchymal stem cell therapy is not FDA-approved to treat, cure, or prevent any disease or condition and is not a substitute for indicated surgical care. Individual results vary and no outcome is guaranteed. This is a self-pay service and is not covered by insurance or Medicare."),
+        ],
+        "cta": "Support Healing, <em>Skip the Surgery</em>",
+        "cta_sub": "Find out if mesenchymal stem cell therapy fits your recovery goals — consultation and imaging review is $300, credited toward treatment starting from $2,500.",
+        "conditions": ["knee-pain", "shoulder-pain", "hip-pain", "arthritis-joint-pain", "tendon-ligament-injuries", "sports-injuries"],
+    },
+    {
+        "slug": "whartons-jelly-therapy",
+        "name": "Wharton's Jelly Therapy",
+        "nav": "Wharton's Jelly Therapy",
+        "parent": "regenerative-medicine-orthobiologics",
+        "title": "Wharton's Jelly Therapy Palm Beach Gardens | RegenOrtho",
+        "desc": "Wharton's Jelly therapy in Palm Beach Gardens — umbilical cord tissue rich in growth factors and extracellular matrix proteins, delivered by ultrasound-guided injection.",
+        "eyebrow": "Regenerative Medicine & Orthobiologics",
+        "h1": "Advanced Regenerative Therapy to Support Joint Health & Tissue Repair",
+        "lede": "Rich in naturally occurring growth factors, cytokines, and extracellular matrix proteins, Wharton's Jelly Therapy may help reduce inflammation, promote tissue repair, and improve joint function without surgery.",
+        "img": "ultrasound-guided.jpg",
+        "img_alt": "Ultrasound-guided delivery of Wharton's Jelly therapy at RegenOrtho Palm Beach",
+        "why": [
+            "Derived from umbilical cord tissue components",
+            "Rich in growth factors, cytokines & matrix proteins",
+            "Physician-performed, ultrasound-guided precision",
+            "Non-surgical, in-office procedure",
+            "Personalized treatment plan for every patient",
+        ],
+        "expertise": [
+            ("How It Works", "Wharton's Jelly Therapy uses the naturally occurring components found within umbilical cord tissue to deliver biologically active substances that support tissue repair, healthy cell communication, and the body's natural healing processes."),
+            ("Not Cell Replacement — Signal Support", "Rather than replacing damaged tissue, Wharton's Jelly provides biologically active components that help support healthy cell communication and tissue repair."),
+            ("Ultrasound-Guided Delivery", "Treatment is precisely delivered into the affected joint, tendon, or ligament under real-time ultrasound guidance."),
+        ],
+        "steps": [
+            ("Consultation & Imaging", "A thorough evaluation and review of diagnostic imaging to confirm candidacy."),
+            ("Ultrasound-Guided Delivery", "Precisely delivered into the affected joint, tendon, or ligament — most procedures completed in under an hour."),
+            ("Recovery & Follow-Up", "Most patients return to light daily activities quickly, with follow-up visits to monitor progress."),
+        ],
+        "faqs": [
+            ("What is Wharton's Jelly Therapy?", "A regenerative medicine treatment that uses umbilical cord tissue rich in naturally occurring growth factors, cytokines, and extracellular matrix proteins."),
+            ("Is it surgical?", "No — it's a minimally invasive treatment performed in the office using ultrasound guidance."),
+            ("Who is a candidate?", "Your physician determines candidacy after reviewing your medical history, symptoms, physical examination, and diagnostic imaging."),
+            ("Is this FDA-approved?", "Wharton's Jelly therapy is not FDA-approved to treat, cure, or prevent any disease or condition and is not a substitute for indicated surgical care. Individual results vary and no outcome is guaranteed. This is a self-pay service and is not covered by insurance or Medicare."),
+        ],
+        "cta": "Support Tissue Repair, <em>Naturally</em>",
+        "cta_sub": "Find out if Wharton's Jelly therapy fits your recovery goals — consultation and imaging review is $300, credited toward treatment starting from $2,500.",
+        "conditions": ["knee-pain", "shoulder-pain", "hip-pain", "arthritis-joint-pain", "tendon-ligament-injuries", "sports-injuries"],
+    },
+    {
+        "slug": "muse-infused-rpa-therapy",
+        "name": "MUSE-Infused RPA™ Therapy",
+        "nav": "MUSE-Infused RPA™ Therapy",
+        "parent": "regenerative-medicine-orthobiologics",
+        "title": "MUSE-Infused RPA Therapy Palm Beach Gardens | RegenOrtho",
+        "desc": "MUSE-Infused RPA therapy in Palm Beach Gardens — an acellular Regenerative Protein Array enhanced with proteins from MUSE cells, delivered by IV push or targeted injection.",
+        "eyebrow": "Regenerative Medicine & Orthobiologics",
+        "h1": "Advanced Acellular Regenerative Protein Therapy for Joint Health & Recovery",
+        "lede": "A specialized protein array enhanced with proteins naturally extracted from MUSE cells, designed to support communication between cells and coordinate the body's natural repair processes.",
+        "img": "cells-macro.jpg",
+        "img_alt": "Regenerative protein array used in MUSE-Infused RPA therapy at RegenOrtho Palm Beach",
+        "why": [
+            "Acellular and non-DNA protein array",
+            "Enhanced with proteins extracted from MUSE cells",
+            "Delivered via IV push or targeted injection",
+            "Supports cell signaling, not living-cell engraftment",
+            "Physician-directed, personalized treatment plan",
+        ],
+        "expertise": [
+            ("What It Is", "MUSE-Infused RPA™ Therapy combines Regenerative Protein Array™ (RPA) technology with proteins extracted from MUSE cells. Because it's acellular, it delivers regenerative proteins rather than living cells."),
+            ("How It Works", "The proteins support direct biological signaling involved in tissue repair, anti-inflammatory activity, angiogenesis, and cytoprotective processes."),
+            ("How It Differs From Traditional MUSE Cell Therapy", "Traditional MUSE Cell Therapy uses living MUSE cells, while MUSE-Infused RPA Therapy uses an acellular protein fraction enhanced with proteins from MUSE cells."),
+        ],
+        "steps": [
+            ("Consultation & Imaging", "A comprehensive evaluation and review of diagnostic imaging to determine candidacy."),
+            ("IV Push or Targeted Injection", "Depending on your physician's recommendation, treatment is delivered by IV push or targeted injection."),
+            ("Recovery & Follow-Up", "Most procedures are completed in under an hour, with scheduled follow-up to monitor progress."),
+        ],
+        "faqs": [
+            ("What is MUSE-Infused RPA™ Therapy?", "An acellular regenerative medicine treatment that combines Regenerative Protein Array™ technology with proteins extracted from MUSE cells to support the body's natural healing response."),
+            ("How is it administered?", "Depending on your physician's recommendation, treatment may be provided through IV push or targeted injection."),
+            ("Does insurance cover treatment?", "Regenerative medicine therapies like this are generally self-pay services and are not covered by insurance or Medicare."),
+            ("Is this FDA-approved?", "MUSE-Infused RPA™ Therapy is not FDA-approved to treat, cure, or prevent any disease or condition and is not a substitute for indicated surgical care. Individual results vary and no outcome is guaranteed."),
+        ],
+        "cta": "Protein-Driven <em>Repair Signals</em>",
+        "cta_sub": "Find out if MUSE-Infused RPA™ therapy fits your recovery goals — consultation and imaging review is $300, credited toward treatment starting from $2,500.",
+        "conditions": ["knee-pain", "shoulder-pain", "hip-pain", "arthritis-joint-pain", "tendon-ligament-injuries", "sports-injuries"],
+    },
+    {
+        "slug": "traditional-muse-cell-therapy",
+        "name": "Traditional MUSE® Cell Therapy",
+        "nav": "Traditional MUSE Cell Therapy",
+        "parent": "regenerative-medicine-orthobiologics",
+        "title": "Traditional MUSE Cell Therapy Palm Beach Gardens | RegenOrtho",
+        "desc": "Traditional MUSE cell therapy in Palm Beach Gardens — a live-cell regenerative treatment using Multilineage-Differentiating Stress-Enduring cells, delivered by IV push or targeted injection.",
+        "eyebrow": "Regenerative Medicine & Orthobiologics",
+        "h1": "Advanced Live-Cell Regenerative Therapy for Orthopedic & Joint Health",
+        "lede": "A live-cell therapy using Multilineage-Differentiating Stress-Enduring (MUSE) cells — a rare population of mesenchymal stem cells — to support the body's natural healing response.",
+        "img": "svc-regen.jpg",
+        "img_alt": "Live-cell preparation used in Traditional MUSE Cell Therapy at RegenOrtho Palm Beach",
+        "why": [
+            "Live-cell preparation of rare MUSE cells",
+            "May support repair via cell engraftment and signaling",
+            "Delivered via IV push or targeted injection",
+            "Newly available at RegenOrtho Palm Beach",
+            "Physician-directed, personalized treatment plan",
+        ],
+        "expertise": [
+            ("What MUSE Cells Are", "Multilineage-Differentiating Stress-Enduring (MUSE) cells are a rare subpopulation of mesenchymal stem cells recognized for their stress-enduring characteristics and regenerative potential."),
+            ("How It Works", "MUSE cells may migrate toward injured tissue, where a portion may engraft and differentiate into functional cells while also supporting repair through paracrine signaling."),
+            ("How It Differs", "Traditional MUSE Cell Therapy uses living MUSE cells, whereas some other regenerative therapies rely primarily on signaling molecules or acellular components."),
+        ],
+        "steps": [
+            ("Consultation & Imaging", "A complete evaluation and review of diagnostic imaging to determine candidacy."),
+            ("IV Push or Targeted Injection", "Treatment is administered by IV push or targeted injection based on your personalized plan."),
+            ("Recovery & Follow-Up", "Most patients return to light activity quickly, with regular follow-up to monitor progress."),
+        ],
+        "faqs": [
+            ("What is Traditional MUSE® Cell Therapy?", "A regenerative medicine treatment using a live-cell preparation containing Multilineage-Differentiating Stress-Enduring (MUSE) cells, a rare subpopulation of mesenchymal stem cells."),
+            ("Is it surgical?", "No — it's a minimally invasive regenerative medicine treatment performed without traditional orthopedic surgery."),
+            ("How is it administered?", "Depending on your individualized treatment plan, therapy may be administered through IV push or targeted injection."),
+            ("Is this FDA-approved?", "Traditional MUSE® Cell Therapy is not FDA-approved to treat, cure, or prevent any disease or condition and is not a substitute for indicated surgical care. Individual results vary and no outcome is guaranteed. This is a self-pay service and is not covered by insurance or Medicare."),
+        ],
+        "cta": "Live-Cell <em>Regenerative Support</em>",
+        "cta_sub": "Find out if Traditional MUSE® Cell Therapy fits your recovery goals — consultation and imaging review is $300, credited toward treatment starting from $2,500.",
+        "conditions": ["knee-pain", "shoulder-pain", "hip-pain", "arthritis-joint-pain", "tendon-ligament-injuries", "sports-injuries"],
     },
     {
         "slug": "advanced-non-surgical-therapies",
@@ -877,7 +986,7 @@ SERVICES = [
         ],
         "cta": "Relief Without a <em>Scalpel</em>",
         "cta_sub": "Book an evaluation to find out whether shockwave, laser, peptide, or exosome therapy can get you moving comfortably again — without surgery.",
-        "conditions": ["plantar-fasciitis", "tendon-ligament-injuries", "sports-injuries", "arthritis-joint-pain"],
+        "conditions": ["tendon-ligament-injuries", "sports-injuries", "arthritis-joint-pain"],
     },
     {
         "slug": "vein-care",
@@ -920,82 +1029,6 @@ SERVICES = [
         "conditions": ["varicose-spider-veins"],
     },
     {
-        "slug": "misha-knee-system",
-        "name": "MISHA Knee System",
-        "nav": "MISHA Knee System",
-        "title": "MISHA Knee System Palm Beach | Implantable Shock Absorber",
-        "desc": "The MISHA Knee System — an implantable shock absorber for medial knee osteoarthritis — offered in Palm Beach Gardens for patients not ready for replacement.",
-        "eyebrow": "MISHA Knee System",
-        "h1": "The MISHA Knee System: A Shock Absorber for Your Knee",
-        "lede": "An implantable shock absorber designed to relieve pain and improve function in patients with medial knee osteoarthritis — placed outside the joint in an outpatient procedure.",
-        "img": "misha-device.jpg",
-        "img_alt": "The MISHA Knee System implantable shock absorber device",
-        "why": [
-            "Reduces peak forces on the knee by over 30% during walking and standing",
-            "Placed under the skin but outside the joint — an outpatient procedure",
-            "Designed for patients not ready for knee replacement surgery",
-            "An option when medication, injections, therapy, or braces haven't been enough",
-        ],
-        "expertise": [
-            ("How It Works", "Overloading the knee joint can lead to the initiation or progression of osteoarthritis — and unloading it can reduce pain and symptoms. Like a car's shock absorber, the MISHA Knee System compresses as you walk or stand, reducing peak forces on the knee by over 30%."),
-            ("Outside the Joint, Under the Skin", "The device is placed under the skin but outside the joint itself during an outpatient procedure — preserving your anatomy while offloading the painful medial compartment."),
-            ("Who It's For", "If pain in the inner half of your knee limits daily activities, and you've already tried medication, knee injections, physical therapy, or off-loader braces — but you're not ready for knee replacement — you may be a candidate."),
-            ("Backed by Research", "The MISHA Knee System's unloading approach is grounded in published biomechanics research on load distribution in early osteoarthritis and medial knee unloading during walking."),
-        ],
-        "steps": [
-            ("Candidacy Evaluation", "Imaging and examination confirm medial-compartment osteoarthritis and whether unloading is right for you."),
-            ("Outpatient Procedure", "The shock absorber is placed under the skin, outside the joint, in an outpatient setting."),
-            ("Recovery & Follow-Up", "A structured recovery plan restores mobility while your care team monitors progress."),
-        ],
-        "faqs": [
-            ("Am I a candidate for the MISHA Knee System?", "You may be if pain in the inner (medial) half of your knee limits daily activity, you've tried conservative care such as medication, injections, therapy, or braces, and you're not ready for knee replacement. An in-office evaluation confirms candidacy."),
-            ("Is the MISHA Knee System a knee replacement?", "No — nothing is removed from your joint. The implant sits under the skin, outside the joint, and works by absorbing load like a shock absorber."),
-            ("How much does it reduce knee load?", "During walking or standing, the shock absorber reduces peak forces on the knee by over 30% based on published biomechanical research."),
-            ("Where can I learn more?", "Visit MISHAknee.com for device details, then call 833-783-6561 to schedule a candidacy consultation in Palm Beach Gardens."),
-        ],
-        "cta": "Not Ready for a <em>Knee Replacement?</em>",
-        "cta_sub": "Find out if the MISHA Knee System's implantable shock absorber can relieve your medial knee pain — schedule a candidacy evaluation today.",
-        "conditions": ["knee-pain", "arthritis-joint-pain"],
-    },
-    {
-        "slug": "mako-robotic-knee-replacement",
-        "name": "Mako Robotic-Assisted Total Knee Replacement",
-        "nav": "Mako Robotic Knee Replacement",
-        "title": "Mako Robotic Knee Replacement Palm Beach Gardens | RegenOrtho",
-        "desc": "Mako robotic-arm assisted total knee replacement in Palm Beach Gardens — 3D CT planning, haptic precision, and personalized implant placement.",
-        "eyebrow": "Mako Robotic-Assisted Surgery",
-        "h1": "Mako Robotic-Assisted Total Knee Replacement",
-        "lede": "State-of-the-art robotic-arm assisted knee replacement with 3D CT-based planning and haptic guidance — improving surgical accuracy to help you get back to your active life sooner.",
-        "img": "knee-implant.jpg",
-        "img_alt": "Knee implant model illustrating robotic-assisted total knee replacement",
-        "why": [
-            "3D CT-based planning personalizes implant placement to your anatomy",
-            "Haptic guidance (AccuStop™) keeps bone cuts within your personalized plan",
-            "Aims to cut less healthy bone and preserve soft tissue versus manual techniques",
-            "Dr. Matarazzo is certified in the MAKO robotic-assisted knee replacement system",
-        ],
-        "expertise": [
-            ("Preoperative CT Scan & Planning", "A high-resolution CT scan builds a 3D model of your knee — bone, cartilage, and alignment — which your surgeon uses to plan implant positioning and joint balance before ever entering the operating room."),
-            ("Robotic Precision in the Operating Room", "During surgery, the robotic arm guides bone cuts within the constraints of your personalized plan; haptic feedback (AccuStop™) prevents deviation beyond safe boundaries."),
-            ("Implant Placement & Fine Adjustments", "Once bone preparation is complete, the implant is placed and the surgeon fine-tunes alignment and balance based on real-time feedback."),
-            ("Recovery & Rehabilitation", "Hospital stays are typically 1–2 nights, with physical therapy often beginning the day after surgery — focusing on range of motion, gait training, and strengthening."),
-        ],
-        "steps": [
-            ("Consultation & Imaging", "Your surgeon reviews your history, exam, and imaging to confirm you're a candidate for robotic-assisted TKA."),
-            ("3D Planning & Surgery", "A CT-based 3D plan personalizes your procedure; the robotic arm executes it with haptic precision."),
-            ("Guided Recovery", "Structured rehabilitation begins right away, with your care team monitoring milestones through full recovery."),
-        ],
-        "faqs": [
-            ("What is the Mako system?", "Mako is a robotic-arm assisted surgical system developed by Stryker that combines CT-based 3D planning, haptic guidance, and real-time feedback to assist your surgeon in performing precise bone cuts and implant placement."),
-            ("Who is a candidate for Mako robotic knee replacement?", "Patients with severe knee arthritis or joint degeneration unresponsive to conservative treatment, persistent pain or stiffness, and sufficient general health for joint replacement surgery."),
-            ("Is robotic knee replacement safer than traditional surgery?", "All surgery carries risks — infection, bleeding, clot formation, and implant-related complications among them. Mako's precision aims to reduce cut error and preserve healthy tissue; your surgeon will discuss the risks and benefits for your case."),
-            ("How long is recovery?", "Hospital stays are typically 1–2 nights, physical therapy usually starts the next day, and your team guides a progressive return to activity over the following weeks."),
-        ],
-        "cta": "Precision You Can <em>Stand On</em>",
-        "cta_sub": "Considering knee replacement? Ask whether Mako robotic-assisted surgery is right for you — we'll review your imaging, history, and goals together.",
-        "conditions": ["knee-pain", "arthritis-joint-pain"],
-    },
-    {
         "slug": "neuropathy-program",
         "name": "Neuropathy Restoration Program",
         "nav": "Neuropathy Restoration Program",
@@ -1033,7 +1066,7 @@ SERVICES = [
         ],
         "cta": "Feel Your <em>Feet</em> Again",
         "cta_sub": "Burning, tingling, and numbness deserve more than another prescription. Book a neuropathy consultation and get a plan that targets the root cause.",
-        "conditions": ["peripheral-neuropathy", "foot-ankle-pain"],
+        "conditions": ["peripheral-neuropathy"],
     },
     {
         "slug": "medical-weight-loss",
@@ -1158,18 +1191,22 @@ SERVICES = [
     },
 ]
 
+# Services that own a slot in the top-level grid/nav. Sub-services (the five
+# regenerative modalities) carry a "parent" and are reached from that page.
+TOP_SERVICES = [s for s in SERVICES if not s.get("parent")]
+
 CONDITIONS = [
     {"slug": "knee-pain", "name": "Knee Pain",
      "title": "Knee Pain Treatment Palm Beach Gardens | RegenOrtho",
-     "desc": "Knee pain treatment in Palm Beach Gardens — from PRP and joint preservation to the MISHA shock absorber and Mako robotic knee replacement. Same-week visits.",
+     "desc": "Knee pain treatment in Palm Beach Gardens — PRP, orthobiologics, and joint-preservation therapy to relieve pain and restore function without surgery.",
      "h1": "Knee Pain, Treated at Every Stage",
-     "lede": "From early arthritis to bone-on-bone — a full spectrum of knee care under one roof, so your treatment matches your stage, not a one-size-fits-all protocol.",
+     "lede": "From early arthritis to advanced wear — regenerative, joint-preserving care matched to your knee's actual stage, not a one-size-fits-all protocol.",
      "img": "knee-implant.jpg",
      "symptoms": ["Pain on stairs, standing, or first steps in the morning", "Swelling or stiffness after activity", "Instability, catching, or giving way", "Deep aching in the inner (medial) knee", "Pain that has outlasted rest, meds, or injections"],
-     "body": "Knee pain is the most common reason patients walk through our doors — and the mistake most practices make is offering only the treatment they happen to sell. Because RegenOrtho Palm Beach spans orthopedic surgery, regenerative medicine, and advanced non-surgical therapies, your plan starts with your knee's actual stage: joint-preserving therapy and biologics when the joint can still be protected, the MISHA implantable shock absorber when medial arthritis needs unloading but you're not ready for replacement, and Mako robotic-assisted total knee replacement when the joint is truly at end stage.",
-     "services": ["orthopedic-sports-medicine", "regenerative-medicine-orthobiologics", "misha-knee-system", "mako-robotic-knee-replacement"],
-     "faqs": [("Can I avoid knee replacement?", "Often, yes — many knees respond to joint preservation, regenerative injections, or unloading with the MISHA Knee System. When replacement is genuinely the right call, robotic-assisted precision improves the experience. An evaluation tells you which stage you're in."),
-              ("What happens at a knee evaluation?", "A focused exam plus imaging review — we identify the pain source, grade the arthritis or injury, and lay out every option that fits, from conservative care to surgery.")]},
+     "body": "Knee pain is the most common reason patients walk through our doors. Our focus is joint preservation — regenerative medicine and advanced non-surgical therapies designed to protect the joint you have rather than rush toward replacement: PRP and orthobiologic injections that address the joint environment directly, biomechanical correction, and progressive rehabilitation. When a knee is genuinely beyond preservation, we'll tell you honestly and coordinate a referral to a trusted surgical specialist.",
+     "services": ["regenerative-medicine-orthobiologics", "advanced-non-surgical-therapies"],
+     "faqs": [("Can I avoid knee replacement?", "Often, yes — many knees respond to joint preservation and regenerative injections that address the joint environment directly. When replacement is genuinely the right call, we'll refer you to a trusted surgical specialist. An evaluation tells you which stage you're in."),
+              ("What happens at a knee evaluation?", "A focused exam plus imaging review — we identify the pain source, grade the arthritis or injury, and lay out every non-surgical option that fits your stage.")]},
     {"slug": "shoulder-pain", "name": "Shoulder Pain",
      "title": "Shoulder Pain Treatment Palm Beach Gardens | RegenOrtho",
      "desc": "Shoulder pain care in Palm Beach Gardens — rotator cuff injuries, arthritis, and sports injuries treated with arthroscopy and regenerative medicine.",
@@ -1177,9 +1214,9 @@ CONDITIONS = [
      "lede": "Fellowship-trained shoulder expertise — from minimally invasive arthroscopy to regenerative options for tendons that need help healing.",
      "img": "svc-ortho.jpg",
      "symptoms": ["Pain reaching overhead or behind your back", "Night pain that interrupts sleep", "Weakness lifting or carrying", "Clicking, catching, or stiffness", "Pain after a fall or throwing activity"],
-     "body": "Dr. Matarazzo is an expert in minimally invasive procedures and complex reconstructions of the shoulder, with more than 23 years of clinical and surgical experience. Shoulder problems — rotator cuff injuries, arthritis, instability, sports overuse — respond best when the diagnosis is precise: our evaluations combine examination with advanced imaging, and treatment ranges from targeted rehabilitation and ultrasound-guided biologic injections to arthroscopic repair when the tissue genuinely needs it.",
-     "services": ["orthopedic-sports-medicine", "regenerative-medicine-orthobiologics", "advanced-non-surgical-therapies"],
-     "faqs": [("Do rotator cuff tears always need surgery?", "No — many partial tears and tendinopathies improve with guided rehabilitation and biologic support. Complete tears in active patients often do best with repair; imaging and examination guide the call."),
+     "body": "Shoulder problems — rotator cuff injuries, arthritis, instability, sports overuse — respond best when the diagnosis is precise. Our evaluations combine examination with advanced imaging, and treatment centers on targeted rehabilitation and ultrasound-guided regenerative injections. When the tissue genuinely needs surgical repair, Dr. Matarazzo — more than 23 years of clinical and surgical experience in shoulder reconstruction — will discuss that path and coordinate the referral.",
+     "services": ["regenerative-medicine-orthobiologics", "advanced-non-surgical-therapies"],
+     "faqs": [("Do rotator cuff tears always need surgery?", "No — many partial tears and tendinopathies improve with guided rehabilitation and biologic support. Complete tears in active patients are often referred for surgical repair; imaging and examination guide the call."),
               ("What regenerative options exist for shoulders?", "PRP and other orthobiologics, delivered under ultrasound guidance, are used for rotator cuff tendinopathy and related soft-tissue problems.")]},
     {"slug": "hip-pain", "name": "Hip Pain",
      "title": "Hip Pain Treatment Palm Beach Gardens | RegenOrtho",
@@ -1188,19 +1225,19 @@ CONDITIONS = [
      "lede": "Groin, lateral hip, and buttock pain have different causes — precise diagnosis is the difference between months of guessing and a plan that works.",
      "img": "recovery-stretch.jpg",
      "symptoms": ["Groin pain with walking or rotation", "Lateral hip pain lying on your side", "Stiffness putting on shoes or socks", "Pain radiating from the back or SI joint", "Reduced stride length or limp"],
-     "body": "Hip pain is a diagnostic puzzle: true joint arthritis, trochanteric bursitis, tendon problems, and referred spine pain all present differently and need different treatment. Our orthopedic evaluation locates the actual pain generator with examination and imaging, then matches treatment — activity modification and rehabilitation, image-guided injections, regenerative options for tendon and soft-tissue problems, or surgical referral pathways when the joint is beyond preservation.",
-     "services": ["orthopedic-sports-medicine", "regenerative-medicine-orthobiologics"],
+     "body": "Hip pain is a diagnostic puzzle: true joint arthritis, trochanteric bursitis, tendon problems, and referred spine pain all present differently and need different treatment. Our evaluation locates the actual pain generator with examination and imaging, then matches treatment — activity modification and rehabilitation, image-guided injections, and regenerative options for tendon and soft-tissue problems — with surgical referral pathways when the joint is beyond preservation.",
+     "services": ["regenerative-medicine-orthobiologics", "advanced-non-surgical-therapies"],
      "faqs": [("Why does my hip hurt in the groin?", "Groin pain with rotation is the classic pattern of true hip-joint pathology such as arthritis or labral problems — an exam and imaging distinguish it from tendon or referred pain."),
               ("Can hip arthritis be managed without replacement?", "Earlier stages often respond to a combination of activity strategy, strengthening, and injection-based care; when replacement becomes the right answer, we'll tell you honestly.")]},
     {"slug": "arthritis-joint-pain", "name": "Arthritis & Joint Pain",
      "title": "Arthritis Treatment Palm Beach Gardens | Joint Pain Relief",
-     "desc": "Arthritis and chronic joint pain care in Palm Beach Gardens — regenerative medicine, joint preservation, unloading implants, and robotic replacement.",
+     "desc": "Arthritis and chronic joint pain care in Palm Beach Gardens — regenerative medicine and joint-preservation therapy to reduce pain and improve function without surgery.",
      "h1": "Arthritis Care Across the Whole Spectrum",
      "lede": "Steroids mask the pain — our goal is a joint environment that hurts less and functions better, stage by stage.",
      "img": "svc-regen.jpg",
      "symptoms": ["Morning stiffness that eases with movement", "Aching that worsens with weather or activity", "Grinding, creaking, or swelling in a joint", "Progressively shorter comfortable walking distance", "Reliance on anti-inflammatories to get through the day"],
-     "body": "Osteoarthritis is progressive, but progression is not a straight line to surgery. The practice's philosophy: match the intervention to the stage. Early and moderate arthritis often responds to joint preservation — strengthening, biomechanical correction, and biologic injections such as PRP that address the joint environment rather than masking pain. Medial knee arthritis has a unique middle option in the MISHA implantable shock absorber. And when a joint is end-stage, robotic-assisted replacement offers a precision path back to activity.",
-     "services": ["regenerative-medicine-orthobiologics", "orthopedic-sports-medicine", "misha-knee-system", "mako-robotic-knee-replacement"],
+     "body": "Osteoarthritis is progressive, but progression is not a straight line to surgery. The practice's philosophy: match the intervention to the stage. Early and moderate arthritis often responds to joint preservation — strengthening, biomechanical correction, and biologic injections such as PRP that address the joint environment rather than masking pain. When a joint is truly end-stage, we'll tell you honestly and coordinate a referral to a trusted surgical specialist.",
+     "services": ["regenerative-medicine-orthobiologics", "advanced-non-surgical-therapies"],
      "faqs": [("Are steroid injections bad for my joint?", "Cortisone can provide real short-term relief, but repeated injections in the same joint have been associated with cartilage thinning when overused — one reason we emphasize biologic and mechanical strategies for long-term management."),
               ("Which joints can regenerative medicine help?", "Knees, shoulders, hips, and smaller joints affected by arthritis or soft-tissue degeneration — candidacy depends on stage and imaging findings.")]},
     {"slug": "sports-injuries", "name": "Sports Injuries",
@@ -1211,7 +1248,7 @@ CONDITIONS = [
      "img": "sports-recovery.jpg",
      "symptoms": ["Acute injuries — sprains, strains, tears, fractures", "Overuse pain that worsens with training", "Instability or weakness after a prior injury", "Swelling or loss of range after activity", "Performance limited by a nagging problem"],
      "body": "Dr. Matarazzo completed his sports medicine and arthroscopy fellowship at Lenox Hill Hospital in New York City, where he served as an assistant team physician to the New York Jets and New York Islanders — and he has served as head team physician for college and high school athletic programs across two states. That sideline experience shapes how we treat every athlete: rapid access when injuries happen, accurate grading of the damage, and structured return-to-play programs that restore strength and confidence rather than just waiting out the pain.",
-     "services": ["orthopedic-sports-medicine", "regenerative-medicine-orthobiologics", "advanced-non-surgical-therapies", "iv-lounge"],
+     "services": ["regenerative-medicine-orthobiologics", "advanced-non-surgical-therapies", "iv-lounge"],
      "faqs": [("How fast can I be seen after an injury?", "We offer same-day injury consultations whenever possible — call the office and acute injuries are prioritized."),
               ("Do you treat weekend athletes or just competitive ones?", "Both — the same diagnostic rigor and recovery structure applies whether you're chasing a championship or a personal best.")]},
     {"slug": "tendon-ligament-injuries", "name": "Tendon & Ligament Injuries",
@@ -1222,31 +1259,9 @@ CONDITIONS = [
      "img": "ultrasound-guided.jpg",
      "symptoms": ["Tennis or golfer's elbow that won't quit", "Achilles or patellar tendon pain with activity", "Chronic ankle instability after sprains", "Pain that returns the moment you resume training", "Tenderness and thickening over a tendon"],
      "body": "Chronic tendinopathy is a failed-healing problem: the tissue gets stuck in a degenerative cycle that rest alone rarely breaks. Our toolkit is built for exactly this — EPAT shockwave therapy to stimulate blood flow and collagen remodeling, ultrasound-guided PRP to deliver concentrated growth factors into the damaged tissue, cold laser to calm inflammation, and progressive loading programs that rebuild capacity. Ligament injuries get the same structured approach, from grading through return-to-activity testing.",
-     "services": ["advanced-non-surgical-therapies", "regenerative-medicine-orthobiologics", "orthopedic-sports-medicine"],
+     "services": ["advanced-non-surgical-therapies", "regenerative-medicine-orthobiologics"],
      "faqs": [("Why didn't rest fix my tendon pain?", "Chronic tendinopathy is degenerative rather than purely inflammatory — the tissue needs a stimulus to remodel, which is what shockwave, biologics, and progressive loading provide."),
               ("How many shockwave sessions do tendons need?", "Most protocols involve a short series of weekly sessions; your specialist will set expectations at your evaluation.")]},
-    {"slug": "foot-ankle-pain", "name": "Foot & Ankle Pain",
-     "title": "Foot & Ankle Pain Treatment Palm Beach Gardens",
-     "desc": "Foot and ankle pain care in Palm Beach Gardens — bunions, hammertoes, sprains, fractures, and nerve pain treated by a board-certified podiatric surgeon.",
-     "h1": "Foot & Ankle Pain, Treated at the Source",
-     "lede": "Twenty-six bones, thirty-three joints — and one board-certified surgical specialist to figure out which one is ruining your day.",
-     "img": "svc-podiatry.jpg",
-     "symptoms": ["Bunions, hammertoes, or toe deformities", "Ankle sprains that never fully healed", "Stress fractures or activity-related pain", "Chronic toenail problems", "Pain that changes how you walk"],
-     "body": "Dr. Cedeno is board certified in foot surgery by the American Board of Foot & Ankle Surgery and completed a three-year surgical residency in reconstructive and trauma surgery of the foot and ankle. That depth matters: foot pain is frequently misdiagnosed, and the practice's approach — clinical exam, imaging, and gait analysis — identifies the true source before treatment begins. Many conditions resolve with conservative care and same-day custom orthotics; when correction is needed, minimally invasive in-office procedures shorten recovery dramatically.",
-     "services": ["podiatric-medicine-foot-ankle-surgery", "advanced-non-surgical-therapies", "neuropathy-program"],
-     "faqs": [("Do bunions always need surgery?", "No — padding, footwear changes, and orthotics manage many bunions. When correction is warranted, modern techniques emphasize smaller incisions and faster recovery."),
-              ("What if my ankle still feels unstable after a sprain?", "Chronic instability responds to structured strengthening and proprioception work; persistent mechanical instability may need further evaluation.")]},
-    {"slug": "plantar-fasciitis", "name": "Plantar Fasciitis & Heel Pain",
-     "title": "Plantar Fasciitis Treatment Palm Beach Gardens | Heel Pain",
-     "desc": "Plantar fasciitis and heel pain treatment in Palm Beach Gardens — EPAT shockwave, custom orthotics, and gait correction from a board-certified podiatrist.",
-     "h1": "Heel Pain That Finally Gets Better",
-     "lede": "Those first steps in the morning shouldn't be the hardest part of your day.",
-     "img": "podiatry-exam.jpg",
-     "symptoms": ["Stabbing heel pain with the first steps of the morning", "Pain after — not during — activity", "Tenderness along the arch or heel", "Pain that improves briefly then returns", "Months of failed home remedies"],
-     "body": "Plantar fasciitis is among the most common — and most stubbornly mistreated — foot problems. Our protocol combines proven therapies: biomechanical gait correction and same-day custom orthotics fabricated onsite to offload the fascia, EPAT shockwave therapy to stimulate healing in chronic cases, and tailored stretching and loading plans that prevent recurrence. Patient outcomes speak for themselves — including patients whose plantar fasciitis resolved fully under Dr. Cedeno's care.",
-     "services": ["podiatric-medicine-foot-ankle-surgery", "advanced-non-surgical-therapies"],
-     "faqs": [("How long does plantar fasciitis take to heal?", "With a structured plan — orthotics, gait correction, and shockwave when indicated — many patients improve substantially within weeks, though chronic cases take longer."),
-              ("Do cortisone shots fix plantar fasciitis?", "They can calm a flare but don't correct the mechanics that caused it; that's why our protocol pairs symptom relief with orthotics and gait correction.")]},
     {"slug": "peripheral-neuropathy", "name": "Peripheral Neuropathy",
      "title": "Peripheral Neuropathy Treatment Palm Beach Gardens",
      "desc": "Peripheral neuropathy treatment in Palm Beach Gardens — an IV-enhanced regenerative program targeting burning, tingling, and numbness at the root cause.",
@@ -1255,7 +1270,7 @@ CONDITIONS = [
      "img": "neuro-exam.jpg",
      "symptoms": ["Burning or tingling in the feet or hands", "Numbness or loss of sensation", "Sharp, shooting, or electric pain", "Weakness or balance instability", "Symptoms worse at night"],
      "body": "The Neuropathy Restoration Program is the practice's comprehensive answer to peripheral nerve damage: advanced diagnostics to distinguish compression from metabolic causes, IV therapy with B12 to nourish nerves systemically, regenerative injections to reduce inflammation at the source, cold laser to stimulate repair, therapeutic ultrasound to improve circulation, and customized peptide protocols. The program is structured with defined pathways after completion — maintenance for responders, escalation for partial response, and targeted evaluation for persistent focal nerve issues.",
-     "services": ["neuropathy-program", "podiatric-medicine-foot-ankle-surgery", "iv-lounge"],
+     "services": ["neuropathy-program", "iv-lounge"],
      "faqs": [("What causes peripheral neuropathy?", "Causes range from metabolic conditions to nerve compression — which is exactly why the program starts with diagnostics that identify your driver before treatment begins."),
               ("Is the program surgical?", "No — it's a non-surgical program. Only a persistent focal nerve issue would prompt evaluation for a targeted nerve release procedure.")]},
     {"slug": "varicose-spider-veins", "name": "Varicose & Spider Veins",
@@ -1266,7 +1281,7 @@ CONDITIONS = [
      "img": "vein-treatment.jpg",
      "symptoms": ["Bulging, rope-like varicose veins", "Visible spider or reticular veins", "Leg heaviness, aching, or swelling by day's end", "Night cramps or restless legs", "Skin changes or slow-healing spots near the ankle"],
      "body": "Vein disease is progressive and underdiagnosed — and treating the visible veins without finding the underlying reflux is why so many treatments elsewhere don't last. Every vein plan here starts with duplex ultrasound mapping to locate the failing valves. Treatment is minimally invasive and office-based: endovenous laser or radiofrequency ablation for diseased saphenous veins, sclerotherapy for spider and reticular veins, micro-incision phlebectomy for surface varicosities, and specialized wound care when venous insufficiency has affected the skin.",
-     "services": ["vein-care", "podiatric-medicine-foot-ankle-surgery"],
+     "services": ["vein-care"],
      "faqs": [("Is vein treatment covered by insurance?", "Medical vein care — treating symptoms and circulation problems — is often covered; cosmetic treatment is usually elective. We verify your benefits before treatment."),
               ("Do varicose veins come back after treatment?", "Treated veins are closed permanently, but new veins can develop over time — structured follow-up and prevention strategies minimize recurrence.")]},
 ]
@@ -1281,29 +1296,29 @@ PATHWAYS = [
 
 LOCATIONS = [
     {"slug": "jupiter", "city": "Jupiter",
-     "blurb": "Just down the road from Jupiter's beaches, golf communities, and active neighborhoods — many of our sports medicine, foot & ankle, and vein patients make the short trip south along US-1 or I-95 to our Palm Beach Gardens clinic.",
-     "angle": "Jupiter is one of the most active communities in South Florida — tennis, golf, boating, running. When injuries or joint pain interrupt that lifestyle, our board-certified specialists are minutes away."},
+     "blurb": "Just down the road from Jupiter's beaches, golf communities, and active neighborhoods — many of our regenerative medicine and vein care patients make the short trip south along US-1 or I-95 to our Palm Beach Gardens clinic.",
+     "angle": "Jupiter is one of the most active communities in South Florida — tennis, golf, boating, running. When recovery needs support, our board-certified specialists are minutes away."},
     {"slug": "north-palm-beach", "city": "North Palm Beach",
-     "blurb": "Our clinic sits on Prosperity Farms Road at the edge of North Palm Beach — for most Village residents we're one of the closest orthopedic and vein practices there is.",
-     "angle": "From the North Palm Beach Country Club to the marinas, this is a community that stays on its feet. We help keep it that way with same-week orthopedic access and concierge-level care."},
+     "blurb": "Our clinic sits on Prosperity Farms Road at the edge of North Palm Beach — for most Village residents we're one of the closest regenerative medicine and vein practices there is.",
+     "angle": "From the North Palm Beach Country Club to the marinas, this is a community that stays on its feet. We help keep it that way with same-week access and concierge-level care."},
     {"slug": "juno-beach", "city": "Juno Beach",
-     "blurb": "A short drive down US-1 from Juno Beach's pier and oceanfront neighborhoods, our Palm Beach Gardens clinic serves Juno Beach residents with orthopedic, podiatric, regenerative, and vein care.",
-     "angle": "Beach walkers and pier regulars know what heel pain and joint stiffness can steal. Our specialists treat both — often without surgery."},
+     "blurb": "A short drive down US-1 from Juno Beach's pier and oceanfront neighborhoods, our Palm Beach Gardens clinic serves Juno Beach residents with regenerative medicine, vein care, and IV wellness.",
+     "angle": "Beach walkers and pier regulars know what stiffness and fatigue can steal. Our specialists treat both — without surgery."},
     {"slug": "tequesta", "city": "Tequesta",
-     "blurb": "Tequesta residents reach us with an easy drive south — worth it for board-certified specialists in orthopedics, podiatry, vein care, and regenerative medicine under one roof.",
+     "blurb": "Tequesta residents reach us with an easy drive south — worth it for board-certified specialists in regenerative medicine, vein care, and IV wellness under one roof.",
      "angle": "For a village built around the water — boating, fishing, paddling — mobility is everything. We offer Tequesta patients concierge access and personalized treatment plans."},
     {"slug": "palm-beach", "city": "Palm Beach",
      "blurb": "Palm Beach residents expect a concierge standard of medicine. Our private suites, same-day diagnostics, and direct-pay bundled pricing were designed for exactly that expectation.",
-     "angle": "Discreet, efficient, and personal — concierge orthopedic and regenerative care matched to Palm Beach standards, twenty minutes from the island."},
+     "angle": "Discreet, efficient, and personal — concierge regenerative care matched to Palm Beach standards, twenty minutes from the island."},
     {"slug": "west-palm-beach", "city": "West Palm Beach",
-     "blurb": "From downtown West Palm Beach, our Palm Beach Gardens clinic is a straight shot north on I-95 — with the full breadth of orthopedic, podiatric, regenerative, vein, and IV wellness care waiting at the other end.",
-     "angle": "West Palm Beach professionals and families choose us for direct specialist access, same-day injury consultations, and treatment plans that don't default to surgery."},
+     "blurb": "From downtown West Palm Beach, our Palm Beach Gardens clinic is a straight shot north on I-95 — with the full breadth of regenerative, vein, and IV wellness care waiting at the other end.",
+     "angle": "West Palm Beach professionals and families choose us for direct specialist access, same-day evaluations, and treatment plans that don't default to surgery."},
     {"slug": "singer-island", "city": "Singer Island",
-     "blurb": "Singer Island and Palm Beach Shores residents cross the bridge to reach our Prosperity Farms Road clinic — for vein care, foot & ankle treatment, joint preservation, and IV wellness.",
-     "angle": "Island living is walking living. When heel pain, veins, or joints start protesting, our specialists get you back to the beach path."},
+     "blurb": "Singer Island and Palm Beach Shores residents cross the bridge to reach our Prosperity Farms Road clinic — for vein care, regenerative therapies, and IV wellness.",
+     "angle": "Island living is walking living. When veins or joints start protesting, our specialists get you back to the beach path."},
     {"slug": "lake-park", "city": "Lake Park",
-     "blurb": "Lake Park sits minutes from our clinic — making RegenOrtho Palm Beach a natural choice for orthopedic urgencies, foot and ankle care, and ongoing joint treatment.",
-     "angle": "Quick to reach and quick to respond: same-day injury consultations and a full regenerative toolkit, right up the road from Lake Park."},
+     "blurb": "Lake Park sits minutes from our clinic — making RegenOrtho Palm Beach a natural choice for regenerative therapies, vein care, and ongoing wellness support.",
+     "angle": "Quick to reach and quick to respond: same-week access and a full regenerative toolkit, right up the road from Lake Park."},
 ]
 
 IV_FAQS = [
@@ -1371,13 +1386,9 @@ def svc_name(slug):
 
 
 SVC_ICONS = {
-    "orthopedic-sports-medicine": '<g transform="rotate(45 12 12)"><path d="M7.2 10.6 h9.6 M7.2 13.4 h9.6"/><circle cx="5.9" cy="10.5" r="1.9"/><circle cx="5.9" cy="13.5" r="1.9"/><circle cx="18.1" cy="10.5" r="1.9"/><circle cx="18.1" cy="13.5" r="1.9"/></g>',
-    "podiatric-medicine-foot-ankle-surgery": '<path d="M9.2 4 C12.4 4 13.9 6.9 13.5 9.8 C13.2 12.2 11.6 13.4 11.4 15.4 C11.2 17.4 12 19.3 10.3 20.4 C8.8 21.3 7 20.4 6.8 18.7 C6.5 16.9 7.6 15.8 7.5 13.8 C7.4 11.7 6.3 10.6 6.4 8.2 C6.5 5.8 7.6 4 9.2 4 Z"/><circle cx="15.6" cy="5.6" r=".9"/><circle cx="17.4" cy="7.3" r=".9"/><circle cx="18.3" cy="9.4" r=".9"/>',
     "regenerative-medicine-orthobiologics": '<path d="M12 3.4 C15 7 17.4 9.8 17.4 13 A5.4 5.4 0 0 1 6.6 13 C6.6 9.8 9 7 12 3.4 Z"/><path d="M9.4 13.2 a2.6 2.6 0 0 0 2.6 2.6"/>',
     "advanced-non-surgical-therapies": '<path d="M13.2 3 L7 13.2 h3.9 L9.4 21 L16.8 10.6 h-3.9 Z"/>',
     "vein-care": '<path d="M12 3 C10 6.8 14 9 12 12.6 C10 16.2 14 18.4 12 21"/><path d="M11.6 8.2 L8.4 10.4 M12.2 14.8 L15.6 17"/>',
-    "misha-knee-system": '<path d="M12 3 v2.6 M8.2 6.4 h7.6 l-7.6 2.4 7.6 2.4 -7.6 2.4 7.6 2.4 h-7.6 M12 18.4 V21"/>',
-    "mako-robotic-knee-replacement": '<circle cx="6.2" cy="17.8" r="2.1"/><path d="M7.8 16.2 L11 9.8 L15.6 7.2"/><circle cx="16.8" cy="6.4" r="1.7"/><path d="M15.2 9.4 l3 3.2 M18.2 12.6 l1.8 -.6"/>',
     "concierge-care": '<path d="M4.6 17.4 h14.8 M6.2 17.4 a5.8 5.8 0 0 1 11.6 0"/><path d="M12 8.4 V6.6"/><circle cx="12" cy="9.6" r="1.1"/>',
 }
 
@@ -1388,20 +1399,12 @@ def build_home():
     d = 0
     svc_cards = []
     HOME_SVCS = [
-        ("orthopedic-sports-medicine", "Same-day injury consults, arthroscopy & joint preservation from a fellowship-trained surgeon.",
-         ["Same-day injury consultations", "Arthroscopy & joint preservation", "Sports performance & recovery programs"]),
-        ("podiatric-medicine-foot-ankle-surgery", "Board-certified foot & ankle surgery with orthotics fabricated onsite.",
-         ["Minimally invasive foot & ankle surgery", "Same-day custom orthotics", "Heel pain & gait correction"]),
         ("regenerative-medicine-orthobiologics", "Biologic therapies that help the body repair itself — without surgery.",
          ["PRP & orthobiologic injections", "Cellular & exosome therapies", "Ultrasound-guided precision"]),
         ("advanced-non-surgical-therapies", "Energy-based and biologic treatments that switch tissue back into repair mode.",
          ["EPAT shockwave therapy", "Cold laser therapy", "Peptide & exosome protocols"]),
         ("vein-care", "Medical & cosmetic vein care with quick, in-office recovery.",
          ["Duplex ultrasound mapping", "Laser & RF ablation", "Sclerotherapy & cosmetic care"]),
-        ("misha-knee-system", "An implantable shock absorber for medial knee arthritis.",
-         ["Placed outside the joint, outpatient", "Reduces peak knee load by 30%+", "For those not ready for replacement"]),
-        ("mako-robotic-knee-replacement", "Robotic-arm assisted knee replacement, personalized to your anatomy.",
-         ["3D CT-based surgical planning", "Haptic robotic precision", "Therapy often starts the next day"]),
         ("concierge-care", "Medicine on your timeline — private, fast, and transparent.",
          ["Same-day diagnostics & planning", "Private infusion & procedure suites", "Transparent bundled pricing"]),
     ]
@@ -1504,14 +1507,14 @@ def build_home():
   <div class="hero-inner">
     <div class="hero-copy">
       <p class="eyebrow hero-eyebrow h-rise" style="--hd:.5s">{TAGLINE}</p>
-      <h1 class="h-rise" style="--hd:.65s">Where surgery meets <em>innovative regeneration</em></h1>
-      <p class="lede h-rise" style="--hd:.82s">Personalized orthopedic, podiatric, and regenerative care in Palm Beach Gardens — led by board-certified surgeons with over 40 years of combined experience.</p>
+      <h1 class="h-rise" style="--hd:.65s">Where recovery meets <em>innovative regeneration</em></h1>
+      <p class="lede h-rise" style="--hd:.82s">Personalized regenerative medicine, non-surgical therapies, and vein care in Palm Beach Gardens — led by board-certified specialists with over 40 years of combined experience.</p>
       <div class="hero-cta-row h-rise" style="--hd:1s">
         <a class="btn btn-gold" href="contact.html#book">Book a Consultation</a>
         <a class="btn btn-teal" href="tel:{PHONE_TEL}">Call {PHONE_VANITY}</a>
       </div>
       <dl class="hero-stats h-rise" style="--hd:1.18s">
-        <div><dt><span class="stat-num" data-count="40">40</span>+</dt><dd>years of combined surgical experience</dd></div>
+        <div><dt><span class="stat-num" data-count="40">40</span>+</dt><dd>years of combined clinical experience</dd></div>
         <div><dt><span class="stat-num" data-count="10000">10,000</span>+</dt><dd>patients helped in Palm Beach</dd></div>
         <div><dt>4.9<span aria-hidden="true">★</span></dt><dd>rated on Google reviews</dd></div>
       </dl>
@@ -1519,7 +1522,7 @@ def build_home():
   </div>
   <div class="hero-marquee h-rise" style="--hd:1.35s" aria-hidden="true">
     <div class="marquee-track" data-marquee>
-      <span>Orthopedics</span><span>·</span><span>Sports Medicine</span><span>·</span><span>Podiatry</span><span>·</span><span>Regenerative Medicine</span><span>·</span><span>Vein Care</span><span>·</span><span>IV Wellness</span><span>·</span><span>Concierge Care</span><span>·</span>
+      <span>Regenerative Medicine</span><span>·</span><span>Peptide Therapy</span><span>·</span><span>Vein Care</span><span>·</span><span>IV Wellness</span><span>·</span><span>Neuropathy Care</span><span>·</span><span>Concierge Care</span><span>·</span>
     </div>
   </div>
 </section>
@@ -1548,8 +1551,8 @@ def build_home():
 <section class="section section-services" id="services">
   <div class="section-head reveal">
     <p class="eyebrow">One Roof. Every Answer.</p>
-    <h2>Specialized care, <em>seven ways</em></h2>
-    <p class="section-sub">Orthopedics, podiatry, regenerative medicine, and vein care under one roof — so your plan is built around your body, not around a single specialty's toolkit.</p>
+    <h2>Specialized care, <em>four ways</em></h2>
+    <p class="section-sub">Regenerative medicine, non-surgical therapies, vein care, and concierge access under one roof — so your plan is built around healing, not a single specialty's toolkit.</p>
   </div>
   <div class="svc-grid">
     {svc_cards_html}
@@ -1594,8 +1597,8 @@ def build_home():
     </a>
   </div>
   <div class="why-strip reveal">
-    <div><strong>Board-Certified Expertise</strong><span>Decades of combined experience in sports orthopedics, podiatry, and vein care</span></div>
-    <div><strong>Comprehensive Solutions</strong><span>From surgery to regenerative therapies, we treat the whole patient</span></div>
+    <div><strong>Board-Certified Expertise</strong><span>Decades of combined experience in regenerative medicine and vein care</span></div>
+    <div><strong>Comprehensive Solutions</strong><span>From orthobiologics to advanced non-surgical therapies, we treat the whole patient</span></div>
     <div><strong>Personalized Care</strong><span>Concierge-level access with tailored treatment plans</span></div>
     <div><strong>Advanced Technology</strong><span>State-of-the-art biologics, minimally invasive procedures, and custom recovery solutions</span></div>
   </div>
@@ -1684,8 +1687,8 @@ def build_home():
     page = head(
         # ~57 chars: keyword + city front-loaded, brand last. Google truncates a
         # title around 600px (~60 chars) and the brand is the cheapest thing to lose.
-        "Orthopedic & Regenerative Care Palm Beach Gardens | RegenOrtho",
-        "Concierge orthopedic, podiatric, regenerative & vein care in Palm Beach Gardens. Board-certified surgeons, 40+ years combined experience. Call 833-STEM561.",
+        "Regenerative Medicine & Vein Care Palm Beach Gardens | RegenOrtho",
+        "Concierge regenerative medicine, non-surgical therapies & vein care in Palm Beach Gardens. Board-certified specialists, 40+ years combined experience. Call 833-STEM561.",
         # canonical="" -> BASE/ (the root), NOT /index.html. Every inbound link,
         # the GBP listing and the social profiles point at the root; canonicalising
         # to /index.html asks Google to consolidate the wrong direction.
@@ -1699,6 +1702,17 @@ def build_home():
 SERVICE_FROM_PRICE = {
     "medical-weight-loss": 239,
     "peptide-therapy": 249,
+}
+
+# The five regenerative modalities publish a one-time "Treatment Starting From
+# $2,500" figure (plus a $300 consultation credited toward it), not a monthly
+# plan — so they get an Offer without the per-month UnitPriceSpecification.
+SERVICE_ONE_TIME_PRICE = {
+    "exosome-therapy": 2500,
+    "mesenchymal-stem-cell-therapy": 2500,
+    "whartons-jelly-therapy": 2500,
+    "muse-infused-rpa-therapy": 2500,
+    "traditional-muse-cell-therapy": 2500,
 }
 
 
@@ -1733,6 +1747,21 @@ def therapy_schema(svc):
                 "billingIncrement": 1,
             },
         }
+    one_time = SERVICE_ONE_TIME_PRICE.get(svc["slug"])
+    if one_time:
+        node["offers"] = {
+            "@type": "Offer",
+            "price": one_time,
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock",
+            "url": f"{BASE}/services/{svc['slug']}.html",
+            "priceSpecification": {
+                "@type": "PriceSpecification",
+                "price": one_time,
+                "priceCurrency": "USD",
+                "minPrice": one_time,
+            },
+        }
     return extra_ld(node)
 
 
@@ -1761,7 +1790,27 @@ def build_services():
             for c in svc.get("conditions", []) if any(x["slug"] == c for x in CONDITIONS)
         )
         conds_html = f"""<aside class="cond-links reveal"><h2>Conditions this helps</h2><ul>{conds}</ul></aside>""" if conds else ""
-        crumbs_html = crumbs([("services/index.html", "Services"), ("", svc["name"])], depth=d)
+        sub_slugs = svc.get("subservices", [])
+        subsvc_html = ""
+        if sub_slugs:
+            sub_cards = "".join(
+                f"""<a class="svc-card reveal" href="{sub['slug']}.html" style="--d:{i * 70}ms">
+        <span class="svc-num" aria-hidden="true">{i + 1:02d}</span>
+        <span class="svc-media"><img src="../assets/media/{sub['img']}?v={asset_v('assets/media/' + sub['img'])}" alt="" width="640" height="420" loading="lazy"></span>
+        <span class="svc-body"><strong>{sub['name']}</strong><span>{sub['lede'][:130].rsplit(' ', 1)[0]}…</span><em class="svc-more">Explore <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></span>
+      </a>"""
+                for i, sub in enumerate(next(x for x in SERVICES if x["slug"] == s) for s in sub_slugs)
+            )
+            subsvc_html = f"""<section class="section section-tint">
+  <div class="section-head reveal"><p class="eyebrow">Explore Each Therapy</p><h2>Five ways we <em>regenerate tissue</em></h2></div>
+  <div class="svc-grid svc-grid-3">{sub_cards}</div>
+</section>"""
+        parent = next((x for x in SERVICES if x["slug"] == svc.get("parent")), None) if svc.get("parent") else None
+        crumb_parts = [("services/index.html", "Services")]
+        if parent:
+            crumb_parts.append((f"services/{parent['slug']}.html", parent["name"]))
+        crumb_parts.append(("", svc["name"]))
+        crumbs_html = crumbs(crumb_parts, depth=d)
         body = f"""{nav(d)}
 <main id="main">
 {page_hero(svc['eyebrow'], svc['h1'], svc['lede'], crumbs_html, depth=d)}
@@ -1784,6 +1833,7 @@ def build_services():
   <div class="section-head reveal"><p class="eyebrow">How It Works</p><h2>Three steps to <em>relief</em></h2></div>
   <ol class="steps">{steps}</ol>
 </section>
+{subsvc_html}
 {conds_html}
 <section class="section section-tint">
   <div class="section-head reveal"><p class="eyebrow">Patient Guide &amp; Answers</p><h2>Common <em>questions</em></h2></div>
@@ -1793,10 +1843,14 @@ def build_services():
 {cta_band(d, heading=svc['cta'], sub=svc['cta_sub'])}
 </main>
 {footer(d)}"""
+        crumb_schema_parts = [("", "Home"), ("services/index.html", "Services")]
+        if parent:
+            crumb_schema_parts.append((f"services/{parent['slug']}.html", parent["name"]))
+        crumb_schema_parts.append((f"services/{svc['slug']}.html", svc["name"]))
         schema = (
             therapy_schema(svc)
             + faq_schema(svc["faqs"])
-            + breadcrumb_schema([("", "Home"), ("services/index.html", "Services"), (f"services/{svc['slug']}.html", svc["name"])])
+            + breadcrumb_schema(crumb_schema_parts)
         )
         page = head(svc["title"], svc["desc"], depth=d,
                     canonical=f"services/{svc['slug']}.html",
@@ -1812,7 +1866,7 @@ def build_services():
         <span class="svc-media"><img src="../assets/media/{s['img']}?v={asset_v('assets/media/' + s['img'])}" alt="" width="640" height="420" loading="lazy"></span>
         <span class="svc-body"><strong>{s['name']}</strong><span>{s['lede'][:130].rsplit(' ', 1)[0]}…</span><em class="svc-more">Explore <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></span>
       </a>"""
-        for i, s in enumerate(SERVICES)
+        for i, s in enumerate(TOP_SERVICES)
     )
     pathways = "".join(
         f"""<li class="pathway reveal" style="--d:{i * 70}ms">
@@ -1825,16 +1879,16 @@ def build_services():
     crumbs_html = crumbs([("", "Our Services")], depth=d)
     body = f"""{nav(d)}
 <main id="main">
-{page_hero("Our Services", "Specialized treatment, all under one roof", "Orthopedics, podiatry, regenerative medicine, vein care, IV wellness, and concierge programs — board-certified specialists with one shared goal: help you move better, heal faster, and live healthier.", crumbs_html, depth=d)}
+{page_hero("Our Services", "Specialized treatment, all under one roof", "Regenerative medicine, non-surgical therapies, vein care, IV wellness, and concierge programs — board-certified specialists with one shared goal: help you move better, heal faster, and live healthier.", crumbs_html, depth=d)}
 <section class="section">
   <div class="svc-grid svc-grid-3">{tiles}
     <a class="svc-card reveal" href="../iv-therapy.html">
-      <span class="svc-num" aria-hidden="true">{len(SERVICES) + 1:02d}</span>
+      <span class="svc-num" aria-hidden="true">{len(TOP_SERVICES) + 1:02d}</span>
       <span class="svc-media"><img src="../assets/media/iv-hero.jpg?v={asset_v('assets/media/iv-hero.jpg')}" alt="" width="640" height="420" loading="lazy"></span>
       <span class="svc-body"><strong>IV Recovery &amp; Wellness Lounge</strong><span>Twelve clinician-supervised drips — hydration, immunity, NAD⁺, athletic recovery…</span><em class="svc-more">Explore <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></span>
     </a>
     <a class="svc-card reveal" href="../infusions/index.html">
-      <span class="svc-num" aria-hidden="true">{len(SERVICES) + 2:02d}</span>
+      <span class="svc-num" aria-hidden="true">{len(TOP_SERVICES) + 2:02d}</span>
       <span class="svc-media"><img src="../assets/media/infusion-room.jpg?v={asset_v('assets/media/infusion-room.jpg')}" alt="" width="640" height="420" loading="lazy"></span>
       <span class="svc-body"><strong>Specialty Infusion Center</strong><span>IVIG, Krystexxa, Ocrevus &amp; Ultomiris in a private, monitored outpatient suite…</span><em class="svc-more">Explore <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></span>
     </a>
@@ -1856,7 +1910,7 @@ def build_services():
 {footer(d)}"""
     schema = breadcrumb_schema([("", "Home"), ("services/index.html", "Our Services")])
     page = head("Our Services | RegenOrtho Palm Beach — Palm Beach Gardens",
-                "RegenOrtho Palm Beach services: orthopedics, podiatry, regenerative medicine, vein care, IV therapy, MISHA & Mako knees, weight loss, and concierge care.",
+                "RegenOrtho Palm Beach services: regenerative medicine, advanced non-surgical therapies, vein care, IV therapy, neuropathy care, weight loss, and concierge care.",
                 depth=d, canonical="services/index.html", extra_schema=schema, speakable=True) + '<body class="page-services">\n' + body
     write("services/index.html", page)
 
@@ -1980,7 +2034,7 @@ def build_locations():
       <p>Our clinic at {ADDRESS_STREET}, {ADDRESS_CITY} brings together <strong>Dr. Marc Matarazzo, MD</strong> — a board-certified, fellowship-trained orthopedic surgeon with more than 23 years of experience in sports medicine and minimally invasive arthroscopic surgery — and <strong>Dr. Orlando Cedeno, DPM</strong>, board certified in foot surgery by the American Board of Foot &amp; Ankle Surgery with advanced expertise in vein care. Around them: an IV wellness lounge, regenerative medicine program, advanced non-surgical therapies, and concierge-level coordination.</p>
       <h2>What {city} patients come to us for</h2>
       <div class="treat-grid">{svc_list}</div>
-      <p class="loc-more">Also available: the <a href="../services/misha-knee-system.html">MISHA Knee System</a>, <a href="../services/mako-robotic-knee-replacement.html">Mako robotic knee replacement</a>, <a href="../services/neuropathy-program.html">Neuropathy Restoration Program</a>, <a href="../services/medical-weight-loss.html">physician-supervised weight loss</a>, and the <a href="../iv-therapy.html">IV Recovery &amp; Wellness Lounge</a>.</p>
+      <p class="loc-more">Also available: the <a href="../services/neuropathy-program.html">Neuropathy Restoration Program</a>, <a href="../services/medical-weight-loss.html">physician-supervised weight loss</a>, and the <a href="../iv-therapy.html">IV Recovery &amp; Wellness Lounge</a>.</p>
     </div>
     <aside class="loc-side reveal" style="--d:120ms">
       <div class="sym-card">
@@ -2147,10 +2201,8 @@ def build_providers():
         "Dr. Marc Matarazzo MD | Orthopedic Surgeon Palm Beach Gardens",
         "Dr. Marc Matarazzo, MD — board-certified orthopedic surgeon in Palm Beach Gardens. Sports medicine, arthroscopy, shoulder & knee, MAKO robotic replacement.",
         [
-            ("../services/orthopedic-sports-medicine.html", "Orthopedic & Sports Medicine"),
-            ("../services/mako-robotic-knee-replacement.html", "Mako Robotic Knee Replacement"),
-            ("../services/misha-knee-system.html", "MISHA Knee System"),
             ("../services/regenerative-medicine-orthobiologics.html", "Regenerative Medicine"),
+            ("../services/advanced-non-surgical-therapies.html", "Advanced Non-Surgical Therapies"),
             ("../conditions/shoulder-pain.html", "Shoulder Pain"),
             ("../conditions/knee-pain.html", "Knee Pain"),
         ],
@@ -2192,12 +2244,11 @@ def build_providers():
         "Dr. Orlando Cedeno DPM | Podiatrist Palm Beach Gardens",
         "Dr. Orlando Cedeno, DPM — board-certified podiatric surgeon and vein specialist in Palm Beach Gardens. Foot & ankle surgery, heel pain, and custom orthotics.",
         [
-            ("../services/podiatric-medicine-foot-ankle-surgery.html", "Podiatric Medicine & Foot/Ankle Surgery"),
             ("../services/vein-care.html", "Vein Care — Medical & Cosmetic"),
             ("../services/neuropathy-program.html", "Neuropathy Restoration Program"),
-            ("../conditions/plantar-fasciitis.html", "Plantar Fasciitis & Heel Pain"),
-            ("../conditions/foot-ankle-pain.html", "Foot & Ankle Pain"),
+            ("../services/regenerative-medicine-orthobiologics.html", "Regenerative Medicine"),
             ("../conditions/varicose-spider-veins.html", "Varicose & Spider Veins"),
+            ("../conditions/peripheral-neuropathy.html", "Peripheral Neuropathy"),
         ],
         creds_line="DPM, FACFAS · Owner, RegenOrtho Palm Beach · Owner, Abacoa Podiatry &amp; Leg Vein Center",
         tagline="A surgeon who <em>treats before he operates.</em>",
@@ -2305,9 +2356,7 @@ def build_about():
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="section-head reveal"><p class="eyebrow">Meet the Team</p><h2>Dedicated to <em>your care</em></h2></div>
   <div class="doc-grid">{team_cards}</div>
-  <div class="team-strip">
-    {support}
-  </div>
+  {f'<div class="team-strip">{support}</div>' if support else ''}
 </section>
 <section class="section">
   <div class="section-head reveal"><p class="eyebrow">Our Team</p><h2>The people <em>behind your recovery</em></h2></div>
@@ -2625,14 +2674,10 @@ def build_contact():
       <label>Email<input type="email" name="email" required autocomplete="email"></label>
       <label>Select Your Service
         <select name="service">
-          <option>Orthopedic &amp; Sports Medicine</option>
-          <option>Podiatric Medicine &amp; Foot/Ankle Surgery</option>
           <option>Regenerative Medicine &amp; Orthobiologic Therapies</option>
           <option>IV Recovery &amp; Wellness Therapy</option>
           <option>Advanced Non-Surgical Therapies</option>
           <option>Vein Care</option>
-          <option>MISHA Knee System</option>
-          <option>Mako Robotic Knee Replacement</option>
           <option>Neuropathy Restoration Program</option>
           <option>Medical Weight Loss / GLP-1</option>
           <option>Concierge &amp; Cash-Pay Services</option>
@@ -2702,17 +2747,6 @@ def build_resources():
       <p>After your treatment, proper care and lifestyle adjustments support faster recovery and better outcomes.</p>
       <ul class="check-list"><li>General recovery tips</li><li>Nutrition and wellness guidance</li><li>When to follow up with your provider</li></ul>
     </article>
-  </div>
-</section>
-<section class="section section-dark guide-band">
-  <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
-  <div class="guide-inner reveal">
-    <div>
-      <p class="eyebrow">Free Download</p>
-      <h2>The RegenOrtho Palm Beach <em>Foot &amp; Ankle Guide</em></h2>
-      <p>Prevention tips, common conditions, and when to see a specialist — from our board-certified podiatric surgery team.</p>
-    </div>
-    <a class="btn btn-gold" href="assets/media/foot-ankle-guide.pdf" download>Download the guide (PDF)</a>
   </div>
 </section>
 <section class="section section-tint">
@@ -3264,7 +3298,12 @@ Sitemap: {BASE}/sitemap.xml
         for m in IV_MENU)
     unpriced = "\n".join(
         f"- {s['name']}: {BASE}/services/{s['slug']}.html"
-        for s in SERVICES if s["slug"] not in SERVICE_FROM_PRICE)
+        for s in SERVICES
+        if s["slug"] not in SERVICE_FROM_PRICE and s["slug"] not in SERVICE_ONE_TIME_PRICE)
+    regen_rows = "\n".join(
+        f"| {html.unescape(s['name'])} | from ${SERVICE_ONE_TIME_PRICE[s['slug']]:,} | "
+        f"$300 consultation & imaging review, credited toward treatment. |"
+        for s in SERVICES if s["slug"] in SERVICE_ONE_TIME_PRICE)
     write("pricing.md", f"""# Pricing — {NAME}
 
 Palm Beach Gardens, FL. Last updated from the published pages on each build.
@@ -3280,6 +3319,15 @@ consultation — see "Quoted at consultation" below.
 | Medical Weight Loss & GLP-1 | from $239/month | Plan depends on medication and monitoring your physician recommends. |
 | Peptide Therapy | from $249/month | Protocol and cost set at consultation based on your goals. |
 | IV Recovery & Wellness Lounge | $189–$499 per infusion | Per-formula prices below. |
+
+## Regenerative therapies
+
+Self-pay only — these are not covered by insurance or Medicare. None are
+FDA-approved to treat, cure or prevent any disease or condition.
+
+| Therapy | Price | Notes |
+| --- | --- | --- |
+{regen_rows}
 
 ## IV infusion menu
 

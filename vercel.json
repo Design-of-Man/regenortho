@@ -28,17 +28,52 @@
     },
     {
       "source": "/our-services/orthopedic-sports-medicine",
-      "destination": "/services/orthopedic-sports-medicine.html",
+      "destination": "https://elitesportsmed.org/services/sports-medicine/",
+      "permanent": true
+    },
+    {
+      "source": "/services/orthopedic-sports-medicine.html",
+      "destination": "https://elitesportsmed.org/services/sports-medicine/",
       "permanent": true
     },
     {
       "source": "/our-services/podiatric-medicine-foot-ankle-surgery",
-      "destination": "/services/podiatric-medicine-foot-ankle-surgery.html",
+      "destination": "https://jupiterlaser.com/ankle/",
+      "permanent": true
+    },
+    {
+      "source": "/services/podiatric-medicine-foot-ankle-surgery.html",
+      "destination": "https://jupiterlaser.com/ankle/",
       "permanent": true
     },
     {
       "source": "/our-services/regenerative-medicine-orthobiologic-therapies",
       "destination": "/services/regenerative-medicine-orthobiologics.html",
+      "permanent": true
+    },
+    {
+      "source": "/our-services/regenerative-medicine-orthobiologic-therapies/exosome-therapy",
+      "destination": "/services/exosome-therapy.html",
+      "permanent": true
+    },
+    {
+      "source": "/our-services/regenerative-medicine-orthobiologic-therapies/mesenchymal-stem-cell-therapy",
+      "destination": "/services/mesenchymal-stem-cell-therapy.html",
+      "permanent": true
+    },
+    {
+      "source": "/our-services/regenerative-medicine-orthobiologic-therapies/whartons-jelly-therapy",
+      "destination": "/services/whartons-jelly-therapy.html",
+      "permanent": true
+    },
+    {
+      "source": "/our-services/regenerative-medicine-orthobiologic-therapies/muse-infused-rpa-therapy",
+      "destination": "/services/muse-infused-rpa-therapy.html",
+      "permanent": true
+    },
+    {
+      "source": "/our-services/regenerative-medicine-orthobiologic-therapies/traditional-muse-cell-therapy",
+      "destination": "/services/traditional-muse-cell-therapy.html",
       "permanent": true
     },
     {
@@ -58,7 +93,12 @@
     },
     {
       "source": "/our-services/misha-knee-system",
-      "destination": "/services/misha-knee-system.html",
+      "destination": "https://elitesportsmed.org/services/misha-minimally-invasive-implantable-shock-absorber-implant/",
+      "permanent": true
+    },
+    {
+      "source": "/services/misha-knee-system.html",
+      "destination": "https://elitesportsmed.org/services/misha-minimally-invasive-implantable-shock-absorber-implant/",
       "permanent": true
     },
     {
@@ -73,7 +113,22 @@
     },
     {
       "source": "/mako-total-knee",
-      "destination": "/services/mako-robotic-knee-replacement.html",
+      "destination": "https://elitesportsmed.org/services/mako-total-and-partial-knee-replacement/",
+      "permanent": true
+    },
+    {
+      "source": "/services/mako-robotic-knee-replacement.html",
+      "destination": "https://elitesportsmed.org/services/mako-total-and-partial-knee-replacement/",
+      "permanent": true
+    },
+    {
+      "source": "/conditions/foot-ankle-pain.html",
+      "destination": "https://jupiterlaser.com/ankle/",
+      "permanent": true
+    },
+    {
+      "source": "/conditions/plantar-fasciitis.html",
+      "destination": "https://jupiterlaser.com/plantar-fasciitis/",
       "permanent": true
     },
     {
