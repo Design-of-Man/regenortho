@@ -256,7 +256,7 @@ def head(title, desc, depth=0, canonical="", og_image="assets/media/og-team.jpg"
 <link rel="icon" type="image/png" sizes="16x16" href="{p}assets/media/favicon-16.png?v=1">
 <link rel="apple-touch-icon" href="{p}assets/media/apple-touch-icon.png?v=1">
 <link rel="manifest" href="{p}site.webmanifest">
-<link rel="preload" href="{p}assets/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{p}assets/fonts/fraunces-v2.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{p}assets/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin>
 {hero_preload}<link rel="stylesheet" href="{p}assets/css/styles.css?v={asset_v('assets/css/styles.css')}">
 <link rel="stylesheet" href="{p}assets/css/assist.css?v={asset_v('assets/css/assist.css')}">
@@ -600,9 +600,42 @@ def faq_schema(pairs):
     })
 
 
+# Straight vs curly apostrophes were mixed roughly 5:1 across the site because
+# copy is authored in Python string literals, where typing ' is the path of
+# least resistance. Normalising here rather than in the source data means new
+# copy can keep being written with a plain ' and still render typographically.
+# Deliberately conservative: TEXT NODES ONLY (never inside a tag, so attributes
+# and URLs are untouched), and <script>/<style>/<pre>/<code> are skipped whole —
+# curling a quote inside JSON-LD or JS would corrupt it. Only the possessive /
+# contraction case (letter-quote-letter, plus a trailing plural possessive like
+# patients') is converted; bare quotes are left alone as they are ambiguous.
+_SKIP_BLOCKS = re.compile(r"(?is)<(script|style|pre|code)\b.*?</\1\s*>")
+_TEXT_NODE = re.compile(r">([^<]+)<")
+
+
+def _curl(text):
+    text = re.sub(r"(?<=[A-Za-z])'(?=[A-Za-z])", "’", text)
+    text = re.sub(r"(?<=s)'(?=\s|$)", "’", text)
+    return text
+
+
+def smart_punctuation(html_str):
+    parts, last = [], 0
+    for m in _SKIP_BLOCKS.finditer(html_str):
+        parts.append(_TEXT_NODE.sub(lambda t: ">" + _curl(t.group(1)) + "<",
+                                    html_str[last:m.start()]))
+        parts.append(m.group(0))          # verbatim — never touch script/style
+        last = m.end()
+    parts.append(_TEXT_NODE.sub(lambda t: ">" + _curl(t.group(1)) + "<",
+                                html_str[last:]))
+    return "".join(parts)
+
+
 def write(path, content):
     full = os.path.join(ROOT, path)
     os.makedirs(os.path.dirname(full), exist_ok=True)
+    if path.endswith(".html"):
+        content = smart_punctuation(content)
     with open(full, "w") as f:
         f.write(content)
     print("wrote", path)
@@ -1876,6 +1909,29 @@ def build_services():
     </li>"""
         for i, (nm, sub, price, href) in enumerate(PATHWAYS)
     )
+    # The regenerative modalities are sub-services, so they are deliberately kept
+    # out of the main tile grid (TOP_SERVICES) — but they still need a visible
+    # home on this page, or the only route to them is the nav flyout.
+    regen_parent = next((s for s in SERVICES if s["slug"] == "regenerative-medicine-orthobiologics"), None)
+    regen_cards = ""
+    if regen_parent:
+        regen_cards = "".join(
+            f"""<a class="subsvc-card reveal" href="{k['slug']}.html" style="--d:{(i % 3) * 80}ms">
+        <strong>{k['name']}</strong>
+        <span>{k['lede'][:120].rsplit(' ', 1)[0]}…</span>
+        <em class="svc-more">Explore <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em>
+      </a>"""
+            for i, k in enumerate(s for s in SERVICES
+                                  if s.get("parent") == "regenerative-medicine-orthobiologics")
+        )
+    regen_section = f"""<section class="section section-tint">
+  <div class="section-head reveal">
+    <p class="eyebrow">Regenerative Medicine</p>
+    <h2>Five regenerative <em>therapies</em></h2>
+    <p class="section-sub">Each is physician-directed and begins with a $300 consultation and imaging review, credited toward treatment. These are self-pay services; none are FDA-approved to treat, cure or prevent any disease.</p>
+  </div>
+  <div class="subsvc-grid">{regen_cards}</div>
+</section>""" if regen_cards else ""
     crumbs_html = crumbs([("", "Our Services")], depth=d)
     body = f"""{nav(d)}
 <main id="main">
@@ -1894,6 +1950,7 @@ def build_services():
     </a>
   </div>
 </section>
+{regen_section}
 <section class="section section-dark section-pathways">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="section-head reveal">

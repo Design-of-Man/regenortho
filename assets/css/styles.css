@@ -6,14 +6,14 @@
 
 @font-face {
   font-family: "Fraunces";
-  src: url("../fonts/fraunces.woff2") format("woff2");
+  src: url("../fonts/fraunces-v2.woff2") format("woff2");
   font-weight: 400 700;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Fraunces";
-  src: url("../fonts/fraunces-italic.woff2") format("woff2");
+  src: url("../fonts/fraunces-italic-v2.woff2") format("woff2");
   font-weight: 400 700;
   font-style: italic;
   font-display: swap;
@@ -67,13 +67,20 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
   /* Fraunces carries an optical-size axis, and browsers default to
-     font-optical-sizing:auto — so a 65px heading asks for opsz ~49. Above
-     opsz 20 Fraunces swaps in its display alternates: a curled f, a J that
-     drops below the baseline, and a swash ampersand. Handsome on a magazine,
-     eccentric on an orthopedic practice. Pinning opsz to 20 keeps the clean
-     text cut at every size. Inherited, so it covers every element and every
-     stylesheet. Manrope has no opsz axis, so this is a no-op there, and
-     naming only opsz leaves font-weight in charge of the wght axis. */
+     font-optical-sizing:auto — so a 65px heading asks for opsz ~49, which
+     thins the strokes and tightens the fit more than this design wants.
+     Pinning opsz to 20 keeps one consistent cut at every size. Inherited, so
+     it covers every element and every stylesheet. Manrope has no opsz axis,
+     so this is a no-op there, and naming only opsz leaves font-weight in
+     charge of the wght axis.
+
+     Note: the quirky glyphs (the joined "ff", the swash ampersand) came from
+     Fraunces' WONK axis, NOT from opsz — and WONK defaults to 1 upstream, so
+     an unpinned subset bakes them in. assets/fonts/fraunces-v2.woff2 is
+     instanced at WONK=0 + SOFT=0 with opsz/wght left variable. If these files
+     are ever regenerated from Google Fonts, pin WONK=0 again or the wonk
+     returns. The -v2 suffix exists because /assets/* is served immutable for
+     a year — changing a font's bytes needs a new filename. */
   font-variation-settings: "opsz" 20;
 }
 
@@ -609,6 +616,22 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
   background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden;
   transition: transform .35s var(--ease), box-shadow .35s var(--ease), border-color .35s;
 }
+
+/* Sub-service cards (the regenerative modalities on /services). Text-only —
+   they sit under the parent tile grid, so a second row of photo cards would
+   compete with it for the same attention. */
+.subsvc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.subsvc-card {
+  display: flex; flex-direction: column; gap: .45rem; text-decoration: none;
+  background: #fff; border: 1px solid var(--line); border-radius: var(--r-md);
+  padding: 1.25rem 1.35rem; border-left: 3px solid var(--gold);
+  transition: transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s;
+}
+.subsvc-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-sm); border-color: var(--gold); }
+.subsvc-card strong { font-family: var(--serif); font-size: 1.12rem; font-weight: 600; color: var(--navy-900); line-height: 1.25; }
+.subsvc-card > span { font-size: .93rem; color: var(--muted); line-height: 1.5; }
+@media (max-width: 900px) { .subsvc-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 620px) { .subsvc-grid { grid-template-columns: 1fr; } }
 .svc-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: var(--gold); }
 .svc-num {
   position: absolute; top: .7rem; left: .8rem; z-index: 2;
