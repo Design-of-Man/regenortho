@@ -1602,6 +1602,7 @@ def build_home():
       <video class="hero-video" autoplay muted loop playsinline preload="none"
              poster="assets/video/juno-poster.jpg?v={asset_v('assets/video/juno-poster.jpg')}"
              data-hero-video
+             data-poster-portrait="assets/video/juno-poster-portrait.jpg?v={asset_v('assets/video/juno-poster-portrait.jpg')}"
              data-mp4-max="assets/video/juno-max.mp4?v={asset_v('assets/video/juno-max.mp4')}"
              data-mp4-hd="assets/video/juno-hd.mp4?v={asset_v('assets/video/juno-hd.mp4')}"
              data-webm-hd="assets/video/juno-hd.webm?v={asset_v('assets/video/juno-hd.webm')}"
