@@ -638,10 +638,6 @@ TEAM = [
 SUPPORT_TEAM = []
 
 TESTIMONIALS = [
-    ("RegenOrtho Palm Beach gave me my life back. Their regenerative therapy helped me avoid surgery, and I feel stronger every day.", "Sarah W.", "Patient testimonial"),
-    ("The team is so caring and professional. They explained every step and made sure I was comfortable throughout my treatment.", "Michael R.", "Patient testimonial"),
-    ("I was struggling with chronic knee pain. Within weeks of my procedure here, I noticed a huge improvement. Highly recommend!", "Linda T.", "Patient testimonial"),
-    ("From the moment I walked in, I felt supported. They truly deliver personalized care with advanced techniques.", "James K.", "Patient testimonial"),
     ("Very professional service. The staff and doctor were very accommodating to my needs. I felt comfortable, well cared for and well informed.", "Al Franc", "Posted on Google"),
     ("Dr Cendeno was very knowledgeable, he took the time to explain my diagnosis in detail and answered all my questions. Office staff was welcoming and kind.", "Erika S.", "Posted on Google"),
     ("My experience was one of the best as i followed Dr Cedeno instructions and his treatment my plantar fasciitis issue has been resolved. Both locations are easy to find and the staff are very friendly knowledgeable and kind. If you have any type of discomfort or feet pain this is definitely the doctor for you!", "Veronica “Roni” Lee", "Posted on Google"),
