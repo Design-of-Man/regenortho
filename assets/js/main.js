@@ -77,6 +77,12 @@
       // and loses most of the frame. Portrait phones get a 9:16 crop instead.
       var isPortrait = isMobile && window.matchMedia("(orientation: portrait)").matches
                        && !!heroVid.getAttribute("data-mp4-portrait");
+      // The markup ships the landscape poster because that is the common case.
+      // A portrait phone cover-fits it and loses most of the frame, so swap in
+      // the 9:16 poster to match the 9:16 rendition it is about to download —
+      // set before load() so the first paint is already the right image.
+      var portraitPoster = heroVid.getAttribute("data-poster-portrait");
+      if (isPortrait && portraitPoster) heroVid.setAttribute("poster", portraitPoster);
       var wantMax = !isMobile && window.innerWidth >= 1200 &&
                     (window.devicePixelRatio || 1) * window.innerWidth >= 2200;
       var mp4 = isPortrait ? heroVid.getAttribute("data-mp4-portrait")
@@ -96,15 +102,22 @@
         heroVid.appendChild(s2);
       }
       heroVid.load();
-      // The CSS coastline scene sits underneath as the fallback, but once the
-      // video is actually painting it's fully covered — yet its dozens of
-      // blurred, continuously-animating layers (waves, clouds, birds, sparkles)
-      // keep compositing every frame for nothing. Hiding it once playback
-      // starts removes that wasted work without touching the fallback path.
+      // The CSS coastline scene underneath is covered once the video paints, so
+      // its animated layers are wasted compositing — the class parks them (see
+      // styles.css). It must be reversible: iOS suspends a playing video when
+      // the tab is backgrounded or memory is tight, and a one-way switch left
+      // the hero black with the fallback already gone.
       var heroEl = heroVid.closest(".hero");
-      heroVid.addEventListener("playing", function () {
-        if (heroEl) heroEl.classList.add("video-live");
-      }, { once: true });
+      var liveOn = function () { if (heroEl) heroEl.classList.add("video-live"); };
+      var liveOff = function () { if (heroEl) heroEl.classList.remove("video-live"); };
+      heroVid.addEventListener("playing", liveOn);
+      ["pause", "emptied", "error", "abort", "stalled", "suspend"].forEach(function (ev) {
+        heroVid.addEventListener(ev, function () {
+          // Only surrender the scene if the video genuinely has no frame to
+          // show; brief buffering keeps the last frame and must not flicker.
+          if (heroVid.readyState < 2) liveOff();
+        });
+      });
       var tryPlay = function () {
         var pr = heroVid.play();
         if (pr && pr.catch) pr.catch(function () { /* autoplay veto → poster stays */ });

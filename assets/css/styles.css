@@ -213,10 +213,18 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
    fallback while the poster/first frame loads and wherever autoplay is vetoed */
 .hero-video-slot { z-index: 1; }
 .hero-video-slot video { width: 100%; height: 100%; object-fit: cover; }
-/* Once the video is confirmed playing (main.js adds this class on the
-   "playing" event), the CSS scene underneath is fully covered — stop
-   rendering its animated layers so they don't keep compositing for nothing. */
-.hero.video-live .hero-scene { display: none; }
+/* Once the video is confirmed playing (main.js adds this class on "playing"),
+   the CSS scene underneath is fully covered, so its couple of dozen blurred
+   keyframe animations are pure wasted work — park them.
+   This used to be `display: none`, which was a bug: the scene is the fallback,
+   and iOS suspends a playing video when the tab is backgrounded or memory runs
+   short. Removing it from the render tree meant that once the video stopped
+   painting the hero went flat navy with nothing behind it. Pausing keeps the
+   fallback underneath at effectively no cost and cannot fail open. */
+.hero.video-live .hero-scene,
+.hero.video-live .hero-scene *,
+.hero.video-live .hero-scene *::before,
+.hero.video-live .hero-scene *::after { animation-play-state: paused; }
 /* No scrim over the footage — kept fully bright per the client's request.
    Legibility comes entirely from .hero-copy's text-shadow below. */
 .hero-video-scrim { position: absolute; inset: 0; pointer-events: none; background: none; }
