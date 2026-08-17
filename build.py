@@ -50,8 +50,8 @@ MAP_URL = "https://maps.google.com/maps?q=RegenOrtho%20Palm%20Beach%2011380%20Pr
 # Alt for the default share card. Deliberately does not name individuals — the
 # roster is named on /about and /providers, and a share card should not be the
 # thing that gets a person's name wrong.
-OG_TEAM_ALT = ("The RegenOrtho Palm Beach care team — orthopedic, podiatric, vein and "
-               "regenerative specialists at the Palm Beach Gardens clinic")
+OG_TEAM_ALT = ("The RegenOrtho Palm Beach care team — regenerative medicine, vein care, and "
+               "IV wellness specialists at the Palm Beach Gardens clinic")
 GEO_LAT, GEO_LNG = 26.8449, -80.0693
 
 ORG_ID = f"{BASE}/#organization"
@@ -303,9 +303,20 @@ LOCATIONS_NAV = [
 
 def nav(depth=0, current=""):
     p = "../" * depth
-    svc = "\n".join(
-        f'<li><a href="{p}{href}">{label}</a></li>' for href, label in SERVICES_NAV
-    )
+    svc_items = []
+    for href, label in SERVICES_NAV:
+        slug = href.rsplit("/", 1)[-1].removesuffix(".html")
+        kids = [s for s in SERVICES if s.get("parent") == slug]
+        if kids:
+            sub = "".join(
+                f'<li><a href="{p}services/{k["slug"]}.html">{k["nav"]}</a></li>' for k in kids
+            )
+            svc_items.append(
+                f'<li class="has-sub"><a href="{p}{href}">{label}</a><ul class="drop-sub">{sub}</ul></li>'
+            )
+        else:
+            svc_items.append(f'<li><a href="{p}{href}">{label}</a></li>')
+    svc = "\n".join(svc_items)
     cond = "\n".join(
         f'<li><a href="{p}{href}">{label}</a></li>' for href, label in CONDITIONS_NAV
     )
@@ -384,7 +395,7 @@ def footer(depth=0, extra_js="", analytics=True):
   <div class="footer-inner">
     <div class="footer-brand">
       <img src="{p}assets/media/logo-dark-nav.png?v={asset_v('assets/media/logo-dark-nav.png')}" alt="{NAME} — {TAGLINE}" width="220" height="68" loading="lazy">
-      <p>Concierge orthopedic, podiatric, regenerative, and vein care in Palm Beach Gardens — board-certified specialists helping you move better, heal faster, and live healthier.</p>
+      <p>Concierge regenerative medicine, non-surgical therapies, and vein care in Palm Beach Gardens — board-certified specialists helping you move better, heal faster, and live healthier.</p>
       <a class="footer-ig" href="{INSTAGRAM}" rel="noopener" target="_blank"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2.2c3.2 0 3.6 0 4.8.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2m0 1.8c-3.1 0-3.5 0-4.7.1-1.1.1-1.5.2-1.8.3-.5.2-.8.4-1.1.7-.3.3-.5.6-.7 1.1-.1.3-.3.7-.3 1.8-.1 1.2-.1 1.6-.1 4.7s0 3.5.1 4.7c.1 1.1.2 1.5.3 1.8.2.5.4.8.7 1.1.3.3.6.5 1.1.7.3.1.7.3 1.8.3 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1.1-.1 1.5-.2 1.8-.3.5-.2.8-.4 1.1-.7.3-.3.5-.6.7-1.1.1-.3.3-.7.3-1.8.1-1.2.1-1.6.1-4.7s0-3.5-.1-4.7c-.1-1.1-.2-1.5-.3-1.8-.2-.5-.4-.8-.7-1.1-.3-.3-.6-.5-1.1-.7-.3-.1-.7-.3-1.8-.3-1.2-.1-1.6-.1-4.7-.1M12 7.1a4.9 4.9 0 1 1 0 9.8 4.9 4.9 0 0 1 0-9.8m0 1.8a3.1 3.1 0 1 0 0 6.2 3.1 3.1 0 0 0 0-6.2m5.1-3.1a1.1 1.1 0 1 1 0 2.3 1.1 1.1 0 0 1 0-2.3"/></svg> @regenortho_palmbeach</a>
     </div>
     <nav class="footer-col" aria-label="Quick links">
@@ -738,6 +749,203 @@ SERVICES = [
         "cta": "Heal Naturally. <em>Recover Stronger.</em>",
         "cta_sub": "Discover the power of regenerative medicine. Schedule your consultation today and take the first step toward natural, lasting recovery.",
         "conditions": ["knee-pain", "shoulder-pain", "arthritis-joint-pain", "tendon-ligament-injuries", "sports-injuries"],
+        "subservices": ["exosome-therapy", "mesenchymal-stem-cell-therapy", "whartons-jelly-therapy",
+                         "muse-infused-rpa-therapy", "traditional-muse-cell-therapy"],
+    },
+    {
+        "slug": "exosome-therapy",
+        "name": "Exosome Therapy",
+        "nav": "Exosome Therapy",
+        "parent": "regenerative-medicine-orthobiologics",
+        "title": "Exosome Therapy Palm Beach Gardens | RegenOrtho",
+        "desc": "Cell-free exosome therapy in Palm Beach Gardens — ultrasound-guided delivery of growth-factor-rich extracellular vesicles for joint, tendon, and soft-tissue repair.",
+        "eyebrow": "Regenerative Medicine & Orthobiologics",
+        "h1": "Advanced Cell-Free Regenerative Therapy for Pain Relief & Tissue Recovery",
+        "lede": "A cell-free treatment using naturally occurring extracellular vesicles rich in growth factors and signaling molecules to support your body's healing response, reduce inflammation, and improve mobility.",
+        "img": "cells-macro.jpg",
+        "img_alt": "Macro view of cell-signaling vesicles used in exosome therapy at RegenOrtho Palm Beach",
+        "why": [
+            "Cell-free — delivers biological signals rather than living cells",
+            "Physician-performed, ultrasound-guided precision",
+            "Supports tissue repair and helps reduce inflammation",
+            "Minimal downtime, non-surgical approach",
+            "Personalized treatment plan for every patient",
+        ],
+        "expertise": [
+            ("What Exosomes Are", "Exosomes are cell-signaling extracellular vesicles naturally released by cells, carrying growth factors, proteins, cytokines, and signaling molecules that help coordinate communication between cells."),
+            ("How It Differs From Stem Cell Therapy", "Unlike stem cell therapy, exosome therapy is cell-free — instead of delivering living cells, it delivers biological signals that encourage the body's own cells to communicate and repair."),
+            ("Ultrasound-Guided Delivery", "Exosomes are precisely delivered to the affected joint, tendon, ligament, or soft tissue under real-time ultrasound guidance for accurate placement."),
+        ],
+        "steps": [
+            ("Consultation & Imaging", "A comprehensive evaluation plus review of MRI, ultrasound, X-ray, or other diagnostic imaging to confirm candidacy."),
+            ("Ultrasound-Guided Treatment", "Exosomes are delivered directly to the affected area — most treatments are completed in under an hour."),
+            ("Recovery & Follow-Up", "Most patients resume light activity shortly after treatment, with follow-up visits to monitor healing."),
+        ],
+        "faqs": [
+            ("What is Exosome Therapy?", "A regenerative medicine treatment that uses naturally occurring extracellular vesicles containing proteins, growth factors, and signaling molecules that help support the body's healing response."),
+            ("Is the procedure painful?", "Most patients experience only minimal discomfort during treatment."),
+            ("Who is a candidate?", "Candidacy is determined after a comprehensive consultation, imaging review, and physical examination."),
+            ("Is this FDA-approved?", "Exosome therapy is not FDA-approved to treat, cure, or prevent any disease or condition and is not a substitute for indicated surgical care. Cellular products come from accredited U.S. suppliers; individual results vary and no outcome is guaranteed. This is a self-pay service and is not covered by insurance or Medicare."),
+        ],
+        "cta": "Cell-Free. <em>Signal-Driven Healing.</em>",
+        "cta_sub": "Find out if exosome therapy fits your recovery goals — consultation and imaging review is $300, credited toward treatment starting from $2,500.",
+        "conditions": ["knee-pain", "shoulder-pain", "hip-pain", "arthritis-joint-pain", "tendon-ligament-injuries", "sports-injuries"],
+    },
+    {
+        "slug": "mesenchymal-stem-cell-therapy",
+        "name": "Mesenchymal Stem Cell Therapy",
+        "nav": "Mesenchymal Stem Cell Therapy",
+        "parent": "regenerative-medicine-orthobiologics",
+        "title": "Mesenchymal Stem Cell Therapy Palm Beach Gardens | RegenOrtho",
+        "desc": "Mesenchymal stem cell therapy in Palm Beach Gardens — umbilical cord-derived cells delivered via ultrasound-guided injection to support joint and tissue healing.",
+        "eyebrow": "Regenerative Medicine & Orthobiologics",
+        "h1": "Advanced Regenerative Medicine for Joint Pain & Tissue Healing",
+        "lede": "A non-surgical approach using umbilical cord-derived mesenchymal stem cells to support the body's natural healing response, reduce pain, and improve mobility.",
+        "img": "svc-regen.jpg",
+        "img_alt": "Regenerative medicine specialist preparing mesenchymal stem cell therapy at RegenOrtho Palm Beach",
+        "why": [
+            "Umbilical cord-derived mesenchymal stem cells",
+            "Physician-performed, ultrasound-guided precision",
+            "Supports tissue repair without surgery",
+            "Personalized plan based on your diagnosis and goals",
+            "Regular follow-up to monitor healing progress",
+        ],
+        "expertise": [
+            ("How It Works", "Mesenchymal Stem Cell Therapy uses umbilical cord-derived mesenchymal stem cells to support the body's natural healing response through regenerative signaling, promoting tissue repair and reducing inflammation."),
+            ("Ultrasound-Guided Delivery", "Every treatment is performed using real-time ultrasound guidance to ensure accurate, personalized placement."),
+            ("Minimally Invasive", "Performed in-office — no surgery, no general anesthesia, with most patients returning to light activity quickly."),
+        ],
+        "steps": [
+            ("Consultation & Imaging", "Review of symptoms, medical history, and diagnostic imaging (MRI, X-ray, ultrasound) to confirm candidacy."),
+            ("Ultrasound-Guided Therapy", "Real-time ultrasound guidance ensures precise delivery to the targeted area."),
+            ("Recovery & Follow-Up", "Return to daily activities quickly, with follow-up visits to monitor healing and optimize recovery."),
+        ],
+        "faqs": [
+            ("What is Mesenchymal Stem Cell Therapy?", "A regenerative medicine treatment that uses umbilical cord-derived mesenchymal stem cells selected for their regenerative signaling properties to support the body's natural healing response."),
+            ("Is the procedure surgical?", "No — it's a minimally invasive treatment performed in the office using ultrasound guidance."),
+            ("How soon will I notice improvement?", "Recovery varies by patient — some notice improvement within weeks, others see gradual progress over the following months."),
+            ("Is this FDA-approved?", "Mesenchymal stem cell therapy is not FDA-approved to treat, cure, or prevent any disease or condition and is not a substitute for indicated surgical care. Individual results vary and no outcome is guaranteed. This is a self-pay service and is not covered by insurance or Medicare."),
+        ],
+        "cta": "Support Healing, <em>Skip the Surgery</em>",
+        "cta_sub": "Find out if mesenchymal stem cell therapy fits your recovery goals — consultation and imaging review is $300, credited toward treatment starting from $2,500.",
+        "conditions": ["knee-pain", "shoulder-pain", "hip-pain", "arthritis-joint-pain", "tendon-ligament-injuries", "sports-injuries"],
+    },
+    {
+        "slug": "whartons-jelly-therapy",
+        "name": "Wharton's Jelly Therapy",
+        "nav": "Wharton's Jelly Therapy",
+        "parent": "regenerative-medicine-orthobiologics",
+        "title": "Wharton's Jelly Therapy Palm Beach Gardens | RegenOrtho",
+        "desc": "Wharton's Jelly therapy in Palm Beach Gardens — umbilical cord tissue rich in growth factors and extracellular matrix proteins, delivered by ultrasound-guided injection.",
+        "eyebrow": "Regenerative Medicine & Orthobiologics",
+        "h1": "Advanced Regenerative Therapy to Support Joint Health & Tissue Repair",
+        "lede": "Rich in naturally occurring growth factors, cytokines, and extracellular matrix proteins, Wharton's Jelly Therapy may help reduce inflammation, promote tissue repair, and improve joint function without surgery.",
+        "img": "ultrasound-guided.jpg",
+        "img_alt": "Ultrasound-guided delivery of Wharton's Jelly therapy at RegenOrtho Palm Beach",
+        "why": [
+            "Derived from umbilical cord tissue components",
+            "Rich in growth factors, cytokines & matrix proteins",
+            "Physician-performed, ultrasound-guided precision",
+            "Non-surgical, in-office procedure",
+            "Personalized treatment plan for every patient",
+        ],
+        "expertise": [
+            ("How It Works", "Wharton's Jelly Therapy uses the naturally occurring components found within umbilical cord tissue to deliver biologically active substances that support tissue repair, healthy cell communication, and the body's natural healing processes."),
+            ("Not Cell Replacement — Signal Support", "Rather than replacing damaged tissue, Wharton's Jelly provides biologically active components that help support healthy cell communication and tissue repair."),
+            ("Ultrasound-Guided Delivery", "Treatment is precisely delivered into the affected joint, tendon, or ligament under real-time ultrasound guidance."),
+        ],
+        "steps": [
+            ("Consultation & Imaging", "A thorough evaluation and review of diagnostic imaging to confirm candidacy."),
+            ("Ultrasound-Guided Delivery", "Precisely delivered into the affected joint, tendon, or ligament — most procedures completed in under an hour."),
+            ("Recovery & Follow-Up", "Most patients return to light daily activities quickly, with follow-up visits to monitor progress."),
+        ],
+        "faqs": [
+            ("What is Wharton's Jelly Therapy?", "A regenerative medicine treatment that uses umbilical cord tissue rich in naturally occurring growth factors, cytokines, and extracellular matrix proteins."),
+            ("Is it surgical?", "No — it's a minimally invasive treatment performed in the office using ultrasound guidance."),
+            ("Who is a candidate?", "Your physician determines candidacy after reviewing your medical history, symptoms, physical examination, and diagnostic imaging."),
+            ("Is this FDA-approved?", "Wharton's Jelly therapy is not FDA-approved to treat, cure, or prevent any disease or condition and is not a substitute for indicated surgical care. Individual results vary and no outcome is guaranteed. This is a self-pay service and is not covered by insurance or Medicare."),
+        ],
+        "cta": "Support Tissue Repair, <em>Naturally</em>",
+        "cta_sub": "Find out if Wharton's Jelly therapy fits your recovery goals — consultation and imaging review is $300, credited toward treatment starting from $2,500.",
+        "conditions": ["knee-pain", "shoulder-pain", "hip-pain", "arthritis-joint-pain", "tendon-ligament-injuries", "sports-injuries"],
+    },
+    {
+        "slug": "muse-infused-rpa-therapy",
+        "name": "MUSE-Infused RPA™ Therapy",
+        "nav": "MUSE-Infused RPA™ Therapy",
+        "parent": "regenerative-medicine-orthobiologics",
+        "title": "MUSE-Infused RPA Therapy Palm Beach Gardens | RegenOrtho",
+        "desc": "MUSE-Infused RPA therapy in Palm Beach Gardens — an acellular Regenerative Protein Array enhanced with proteins from MUSE cells, delivered by IV push or targeted injection.",
+        "eyebrow": "Regenerative Medicine & Orthobiologics",
+        "h1": "Advanced Acellular Regenerative Protein Therapy for Joint Health & Recovery",
+        "lede": "A specialized protein array enhanced with proteins naturally extracted from MUSE cells, designed to support communication between cells and coordinate the body's natural repair processes.",
+        "img": "cells-macro.jpg",
+        "img_alt": "Regenerative protein array used in MUSE-Infused RPA therapy at RegenOrtho Palm Beach",
+        "why": [
+            "Acellular and non-DNA protein array",
+            "Enhanced with proteins extracted from MUSE cells",
+            "Delivered via IV push or targeted injection",
+            "Supports cell signaling, not living-cell engraftment",
+            "Physician-directed, personalized treatment plan",
+        ],
+        "expertise": [
+            ("What It Is", "MUSE-Infused RPA™ Therapy combines Regenerative Protein Array™ (RPA) technology with proteins extracted from MUSE cells. Because it's acellular, it delivers regenerative proteins rather than living cells."),
+            ("How It Works", "The proteins support direct biological signaling involved in tissue repair, anti-inflammatory activity, angiogenesis, and cytoprotective processes."),
+            ("How It Differs From Traditional MUSE Cell Therapy", "Traditional MUSE Cell Therapy uses living MUSE cells, while MUSE-Infused RPA Therapy uses an acellular protein fraction enhanced with proteins from MUSE cells."),
+        ],
+        "steps": [
+            ("Consultation & Imaging", "A comprehensive evaluation and review of diagnostic imaging to determine candidacy."),
+            ("IV Push or Targeted Injection", "Depending on your physician's recommendation, treatment is delivered by IV push or targeted injection."),
+            ("Recovery & Follow-Up", "Most procedures are completed in under an hour, with scheduled follow-up to monitor progress."),
+        ],
+        "faqs": [
+            ("What is MUSE-Infused RPA™ Therapy?", "An acellular regenerative medicine treatment that combines Regenerative Protein Array™ technology with proteins extracted from MUSE cells to support the body's natural healing response."),
+            ("How is it administered?", "Depending on your physician's recommendation, treatment may be provided through IV push or targeted injection."),
+            ("Does insurance cover treatment?", "Regenerative medicine therapies like this are generally self-pay services and are not covered by insurance or Medicare."),
+            ("Is this FDA-approved?", "MUSE-Infused RPA™ Therapy is not FDA-approved to treat, cure, or prevent any disease or condition and is not a substitute for indicated surgical care. Individual results vary and no outcome is guaranteed."),
+        ],
+        "cta": "Protein-Driven <em>Repair Signals</em>",
+        "cta_sub": "Find out if MUSE-Infused RPA™ therapy fits your recovery goals — consultation and imaging review is $300, credited toward treatment starting from $2,500.",
+        "conditions": ["knee-pain", "shoulder-pain", "hip-pain", "arthritis-joint-pain", "tendon-ligament-injuries", "sports-injuries"],
+    },
+    {
+        "slug": "traditional-muse-cell-therapy",
+        "name": "Traditional MUSE® Cell Therapy",
+        "nav": "Traditional MUSE Cell Therapy",
+        "parent": "regenerative-medicine-orthobiologics",
+        "title": "Traditional MUSE Cell Therapy Palm Beach Gardens | RegenOrtho",
+        "desc": "Traditional MUSE cell therapy in Palm Beach Gardens — a live-cell regenerative treatment using Multilineage-Differentiating Stress-Enduring cells, delivered by IV push or targeted injection.",
+        "eyebrow": "Regenerative Medicine & Orthobiologics",
+        "h1": "Advanced Live-Cell Regenerative Therapy for Orthopedic & Joint Health",
+        "lede": "A live-cell therapy using Multilineage-Differentiating Stress-Enduring (MUSE) cells — a rare population of mesenchymal stem cells — to support the body's natural healing response.",
+        "img": "svc-regen.jpg",
+        "img_alt": "Live-cell preparation used in Traditional MUSE Cell Therapy at RegenOrtho Palm Beach",
+        "why": [
+            "Live-cell preparation of rare MUSE cells",
+            "May support repair via cell engraftment and signaling",
+            "Delivered via IV push or targeted injection",
+            "Newly available at RegenOrtho Palm Beach",
+            "Physician-directed, personalized treatment plan",
+        ],
+        "expertise": [
+            ("What MUSE Cells Are", "Multilineage-Differentiating Stress-Enduring (MUSE) cells are a rare subpopulation of mesenchymal stem cells recognized for their stress-enduring characteristics and regenerative potential."),
+            ("How It Works", "MUSE cells may migrate toward injured tissue, where a portion may engraft and differentiate into functional cells while also supporting repair through paracrine signaling."),
+            ("How It Differs", "Traditional MUSE Cell Therapy uses living MUSE cells, whereas some other regenerative therapies rely primarily on signaling molecules or acellular components."),
+        ],
+        "steps": [
+            ("Consultation & Imaging", "A complete evaluation and review of diagnostic imaging to determine candidacy."),
+            ("IV Push or Targeted Injection", "Treatment is administered by IV push or targeted injection based on your personalized plan."),
+            ("Recovery & Follow-Up", "Most patients return to light activity quickly, with regular follow-up to monitor progress."),
+        ],
+        "faqs": [
+            ("What is Traditional MUSE® Cell Therapy?", "A regenerative medicine treatment using a live-cell preparation containing Multilineage-Differentiating Stress-Enduring (MUSE) cells, a rare subpopulation of mesenchymal stem cells."),
+            ("Is it surgical?", "No — it's a minimally invasive regenerative medicine treatment performed without traditional orthopedic surgery."),
+            ("How is it administered?", "Depending on your individualized treatment plan, therapy may be administered through IV push or targeted injection."),
+            ("Is this FDA-approved?", "Traditional MUSE® Cell Therapy is not FDA-approved to treat, cure, or prevent any disease or condition and is not a substitute for indicated surgical care. Individual results vary and no outcome is guaranteed. This is a self-pay service and is not covered by insurance or Medicare."),
+        ],
+        "cta": "Live-Cell <em>Regenerative Support</em>",
+        "cta_sub": "Find out if Traditional MUSE® Cell Therapy fits your recovery goals — consultation and imaging review is $300, credited toward treatment starting from $2,500.",
+        "conditions": ["knee-pain", "shoulder-pain", "hip-pain", "arthritis-joint-pain", "tendon-ligament-injuries", "sports-injuries"],
     },
     {
         "slug": "advanced-non-surgical-therapies",
@@ -983,6 +1191,10 @@ SERVICES = [
     },
 ]
 
+# Services that own a slot in the top-level grid/nav. Sub-services (the five
+# regenerative modalities) carry a "parent" and are reached from that page.
+TOP_SERVICES = [s for s in SERVICES if not s.get("parent")]
+
 CONDITIONS = [
     {"slug": "knee-pain", "name": "Knee Pain",
      "title": "Knee Pain Treatment Palm Beach Gardens | RegenOrtho",
@@ -1084,29 +1296,29 @@ PATHWAYS = [
 
 LOCATIONS = [
     {"slug": "jupiter", "city": "Jupiter",
-     "blurb": "Just down the road from Jupiter's beaches, golf communities, and active neighborhoods — many of our sports medicine, foot & ankle, and vein patients make the short trip south along US-1 or I-95 to our Palm Beach Gardens clinic.",
-     "angle": "Jupiter is one of the most active communities in South Florida — tennis, golf, boating, running. When injuries or joint pain interrupt that lifestyle, our board-certified specialists are minutes away."},
+     "blurb": "Just down the road from Jupiter's beaches, golf communities, and active neighborhoods — many of our regenerative medicine and vein care patients make the short trip south along US-1 or I-95 to our Palm Beach Gardens clinic.",
+     "angle": "Jupiter is one of the most active communities in South Florida — tennis, golf, boating, running. When recovery needs support, our board-certified specialists are minutes away."},
     {"slug": "north-palm-beach", "city": "North Palm Beach",
-     "blurb": "Our clinic sits on Prosperity Farms Road at the edge of North Palm Beach — for most Village residents we're one of the closest orthopedic and vein practices there is.",
-     "angle": "From the North Palm Beach Country Club to the marinas, this is a community that stays on its feet. We help keep it that way with same-week orthopedic access and concierge-level care."},
+     "blurb": "Our clinic sits on Prosperity Farms Road at the edge of North Palm Beach — for most Village residents we're one of the closest regenerative medicine and vein practices there is.",
+     "angle": "From the North Palm Beach Country Club to the marinas, this is a community that stays on its feet. We help keep it that way with same-week access and concierge-level care."},
     {"slug": "juno-beach", "city": "Juno Beach",
-     "blurb": "A short drive down US-1 from Juno Beach's pier and oceanfront neighborhoods, our Palm Beach Gardens clinic serves Juno Beach residents with orthopedic, podiatric, regenerative, and vein care.",
-     "angle": "Beach walkers and pier regulars know what heel pain and joint stiffness can steal. Our specialists treat both — often without surgery."},
+     "blurb": "A short drive down US-1 from Juno Beach's pier and oceanfront neighborhoods, our Palm Beach Gardens clinic serves Juno Beach residents with regenerative medicine, vein care, and IV wellness.",
+     "angle": "Beach walkers and pier regulars know what stiffness and fatigue can steal. Our specialists treat both — without surgery."},
     {"slug": "tequesta", "city": "Tequesta",
-     "blurb": "Tequesta residents reach us with an easy drive south — worth it for board-certified specialists in orthopedics, podiatry, vein care, and regenerative medicine under one roof.",
+     "blurb": "Tequesta residents reach us with an easy drive south — worth it for board-certified specialists in regenerative medicine, vein care, and IV wellness under one roof.",
      "angle": "For a village built around the water — boating, fishing, paddling — mobility is everything. We offer Tequesta patients concierge access and personalized treatment plans."},
     {"slug": "palm-beach", "city": "Palm Beach",
      "blurb": "Palm Beach residents expect a concierge standard of medicine. Our private suites, same-day diagnostics, and direct-pay bundled pricing were designed for exactly that expectation.",
-     "angle": "Discreet, efficient, and personal — concierge orthopedic and regenerative care matched to Palm Beach standards, twenty minutes from the island."},
+     "angle": "Discreet, efficient, and personal — concierge regenerative care matched to Palm Beach standards, twenty minutes from the island."},
     {"slug": "west-palm-beach", "city": "West Palm Beach",
-     "blurb": "From downtown West Palm Beach, our Palm Beach Gardens clinic is a straight shot north on I-95 — with the full breadth of orthopedic, podiatric, regenerative, vein, and IV wellness care waiting at the other end.",
-     "angle": "West Palm Beach professionals and families choose us for direct specialist access, same-day injury consultations, and treatment plans that don't default to surgery."},
+     "blurb": "From downtown West Palm Beach, our Palm Beach Gardens clinic is a straight shot north on I-95 — with the full breadth of regenerative, vein, and IV wellness care waiting at the other end.",
+     "angle": "West Palm Beach professionals and families choose us for direct specialist access, same-day evaluations, and treatment plans that don't default to surgery."},
     {"slug": "singer-island", "city": "Singer Island",
-     "blurb": "Singer Island and Palm Beach Shores residents cross the bridge to reach our Prosperity Farms Road clinic — for vein care, foot & ankle treatment, joint preservation, and IV wellness.",
-     "angle": "Island living is walking living. When heel pain, veins, or joints start protesting, our specialists get you back to the beach path."},
+     "blurb": "Singer Island and Palm Beach Shores residents cross the bridge to reach our Prosperity Farms Road clinic — for vein care, regenerative therapies, and IV wellness.",
+     "angle": "Island living is walking living. When veins or joints start protesting, our specialists get you back to the beach path."},
     {"slug": "lake-park", "city": "Lake Park",
-     "blurb": "Lake Park sits minutes from our clinic — making RegenOrtho Palm Beach a natural choice for orthopedic urgencies, foot and ankle care, and ongoing joint treatment.",
-     "angle": "Quick to reach and quick to respond: same-day injury consultations and a full regenerative toolkit, right up the road from Lake Park."},
+     "blurb": "Lake Park sits minutes from our clinic — making RegenOrtho Palm Beach a natural choice for regenerative therapies, vein care, and ongoing wellness support.",
+     "angle": "Quick to reach and quick to respond: same-week access and a full regenerative toolkit, right up the road from Lake Park."},
 ]
 
 IV_FAQS = [
@@ -1295,14 +1507,14 @@ def build_home():
   <div class="hero-inner">
     <div class="hero-copy">
       <p class="eyebrow hero-eyebrow h-rise" style="--hd:.5s">{TAGLINE}</p>
-      <h1 class="h-rise" style="--hd:.65s">Where surgery meets <em>innovative regeneration</em></h1>
-      <p class="lede h-rise" style="--hd:.82s">Personalized orthopedic, podiatric, and regenerative care in Palm Beach Gardens — led by board-certified surgeons with over 40 years of combined experience.</p>
+      <h1 class="h-rise" style="--hd:.65s">Where recovery meets <em>innovative regeneration</em></h1>
+      <p class="lede h-rise" style="--hd:.82s">Personalized regenerative medicine, non-surgical therapies, and vein care in Palm Beach Gardens — led by board-certified specialists with over 40 years of combined experience.</p>
       <div class="hero-cta-row h-rise" style="--hd:1s">
         <a class="btn btn-gold" href="contact.html#book">Book a Consultation</a>
         <a class="btn btn-teal" href="tel:{PHONE_TEL}">Call {PHONE_VANITY}</a>
       </div>
       <dl class="hero-stats h-rise" style="--hd:1.18s">
-        <div><dt><span class="stat-num" data-count="40">40</span>+</dt><dd>years of combined surgical experience</dd></div>
+        <div><dt><span class="stat-num" data-count="40">40</span>+</dt><dd>years of combined clinical experience</dd></div>
         <div><dt><span class="stat-num" data-count="10000">10,000</span>+</dt><dd>patients helped in Palm Beach</dd></div>
         <div><dt>4.9<span aria-hidden="true">★</span></dt><dd>rated on Google reviews</dd></div>
       </dl>
@@ -1310,7 +1522,7 @@ def build_home():
   </div>
   <div class="hero-marquee h-rise" style="--hd:1.35s" aria-hidden="true">
     <div class="marquee-track" data-marquee>
-      <span>Orthopedics</span><span>·</span><span>Sports Medicine</span><span>·</span><span>Podiatry</span><span>·</span><span>Regenerative Medicine</span><span>·</span><span>Vein Care</span><span>·</span><span>IV Wellness</span><span>·</span><span>Concierge Care</span><span>·</span>
+      <span>Regenerative Medicine</span><span>·</span><span>Peptide Therapy</span><span>·</span><span>Vein Care</span><span>·</span><span>IV Wellness</span><span>·</span><span>Neuropathy Care</span><span>·</span><span>Concierge Care</span><span>·</span>
     </div>
   </div>
 </section>
@@ -1385,8 +1597,8 @@ def build_home():
     </a>
   </div>
   <div class="why-strip reveal">
-    <div><strong>Board-Certified Expertise</strong><span>Decades of combined experience in sports orthopedics, podiatry, and vein care</span></div>
-    <div><strong>Comprehensive Solutions</strong><span>From surgery to regenerative therapies, we treat the whole patient</span></div>
+    <div><strong>Board-Certified Expertise</strong><span>Decades of combined experience in regenerative medicine and vein care</span></div>
+    <div><strong>Comprehensive Solutions</strong><span>From orthobiologics to advanced non-surgical therapies, we treat the whole patient</span></div>
     <div><strong>Personalized Care</strong><span>Concierge-level access with tailored treatment plans</span></div>
     <div><strong>Advanced Technology</strong><span>State-of-the-art biologics, minimally invasive procedures, and custom recovery solutions</span></div>
   </div>
@@ -1475,8 +1687,8 @@ def build_home():
     page = head(
         # ~57 chars: keyword + city front-loaded, brand last. Google truncates a
         # title around 600px (~60 chars) and the brand is the cheapest thing to lose.
-        "Orthopedic & Regenerative Care Palm Beach Gardens | RegenOrtho",
-        "Concierge orthopedic, podiatric, regenerative & vein care in Palm Beach Gardens. Board-certified surgeons, 40+ years combined experience. Call 833-STEM561.",
+        "Regenerative Medicine & Vein Care Palm Beach Gardens | RegenOrtho",
+        "Concierge regenerative medicine, non-surgical therapies & vein care in Palm Beach Gardens. Board-certified specialists, 40+ years combined experience. Call 833-STEM561.",
         # canonical="" -> BASE/ (the root), NOT /index.html. Every inbound link,
         # the GBP listing and the social profiles point at the root; canonicalising
         # to /index.html asks Google to consolidate the wrong direction.
@@ -1490,6 +1702,17 @@ def build_home():
 SERVICE_FROM_PRICE = {
     "medical-weight-loss": 239,
     "peptide-therapy": 249,
+}
+
+# The five regenerative modalities publish a one-time "Treatment Starting From
+# $2,500" figure (plus a $300 consultation credited toward it), not a monthly
+# plan — so they get an Offer without the per-month UnitPriceSpecification.
+SERVICE_ONE_TIME_PRICE = {
+    "exosome-therapy": 2500,
+    "mesenchymal-stem-cell-therapy": 2500,
+    "whartons-jelly-therapy": 2500,
+    "muse-infused-rpa-therapy": 2500,
+    "traditional-muse-cell-therapy": 2500,
 }
 
 
@@ -1524,6 +1747,21 @@ def therapy_schema(svc):
                 "billingIncrement": 1,
             },
         }
+    one_time = SERVICE_ONE_TIME_PRICE.get(svc["slug"])
+    if one_time:
+        node["offers"] = {
+            "@type": "Offer",
+            "price": one_time,
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock",
+            "url": f"{BASE}/services/{svc['slug']}.html",
+            "priceSpecification": {
+                "@type": "PriceSpecification",
+                "price": one_time,
+                "priceCurrency": "USD",
+                "minPrice": one_time,
+            },
+        }
     return extra_ld(node)
 
 
@@ -1552,7 +1790,27 @@ def build_services():
             for c in svc.get("conditions", []) if any(x["slug"] == c for x in CONDITIONS)
         )
         conds_html = f"""<aside class="cond-links reveal"><h2>Conditions this helps</h2><ul>{conds}</ul></aside>""" if conds else ""
-        crumbs_html = crumbs([("services/index.html", "Services"), ("", svc["name"])], depth=d)
+        sub_slugs = svc.get("subservices", [])
+        subsvc_html = ""
+        if sub_slugs:
+            sub_cards = "".join(
+                f"""<a class="svc-card reveal" href="{sub['slug']}.html" style="--d:{i * 70}ms">
+        <span class="svc-num" aria-hidden="true">{i + 1:02d}</span>
+        <span class="svc-media"><img src="../assets/media/{sub['img']}?v={asset_v('assets/media/' + sub['img'])}" alt="" width="640" height="420" loading="lazy"></span>
+        <span class="svc-body"><strong>{sub['name']}</strong><span>{sub['lede'][:130].rsplit(' ', 1)[0]}…</span><em class="svc-more">Explore <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></span>
+      </a>"""
+                for i, sub in enumerate(next(x for x in SERVICES if x["slug"] == s) for s in sub_slugs)
+            )
+            subsvc_html = f"""<section class="section section-tint">
+  <div class="section-head reveal"><p class="eyebrow">Explore Each Therapy</p><h2>Five ways we <em>regenerate tissue</em></h2></div>
+  <div class="svc-grid svc-grid-3">{sub_cards}</div>
+</section>"""
+        parent = next((x for x in SERVICES if x["slug"] == svc.get("parent")), None) if svc.get("parent") else None
+        crumb_parts = [("services/index.html", "Services")]
+        if parent:
+            crumb_parts.append((f"services/{parent['slug']}.html", parent["name"]))
+        crumb_parts.append(("", svc["name"]))
+        crumbs_html = crumbs(crumb_parts, depth=d)
         body = f"""{nav(d)}
 <main id="main">
 {page_hero(svc['eyebrow'], svc['h1'], svc['lede'], crumbs_html, depth=d)}
@@ -1575,6 +1833,7 @@ def build_services():
   <div class="section-head reveal"><p class="eyebrow">How It Works</p><h2>Three steps to <em>relief</em></h2></div>
   <ol class="steps">{steps}</ol>
 </section>
+{subsvc_html}
 {conds_html}
 <section class="section section-tint">
   <div class="section-head reveal"><p class="eyebrow">Patient Guide &amp; Answers</p><h2>Common <em>questions</em></h2></div>
@@ -1584,10 +1843,14 @@ def build_services():
 {cta_band(d, heading=svc['cta'], sub=svc['cta_sub'])}
 </main>
 {footer(d)}"""
+        crumb_schema_parts = [("", "Home"), ("services/index.html", "Services")]
+        if parent:
+            crumb_schema_parts.append((f"services/{parent['slug']}.html", parent["name"]))
+        crumb_schema_parts.append((f"services/{svc['slug']}.html", svc["name"]))
         schema = (
             therapy_schema(svc)
             + faq_schema(svc["faqs"])
-            + breadcrumb_schema([("", "Home"), ("services/index.html", "Services"), (f"services/{svc['slug']}.html", svc["name"])])
+            + breadcrumb_schema(crumb_schema_parts)
         )
         page = head(svc["title"], svc["desc"], depth=d,
                     canonical=f"services/{svc['slug']}.html",
@@ -1603,7 +1866,7 @@ def build_services():
         <span class="svc-media"><img src="../assets/media/{s['img']}?v={asset_v('assets/media/' + s['img'])}" alt="" width="640" height="420" loading="lazy"></span>
         <span class="svc-body"><strong>{s['name']}</strong><span>{s['lede'][:130].rsplit(' ', 1)[0]}…</span><em class="svc-more">Explore <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></span>
       </a>"""
-        for i, s in enumerate(SERVICES)
+        for i, s in enumerate(TOP_SERVICES)
     )
     pathways = "".join(
         f"""<li class="pathway reveal" style="--d:{i * 70}ms">
@@ -1616,16 +1879,16 @@ def build_services():
     crumbs_html = crumbs([("", "Our Services")], depth=d)
     body = f"""{nav(d)}
 <main id="main">
-{page_hero("Our Services", "Specialized treatment, all under one roof", "Orthopedics, podiatry, regenerative medicine, vein care, IV wellness, and concierge programs — board-certified specialists with one shared goal: help you move better, heal faster, and live healthier.", crumbs_html, depth=d)}
+{page_hero("Our Services", "Specialized treatment, all under one roof", "Regenerative medicine, non-surgical therapies, vein care, IV wellness, and concierge programs — board-certified specialists with one shared goal: help you move better, heal faster, and live healthier.", crumbs_html, depth=d)}
 <section class="section">
   <div class="svc-grid svc-grid-3">{tiles}
     <a class="svc-card reveal" href="../iv-therapy.html">
-      <span class="svc-num" aria-hidden="true">{len(SERVICES) + 1:02d}</span>
+      <span class="svc-num" aria-hidden="true">{len(TOP_SERVICES) + 1:02d}</span>
       <span class="svc-media"><img src="../assets/media/iv-hero.jpg?v={asset_v('assets/media/iv-hero.jpg')}" alt="" width="640" height="420" loading="lazy"></span>
       <span class="svc-body"><strong>IV Recovery &amp; Wellness Lounge</strong><span>Twelve clinician-supervised drips — hydration, immunity, NAD⁺, athletic recovery…</span><em class="svc-more">Explore <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></span>
     </a>
     <a class="svc-card reveal" href="../infusions/index.html">
-      <span class="svc-num" aria-hidden="true">{len(SERVICES) + 2:02d}</span>
+      <span class="svc-num" aria-hidden="true">{len(TOP_SERVICES) + 2:02d}</span>
       <span class="svc-media"><img src="../assets/media/infusion-room.jpg?v={asset_v('assets/media/infusion-room.jpg')}" alt="" width="640" height="420" loading="lazy"></span>
       <span class="svc-body"><strong>Specialty Infusion Center</strong><span>IVIG, Krystexxa, Ocrevus &amp; Ultomiris in a private, monitored outpatient suite…</span><em class="svc-more">Explore <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></span>
     </a>
@@ -1647,7 +1910,7 @@ def build_services():
 {footer(d)}"""
     schema = breadcrumb_schema([("", "Home"), ("services/index.html", "Our Services")])
     page = head("Our Services | RegenOrtho Palm Beach — Palm Beach Gardens",
-                "RegenOrtho Palm Beach services: orthopedics, podiatry, regenerative medicine, vein care, IV therapy, MISHA & Mako knees, weight loss, and concierge care.",
+                "RegenOrtho Palm Beach services: regenerative medicine, advanced non-surgical therapies, vein care, IV therapy, neuropathy care, weight loss, and concierge care.",
                 depth=d, canonical="services/index.html", extra_schema=schema, speakable=True) + '<body class="page-services">\n' + body
     write("services/index.html", page)
 
@@ -3035,7 +3298,12 @@ Sitemap: {BASE}/sitemap.xml
         for m in IV_MENU)
     unpriced = "\n".join(
         f"- {s['name']}: {BASE}/services/{s['slug']}.html"
-        for s in SERVICES if s["slug"] not in SERVICE_FROM_PRICE)
+        for s in SERVICES
+        if s["slug"] not in SERVICE_FROM_PRICE and s["slug"] not in SERVICE_ONE_TIME_PRICE)
+    regen_rows = "\n".join(
+        f"| {html.unescape(s['name'])} | from ${SERVICE_ONE_TIME_PRICE[s['slug']]:,} | "
+        f"$300 consultation & imaging review, credited toward treatment. |"
+        for s in SERVICES if s["slug"] in SERVICE_ONE_TIME_PRICE)
     write("pricing.md", f"""# Pricing — {NAME}
 
 Palm Beach Gardens, FL. Last updated from the published pages on each build.
@@ -3051,6 +3319,15 @@ consultation — see "Quoted at consultation" below.
 | Medical Weight Loss & GLP-1 | from $239/month | Plan depends on medication and monitoring your physician recommends. |
 | Peptide Therapy | from $249/month | Protocol and cost set at consultation based on your goals. |
 | IV Recovery & Wellness Lounge | $189–$499 per infusion | Per-formula prices below. |
+
+## Regenerative therapies
+
+Self-pay only — these are not covered by insurance or Medicare. None are
+FDA-approved to treat, cure or prevent any disease or condition.
+
+| Therapy | Price | Notes |
+| --- | --- | --- |
+{regen_rows}
 
 ## IV infusion menu
 

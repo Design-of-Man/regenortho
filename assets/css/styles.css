@@ -177,6 +177,11 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
 .drop li a:hover { background: rgba(253, 201, 41, .12); color: var(--gold); }
 .drop-mega { min-width: 560px; display: grid; grid-template-columns: 1fr 1fr; gap: 0 .4rem; }
 .drop-all a { color: var(--gold) !important; }
+/* Nested therapies under a parent service — rendered inline in the mega panel
+   rather than as a flyout, so it stays reachable on touch and keyboard. */
+.drop-sub { list-style: none; margin: 0 0 .3rem; padding: 0 0 0 .8rem;
+  border-left: 1px solid rgba(253, 201, 41, .22); }
+.drop-sub li a { font-size: .82rem; font-weight: 500; color: #B9C9DA; padding: .34rem .8rem; }
 
 /* ------------------------------ aurora / dark sections ------------------- */
 
@@ -201,21 +206,16 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
    fallback while the poster/first frame loads and wherever autoplay is vetoed */
 .hero-video-slot { z-index: 1; }
 .hero-video-slot video { width: 100%; height: 100%; object-fit: cover; }
-/* Legibility scrim: the footage pans across white surf and bright sand, and the
-   pale lede text disappears against it. Weighted to the copy side on desktop,
-   vertical on phones. Kept light — the client asked for a bright hero. */
-.hero-video-scrim { position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(90deg, rgba(4, 16, 31, .34) 0%, rgba(4, 16, 31, .16) 42%, transparent 66%); }
+/* Once the video is confirmed playing (main.js adds this class on the
+   "playing" event), the CSS scene underneath is fully covered — stop
+   rendering its animated layers so they don't keep compositing for nothing. */
+.hero.video-live .hero-scene { display: none; }
+/* No scrim over the footage — kept fully bright per the client's request.
+   Legibility comes entirely from .hero-copy's text-shadow below. */
+.hero-video-scrim { position: absolute; inset: 0; pointer-events: none; background: none; }
 @media (max-width: 767px) {
-  /* Legibility without a panel: weight the scrim to the TOP third where the
-     copy sits and let it clear by ~62%, so the surf and sand stay bright.
-     A gradient has no edge to read as a box. */
-  .hero-video-scrim { background: linear-gradient(180deg,
-    rgba(4, 16, 31, .66) 0%, rgba(4, 16, 31, .5) 28%, rgba(4, 16, 31, .26) 48%,
-    rgba(4, 16, 31, .07) 62%, rgba(4, 16, 31, .34) 100%); }
-
   .hero-copy { text-align: center; margin-inline: auto; max-width: 34ch;
-    text-shadow: 0 1px 2px rgba(4, 16, 31, .8), 0 2px 18px rgba(4, 16, 31, .75); }
+    text-shadow: 0 1px 3px rgba(4, 16, 31, .9), 0 2px 22px rgba(4, 16, 31, .85), 0 0 44px rgba(4, 16, 31, .6); }
   .hero-copy h1 { max-width: none; margin-inline: auto; }
   .hero .lede { margin-inline: auto; }
   .hero-cta-row { justify-content: center; }
@@ -431,7 +431,7 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
 
 .hero-inner { position: relative; flex: 1; display: flex; align-items: center; width: 100%;
   max-width: var(--wrap); margin: 0 auto; padding: calc(var(--header-h) + clamp(2rem, 6vh, 4rem)) 1.2rem 3rem; }
-.hero-copy { max-width: 660px; text-shadow: 0 1px 3px rgba(4, 16, 31, .55), 0 2px 28px rgba(4, 16, 31, .65); }
+.hero-copy { max-width: 660px; text-shadow: 0 1px 3px rgba(4, 16, 31, .85), 0 2px 26px rgba(4, 16, 31, .8), 0 0 50px rgba(4, 16, 31, .55); }
 .eyebrow { font: 800 .78rem/1.3 var(--sans); letter-spacing: .22em; text-transform: uppercase; color: var(--bronze-text); }
 .section-dark .eyebrow, .page-hero .eyebrow, .hero .eyebrow, .cta-band .eyebrow { color: var(--gold); }
 .hero-eyebrow::before { content: ""; display: inline-block; width: 34px; height: 2px; background: var(--gold); vertical-align: middle; margin-right: .6rem; }

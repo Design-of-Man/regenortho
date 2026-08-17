@@ -14,6 +14,19 @@ consultation — see "Quoted at consultation" below.
 | Peptide Therapy | from $249/month | Protocol and cost set at consultation based on your goals. |
 | IV Recovery & Wellness Lounge | $189–$499 per infusion | Per-formula prices below. |
 
+## Regenerative therapies
+
+Self-pay only — these are not covered by insurance or Medicare. None are
+FDA-approved to treat, cure or prevent any disease or condition.
+
+| Therapy | Price | Notes |
+| --- | --- | --- |
+| Exosome Therapy | from $2,500 | $300 consultation & imaging review, credited toward treatment. |
+| Mesenchymal Stem Cell Therapy | from $2,500 | $300 consultation & imaging review, credited toward treatment. |
+| Wharton's Jelly Therapy | from $2,500 | $300 consultation & imaging review, credited toward treatment. |
+| MUSE-Infused RPA™ Therapy | from $2,500 | $300 consultation & imaging review, credited toward treatment. |
+| Traditional MUSE® Cell Therapy | from $2,500 | $300 consultation & imaging review, credited toward treatment. |
+
 ## IV infusion menu
 
 Twelve clinician-supervised infusions. Each visit starts with a medical
