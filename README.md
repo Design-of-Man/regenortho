@@ -106,8 +106,12 @@ To deploy:
 
 1. Import this repo into Vercel. No build step and no framework — it's static output that
    is committed, and `vercel.json` is already configured.
-2. Set the production domain to `www.regenorthopb.com`.
-3. Point DNS: `A @ → 76.76.21.21`, `CNAME www → cname.vercel-dns.com`.
+2. Set the production domain to `www.regenorthopb.com` and redirect the apex to it.
+3. Point DNS: `A @` → the apex IP Vercel prints on the Domains screen (it has rotated —
+   older projects get `76.76.21.21`, newer ones `216.150.1.1`), `CNAME www →
+   cname.vercel-dns.com`. The domain is on Wix today, and Wix also hosts its DNS and the
+   practice's Google Workspace mail records — follow **[CUTOVER.md](CUTOVER.md)** rather
+   than editing records freehand.
 4. **Set `SHARE_BASE = BASE` in `build.py` and rebuild.** Until the domain resolves,
    `og:image` has to point at the live `*.vercel.app` host, because link-preview
    scrapers actually fetch that URL and fall back to a random page image if it 404s.
