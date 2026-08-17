@@ -13,13 +13,9 @@
 - New patients accepted; no referral required; most major insurance accepted; concierge/direct-pay bundles available.
 
 ## Services
-- Orthopedic & Sports Medicine: https://www.regenorthopb.com/services/orthopedic-sports-medicine.html — Board-certified orthopedic surgery & sports medicine in Palm Beach Gardens — same-day injury consults, joint preservation, arthroscopy, recovery plans.
-- Podiatric Medicine & Foot/Ankle Surgery: https://www.regenorthopb.com/services/podiatric-medicine-foot-ankle-surgery.html — Board-certified podiatric surgeon in Palm Beach Gardens — minimally invasive foot & ankle surgery, custom orthotics, heel pain relief, and gait correction.
 - Regenerative Medicine & Orthobiologic Therapies: https://www.regenorthopb.com/services/regenerative-medicine-orthobiologics.html — PRP injections, cellular and exosome therapies, peptides, and ultrasound-guided orthobiologics in Palm Beach Gardens — natural healing without surgery.
 - Advanced Non-Surgical Therapies: https://www.regenorthopb.com/services/advanced-non-surgical-therapies.html — EPAT shockwave, cold laser, peptide, and exosome therapies in Palm Beach Gardens — non-surgical pain relief and faster healing with minimal downtime.
 - Vein Care — Medical & Cosmetic: https://www.regenorthopb.com/services/vein-care.html — Ultrasound-guided vein care in Palm Beach Gardens — sclerotherapy, endovenous laser & RF ablation, phlebectomy, and cosmetic vein treatment with quick recovery.
-- MISHA Knee System: https://www.regenorthopb.com/services/misha-knee-system.html — The MISHA Knee System — an implantable shock absorber for medial knee osteoarthritis — offered in Palm Beach Gardens for patients not ready for replacement.
-- Mako Robotic-Assisted Total Knee Replacement: https://www.regenorthopb.com/services/mako-robotic-knee-replacement.html — Mako robotic-arm assisted total knee replacement in Palm Beach Gardens — 3D CT planning, haptic precision, and personalized implant placement.
 - Neuropathy Restoration Program: https://www.regenorthopb.com/services/neuropathy-program.html — The Neuropathy Restoration Program in Palm Beach Gardens — regenerative nerve repair for burning, tingling, and numbness. Non-surgical, personalized.
 - Medical Weight Loss & GLP-1 Program: https://www.regenorthopb.com/services/medical-weight-loss.html — Physician-supervised medical weight loss in Palm Beach Gardens — GLP-1 therapy, personalized dosing, and ongoing monitoring. Plans starting at $239/month.
 - Peptide Therapy: https://www.regenorthopb.com/services/peptide-therapy.html — Physician-supervised peptide therapy in Palm Beach Gardens — protocols for joint & tendon repair, inflammation, sleep, skin, and immunity. From $249/month.
@@ -34,8 +30,6 @@
 - Arthritis & Joint Pain: https://www.regenorthopb.com/conditions/arthritis-joint-pain.html
 - Sports Injuries: https://www.regenorthopb.com/conditions/sports-injuries.html
 - Tendon & Ligament Injuries: https://www.regenorthopb.com/conditions/tendon-ligament-injuries.html
-- Foot & Ankle Pain: https://www.regenorthopb.com/conditions/foot-ankle-pain.html
-- Plantar Fasciitis & Heel Pain: https://www.regenorthopb.com/conditions/plantar-fasciitis.html
 - Peripheral Neuropathy: https://www.regenorthopb.com/conditions/peripheral-neuropathy.html
 - Varicose & Spider Veins: https://www.regenorthopb.com/conditions/varicose-spider-veins.html
 

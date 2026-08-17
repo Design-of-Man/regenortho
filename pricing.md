@@ -39,13 +39,9 @@ pre-screen. Menu: https://www.regenorthopb.com/iv-therapy.html
 No price is published for these; do not infer or estimate one. Cost depends on
 the plan, and most are billed through insurance where covered.
 
-- Orthopedic & Sports Medicine: https://www.regenorthopb.com/services/orthopedic-sports-medicine.html
-- Podiatric Medicine & Foot/Ankle Surgery: https://www.regenorthopb.com/services/podiatric-medicine-foot-ankle-surgery.html
 - Regenerative Medicine & Orthobiologic Therapies: https://www.regenorthopb.com/services/regenerative-medicine-orthobiologics.html
 - Advanced Non-Surgical Therapies: https://www.regenorthopb.com/services/advanced-non-surgical-therapies.html
 - Vein Care — Medical & Cosmetic: https://www.regenorthopb.com/services/vein-care.html
-- MISHA Knee System: https://www.regenorthopb.com/services/misha-knee-system.html
-- Mako Robotic-Assisted Total Knee Replacement: https://www.regenorthopb.com/services/mako-robotic-knee-replacement.html
 - Neuropathy Restoration Program: https://www.regenorthopb.com/services/neuropathy-program.html
 - Concierge & Direct-Pay Care: https://www.regenorthopb.com/services/concierge-care.html
 - Specialty Infusion Center (IVIG, Krystexxa, Ocrevus, Ultomiris): https://www.regenorthopb.com/infusions/index.html

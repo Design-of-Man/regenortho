@@ -28,12 +28,22 @@
     },
     {
       "source": "/our-services/orthopedic-sports-medicine",
-      "destination": "/services/orthopedic-sports-medicine.html",
+      "destination": "https://elitesportsmed.org/services/sports-medicine/",
+      "permanent": true
+    },
+    {
+      "source": "/services/orthopedic-sports-medicine.html",
+      "destination": "https://elitesportsmed.org/services/sports-medicine/",
       "permanent": true
     },
     {
       "source": "/our-services/podiatric-medicine-foot-ankle-surgery",
-      "destination": "/services/podiatric-medicine-foot-ankle-surgery.html",
+      "destination": "https://jupiterlaser.com/ankle/",
+      "permanent": true
+    },
+    {
+      "source": "/services/podiatric-medicine-foot-ankle-surgery.html",
+      "destination": "https://jupiterlaser.com/ankle/",
       "permanent": true
     },
     {
@@ -58,7 +68,12 @@
     },
     {
       "source": "/our-services/misha-knee-system",
-      "destination": "/services/misha-knee-system.html",
+      "destination": "https://elitesportsmed.org/services/misha-minimally-invasive-implantable-shock-absorber-implant/",
+      "permanent": true
+    },
+    {
+      "source": "/services/misha-knee-system.html",
+      "destination": "https://elitesportsmed.org/services/misha-minimally-invasive-implantable-shock-absorber-implant/",
       "permanent": true
     },
     {
@@ -73,7 +88,22 @@
     },
     {
       "source": "/mako-total-knee",
-      "destination": "/services/mako-robotic-knee-replacement.html",
+      "destination": "https://elitesportsmed.org/services/mako-total-and-partial-knee-replacement/",
+      "permanent": true
+    },
+    {
+      "source": "/services/mako-robotic-knee-replacement.html",
+      "destination": "https://elitesportsmed.org/services/mako-total-and-partial-knee-replacement/",
+      "permanent": true
+    },
+    {
+      "source": "/conditions/foot-ankle-pain.html",
+      "destination": "https://jupiterlaser.com/ankle/",
+      "permanent": true
+    },
+    {
+      "source": "/conditions/plantar-fasciitis.html",
+      "destination": "https://jupiterlaser.com/plantar-fasciitis/",
       "permanent": true
     },
     {
