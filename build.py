@@ -18,18 +18,20 @@ import re
 import subprocess
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-BASE = "https://www.regenorthopb.com"
+# APEX, no www. The WordPress site this replaced canonicalised to the apex, its
+# sitemap emitted the apex, and www 301'd to it — so every inbound link, citation
+# and GBP entry already points there. Canonicalising to www would put a redirect
+# hop in front of all of them. If this ever changes, the Vercel project's primary
+# domain has to change in the same breath or all 60 canonicals point at a 308.
+BASE = "https://regenorthopb.com"
 
 # Host used ONLY for og:image / twitter:image. Link-preview scrapers (iMessage,
 # Slack, Facebook, LinkedIn) actually fetch that URL; if it 404s they fall back
-# to grabbing some arbitrary image off the page. regenorthopb.com is not pointed
-# at Vercel yet, so pre-launch it has to be the live deploy host or every shared
-# link previews with the wrong picture.
-#   >>> AT DNS FLIP: set SHARE_BASE = BASE and rebuild. <<<
-# Canonicals, schema @ids and sitemap all stay on BASE — only the share card moves.
-SHARE_BASE = "https://regenortho-mu.vercel.app"
+# to grabbing some arbitrary image off the page. Now that regenorthopb.com points
+# at Vercel this tracks BASE; the build prints a reminder whenever the two differ.
+SHARE_BASE = BASE
 SITE_LAUNCHED = "2026-07-30"
-SITE_UPDATED = "2026-08-03"
+SITE_UPDATED = "2026-08-17"
 # IndexNow key (public by design — it must be served at /{key}.txt to prove
 # ownership). Ping Bing/Yandex on content changes; see README.
 INDEXNOW_KEY = "a7f3c1e94b2d48f6ae05d7c318b6f240"
