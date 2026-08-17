@@ -256,7 +256,7 @@ def head(title, desc, depth=0, canonical="", og_image="assets/media/og-team.jpg"
 <link rel="icon" type="image/png" sizes="16x16" href="{p}assets/media/favicon-16.png?v=1">
 <link rel="apple-touch-icon" href="{p}assets/media/apple-touch-icon.png?v=1">
 <link rel="manifest" href="{p}site.webmanifest">
-<link rel="preload" href="{p}assets/fonts/fraunces-v2.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{p}assets/fonts/newsreader-v1.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{p}assets/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin>
 {hero_preload}<link rel="stylesheet" href="{p}assets/css/styles.css?v={asset_v('assets/css/styles.css')}">
 <link rel="stylesheet" href="{p}assets/css/assist.css?v={asset_v('assets/css/assist.css')}">
@@ -739,6 +739,61 @@ INFUSIONS = [
      "body": "Ultomiris is a physician-prescribed infusion used in the management of certain rare complement-mediated conditions. We administer it on your prescriber's protocol in a monitored, private infusion suite — a calmer, more convenient alternative to hospital-based infusion."},
 ]
 
+# Shared across the five regenerative modality pages. All of these are quoted
+# from the practice's own published pages — the conditions list, the inclusions
+# list and the HCT/P disclaimer are identical on each, so they live here once.
+# The disclaimer is a compliance statement: do not paraphrase or trim it.
+# "Ankle & foot arthritis" and "Plantar fasciitis" appear on the practice's own
+# pages but are deliberately omitted here: foot and ankle care is Abacoa
+# Podiatry's territory (jupiterlaser.com) and this site does not compete for
+# those terms. Do not add them back without checking that decision first.
+REGEN_TREATS = [
+    "Knee osteoarthritis", "Hip osteoarthritis", "Shoulder arthritis",
+    "Chronic tendon injuries", "Ligament injuries",
+    "Persistent joint pain", "Sports injuries",
+    "Inflammation management",
+]
+
+REGEN_INCLUDES = [
+    "Comprehensive orthopedic evaluation",
+    "Review of diagnostic imaging",
+    "Personalized regenerative medicine plan",
+    "Ultrasound-guided precision treatment",
+    "Physician-performed procedure",
+    "Follow-up care and recovery monitoring",
+]
+
+# The MUSE modalities are delivered by IV push or targeted injection rather than
+# under ultrasound, so their inclusions list differs on the source pages.
+REGEN_INCLUDES_IV = [
+    "Comprehensive orthopedic evaluation",
+    "Review of diagnostic imaging",
+    "Personalized regenerative treatment planning",
+    "Physician-directed IV push or targeted injection",
+    "Recovery recommendations",
+    "Scheduled follow-up appointments",
+]
+
+REGEN_PRICE = {
+    "consult": 300,
+    "from": 2500,
+    "note": "The consultation fee is credited toward treatment. Pricing varies based on "
+            "the treatment plan and physician recommendations. These are self-pay "
+            "services and are not covered by insurance or Medicare.",
+}
+
+REGEN_DISCLAIMER = (
+    "None of the therapies described are FDA-approved to treat, cure or prevent any "
+    "disease or condition, and they are not a substitute for indicated surgical care. "
+    "Composition and mechanism characteristics are drawn from published literature and "
+    "supplier documentation, not from RegenOrtho Palm Beach outcomes. Cellular products "
+    "are HCT/Ps from accredited U.S. suppliers; per 21 C.F.R. &sect; 1271.3(d) cell "
+    "factors such as RPA are not classified as HCT/Ps. Donors are U.S.-based, screened "
+    "and tested by third-party CLIA laboratories. Individual results vary and no outcome "
+    "is guaranteed. This material is general education, not medical advice. Services are "
+    "self-pay and are not covered by insurance or Medicare."
+)
+
 SERVICES = [
     {
         "slug": "regenerative-medicine-orthobiologics",
@@ -810,15 +865,23 @@ SERVICES = [
             ("Ultrasound-Guided Delivery", "Exosomes are precisely delivered to the affected joint, tendon, ligament, or soft tissue under real-time ultrasound guidance for accurate placement."),
         ],
         "steps": [
-            ("Consultation & Imaging", "A comprehensive evaluation plus review of MRI, ultrasound, X-ray, or other diagnostic imaging to confirm candidacy."),
-            ("Ultrasound-Guided Treatment", "Exosomes are delivered directly to the affected area — most treatments are completed in under an hour."),
-            ("Recovery & Follow-Up", "Most patients resume light activity shortly after treatment, with follow-up visits to monitor healing."),
+            ("Comprehensive Consultation", "Your physician performs a full evaluation, reviewing your symptoms, medical history, previous treatments, and recovery goals."),
+            ("Imaging &amp; Diagnosis", "MRI, ultrasound, X-rays, or other diagnostic imaging are reviewed to identify the source of pain and confirm candidacy."),
+            ("Customized Treatment Plan", "An individualized regenerative medicine approach is built around your diagnosis, activity level, and health goals."),
+            ("Ultrasound-Guided Exosome Therapy", "Exosomes are delivered precisely to the affected tissue under real-time ultrasound guidance. Most treatments are completed in less than one hour."),
+            ("Recovery &amp; Follow-Up", "Most patients resume light activity shortly afterward, with follow-up visits so your physician can monitor healing."),
         ],
+        "treats": REGEN_TREATS,
+        "includes": REGEN_INCLUDES,
+        "price": REGEN_PRICE,
+        "disclaimer": REGEN_DISCLAIMER,
         "faqs": [
             ("What is Exosome Therapy?", "A regenerative medicine treatment that uses naturally occurring extracellular vesicles containing proteins, growth factors, and signaling molecules that help support the body's healing response."),
-            ("Is the procedure painful?", "Most patients experience only minimal discomfort during treatment."),
+            ("How is it different from stem cell therapy?", "Exosome therapy is cell-free. Rather than delivering living cells, it delivers the biological signals that encourage your body's own cells to communicate and repair."),
             ("Who is a candidate?", "Candidacy is determined after a comprehensive consultation, imaging review, and physical examination."),
-            ("Is this FDA-approved?", "Exosome therapy is not FDA-approved to treat, cure, or prevent any disease or condition and is not a substitute for indicated surgical care. Cellular products come from accredited U.S. suppliers; individual results vary and no outcome is guaranteed. This is a self-pay service and is not covered by insurance or Medicare."),
+            ("Is the procedure painful?", "Most patients experience only minimal discomfort during treatment, which is performed under ultrasound guidance."),
+            ("How long does treatment take?", "Most treatments are completed in less than one hour."),
+            ("How soon will I see results?", "Healing timelines vary depending on the condition treated and each patient's individual response."),
         ],
         "cta": "Cell-Free. <em>Signal-Driven Healing.</em>",
         "cta_sub": "Find out if exosome therapy fits your recovery goals — consultation and imaging review is $300, credited toward treatment starting from $2,500.",
@@ -849,15 +912,23 @@ SERVICES = [
             ("Minimally Invasive", "Performed in-office — no surgery, no general anesthesia, with most patients returning to light activity quickly."),
         ],
         "steps": [
-            ("Consultation & Imaging", "Review of symptoms, medical history, and diagnostic imaging (MRI, X-ray, ultrasound) to confirm candidacy."),
-            ("Ultrasound-Guided Therapy", "Real-time ultrasound guidance ensures precise delivery to the targeted area."),
-            ("Recovery & Follow-Up", "Return to daily activities quickly, with follow-up visits to monitor healing and optimize recovery."),
+            ("Comprehensive Consultation", "Your physician reviews your symptoms, medical history, previous treatments, and long-term recovery goals."),
+            ("Imaging &amp; Diagnosis", "MRI, X-rays, ultrasound, or other diagnostic imaging are evaluated to identify the source of your condition."),
+            ("Customized Treatment Plan", "Therapy is designed around your diagnosis, activity level, and health goals."),
+            ("Ultrasound-Guided Therapy", "Real-time ultrasound guidance ensures precise delivery to the targeted area. Most treatments are completed in less than one hour."),
+            ("Recovery &amp; Follow-Up", "Most patients return to daily activities quickly, with follow-up visits to monitor healing progress."),
         ],
+        "treats": REGEN_TREATS,
+        "includes": REGEN_INCLUDES,
+        "price": REGEN_PRICE,
+        "disclaimer": REGEN_DISCLAIMER,
         "faqs": [
             ("What is Mesenchymal Stem Cell Therapy?", "A regenerative medicine treatment that uses umbilical cord-derived mesenchymal stem cells selected for their regenerative signaling properties to support the body's natural healing response."),
+            ("Who is a good candidate?", "Candidacy is determined after a comprehensive consultation, medical history review, physical examination, and imaging assessment."),
             ("Is the procedure surgical?", "No — it's a minimally invasive treatment performed in the office using ultrasound guidance."),
-            ("How soon will I notice improvement?", "Recovery varies by patient — some notice improvement within weeks, others see gradual progress over the following months."),
-            ("Is this FDA-approved?", "Mesenchymal stem cell therapy is not FDA-approved to treat, cure, or prevent any disease or condition and is not a substitute for indicated surgical care. Individual results vary and no outcome is guaranteed. This is a self-pay service and is not covered by insurance or Medicare."),
+            ("How long does the procedure take?", "Most treatments are completed in less than one hour, allowing many patients to return to light activity quickly."),
+            ("How soon will I notice improvement?", "Recovery varies for every patient. Some begin noticing improvement within weeks; others see gradual progress over the following months."),
+            ("Why choose RegenOrtho Palm Beach?", "The practice combines experienced physicians, advanced imaging technology, and personalized regenerative medicine treatment plans."),
         ],
         "cta": "Support Healing, <em>Skip the Surgery</em>",
         "cta_sub": "Find out if mesenchymal stem cell therapy fits your recovery goals — consultation and imaging review is $300, credited toward treatment starting from $2,500.",
@@ -888,15 +959,23 @@ SERVICES = [
             ("Ultrasound-Guided Delivery", "Treatment is precisely delivered into the affected joint, tendon, or ligament under real-time ultrasound guidance."),
         ],
         "steps": [
-            ("Consultation & Imaging", "A thorough evaluation and review of diagnostic imaging to confirm candidacy."),
-            ("Ultrasound-Guided Delivery", "Precisely delivered into the affected joint, tendon, or ligament — most procedures completed in under an hour."),
-            ("Recovery & Follow-Up", "Most patients return to light daily activities quickly, with follow-up visits to monitor progress."),
+            ("Comprehensive Consultation", "A thorough medical evaluation reviewing your symptoms, previous treatments, lifestyle, and long-term recovery goals."),
+            ("Imaging &amp; Diagnosis", "Our physicians carefully assess MRI, X-rays, ultrasound, or other diagnostic imaging to determine the most appropriate treatment approach."),
+            ("Customized Treatment Plan", "Every patient receives a personalized regenerative medicine treatment plan based on their diagnosis, activity level, and health goals."),
+            ("Ultrasound-Guided Wharton&rsquo;s Jelly Therapy", "Using ultrasound guidance, Wharton's Jelly is precisely delivered into the affected joint, tendon, ligament, or surrounding soft tissue."),
+            ("Recovery &amp; Follow-Up", "Most patients return to light daily activities quickly. Follow-up visits allow our physicians to monitor healing progress and adjust your care plan if needed."),
         ],
+        "treats": REGEN_TREATS,
+        "includes": REGEN_INCLUDES,
+        "price": REGEN_PRICE,
+        "disclaimer": "Newly available at RegenOrtho Palm Beach. " + REGEN_DISCLAIMER,
         "faqs": [
-            ("What is Wharton's Jelly Therapy?", "A regenerative medicine treatment that uses umbilical cord tissue rich in naturally occurring growth factors, cytokines, and extracellular matrix proteins."),
-            ("Is it surgical?", "No — it's a minimally invasive treatment performed in the office using ultrasound guidance."),
-            ("Who is a candidate?", "Your physician determines candidacy after reviewing your medical history, symptoms, physical examination, and diagnostic imaging."),
-            ("Is this FDA-approved?", "Wharton's Jelly therapy is not FDA-approved to treat, cure, or prevent any disease or condition and is not a substitute for indicated surgical care. Individual results vary and no outcome is guaranteed. This is a self-pay service and is not covered by insurance or Medicare."),
+            ("What is Wharton's Jelly Therapy?", "A regenerative medicine treatment that uses umbilical cord tissue rich in naturally occurring growth factors, cytokines, and extracellular matrix proteins to support the body's natural healing response."),
+            ("How does Wharton's Jelly Therapy work?", "Rather than replacing damaged tissue, Wharton's Jelly provides biologically active components that help support healthy cell communication and tissue repair."),
+            ("Who is a candidate for treatment?", "Your physician will determine whether Wharton's Jelly Therapy is appropriate after reviewing your medical history, symptoms, physical examination, and diagnostic imaging."),
+            ("Is the procedure surgical?", "No. Wharton's Jelly Therapy is a minimally invasive treatment performed in the office using ultrasound guidance."),
+            ("How long does treatment take?", "Most procedures are completed in less than one hour, allowing many patients to resume light activities shortly afterward."),
+            ("Why choose RegenOrtho Palm Beach?", "Our physicians combine advanced regenerative medicine, ultrasound-guided precision, and personalized treatment planning to provide comprehensive orthopedic care tailored to every patient."),
         ],
         "cta": "Support Tissue Repair, <em>Naturally</em>",
         "cta_sub": "Find out if Wharton's Jelly therapy fits your recovery goals — consultation and imaging review is $300, credited toward treatment starting from $2,500.",
@@ -927,15 +1006,23 @@ SERVICES = [
             ("How It Differs From Traditional MUSE Cell Therapy", "Traditional MUSE Cell Therapy uses living MUSE cells, while MUSE-Infused RPA Therapy uses an acellular protein fraction enhanced with proteins from MUSE cells."),
         ],
         "steps": [
-            ("Consultation & Imaging", "A comprehensive evaluation and review of diagnostic imaging to determine candidacy."),
-            ("IV Push or Targeted Injection", "Depending on your physician's recommendation, treatment is delivered by IV push or targeted injection."),
-            ("Recovery & Follow-Up", "Most procedures are completed in under an hour, with scheduled follow-up to monitor progress."),
+            ("Comprehensive Consultation", "Your physician performs an orthopedic evaluation and reviews your medical history, symptoms, imaging, and treatment goals."),
+            ("Imaging &amp; Diagnosis", "Diagnostic tools help determine the most appropriate regenerative approach for your condition."),
+            ("Customized Treatment Plan", "Your physician develops a strategy based on your diagnosis, activity level, and lifestyle."),
+            ("MUSE-Infused RPA&trade; Therapy", "Your physician delivers the therapy through IV push or targeted injection to help support tissue repair and recovery."),
+            ("Recovery &amp; Follow-Up", "Most patients return to light activities quickly, with scheduled monitoring appointments."),
         ],
+        "treats": REGEN_TREATS,
+        "includes": REGEN_INCLUDES_IV,
+        "price": REGEN_PRICE,
+        "disclaimer": REGEN_DISCLAIMER,
         "faqs": [
-            ("What is MUSE-Infused RPA™ Therapy?", "An acellular regenerative medicine treatment that combines Regenerative Protein Array™ technology with proteins extracted from MUSE cells to support the body's natural healing response."),
-            ("How is it administered?", "Depending on your physician's recommendation, treatment may be provided through IV push or targeted injection."),
-            ("Does insurance cover treatment?", "Regenerative medicine therapies like this are generally self-pay services and are not covered by insurance or Medicare."),
-            ("Is this FDA-approved?", "MUSE-Infused RPA™ Therapy is not FDA-approved to treat, cure, or prevent any disease or condition and is not a substitute for indicated surgical care. Individual results vary and no outcome is guaranteed."),
+            ("What is MUSE-Infused RPA™ Therapy?", "An acellular regenerative medicine treatment that combines Regenerative Protein Array™ technology with proteins extracted from MUSE cells to support the body's natural healing response through protein signaling rather than living cells."),
+            ("How is it different from Traditional MUSE Cell Therapy?", "Traditional MUSE Cell Therapy uses living MUSE cells, while MUSE-Infused RPA Therapy uses an acellular protein fraction enhanced with proteins from MUSE cells."),
+            ("How is treatment administered?", "Treatment may be provided through IV push or targeted injection as part of your personalized treatment plan."),
+            ("Who may be a candidate?", "Your physician will determine whether MUSE-Infused RPA Therapy is appropriate after reviewing your symptoms, medical history, physical examination, and diagnostic imaging."),
+            ("How long does treatment take?", "Most regenerative medicine procedures are completed in under one hour, although treatment times vary depending on your individualized care plan."),
+            ("Does insurance cover treatment?", "Regenerative medicine therapies are generally self-pay services and are not covered by insurance or Medicare."),
         ],
         "cta": "Protein-Driven <em>Repair Signals</em>",
         "cta_sub": "Find out if MUSE-Infused RPA™ therapy fits your recovery goals — consultation and imaging review is $300, credited toward treatment starting from $2,500.",
@@ -966,15 +1053,23 @@ SERVICES = [
             ("How It Differs", "Traditional MUSE Cell Therapy uses living MUSE cells, whereas some other regenerative therapies rely primarily on signaling molecules or acellular components."),
         ],
         "steps": [
-            ("Consultation & Imaging", "A complete evaluation and review of diagnostic imaging to determine candidacy."),
-            ("IV Push or Targeted Injection", "Treatment is administered by IV push or targeted injection based on your personalized plan."),
-            ("Recovery & Follow-Up", "Most patients return to light activity quickly, with regular follow-up to monitor progress."),
+            ("Comprehensive Consultation", "Your physician performs a complete evaluation and reviews your medical history, symptoms, previous treatments, and long-term recovery goals."),
+            ("Imaging &amp; Diagnosis", "MRI, ultrasound, X-rays, or other diagnostic imaging are reviewed to determine candidacy."),
+            ("Customized Treatment Plan", "Your physician develops a customized regenerative medicine plan based on your condition and lifestyle."),
+            ("Treatment Administration", "Traditional MUSE Cell Therapy may be administered through IV push or targeted injection."),
+            ("Recovery &amp; Follow-Up", "Most patients return to light activities quickly. Regular follow-up visits allow your physician to monitor progress."),
         ],
+        "treats": REGEN_TREATS,
+        "includes": REGEN_INCLUDES_IV,
+        "price": REGEN_PRICE,
+        "disclaimer": "Newly available at RegenOrtho Palm Beach. " + REGEN_DISCLAIMER,
         "faqs": [
             ("What is Traditional MUSE® Cell Therapy?", "A regenerative medicine treatment using a live-cell preparation containing Multilineage-Differentiating Stress-Enduring (MUSE) cells, a rare subpopulation of mesenchymal stem cells."),
-            ("Is it surgical?", "No — it's a minimally invasive regenerative medicine treatment performed without traditional orthopedic surgery."),
-            ("How is it administered?", "Depending on your individualized treatment plan, therapy may be administered through IV push or targeted injection."),
-            ("Is this FDA-approved?", "Traditional MUSE® Cell Therapy is not FDA-approved to treat, cure, or prevent any disease or condition and is not a substitute for indicated surgical care. Individual results vary and no outcome is guaranteed. This is a self-pay service and is not covered by insurance or Medicare."),
+            ("How is it different from other regenerative therapies?", "Traditional MUSE Cell Therapy uses living MUSE cells, whereas some other regenerative therapies rely primarily on signaling molecules or acellular components."),
+            ("How is the treatment administered?", "Depending on your individualized treatment plan, therapy may be administered through IV push or targeted injection."),
+            ("Who may be a candidate?", "Your physician will determine candidacy after reviewing your medical history, physical examination, symptoms, and diagnostic imaging."),
+            ("How long does the procedure take?", "Most regenerative medicine procedures are completed in less than one hour, although timing varies depending on your personalized treatment plan."),
+            ("Is Traditional MUSE Cell Therapy surgical?", "No. It is a minimally invasive regenerative medicine treatment performed without traditional orthopedic surgery."),
         ],
         "cta": "Live-Cell <em>Regenerative Support</em>",
         "cta_sub": "Find out if Traditional MUSE® Cell Therapy fits your recovery goals — consultation and imaging review is $300, credited toward treatment starting from $2,500.",
@@ -1838,6 +1933,49 @@ def build_services():
   <div class="section-head reveal"><p class="eyebrow">Explore Each Therapy</p><h2>Five ways we <em>regenerate tissue</em></h2></div>
   <div class="svc-grid svc-grid-3">{sub_cards}</div>
 </section>"""
+        # Optional blocks, all keyed off the service dict so the services that
+        # don't define them render exactly as before.
+        treats = "".join(f"<li>{t}</li>" for t in svc.get("treats", []))
+        treats_html = f"""<section class="section">
+  <div class="section-head reveal"><p class="eyebrow">Conditions Treated</p><h2>What this therapy is <em>used for</em></h2></div>
+  <ul class="treats-grid reveal">{treats}</ul>
+</section>""" if treats else ""
+
+        includes = "".join(f"<li>{t}</li>" for t in svc.get("includes", []))
+        price = svc.get("price")
+        price_html = ""
+        if includes or price:
+            price_block = ""
+            if price:
+                price_block = f"""<div class="price-card reveal" style="--d:90ms">
+      <p class="eyebrow">Pricing</p>
+      <dl class="price-list">
+        <div><dt>Initial consultation &amp; imaging review</dt><dd>${price['consult']}</dd></div>
+        <div><dt>Treatment starting from</dt><dd>${price['from']:,}</dd></div>
+      </dl>
+      <p class="price-note">{price['note']}</p>
+      <a class="btn btn-gold" href="../contact.html#book">Book a Consultation</a>
+    </div>"""
+            inc_block = f"""<div class="reveal">
+      <p class="eyebrow">Treatment Includes</p>
+      <h2>What&rsquo;s <em>included</em></h2>
+      <ul class="check-list">{includes}</ul>
+    </div>""" if includes else ""
+            price_html = f"""<section class="section section-tint">
+  <div class="price-grid">
+    {inc_block}
+    {price_block}
+  </div>
+</section>"""
+
+        disclaimer_html = f"""<section class="section section-disclaimer">
+  <div class="disclaimer reveal">
+    <p class="eyebrow">Important Medical Information</p>
+    <p>{svc['disclaimer']}</p>
+  </div>
+</section>""" if svc.get("disclaimer") else ""
+
+        step_word = {3: "Three", 4: "Four", 5: "Five", 6: "Six"}.get(len(svc["steps"]), "Every")
         parent = next((x for x in SERVICES if x["slug"] == svc.get("parent")), None) if svc.get("parent") else None
         crumb_parts = [("services/index.html", "Services")]
         if parent:
@@ -1863,9 +2001,11 @@ def build_services():
   <div class="exp-grid">{cards}</div>
 </section>
 <section class="section">
-  <div class="section-head reveal"><p class="eyebrow">How It Works</p><h2>Three steps to <em>relief</em></h2></div>
+  <div class="section-head reveal"><p class="eyebrow">How It Works</p><h2>{step_word} steps to <em>relief</em></h2></div>
   <ol class="steps">{steps}</ol>
 </section>
+{treats_html}
+{price_html}
 {subsvc_html}
 {conds_html}
 <section class="section section-tint">
@@ -1874,6 +2014,7 @@ def build_services():
   <p class="section-foot"><a href="../faq.html">Browse the full FAQ →</a></p>
 </section>
 {cta_band(d, heading=svc['cta'], sub=svc['cta_sub'])}
+{disclaimer_html}
 </main>
 {footer(d)}"""
         crumb_schema_parts = [("", "Home"), ("services/index.html", "Services")]

@@ -6,8 +6,15 @@ Static site, 56 pages, generated — do not edit HTML files directly.
 - **`build.py`** is the single source of truth: all page content, services, team, conditions,
   locations, IV menu/pricing, FAQs, testimonials. Edit it, run `python3 build.py` (from this
   directory) to regenerate every page in place. `blog_content.py` holds blog post bodies.
-- Fonts are SELF-HOSTED in assets/fonts/ (Fraunces + Manrope variable woff2, @font-face at
+- Fonts are SELF-HOSTED in assets/fonts/ (Newsreader + Manrope variable woff2, @font-face at
   the top of styles.css, preloads in head()) — do not add Google Fonts links.
+  Newsreader replaced Fraunces because Fraunces' J/j carry a hooked ball terminal that
+  reads as eccentric on a clinical site (its own design at every axis value, NOT the WONK
+  axis). The Newsreader files are instanced to wght 400–700 with opsz PINNED at 20, which
+  is why there is no `font-variation-settings` on body — pinning the axis out of the file
+  instead of overriding it in CSS is what keeps the pair at 98KB instead of ~250KB.
+  Font files carry a version suffix (`-v1`) because /assets/* is served immutable for a
+  year: changing a font's bytes REQUIRES a new filename, not just a rebuild.
 - All CSS/JS links carry build-time content-hash cache-busters (`asset_v()` in build.py) —
   never link an asset without one.
 - `assets/css/styles.css` — design system: navy #092D5C + gold #FDC929 (from the logo),

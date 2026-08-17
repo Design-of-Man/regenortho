@@ -1,19 +1,31 @@
 /* ==========================================================================
    RegenOrtho Palm Beach — design system
    Navy (#092D5C) + gold (#FDC929) from the brand mark, porcelain light field,
-   Fraunces display serif + Manrope UI sans (self-hosted, variable).
+   Newsreader display serif + Manrope UI sans (self-hosted, variable).
+
+   Newsreader replaced Fraunces: Fraunces' J and j carry a heavy ball terminal
+   that hooks below the baseline, which read as eccentric on a clinical site.
+   That shape is Fraunces' own design at every opsz and weight — it was not the
+   WONK axis — so the only fix was a different face.
+
+   Both files are instanced to wght 400–700 (the site only uses 500 and 600)
+   with opsz PINNED at 20, because the design wants one consistent cut at every
+   size rather than true optical sizing. Pinning the axis out rather than
+   overriding it in CSS cuts each file by ~65%: the pair is 98KB, against 148KB
+   for the Fraunces pair it replaced. If you ever need optical sizing back,
+   re-instance from Google Fonts leaving opsz variable and expect ~250KB.
    ========================================================================== */
 
 @font-face {
-  font-family: "Fraunces";
-  src: url("../fonts/fraunces-v2.woff2") format("woff2");
+  font-family: "Newsreader";
+  src: url("../fonts/newsreader-v1.woff2") format("woff2");
   font-weight: 400 700;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Fraunces";
-  src: url("../fonts/fraunces-italic-v2.woff2") format("woff2");
+  font-family: "Newsreader";
+  src: url("../fonts/newsreader-italic-v1.woff2") format("woff2");
   font-weight: 400 700;
   font-style: italic;
   font-display: swap;
@@ -42,7 +54,7 @@
   --line: #DCD5C6;
   --line-dark: rgba(253, 201, 41, .18);
   --white: #FFFFFF;
-  --serif: "Fraunces", Georgia, serif;
+  --serif: "Newsreader", Georgia, serif;
   --sans: "Manrope", -apple-system, "Segoe UI", sans-serif;
   --shadow-lg: 0 30px 60px -25px rgba(4, 16, 31, .35);
   --shadow-sm: 0 10px 30px -18px rgba(4, 16, 31, .35);
@@ -66,22 +78,10 @@ body {
   background: var(--porcelain);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
-  /* Fraunces carries an optical-size axis, and browsers default to
-     font-optical-sizing:auto — so a 65px heading asks for opsz ~49, which
-     thins the strokes and tightens the fit more than this design wants.
-     Pinning opsz to 20 keeps one consistent cut at every size. Inherited, so
-     it covers every element and every stylesheet. Manrope has no opsz axis,
-     so this is a no-op there, and naming only opsz leaves font-weight in
-     charge of the wght axis.
-
-     Note: the quirky glyphs (the joined "ff", the swash ampersand) came from
-     Fraunces' WONK axis, NOT from opsz — and WONK defaults to 1 upstream, so
-     an unpinned subset bakes them in. assets/fonts/fraunces-v2.woff2 is
-     instanced at WONK=0 + SOFT=0 with opsz/wght left variable. If these files
-     are ever regenerated from Google Fonts, pin WONK=0 again or the wonk
-     returns. The -v2 suffix exists because /assets/* is served immutable for
-     a year — changing a font's bytes needs a new filename. */
-  font-variation-settings: "opsz" 20;
+  /* No font-variation-settings here on purpose. Optical size is baked into the
+     Newsreader files (pinned at opsz 20 — see the @font-face note above), so
+     the axis no longer exists at runtime and a CSS override would be dead
+     weight. Weight is left to font-weight, which drives the wght axis. */
 }
 
 img { max-width: 100%; height: auto; display: block; }
@@ -616,6 +616,32 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
   background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden;
   transition: transform .35s var(--ease), box-shadow .35s var(--ease), border-color .35s;
 }
+
+/* ---- service page: conditions treated / inclusions + pricing / disclaimer -- */
+.treats-grid { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: .6rem; max-width: var(--wrap); margin: 0 auto; padding: 0; }
+.treats-grid li { position: relative; background: #fff; border: 1px solid var(--line);
+  border-radius: var(--r-md); padding: .85rem 1rem .85rem 2.5rem; font-weight: 500; color: var(--ink); }
+.treats-grid li::before { content: ""; position: absolute; left: 1rem; top: 50%; width: 9px; height: 9px;
+  margin-top: -4.5px; border-radius: 50%; background: var(--gold); }
+
+.price-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 2.4rem; align-items: start;
+  max-width: var(--wrap); margin: 0 auto; }
+.price-card { background: var(--navy-800); color: #E7EFF7; border-radius: var(--r-lg);
+  padding: 1.9rem; box-shadow: var(--shadow-lg); }
+.price-card .eyebrow { color: var(--gold); }
+.price-list { margin: 1rem 0 1.1rem; }
+.price-list > div { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+  padding: .8rem 0; border-bottom: 1px solid rgba(253, 201, 41, .22); }
+.price-list > div:last-child { border-bottom: 0; }
+.price-list dt { font-size: .95rem; color: #C6D4E2; }
+.price-list dd { font-family: var(--serif); font-size: 1.6rem; font-weight: 600; color: var(--gold); white-space: nowrap; }
+.price-note { font-size: .82rem; line-height: 1.55; color: #A9BDD0; margin-bottom: 1.2rem; }
+@media (max-width: 860px) { .price-grid { grid-template-columns: 1fr; gap: 1.6rem; } }
+
+.section-disclaimer { padding-top: 0; }
+.disclaimer { max-width: 900px; margin: 0 auto; border-top: 1px solid var(--line); padding-top: 1.6rem; }
+.disclaimer p:last-child { font-size: .8rem; line-height: 1.65; color: var(--muted); }
 
 /* Sub-service cards (the regenerative modalities on /services). Text-only —
    they sit under the parent tile grid, so a second row of photo cards would
