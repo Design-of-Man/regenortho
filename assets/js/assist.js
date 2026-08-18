@@ -346,7 +346,7 @@
 
   function payload() {
     return {
-      _subject: "New appointment request (site assistant) — " + draft.name,
+      _subject: "[Site Assistant] New Appointment Request — " + draft.name,
       name: draft.name, phone: draft.phone, email: draft.email,
       service: draft.service, preferred_time: draft.timing, message: draft.message || "",
       source: "regenorthopb.com concierge assistant, " + location.pathname,
