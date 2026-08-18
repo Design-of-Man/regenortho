@@ -556,8 +556,10 @@ def org_schema():
             "priceRange": "$$",
             "currenciesAccepted": "USD",
             "paymentAccepted": "Cash, Credit Card, Insurance, HSA/FSA",
-            "availableLanguage": [{"@type": "Language", "name": "English"},
-                                  {"@type": "Language", "name": "Spanish"}],
+            # Spanish was previously listed here with no published claim anywhere on the
+            # site to back it up — a fabricated capability claim (facts discipline). Add
+            # it back only once the practice confirms Spanish-speaking staff/service.
+            "availableLanguage": [{"@type": "Language", "name": "English"}],
             "knowsAbout": [
                 "Regenerative medicine", "Platelet-rich plasma therapy", "Orthobiologics",
                 "Peptide therapy", "Varicose vein treatment", "Peripheral neuropathy",
