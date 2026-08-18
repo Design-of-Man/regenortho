@@ -42,7 +42,7 @@
 <link rel="manifest" href="site.webmanifest">
 <link rel="preload" href="assets/fonts/newsreader-v1.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/styles.css?v=86bb0e25">
+<link rel="stylesheet" href="assets/css/styles.css?v=61b99951">
 <link rel="stylesheet" href="assets/css/assist.css?v=19444d03">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":["MedicalClinic","MedicalBusiness"],"@id":"https://www.regenorthopb.com/#organization","name":"RegenOrtho Palm Beach","alternateName":["Regen Ortho","RegenOrtho","Regen Ortho PB"],"slogan":"The Regeneration of Orthopedics","description":"Concierge regenerative orthopedic and vein care in Palm Beach Gardens, FL \u2014 board-certified specialists offering orthobiologic therapies, peptide therapy, IV wellness, and minimally invasive vein treatment.","url":"https://www.regenorthopb.com/","logo":{"@type":"ImageObject","@id":"https://www.regenorthopb.com/#logo","url":"https://www.regenorthopb.com/assets/media/logo-dark.png","contentUrl":"https://www.regenorthopb.com/assets/media/logo-dark.png","caption":"RegenOrtho Palm Beach"},"image":{"@type":"ImageObject","url":"https://www.regenorthopb.com/assets/media/og-team.jpg","caption":"The RegenOrtho Palm Beach care team \u2014 regenerative medicine, vein care, and IV wellness specialists at the Palm Beach Gardens clinic"},"telephone":"+1-833-783-6561","email":"info@regenorthopalmbeach.com","priceRange":"$$","currenciesAccepted":"USD","paymentAccepted":"Cash, Credit Card, Insurance, HSA/FSA","availableLanguage":[{"@type":"Language","name":"English"}],"knowsAbout":["Regenerative medicine","Platelet-rich plasma therapy","Orthobiologics","Peptide therapy","Varicose vein treatment","Peripheral neuropathy","GLP-1 medical weight loss","IV infusion therapy"],"isAcceptingNewPatients":true,"medicalSpecialty":["Regenerative medicine","Phlebology"],"address":{"@type":"PostalAddress","streetAddress":"11380 Prosperity Farms Road, Suite 204\u2013208","addressLocality":"Palm Beach Gardens","addressRegion":"FL","postalCode":"33410","addressCountry":"US"},"geo":{"@type":"GeoCoordinates","latitude":26.8449,"longitude":-80.0693},"hasMap":"https://maps.google.com/maps?q=RegenOrtho%20Palm%20Beach%2011380%20Prosperity%20Farms%20Road%20Palm%20Beach%20Gardens","openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"08:00","closes":"17:00"}],"areaServed":[{"@type":"City","name":"Palm Beach Gardens"},{"@type":"City","name":"Jupiter"},{"@type":"City","name":"North Palm Beach"},{"@type":"City","name":"Juno Beach"},{"@type":"City","name":"Tequesta"},{"@type":"City","name":"Palm Beach"},{"@type":"City","name":"West Palm Beach"},{"@type":"City","name":"Singer Island"},{"@type":"City","name":"Lake Park"},{"@type":"City","name":"Riviera Beach"}],"sameAs":["https://www.instagram.com/regenortho_palmbeach/"],"availableService":[{"@type":"MedicalTherapy","@id":"https://www.regenorthopb.com/services/regenerative-medicine-orthobiologics.html#service"},{"@type":"MedicalTherapy","@id":"https://www.regenorthopb.com/services/vein-care.html#service"},{"@type":"MedicalTherapy","@id":"https://www.regenorthopb.com/iv-therapy.html#service"}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://www.regenorthopb.com/#website","url":"https://www.regenorthopb.com/","name":"RegenOrtho Palm Beach","inLanguage":"en-US","publisher":{"@id":"https://www.regenorthopb.com/#organization"}},{"@type":"WebPage","@id":"https://www.regenorthopb.com/contact.html#webpage","url":"https://www.regenorthopb.com/contact.html","name":"Contact RegenOrtho Palm Beach | Book a Consultation","description":"Book a consultation at RegenOrtho Palm Beach \u2014 11380 Prosperity Farms Road, Palm Beach Gardens. Call 833-STEM561 (833-783-6561) or book online.","inLanguage":"en-US","isPartOf":{"@id":"https://www.regenorthopb.com/#website"},"about":{"@id":"https://www.regenorthopb.com/#organization"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://regenortho-mu.vercel.app/assets/media/og-team.jpg?v=df0ae135"},"datePublished":"2026-07-30","dateModified":"2026-08-18"}]}</script>
@@ -145,7 +145,7 @@
         <button class="btn btn-navy" data-open-assist>Open the assistant</button>
       </div>
     </div>
-    <form class="contact-form reveal" style="--d:120ms" action="https://formsubmit.co/emily@regenorthopb.com" method="POST">
+    <form class="contact-form reveal" id="contact-form" style="--d:120ms" action="https://formsubmit.co/emily@regenorthopb.com" method="POST">
       <h2 class="form-title">Request an appointment</h2>
       <input type="hidden" name="_subject" value="[Contact Form] New Appointment Request — regenorthopb.com">
       <input type="hidden" name="_captcha" value="false">
@@ -176,7 +176,14 @@
       <p class="form-fine form-fine-inline">Please don’t include medical history or symptoms here — we’ll take that securely at your visit.</p>
       <button class="btn btn-gold btn-block" type="submit">Book Appointment</button>
       <p class="form-fine">Submitting sends your request straight to our front desk. For anything urgent, call 833-783-6561.</p>
+      <p class="form-error" id="contact-error" hidden>Something went wrong sending that — please call <a href="tel:+18337836561">833-STEM561</a> and we’ll get you booked directly.</p>
     </form>
+    <div class="contact-form contact-success reveal" id="contact-success" style="--d:120ms" hidden tabindex="-1">
+      <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#FDC929"/><path fill="none" stroke="#092D5C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M6.5 12.5 10 16l7.5-8"/></svg>
+      <h2 class="form-title">Thanks, <span id="contact-success-name">there</span>!</h2>
+      <p>We’ve received your request and our front desk will reach out to confirm your appointment — usually within one business day.</p>
+      <p class="form-fine">Need us sooner? Call <a href="tel:+18337836561">833-STEM561 · 833-783-6561</a>.</p>
+    </div>
   </div>
 </section>
 <section class="section section-tint contact-map-section">
@@ -251,5 +258,6 @@
 <script src="assets/js/main.js?v=5c87050c"></script>
 <script src="assets/js/assist.js?v=80316c7a" defer></script>
 <script defer src="/_vercel/insights/script.js"></script>
+<script src="assets/js/contact-form.js?v=15df50cf" defer></script>
 </body>
 </html>

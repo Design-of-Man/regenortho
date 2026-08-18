@@ -2891,7 +2891,7 @@ def build_contact():
         <button class="btn btn-navy" data-open-assist>Open the assistant</button>
       </div>
     </div>
-    <form class="contact-form reveal" style="--d:120ms" action="https://formsubmit.co/{FORM_TARGET_EMAIL}" method="POST">
+    <form class="contact-form reveal" id="contact-form" style="--d:120ms" action="https://formsubmit.co/{FORM_TARGET_EMAIL}" method="POST">
       <h2 class="form-title">Request an appointment</h2>
       <input type="hidden" name="_subject" value="[Contact Form] New Appointment Request — regenorthopb.com">
       <input type="hidden" name="_captcha" value="false">
@@ -2922,7 +2922,14 @@ def build_contact():
       <p class="form-fine form-fine-inline">Please don't include medical history or symptoms here — we'll take that securely at your visit.</p>
       <button class="btn btn-gold btn-block" type="submit">Book Appointment</button>
       <p class="form-fine">Submitting sends your request straight to our front desk. For anything urgent, call {PHONE_DISPLAY}.</p>
+      <p class="form-error" id="contact-error" hidden>Something went wrong sending that — please call <a href="tel:{PHONE_TEL}">{PHONE_VANITY}</a> and we'll get you booked directly.</p>
     </form>
+    <div class="contact-form contact-success reveal" id="contact-success" style="--d:120ms" hidden tabindex="-1">
+      <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#FDC929"/><path fill="none" stroke="#092D5C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M6.5 12.5 10 16l7.5-8"/></svg>
+      <h2 class="form-title">Thanks, <span id="contact-success-name">there</span>!</h2>
+      <p>We've received your request and our front desk will reach out to confirm your appointment — usually within one business day.</p>
+      <p class="form-fine">Need us sooner? Call <a href="tel:{PHONE_TEL}">{PHONE_VANITY} · {PHONE_DISPLAY}</a>.</p>
+    </div>
   </div>
 </section>
 <section class="section section-tint contact-map-section">
@@ -2930,7 +2937,7 @@ def build_contact():
   <div class="map-wrap reveal"><iframe src="https://maps.google.com/maps?q=RegenOrtho%20Palm%20Beach%20Palm%20Beach%20Gardens&t=m&z=13&output=embed&iwloc=near" title="Map to RegenOrtho Palm Beach — 11380 Prosperity Farms Road, Palm Beach Gardens" width="1200" height="420" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe></div>
 </section>
 </main>
-{footer(d)}"""
+{footer(d, extra_js="assets/js/contact-form.js")}"""
     schema = breadcrumb_schema([("", "Home"), ("contact.html", "Contact Us")])
     page = head("Contact RegenOrtho Palm Beach | Book a Consultation",
                 "Book a consultation at RegenOrtho Palm Beach — 11380 Prosperity Farms Road, Palm Beach Gardens. Call 833-STEM561 (833-783-6561) or book online.",
