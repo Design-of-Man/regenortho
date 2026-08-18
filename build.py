@@ -164,7 +164,7 @@ def img_dims(path, fallback=(1200, 630)):
 # in the org schema, so nothing is lost.
 def head(title, desc, depth=0, canonical="", og_image="assets/media/og-team.jpg",
          page_type="website", extra_schema="", preload_hero=False, extra_css="",
-         webpage_type="WebPage", speakable=False):
+         webpage_type="WebPage", speakable=False, assistant=True):
     p = "../" * depth
     canonical_url = f"{BASE}/{canonical}" if canonical else f"{BASE}/"
     og_url = f"{SHARE_BASE}/{og_image}?v={asset_v(og_image)}"
@@ -260,8 +260,7 @@ def head(title, desc, depth=0, canonical="", og_image="assets/media/og-team.jpg"
 <link rel="preload" href="{p}assets/fonts/newsreader-v1.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{p}assets/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin>
 {hero_preload}<link rel="stylesheet" href="{p}assets/css/styles.css?v={asset_v('assets/css/styles.css')}">
-<link rel="stylesheet" href="{p}assets/css/assist.css?v={asset_v('assets/css/assist.css')}">
-{extra_css_tag}<script type="application/ld+json">{schema}</script>
+{'<link rel="stylesheet" href="' + p + 'assets/css/assist.css?v=' + asset_v('assets/css/assist.css') + '">' + chr(10) if assistant else ''}{extra_css_tag}<script type="application/ld+json">{schema}</script>
 <script type="application/ld+json">{page_graph}</script>
 {extra_schema}</head>
 """
@@ -305,16 +304,23 @@ LOCATIONS_NAV = [
 def nav(depth=0, current=""):
     p = "../" * depth
     svc_items = []
+    featured_html = ""
     for href, label in SERVICES_NAV:
         slug = href.rsplit("/", 1)[-1].removesuffix(".html")
         kids = [s for s in SERVICES if s.get("parent") == slug]
         if kids:
-            sub = "".join(
-                f'<li><a href="{p}services/{k["slug"]}.html">{k["nav"]}</a></li>' for k in kids
+            # The five regenerative modalities get their own full-width shelf
+            # at the top of the mega menu (pill row) instead of a cramped,
+            # indented sub-list wedged into one grid column — that lopsided
+            # the two columns and read as an afterthought next to the plain
+            # service links.
+            pills = "".join(
+                f'<a class="drop-pill" href="{p}services/{k["slug"]}.html">{k["nav"]}</a>' for k in kids
             )
-            svc_items.append(
-                f'<li class="has-sub"><a href="{p}{href}">{label}</a><ul class="drop-sub">{sub}</ul></li>'
-            )
+            featured_html = f"""<li class="drop-featured">
+              <a class="drop-featured-link" href="{p}{href}">{label}<svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></a>
+              <div class="drop-pill-row">{pills}</div>
+            </li>"""
         else:
             svc_items.append(f'<li><a href="{p}{href}">{label}</a></li>')
     svc = "\n".join(svc_items)
@@ -342,6 +348,7 @@ def nav(depth=0, current=""):
         </li>
         <li class="has-drop has-mega"><button class="drop-btn" aria-expanded="false">Services<svg viewBox="0 0 12 8" width="10" height="7" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 1.5 6 6.5 11 1.5"/></svg></button>
           <ul class="drop drop-mega">
+            {featured_html}
             {svc}
             <li class="drop-all"><a href="{p}services/index.html">All services →</a></li>
           </ul>
@@ -371,7 +378,7 @@ def nav(depth=0, current=""):
 """
 
 
-def footer(depth=0, extra_js="", analytics=True):
+def footer(depth=0, extra_js="", analytics=True, assistant=True):
     p = "../" * depth
     extra_js_tag = ""
     if extra_js:
@@ -384,6 +391,13 @@ def footer(depth=0, extra_js="", analytics=True):
     analytics_tag = ""
     if analytics:
         analytics_tag = '<script defer src="/_vercel/insights/script.js"></script>\n'
+    # The concierge assistant calls fetch() to formsubmit.co for its own booking
+    # flow — a live third-party network surface that has no business sitting on
+    # a page collecting PHI. Excluded on /forms/* alongside analytics, so the
+    # "nothing is transmitted" promise on those pages is actually true of
+    # everything loaded there, not just forms.js itself.
+    assist_tag = (f'<script src="{p}assets/js/assist.js?v={asset_v("assets/js/assist.js")}" defer></script>\n'
+                  if assistant else "")
     svc = "\n".join(
         f'<li><a href="{p}{href}">{label}</a></li>' for href, label in SERVICES_NAV[:8]
     )
@@ -442,10 +456,22 @@ def footer(depth=0, extra_js="", analytics=True):
   <a class="mobile-call" href="tel:{PHONE_TEL}"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8c1.5 2.9 3.7 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .7-.2 1l-2.3 2.2z"/></svg>Call Now</a>
 </footer>
 <script src="{p}assets/js/main.js?v={asset_v('assets/js/main.js')}"></script>
-<script src="{p}assets/js/assist.js?v={asset_v('assets/js/assist.js')}" defer></script>
-{analytics_tag}{extra_js_tag}</body>
+{assist_tag}{analytics_tag}{extra_js_tag}</body>
 </html>
 """
+
+
+# Decorative orbit rings + drifting gold light-points behind interior page
+# heroes — echoes the homepage figure's "drifting light threads between
+# treatment points" without the weight of the figure itself. Pure CSS/SVG,
+# no image asset, so it costs nothing toward LCP.
+def _hero_orbit():
+    dots = "".join(
+        f'<i class="ph-dot" style="--x:{x}%;--y:{y}%;--d:{d}s"></i>'
+        for x, y, d in [(10, 22, 0), (86, 14, 1.4), (92, 66, 2.6), (6, 76, .8), (46, 8, 2)]
+    )
+    return (f'<div class="page-hero-orbit" aria-hidden="true">'
+            f'<span class="ph-ring ph-ring-1"></span><span class="ph-ring ph-ring-2"></span>{dots}</div>')
 
 
 def page_hero(eyebrow, title, lede, crumbs_html="", cta=True, depth=0):
@@ -458,6 +484,7 @@ def page_hero(eyebrow, title, lede, crumbs_html="", cta=True, depth=0):
     </div>"""
     return f"""<section class="page-hero">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+  {_hero_orbit()}
   <div class="page-hero-inner reveal">
     {crumbs_html}
     <p class="eyebrow">{eyebrow}</p>
@@ -729,7 +756,7 @@ INFUSIONS = [
      "lede": "Physician-supervised Krystexxa (pegloticase) infusions for chronic, uncontrolled gout — in a private outpatient setting.",
      "body": "Krystexxa is an infusion medication prescribed for adults with chronic gout that has not responded to conventional urate-lowering therapy. Treatment is administered in our monitored infusion suite, with pre-infusion screening and coordination with your prescribing physician at every step."},
     {"slug": "ocrevus", "name": "Ocrevus Treatment",
-     "title": "Ocrevus Infusion Palm Beach Gardens | RegenOrtho Infusion Center",
+     "title": "Ocrevus Infusion Palm Beach Gardens | RegenOrtho",
      "desc": "Ocrevus (ocrelizumab) infusion treatment administered under clinical supervision in a private Palm Beach Gardens suite, coordinated with your neurologist.",
      "lede": "Ocrevus (ocrelizumab) infusions coordinated with your neurologist and delivered in a private, monitored suite.",
      "body": "Ocrevus is a prescription infusion used in the management of certain forms of multiple sclerosis. Our team works with your neurologist's treatment plan, provides pre-infusion screening, and monitors you throughout each visit in a comfortable outpatient environment."},
@@ -847,7 +874,7 @@ SERVICES = [
         "nav": "Exosome Therapy",
         "parent": "regenerative-medicine-orthobiologics",
         "title": "Exosome Therapy Palm Beach Gardens | RegenOrtho",
-        "desc": "Cell-free exosome therapy in Palm Beach Gardens — ultrasound-guided delivery of growth-factor-rich extracellular vesicles for joint, tendon, and soft-tissue repair.",
+        "desc": "Cell-free exosome therapy in Palm Beach Gardens — ultrasound-guided delivery of growth-factor-rich vesicles for joint, tendon, and soft-tissue repair.",
         "eyebrow": "Regenerative Medicine & Orthobiologics",
         "h1": "Advanced Cell-Free Regenerative Therapy for Pain Relief & Tissue Recovery",
         "lede": "A cell-free treatment using naturally occurring extracellular vesicles rich in growth factors and signaling molecules to support your body's healing response, reduce inflammation, and improve mobility.",
@@ -941,7 +968,7 @@ SERVICES = [
         "nav": "Wharton's Jelly Therapy",
         "parent": "regenerative-medicine-orthobiologics",
         "title": "Wharton's Jelly Therapy Palm Beach Gardens | RegenOrtho",
-        "desc": "Wharton's Jelly therapy in Palm Beach Gardens — umbilical cord tissue rich in growth factors and extracellular matrix proteins, delivered by ultrasound-guided injection.",
+        "desc": "Wharton's Jelly therapy in Palm Beach Gardens — umbilical cord tissue rich in growth factors, delivered by ultrasound-guided injection for joint and tissue repair.",
         "eyebrow": "Regenerative Medicine & Orthobiologics",
         "h1": "Advanced Regenerative Therapy to Support Joint Health & Tissue Repair",
         "lede": "Rich in naturally occurring growth factors, cytokines, and extracellular matrix proteins, Wharton's Jelly Therapy may help reduce inflammation, promote tissue repair, and improve joint function without surgery.",
@@ -988,7 +1015,7 @@ SERVICES = [
         "nav": "MUSE-Infused RPA™ Therapy",
         "parent": "regenerative-medicine-orthobiologics",
         "title": "MUSE-Infused RPA Therapy Palm Beach Gardens | RegenOrtho",
-        "desc": "MUSE-Infused RPA therapy in Palm Beach Gardens — an acellular Regenerative Protein Array enhanced with proteins from MUSE cells, delivered by IV push or targeted injection.",
+        "desc": "MUSE-Infused RPA therapy in Palm Beach Gardens — an acellular Regenerative Protein Array enhanced with proteins from MUSE cells, given by IV push or injection.",
         "eyebrow": "Regenerative Medicine & Orthobiologics",
         "h1": "Advanced Acellular Regenerative Protein Therapy for Joint Health & Recovery",
         "lede": "A specialized protein array enhanced with proteins naturally extracted from MUSE cells, designed to support communication between cells and coordinate the body's natural repair processes.",
@@ -1035,7 +1062,7 @@ SERVICES = [
         "nav": "Traditional MUSE Cell Therapy",
         "parent": "regenerative-medicine-orthobiologics",
         "title": "Traditional MUSE Cell Therapy Palm Beach Gardens | RegenOrtho",
-        "desc": "Traditional MUSE cell therapy in Palm Beach Gardens — a live-cell regenerative treatment using Multilineage-Differentiating Stress-Enduring cells, delivered by IV push or targeted injection.",
+        "desc": "Traditional MUSE cell therapy in Palm Beach Gardens — a live-cell regenerative treatment using MUSE cells, delivered by IV push or targeted injection.",
         "eyebrow": "Regenerative Medicine & Orthobiologics",
         "h1": "Advanced Live-Cell Regenerative Therapy for Orthopedic & Joint Health",
         "lede": "A live-cell therapy using Multilineage-Differentiating Stress-Enduring (MUSE) cells — a rare population of mesenchymal stem cells — to support the body's natural healing response.",
@@ -1360,7 +1387,7 @@ CONDITIONS = [
               ("Can hip arthritis be managed without replacement?", "Earlier stages often respond to a combination of activity strategy, strengthening, and injection-based care; when replacement becomes the right answer, we'll tell you honestly.")]},
     {"slug": "arthritis-joint-pain", "name": "Arthritis & Joint Pain",
      "title": "Arthritis Treatment Palm Beach Gardens | Joint Pain Relief",
-     "desc": "Arthritis and chronic joint pain care in Palm Beach Gardens — regenerative medicine and joint-preservation therapy to reduce pain and improve function without surgery.",
+     "desc": "Arthritis and chronic joint pain care in Palm Beach Gardens — regenerative medicine and joint-preservation therapy to relieve pain without surgery.",
      "h1": "Arthritis Care Across the Whole Spectrum",
      "lede": "Steroids mask the pain — our goal is a joint environment that hurts less and functions better, stage by stage.",
      "img": "svc-regen.jpg",
@@ -1818,7 +1845,7 @@ def build_home():
         # ~57 chars: keyword + city front-loaded, brand last. Google truncates a
         # title around 600px (~60 chars) and the brand is the cheapest thing to lose.
         "Regenerative Medicine & Vein Care Palm Beach Gardens | RegenOrtho",
-        "Concierge regenerative medicine, non-surgical therapies & vein care in Palm Beach Gardens. Board-certified specialists, 40+ years combined experience. Call 833-STEM561.",
+        "Concierge regenerative medicine, non-surgical therapies & vein care in Palm Beach Gardens. Board-certified specialists, 40+ years combined experience. 833-STEM561.",
         # canonical="" -> BASE/ (the root), NOT /index.html. Every inbound link,
         # the GBP listing and the social profiles point at the root; canonicalising
         # to /index.html asks Google to consolidate the wrong direction.
@@ -3110,11 +3137,12 @@ def build_forms():
 </section>
 {cta_band(d, heading="Prefer to fill these out <em>with us?</em>", sub="Arrive fifteen minutes early and our front desk will walk you through everything on a practice tablet. Either way works.")}
 </main>
-{footer(d, analytics=False)}"""
+{footer(d, analytics=False, assistant=False)}"""
     hub = head("Patient Forms | RegenOrtho Palm Beach",
                "Complete RegenOrtho Palm Beach patient forms at home — the new patient intake and peptide & GLP-1 questionnaire, filled out privately in your browser.",
                depth=d, canonical="forms/index.html", extra_css="assets/css/forms.css",
-               extra_schema=breadcrumb_schema([("", "Home"), ("forms/index.html", "Patient Forms")])
+               extra_schema=breadcrumb_schema([("", "Home"), ("forms/index.html", "Patient Forms")]),
+               assistant=False,
                ) + '<body class="page-forms">\n' + hub_body
     write("forms/index.html", hub)
 
@@ -3195,11 +3223,12 @@ def build_forms():
   </div>
 </section>
 </main>
-{footer(d, extra_js="assets/js/forms.js", analytics=False)}"""
+{footer(d, extra_js="assets/js/forms.js", analytics=False, assistant=False)}"""
         page = head(f["title"], f["desc"], depth=d, canonical=f"forms/{f['slug']}.html",
                     extra_css="assets/css/forms.css",
                     extra_schema=breadcrumb_schema([("", "Home"), ("forms/index.html", "Patient Forms"),
-                                                    (f"forms/{f['slug']}.html", f["plain_name"])])
+                                                    (f"forms/{f['slug']}.html", f["plain_name"])]),
+                    assistant=False,
                     ) + '<body class="page-form">\n' + body
         write(f"forms/{f['slug']}.html", page)
 
@@ -3254,6 +3283,7 @@ def build_blog():
 <article class="post">
   <header class="page-hero post-hero">
     <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+    {_hero_orbit()}
     <div class="page-hero-inner reveal">
       {crumbs_html}
       <p class="eyebrow">{p_['category']} · {date_h}</p>
@@ -3336,6 +3366,7 @@ def build_legal_and_404():
 <main id="main">
 <section class="page-hero hero-404">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+  {_hero_orbit()}
   <div class="page-hero-inner reveal">
     <p class="eyebrow">404 — Page not found</p>
     <h1>This page has healed and <em>moved on</em></h1>

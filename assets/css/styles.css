@@ -182,13 +182,26 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
   color: #DDE8F3; font-size: .88rem; font-weight: 600; line-height: 1.35;
 }
 .drop li a:hover { background: rgba(253, 201, 41, .12); color: var(--gold); }
-.drop-mega { min-width: 560px; display: grid; grid-template-columns: 1fr 1fr; gap: 0 .4rem; }
+.drop-mega { min-width: 620px; display: grid; grid-template-columns: 1fr 1fr; gap: 0 .4rem; }
 .drop-all a { color: var(--gold) !important; }
-/* Nested therapies under a parent service — rendered inline in the mega panel
-   rather than as a flyout, so it stays reachable on touch and keyboard. */
-.drop-sub { list-style: none; margin: 0 0 .3rem; padding: 0 0 0 .8rem;
-  border-left: 1px solid rgba(253, 201, 41, .22); }
-.drop-sub li a { font-size: .82rem; font-weight: 500; color: #B9C9DA; padding: .34rem .8rem; }
+/* The five regenerative modalities get their own full-width shelf at the top
+   of the mega panel — a labeled header link plus a wrapping row of pills —
+   instead of a cramped, indented sub-list stacked inside one grid column
+   (that lopsided the two columns and read as an afterthought). */
+.drop-featured { grid-column: 1 / -1; background: rgba(253, 201, 41, .06);
+  border: 1px solid rgba(253, 201, 41, .18); border-radius: 11px;
+  padding: .7rem .8rem .75rem; margin-bottom: .5rem; }
+.drop-featured-link { display: flex; align-items: center; gap: .4rem;
+  font: 700 .82rem/1 var(--sans); letter-spacing: .03em; text-transform: uppercase;
+  color: var(--gold); text-decoration: none; padding: .1rem 0 .55rem; }
+.drop-featured-link svg { flex: none; opacity: .85; }
+.drop-featured-link:hover { color: #fff; }
+.drop-pill-row { display: flex; flex-wrap: wrap; gap: .4rem; }
+.drop-pill { display: inline-flex; align-items: center; text-decoration: none;
+  font: 600 .8rem/1 var(--sans); color: #DDE8F3; background: rgba(255, 255, 255, .05);
+  border: 1px solid rgba(255, 255, 255, .1); border-radius: 999px; padding: .42rem .8rem;
+  transition: background .18s var(--ease), color .18s var(--ease), border-color .18s var(--ease); }
+.drop-pill:hover { background: rgba(253, 201, 41, .16); border-color: rgba(253, 201, 41, .4); color: var(--gold); }
 
 /* ------------------------------ aurora / dark sections ------------------- */
 
@@ -860,6 +873,22 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
 
 .page-hero { position: relative; background: linear-gradient(178deg, var(--navy-900) 0%, var(--navy-950) 100%); color: #E7EFF7;
   padding: calc(var(--header-h) + clamp(1.6rem, 4vh, 2.6rem)) 1.2rem clamp(2.8rem, 7vh, 4.6rem); overflow: hidden; }
+/* A flat gradient plus three blurred aurora blobs read as an empty blue box
+   next to the homepage's video hero — these rings and drifting light points
+   borrow the same "gold treatment points, drifting threads" language as the
+   homepage figure, at zero asset cost (pure CSS, nothing to preload). */
+.page-hero .aurora span { opacity: .62; }
+.page-hero-orbit { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.ph-ring { position: absolute; border-radius: 50%; border: 1px solid rgba(253, 201, 41, .16); }
+.ph-ring-1 { width: 62vw; max-width: 720px; aspect-ratio: 1; right: -18vw; top: -22vw; animation: ph-spin 100s linear infinite; }
+.ph-ring-2 { width: 40vw; max-width: 460px; aspect-ratio: 1; right: -6vw; top: -6vw;
+  border-style: dashed; border-color: rgba(253, 201, 41, .24); animation: ph-spin-rev 75s linear infinite; }
+@keyframes ph-spin { to { transform: rotate(360deg); } }
+@keyframes ph-spin-rev { to { transform: rotate(-360deg); } }
+.ph-dot { position: absolute; left: var(--x); top: var(--y); width: 6px; height: 6px; border-radius: 50%;
+  background: var(--gold); box-shadow: 0 0 16px 3px rgba(253, 201, 41, .55);
+  opacity: .5; animation: ph-float 6s ease-in-out infinite; animation-delay: var(--d); }
+@keyframes ph-float { 0%, 100% { transform: translateY(0); opacity: .4; } 50% { transform: translateY(-14px); opacity: 1; } }
 .page-hero-inner { position: relative; max-width: var(--wrap); margin: 0 auto; }
 .page-hero h1 { color: #fff; margin: .9rem 0 1rem; max-width: 22ch; }
 .page-hero .lede { max-width: 62ch; }
