@@ -49,7 +49,7 @@ After ANY edit: `python3 build.py`, then commit. Preview locally with
 
 ## Leads (appointment requests)
 
-Both the contact form and the assistant deliver to **formsubmit.co → info@regenorthopalmbeach.com**.
+Both the contact form and the assistant deliver to **formsubmit.co → emily@regenorthopb.com**.
 ⚠️ FormSubmit requires one-time activation: the first submission triggers a confirmation
 email to that inbox — click it (check spam) or leads will not arrive. If delivery fails,
 the assistant queues the lead in the visitor's browser and retries automatically.

@@ -40,6 +40,7 @@ PHONE_DISPLAY = "833-783-6561"
 PHONE_VANITY = "833-STEM561"
 PHONE_TEL = "+18337836561"
 EMAIL = "info@regenorthopalmbeach.com"
+FORM_TARGET_EMAIL = "emily@regenorthopb.com"  # FormSubmit delivery address (contact form + assistant)
 ADDRESS_STREET = "11380 Prosperity Farms Road, Suite 204–208"
 ADDRESS_CITY = "Palm Beach Gardens"
 ADDRESS_STATE = "FL"
@@ -2861,7 +2862,7 @@ def build_contact():
         <button class="btn btn-navy" data-open-assist>Open the assistant</button>
       </div>
     </div>
-    <form class="contact-form reveal" style="--d:120ms" action="https://formsubmit.co/{EMAIL}" method="POST">
+    <form class="contact-form reveal" style="--d:120ms" action="https://formsubmit.co/{FORM_TARGET_EMAIL}" method="POST">
       <h2 class="form-title">Request an appointment</h2>
       <input type="hidden" name="_subject" value="New appointment request — regenorthopb.com">
       <input type="hidden" name="_captcha" value="false">
