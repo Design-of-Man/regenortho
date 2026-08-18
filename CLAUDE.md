@@ -40,7 +40,7 @@ Static site, 56 pages, generated — do not edit HTML files directly.
   must outrank the fixed site header (90) now that the sheet starts at top:0.
 - `assets/js/assist.js` — concierge assistant. SET ANSWERS only (FAQ array) — no AI, no
   external API, no medical advice; route unknowns to 833-783-6561. Leads deliver via
-  FormSubmit (formsubmit.co/ajax/info@regenorthopalmbeach.com) with a localStorage retry queue.
+  FormSubmit (formsubmit.co/ajax/emily@regenorthopb.com) with a localStorage retry queue.
   Never put secret keys in it.
 - `assets/js/forms.js` + `assets/css/forms.css` + `forms_content.py` — the two patient
   forms (`/forms/new-patient.html`, `/forms/peptide-glp-questionnaire.html`). Questions are

@@ -10,7 +10,8 @@
   var PHONE = "833-783-6561";
   var PHONE_TEL = "+18337836561";
   var EMAIL = "info@regenorthopalmbeach.com";
-  var ENDPOINT = "https://formsubmit.co/ajax/" + EMAIL;
+  var FORM_TARGET_EMAIL = "emily@regenorthopb.com";
+  var ENDPOINT = "https://formsubmit.co/ajax/" + FORM_TARGET_EMAIL;
   var LS_DRAFT = "rga-draft-v1";
   var LS_QUEUE = "rga-queue-v1";
 
@@ -68,6 +69,26 @@
       a: "Concierge & Direct-Pay Care offers one-on-one specialist access, same-day diagnostics and treatment planning, private suites, and transparent bundled pricing. It's ideal if you value speed and privacy." },
     { k: ["emergency", "urgent", "911"],
       a: "If this is a medical emergency, call 911 or go to the nearest emergency room — this assistant isn't monitored in real time. For urgent orthopedic injuries during office hours, call " + PHONE + " and we'll prioritize you, often same-day." },
+    { k: ["surgery", "avoid surgery", "need surgery", "replacement", "operation"],
+      a: "Not necessarily. Many conditions respond to advanced, non-surgical, or minimally invasive care — surgery is only recommended when it's genuinely the safest, most effective option. Dr. Matarazzo is both a surgeon and a regenerative specialist, so the same physician can tell you honestly which one you actually need." },
+    { k: ["result", "results", "how long", "when will i", "improve", "recovery time"],
+      a: "It depends on the treatment. Some patients notice change within weeks; regenerative therapies often develop fully over the following months as tissue heals. Your specialist will give you a realistic timeline for your specific plan at consultation." },
+    { k: ["safe", "safety", "risk", "side effect"],
+      a: "All our regenerative therapies are physician-directed, personalized, and backed by clinical research, with patient safety as the top priority. That said, none of our regenerative and cellular therapies are FDA-approved to treat, cure, or prevent any disease — your specialist will walk you through the specifics for your treatment." },
+    { k: ["difference between prp", "prp vs", "cellular vs", "exosome vs", "which regenerative"],
+      a: "PRP concentrates your own blood platelets to stimulate healing. Cellular and exosome therapies work at the cellular level using umbilical cord-derived material or cell-signaling vesicles. Wharton's Jelly, MUSE-Infused RPA, and Traditional MUSE Cell Therapy are further variations — your specialist matches the modality to your condition at consultation." },
+    { k: ["reviews", "testimonials", "google reviews", "rating"],
+      a: "We're rated 4.9 on Google from patients we've helped in the Palm Beach area. You can also see real patient stories and behind-the-scenes content on Instagram @regenortho_palmbeach." },
+    { k: ["parking", "directions", "map", "get there"],
+      a: "We're at 11380 Prosperity Farms Road, Suite 204–208, Palm Beach Gardens, FL 33410 — see regenorthopb.com/contact.html for a map and directions." },
+    { k: ["book", "schedule", "appointment", "consult", "consultation"],
+      a: "I can take your appointment request right now — tap \"Request an appointment\" below, or call " + PHONE + " if you'd rather book by phone." },
+    { k: ["guide", "ebook", "e-book", "download", "free guide", "book by dr"],
+      a: "Dr. Cedeno wrote a free 28-page patient guide on regenerative foot & ankle care — look for it on our Instagram @regenortho_palmbeach or ask our front desk at your visit." },
+    { k: ["candidate", "am i a candidate", "qualify", "eligible"],
+      a: "Candidacy for any of our therapies is determined after a consultation — reviewing your symptoms, medical history, and imaging where needed. There's no way to say for certain without that evaluation, but booking one is quick and there's no obligation." },
+    { k: ["cancel", "reschedule", "change appointment", "running late"],
+      a: "No problem — call " + PHONE + " and our front desk will get you rescheduled." },
   ];
 
   /* ------------------------------------------------------------------ UI */
@@ -275,6 +296,7 @@
         "IV Therapy", "Vein Care", "Neuropathy Program",
         "Weight Loss / GLP-1", "Concierge Care", "Not sure yet"] },
     { key: "timing", q: "When would you like to come in? (e.g. \"this week\", \"Tuesday morning\", \"ASAP\")" },
+    { key: "message", q: "Anything else you'd like the front desk to know before your visit? This step is optional.\nJust a heads up: please don't include medical history or symptoms here — we'll take that securely at your visit.", chips: ["Skip this step"] },
   ];
 
   function startBooking() {
@@ -300,7 +322,9 @@
 
   function acceptStep(value) {
     var s = BOOK_STEPS[bookStep];
-    draft[s.key] = value.trim();
+    var v = value.trim();
+    if (s.key === "message" && v === "Skip this step") v = "";
+    draft[s.key] = v;
     draft.updated = Date.now();
     save(LS_DRAFT, draft);
     bookStep++;
@@ -311,7 +335,8 @@
   function finishBooking() {
     inputWrap.hidden = true;
     typing(function () {
-      say("Here's what I'll send to the front desk:<br><strong>" + escapeHtml(draft.name) + "</strong><br>📞 " + escapeHtml(draft.phone) + "<br>✉️ " + escapeHtml(draft.email) + "<br>🏥 " + escapeHtml(draft.service) + "<br>🗓 " + escapeHtml(draft.timing));
+      var msgLine = draft.message ? "<br>💬 " + escapeHtml(draft.message) : "";
+      say("Here's what I'll send to the front desk:<br><strong>" + escapeHtml(draft.name) + "</strong><br>📞 " + escapeHtml(draft.phone) + "<br>✉️ " + escapeHtml(draft.email) + "<br>🏥 " + escapeHtml(draft.service) + "<br>🗓 " + escapeHtml(draft.timing) + msgLine);
       chips([
         { label: "Send it ✓", gold: true, go: deliver },
         { label: "Start over", go: startBooking },
@@ -321,9 +346,10 @@
 
   function payload() {
     return {
-      _subject: "New appointment request (site assistant) — " + draft.name,
+      _subject: "[Site Assistant] New Appointment Request — " + draft.name,
+      _cc: "nicholasbkashuba@gmail.com",
       name: draft.name, phone: draft.phone, email: draft.email,
-      service: draft.service, preferred_time: draft.timing,
+      service: draft.service, preferred_time: draft.timing, message: draft.message || "",
       source: "regenorthopb.com concierge assistant, " + location.pathname,
     };
   }
