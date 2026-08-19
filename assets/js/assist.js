@@ -63,8 +63,6 @@
       a: "Foot and ankle care — heel pain, bunions, hammertoes, custom orthotics, and foot & ankle surgery — is handled by Dr. Cedeno at Abacoa Podiatry & Leg Vein Center (jupiterlaser.com). Call " + PHONE + " and we'll get you to the right office." },
     { k: ["doctor", "surgeon", "matarazzo", "cedeno", "who", "team", "provider", "nurse", "emily", "bahnick"],
       a: "Our physicians: Dr. Marc Matarazzo, MD — board-certified sports medicine & orthopedic surgeon (23+ years) — and Dr. Orlando Cedeno, DPM — board-certified podiatric surgeon & vein specialist.\nEmily Bahnick, MSN, RN is our IV infusion nurse and care coordinator, with MSN & BSN degrees and 10+ years of nursing experience." },
-    { k: ["ivig", "krystexxa", "ocrevus", "ultomiris", "specialty infusion"],
-      a: "Our Specialty Infusion Center administers physician-prescribed IVIG, Krystexxa, Ocrevus, and Ultomiris in private, monitored suites with insurance coordination. Have your prescription or referral ready and call " + PHONE + " to get scheduled." },
     { k: ["concierge", "cash", "direct pay", "same day", "membership"],
       a: "Concierge & Direct-Pay Care offers one-on-one specialist access, same-day diagnostics and treatment planning, private suites, and transparent bundled pricing. It's ideal if you value speed and privacy." },
     { k: ["emergency", "urgent", "911"],
