@@ -454,8 +454,7 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
   0% { background-position: 0 0; } 20% { background-position: -42px 28px; }
   40% { background-position: 26px -34px; } 60% { background-position: -24px -18px; }
   80% { background-position: 38px 22px; } 100% { background-position: 0 0; } }
-.hero-scrim { position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(4, 16, 31, .55) 0%, rgba(4, 16, 31, .12) 34%, rgba(4, 16, 31, .16) 58%, rgba(4, 16, 31, .68) 100%); }
+.hero-scrim { position: absolute; inset: 0; pointer-events: none; background: none; }
 
 .hero-inner { position: relative; flex: 1; display: flex; align-items: center; width: 100%;
   max-width: var(--wrap); margin: 0 auto; padding: calc(var(--header-h) + clamp(2rem, 6vh, 4rem)) 1.2rem 3rem; }
