@@ -218,22 +218,22 @@
     },
     {
       "source": "/ivig-intravenous-immunoglobulin",
-      "destination": "/infusions/ivig.html",
+      "destination": "/contact.html",
       "permanent": true
     },
     {
       "source": "/krystexxa-infusion-therapy",
-      "destination": "/infusions/krystexxa.html",
+      "destination": "/contact.html",
       "permanent": true
     },
     {
       "source": "/ocrevus-treatment",
-      "destination": "/infusions/ocrevus.html",
+      "destination": "/contact.html",
       "permanent": true
     },
     {
       "source": "/ultomiris-infusion",
-      "destination": "/infusions/ultomiris.html",
+      "destination": "/contact.html",
       "permanent": true
     },
     {

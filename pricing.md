@@ -57,7 +57,6 @@ the plan, and most are billed through insurance where covered.
 - Vein Care — Medical & Cosmetic: https://www.regenorthopb.com/services/vein-care.html
 - Neuropathy Restoration Program: https://www.regenorthopb.com/services/neuropathy-program.html
 - Concierge & Direct-Pay Care: https://www.regenorthopb.com/services/concierge-care.html
-- Specialty Infusion Center (IVIG, Krystexxa, Ocrevus, Ultomiris): https://www.regenorthopb.com/infusions/index.html
 
 ## Insurance & payment
 
