@@ -3103,10 +3103,11 @@ def build_forms():
           <img src="{"../" * d}assets/media/logo-dark-nav.png?v={asset_v('assets/media/logo-dark-nav.png')}" alt="{NAME} — {TAGLINE}" width="167" height="52">
         </div>
         <h2 tabindex="-1">Your {f['plain_name']} is ready</h2>
-        <p>Nothing has been sent. Print this summary or save it as a PDF, then bring it to your appointment or hand it to our front desk — whichever is easier.</p>
+        <p>Nothing has been sent. Print this summary or save it as a PDF, email yourself a copy to forward on, or bring it with you — whichever is easier.</p>
         <div class="f-done-actions">
           <button type="button" class="btn btn-gold" data-print>Print / save as PDF</button>
           <button type="button" class="btn btn-ghost" data-download>Download as a text file</button>
+          <button type="button" class="btn btn-ghost" data-email>Email a copy to yourself</button>
           <button type="button" class="btn btn-ghost" data-edit>Go back and edit</button>
         </div>
         <div class="f-summary" id="form-summary"></div>
