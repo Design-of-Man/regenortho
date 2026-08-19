@@ -2959,6 +2959,15 @@ def build_forms():
     from forms_content import FORMS
     d = 1
 
+    # The IV consent form's infusion picker is sourced from the live drip menu
+    # rather than a hardcoded list in forms_content.py, so it can't drift out
+    # of sync with what's actually on iv-therapy.html.
+    for f in FORMS:
+        for s in f["sections"]:
+            for fld in s["fields"]:
+                if fld.get("id") == "iv-service":
+                    fld["opts"] = [m["short"] for m in IV_MENU] + ["Not sure — ask the front desk"]
+
     # ---- hub -------------------------------------------------------------
     def _steps(f):
         return len(f["sections"]) + 1          # +1 for the acknowledgment step

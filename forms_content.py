@@ -369,6 +369,10 @@ IV_CONSENT_FORM = {
             {"t": "date", "id": "dob", "label": "Date of Birth", "req": True, "ac": "bday", "w": "half"},
             {"t": "tel", "id": "phone", "label": "Phone", "ac": "tel", "w": "half"},
             {"t": "email", "id": "email", "label": "Email", "req": True, "ac": "email", "w": "half"},
+            # opts populated at build time from build.py's IV_MENU (build_forms()) so this
+            # never drifts out of sync with the actual drip menu on iv-therapy.html.
+            {"t": "select", "id": "iv-service", "label": "Which IV infusion are you receiving today?",
+             "req": True, "hint": "Confirm with the front desk if you're not sure.", "opts": []},
         ]},
         {"n": "02", "title": "Health Screening", "grid": True,
          "intro": "This screening helps our clinical team confirm IV therapy is appropriate for you today.",
