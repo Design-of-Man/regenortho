@@ -146,6 +146,7 @@
 /* -------------------------------- summary -------------------------------- */
 
 .f-done { max-width: 780px; }
+.f-print-head { display: none; }
 .f-done > h2 { margin: 0 0 .6rem; }
 .f-done > h2:focus { outline: none; }
 .f-done > p { color: var(--muted); }
@@ -314,6 +315,8 @@
   .patient-form { display: none !important; }
   .form-shell { display: block; }
   .form-section { padding: 0; }
+  .f-print-head { display: block; margin: 0 0 1rem; }
+  .f-print-head img { height: 40px; width: auto; }
   .f-done > p { display: none; }
   .f-summary { border: 0; }
   .f-summary h3 { background: none; border-bottom: 1px solid #000; color: #000;
