@@ -363,6 +363,7 @@ def nav(depth=0, current=""):
             <li><a href="{p}forms/index.html">All patient forms</a></li>
             <li><a href="{p}forms/new-patient.html">New Patient Intake Form</a></li>
             <li><a href="{p}forms/peptide-glp-questionnaire.html">Peptide &amp; GLP-1 Questionnaire</a></li>
+            <li><a href="{p}forms/iv-therapy-consent.html">IV Therapy Consent</a></li>
           </ul>
         </li>
         <li><a class="nav-link" href="{p}blog/index.html">Blog</a></li>
@@ -3062,7 +3063,7 @@ def build_forms():
           <p class="f-sec-num" aria-hidden="true">{n_secs + 1:02d}</p>
           <h2 id="sec-ack" tabindex="-1">Patient Acknowledgment</h2>
           <div class="f-fields">
-            <p class="f-ack-text">{f['ack']}</p>
+            {"".join(f'<p class="f-ack-text">{para}</p>' for para in f['ack'].split(chr(10) + chr(10)))}
             <fieldset class="f-checks f-ack">
               <legend class="sr-only">Acknowledgment</legend>
               <span class="f-check">
@@ -3089,6 +3090,9 @@ def build_forms():
       </form>
 
       <div class="f-done" hidden>
+        <div class="f-print-head">
+          <img src="{"../" * d}assets/media/logo-dark-nav.png?v={asset_v('assets/media/logo-dark-nav.png')}" alt="{NAME} — {TAGLINE}" width="167" height="52">
+        </div>
         <h2 tabindex="-1">Your {f['plain_name']} is ready</h2>
         <p>Nothing has been sent. Print this summary or save it as a PDF, then bring it to your appointment or hand it to our front desk — whichever is easier.</p>
         <div class="f-done-actions">
@@ -3272,13 +3276,14 @@ def build_legal_and_404():
 
 def build_meta():
     from blog_content import BLOG_POSTS
+    from forms_content import FORMS
     pages = ["index.html", "about.html", "contact.html", "faq.html", "iv-therapy.html",
              "patient-resources.html", "privacy-policy.html", "terms.html",
-             "forms/index.html", "forms/new-patient.html",
-             "forms/peptide-glp-questionnaire.html",
+             "forms/index.html",
              "services/index.html", "blog/index.html",
              "providers/dr-marc-matarazzo.html", "providers/dr-orlando-cedeno.html",
              "providers/emily-bahnick.html"]
+    pages += [f"forms/{f['slug']}.html" for f in FORMS]
     pages += [f"services/{s['slug']}.html" for s in SERVICES]
     pages += [f"conditions/{c['slug']}.html" for c in CONDITIONS]
     pages += [f"locations/{l['slug']}.html" for l in LOCATIONS]
@@ -3505,7 +3510,7 @@ the plan, and most are billed through insurance where covered.
 - Hours: {HOURS}
 - Instagram: {INSTAGRAM}
 - Specialists: Dr. Marc Matarazzo, MD (board-certified sports medicine & orthopedic surgeon, 23+ years, MAKO-certified); Dr. Orlando Cedeno, DPM (board-certified podiatric surgeon & vein specialist); Emily Bahnick, MSN, RN (IV infusion nurse & care coordinator).
-- Patient forms: {BASE}/forms/ — new patient intake and peptide/GLP-1 questionnaire, completed privately in the browser (nothing transmitted).
+- Patient forms: {BASE}/forms/ — new patient intake, peptide/GLP-1 questionnaire, and IV therapy informed consent, completed privately in the browser (nothing transmitted).
 - New patients accepted; no referral required; most major insurance accepted; concierge/direct-pay bundles available.
 
 ## Services

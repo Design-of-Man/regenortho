@@ -316,4 +316,89 @@ INTAKE_FORM = {
     ],
 }
 
-FORMS = [INTAKE_FORM, GLP_FORM]
+# --------------------------------------------------------------------------
+# IV therapy informed consent
+# --------------------------------------------------------------------------
+
+IV_CONSENT_TEXT = (
+    "I understand that IV (intravenous) therapy involves the delivery of fluids, vitamins, "
+    "minerals, and/or other additives directly into my bloodstream through a needle placed in "
+    "a vein. I understand the purpose of my infusion is to support hydration, nutrient "
+    "repletion, and general wellness, and that it is not intended to diagnose, treat, cure, or "
+    "prevent any disease.\n\n"
+    "I understand that, as with any procedure involving needle placement and infused "
+    "substances, there are potential risks and side effects, including but not limited to: "
+    "pain, bruising, or bleeding at the injection site; infiltration or extravasation (fluid "
+    "leaking into surrounding tissue); vein irritation or phlebitis; infection at the injection "
+    "site; lightheadedness, dizziness, or fainting; nausea; a metallic taste during infusion; "
+    "and allergic reaction, which in rare cases can be severe. I understand that patients with "
+    "certain heart, kidney, or other medical conditions may be at higher risk of complications "
+    "such as fluid overload, and that I am responsible for disclosing my full medical history "
+    "in the screening section of this form.\n\n"
+    "I understand that alternatives to IV therapy include oral hydration and oral vitamin or "
+    "mineral supplementation, and that I have had the opportunity to discuss these alternatives "
+    "with the clinical team before treatment.\n\n"
+    "I understand a member of the clinical team will review my health screening answers and "
+    "current medications before my infusion, and that treatment may be modified, delayed, or "
+    "declined based on that review. I understand I may stop my infusion at any time by notifying "
+    "the clinician monitoring my visit.\n\n"
+    "I certify that the information I have provided is accurate and complete to the best of my "
+    "knowledge, and I voluntarily consent to receive IV therapy at RegenOrtho Palm Beach."
+)
+
+IV_CONSENT_FORM = {
+    "slug": "iv-therapy-consent",
+    "name": "IV Therapy Informed Consent",
+    "plain_name": "IV Therapy Informed Consent",
+    "lede": "Please review and complete this consent before your IV infusion visit. All information is kept confidential.",
+    "title": "IV Therapy Informed Consent | RegenOrtho Palm Beach",
+    "desc": ("Review and complete the RegenOrtho Palm Beach IV therapy informed consent before your "
+             "infusion visit — private, filled out entirely in your browser."),
+    "ack": IV_CONSENT_TEXT,
+    "card": {
+        "for_who": "Anyone receiving IV or infusion therapy in our wellness lounge.",
+        "covers": ["What IV therapy involves, and its risks &amp; alternatives",
+                   "A short health screening for infusion safety",
+                   "Medications, supplements &amp; allergies",
+                   "Your signed consent to treatment"],
+        "icon": '<path d="M12 3.5c3 4 6 8 6 11.5a6 6 0 0 1-12 0c0-3.5 3-7.5 6-11.5Z"/><path d="M9.4 15.2a2.6 2.6 0 0 0 2.6 2.6"/>',
+    },
+    "sections": [
+        {"n": "01", "title": "Patient Information", "fields": [
+            {"t": "text", "id": "full-name", "label": "Full Name", "req": True, "ac": "name", "w": "half"},
+            {"t": "date", "id": "dob", "label": "Date of Birth", "req": True, "ac": "bday", "w": "half"},
+            {"t": "tel", "id": "phone", "label": "Phone", "ac": "tel", "w": "half"},
+            {"t": "email", "id": "email", "label": "Email", "req": True, "ac": "email", "w": "half"},
+        ]},
+        {"n": "02", "title": "Health Screening", "grid": True,
+         "intro": "This screening helps our clinical team confirm IV therapy is appropriate for you today.",
+         "fields": [
+            {"t": "yesno", "id": "iv-pregnant", "label": "Are you pregnant, planning pregnancy, or nursing?"},
+            {"t": "yesno", "id": "iv-kidney", "label": "Do you have kidney disease or are you on dialysis?"},
+            {"t": "yesno", "id": "iv-heart",
+             "label": "Do you have heart disease, congestive heart failure, or a fluid restriction?"},
+            {"t": "yesno", "id": "iv-g6pd",
+             "label": "Do you have G6PD deficiency?",
+             "hint": "Relevant for high-dose vitamin C infusions."},
+            {"t": "yesno", "id": "iv-allergy-additive",
+             "label": "Do you have a known allergy to any vitamins, minerals, or IV additives?",
+             "follow": {"t": "text", "id": "iv-allergy-additive-detail", "label": "If yes, please specify"}},
+            {"t": "yesno", "id": "iv-needle-history",
+             "label": "Have you ever fainted, felt dizzy, or had trouble with IV access or blood draws?"},
+            {"t": "yesno", "id": "iv-bleeding",
+             "label": "Do you have a bleeding disorder or take blood thinners?",
+             "follow": {"t": "text", "id": "iv-bleeding-detail", "label": "If yes, please specify"}},
+            {"t": "yesno", "id": "iv-recent-illness",
+             "label": "Do you currently have a fever, infection, or feel acutely unwell?"},
+         ]},
+        {"n": "03", "title": "Medications &amp; Allergies", "fields": list(MEDS_ALLERGIES)},
+        {"n": "04", "title": "Signature", "fields": [
+            {"t": "text", "id": "signature", "label": "Signature (type your full legal name)", "req": True,
+             "hint": "Typing your name here serves as your signature on this form."},
+            {"t": "date", "id": "signature-date", "label": "Date", "req": True, "w": "half"},
+        ]},
+    ],
+}
+
+
+FORMS = [INTAKE_FORM, GLP_FORM, IV_CONSENT_FORM]
