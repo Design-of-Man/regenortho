@@ -922,8 +922,8 @@ SERVICES = [
         "name": "Mesenchymal Stem Cell Therapy",
         "nav": "Mesenchymal Stem Cell Therapy",
         "parent": "regenerative-medicine-orthobiologics",
-        "title": "Mesenchymal Stem Cell Therapy Palm Beach Gardens | RegenOrtho",
-        "desc": "Mesenchymal stem cell therapy in Palm Beach Gardens — umbilical cord-derived cells delivered via ultrasound-guided injection to support joint and tissue healing.",
+        "title": "Mesenchymal Stem Cell Therapy | RegenOrtho Palm Beach",
+        "desc": "Mesenchymal stem cell therapy in Palm Beach Gardens — umbilical cord-derived cells delivered via ultrasound-guided injection for joint and tissue healing.",
         "eyebrow": "Regenerative Medicine & Orthobiologics",
         "h1": "Advanced Regenerative Medicine for Joint Pain & Tissue Healing",
         "lede": "A non-surgical approach using umbilical cord-derived mesenchymal stem cells to support the body's natural healing response, reduce pain, and improve mobility.",
@@ -970,7 +970,7 @@ SERVICES = [
         "nav": "Wharton's Jelly Therapy",
         "parent": "regenerative-medicine-orthobiologics",
         "title": "Wharton's Jelly Therapy Palm Beach Gardens | RegenOrtho",
-        "desc": "Wharton's Jelly therapy in Palm Beach Gardens — umbilical cord tissue rich in growth factors, delivered by ultrasound-guided injection for joint and tissue repair.",
+        "desc": "Wharton's Jelly therapy in Palm Beach Gardens — umbilical cord tissue rich in growth factors, delivered by ultrasound-guided injection for tissue repair.",
         "eyebrow": "Regenerative Medicine & Orthobiologics",
         "h1": "Advanced Regenerative Therapy to Support Joint Health & Tissue Repair",
         "lede": "Rich in naturally occurring growth factors, cytokines, and extracellular matrix proteins, Wharton's Jelly Therapy may help reduce inflammation, promote tissue repair, and improve joint function without surgery.",
@@ -1063,7 +1063,7 @@ SERVICES = [
         "name": "Traditional MUSE® Cell Therapy",
         "nav": "Traditional MUSE Cell Therapy",
         "parent": "regenerative-medicine-orthobiologics",
-        "title": "Traditional MUSE Cell Therapy Palm Beach Gardens | RegenOrtho",
+        "title": "Traditional MUSE Cell Therapy | RegenOrtho Palm Beach",
         "desc": "Traditional MUSE cell therapy in Palm Beach Gardens — a live-cell regenerative treatment using MUSE cells, delivered by IV push or targeted injection.",
         "eyebrow": "Regenerative Medicine & Orthobiologics",
         "h1": "Advanced Live-Cell Regenerative Therapy for Orthopedic & Joint Health",
@@ -1616,7 +1616,7 @@ def build_home():
     posts = __import__("blog_content").BLOG_POSTS[:3]
     blog_cards = "".join(
         f"""<a class="post-card reveal" href="blog/{p_['slug']}.html">
-        <span class="post-media"><img src="assets/media/{p_['image']}?v={asset_v('assets/media/' + p_['image'])}" alt="" width="640" height="400" loading="lazy"></span>
+        <span class="post-media"><img src="assets/media/{p_['image']}?v={asset_v('assets/media/' + p_['image'])}" alt="{p_['title']}" width="640" height="400" loading="lazy"></span>
         <span class="post-tag">{p_['category']}</span>
         <strong>{p_['title']}</strong>
         <em class="svc-more">Read article <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em>
@@ -1846,8 +1846,8 @@ def build_home():
     page = head(
         # ~57 chars: keyword + city front-loaded, brand last. Google truncates a
         # title around 600px (~60 chars) and the brand is the cheapest thing to lose.
-        "Regenerative Medicine & Vein Care Palm Beach Gardens | RegenOrtho",
-        "Concierge regenerative medicine, non-surgical therapies & vein care in Palm Beach Gardens. Board-certified specialists, 40+ years combined experience. 833-STEM561.",
+        "Regenerative Medicine & Vein Care | RegenOrtho Palm Beach",
+        "Concierge regenerative medicine, non-surgical therapies & vein care in Palm Beach Gardens. Board-certified specialists, 40+ years combined experience.",
         # canonical="" -> BASE/ (the root), NOT /index.html. Every inbound link,
         # the GBP listing and the social profiles point at the root; canonicalising
         # to /index.html asks Google to consolidate the wrong direction.
@@ -1955,7 +1955,7 @@ def build_services():
             sub_cards = "".join(
                 f"""<a class="svc-card reveal" href="{sub['slug']}.html" style="--d:{i * 70}ms">
         <span class="svc-num" aria-hidden="true">{i + 1:02d}</span>
-        <span class="svc-media"><img src="../assets/media/{sub['img']}?v={asset_v('assets/media/' + sub['img'])}" alt="" width="640" height="420" loading="lazy"></span>
+        <span class="svc-media"><img src="../assets/media/{sub['img']}?v={asset_v('assets/media/' + sub['img'])}" alt="{sub['img_alt']}" width="640" height="420" loading="lazy"></span>
         <span class="svc-body"><strong>{sub['name']}</strong><span>{sub['lede'][:130].rsplit(' ', 1)[0]}…</span><em class="svc-more">Explore <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></span>
       </a>"""
                 for i, sub in enumerate(next(x for x in SERVICES if x["slug"] == s) for s in sub_slugs)
@@ -2068,7 +2068,7 @@ def build_services():
     tiles = "".join(
         f"""<a class="svc-card reveal" href="{s['slug']}.html" style="--d:{(i % 3) * 90}ms">
         <span class="svc-num" aria-hidden="true">{i + 1:02d}</span>
-        <span class="svc-media"><img src="../assets/media/{s['img']}?v={asset_v('assets/media/' + s['img'])}" alt="" width="640" height="420" loading="lazy"></span>
+        <span class="svc-media"><img src="../assets/media/{s['img']}?v={asset_v('assets/media/' + s['img'])}" alt="{s['img_alt']}" width="640" height="420" loading="lazy"></span>
         <span class="svc-body"><strong>{s['name']}</strong><span>{s['lede'][:130].rsplit(' ', 1)[0]}…</span><em class="svc-more">Explore <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></span>
       </a>"""
         for i, s in enumerate(TOP_SERVICES)
@@ -2112,12 +2112,12 @@ def build_services():
   <div class="svc-grid svc-grid-3">{tiles}
     <a class="svc-card reveal" href="../iv-therapy.html">
       <span class="svc-num" aria-hidden="true">{len(TOP_SERVICES) + 1:02d}</span>
-      <span class="svc-media"><img src="../assets/media/iv-hero.jpg?v={asset_v('assets/media/iv-hero.jpg')}" alt="" width="640" height="420" loading="lazy"></span>
+      <span class="svc-media"><img src="../assets/media/iv-hero.jpg?v={asset_v('assets/media/iv-hero.jpg')}" alt="IV recovery and wellness lounge at RegenOrtho Palm Beach" width="640" height="420" loading="lazy"></span>
       <span class="svc-body"><strong>IV Recovery &amp; Wellness Lounge</strong><span>Twelve clinician-supervised drips — hydration, immunity, NAD⁺, athletic recovery…</span><em class="svc-more">Explore <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></span>
     </a>
     <a class="svc-card reveal" href="../infusions/index.html">
       <span class="svc-num" aria-hidden="true">{len(TOP_SERVICES) + 2:02d}</span>
-      <span class="svc-media"><img src="../assets/media/infusion-room.jpg?v={asset_v('assets/media/infusion-room.jpg')}" alt="" width="640" height="420" loading="lazy"></span>
+      <span class="svc-media"><img src="../assets/media/infusion-room.jpg?v={asset_v('assets/media/infusion-room.jpg')}" alt="Private infusion suite at RegenOrtho Palm Beach" width="640" height="420" loading="lazy"></span>
       <span class="svc-body"><strong>Specialty Infusion Center</strong><span>IVIG, Krystexxa, Ocrevus &amp; Ultomiris in a private, monitored outpatient suite…</span><em class="svc-more">Explore <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></span>
     </a>
   </div>
@@ -2297,7 +2297,7 @@ def build_locations():
             + breadcrumb_schema([("", "Home"), (f"locations/{loc['slug']}.html", city)])
         )
         page = head(
-            f"Orthopedic & Regenerative Care {city} FL | RegenOrtho",
+            f"Orthopedic & Regenerative Care {city} | RegenOrtho",
             f"{city} residents: orthopedic, podiatric, regenerative & vein care minutes away in Palm Beach Gardens. Same-week consultations — call 833-STEM561.",
             depth=d, canonical=f"locations/{loc['slug']}.html", extra_schema=schema, speakable=True,
         ) + '<body class="page-location">\n' + body
@@ -2427,7 +2427,7 @@ def build_providers():
             "Medical Director &amp; Owner, RegenOrtho Palm Beach",
             "Owner, Elite Sports Medicine",
         ],
-        "Dr. Marc Matarazzo MD | Orthopedic Surgeon Palm Beach Gardens",
+        "Dr. Marc Matarazzo, MD | Orthopedic Surgeon | RegenOrtho",
         "Dr. Marc Matarazzo, MD — board-certified orthopedic surgeon in Palm Beach Gardens. Sports medicine, arthroscopy, shoulder & knee, MAKO robotic replacement.",
         [
             ("../services/regenerative-medicine-orthobiologics.html", "Regenerative Medicine"),
@@ -2518,7 +2518,7 @@ def build_emily():
             "IV infusion nurse &amp; care coordinator",
             "Focused on longevity and regenerative health",
         ],
-        "Emily Bahnick, MSN, RN | IV Infusion Nurse Palm Beach Gardens",
+        "Emily Bahnick, MSN, RN | IV Infusion Nurse | RegenOrtho",
         "Meet Emily Bahnick, MSN, RN — the IV infusion nurse and care coordinator at RegenOrtho Palm Beach in Palm Beach Gardens, with 10+ years of nursing experience.",
         [
             ("../iv-therapy.html", "IV Recovery & Wellness Lounge"),
@@ -2715,7 +2715,7 @@ def build_iv():
 </main>
 {footer(d)}"""
     schema = offers + faq_schema(IV_FAQS) + breadcrumb_schema([("", "Home"), ("iv-therapy.html", "IV Therapy")])
-    page = head("IV Therapy Palm Beach Gardens | Drip Lounge & NAD+ | RegenOrtho",
+    page = head("IV Therapy Palm Beach Gardens | Drip Lounge | RegenOrtho",
                 "IV therapy in Palm Beach Gardens: hydration, immune boost, NAD+ 500mg, athletic recovery & more — clinician-supervised drips from $189 in a private lounge.",
                 depth=d, canonical="iv-therapy.html", webpage_type="MedicalWebPage", speakable=True,
                 og_image="assets/media/iv-hero.jpg",
@@ -3255,7 +3255,7 @@ def build_blog():
     for i, p_ in enumerate(BLOG_POSTS):
         date_h = "{}/{}/{}".format(p_["date"][5:7], p_["date"][8:10], p_["date"][:4])
         cards += f"""<a class="post-card reveal" href="{p_['slug']}.html" style="--d:{(i % 3) * 90}ms">
-      <span class="post-media"><img src="../assets/media/{p_['image']}?v={asset_v('assets/media/' + p_['image'])}" alt="" width="640" height="400" loading="lazy"></span>
+      <span class="post-media"><img src="../assets/media/{p_['image']}?v={asset_v('assets/media/' + p_['image'])}" alt="{p_['title']}" width="640" height="400" loading="lazy"></span>
       <span class="post-tag">{p_['category']}</span>
       <strong>{p_['title']}</strong>
       <span class="post-date">{date_h}</span>
@@ -3270,7 +3270,7 @@ def build_blog():
 </main>
 {footer(d)}"""
     schema = breadcrumb_schema([("", "Home"), ("blog/index.html", "Blog")])
-    page = head("Blog | RegenOrtho Palm Beach — Orthopedic & Wellness Insights",
+    page = head("Blog | RegenOrtho Palm Beach — Orthopedic Insights",
                 "Articles from RegenOrtho Palm Beach on PRP, regenerative medicine, foot & ankle care, vein treatment, IV therapy, and staying active in South Florida.",
                 depth=d, canonical="blog/index.html", extra_schema=schema) + '<body class="page-blog">\n' + body
     write("blog/index.html", page)
@@ -3303,7 +3303,7 @@ def build_blog():
     </div>
   </header>
   <div class="post-body">
-    <figure class="post-figure reveal"><img src="../assets/media/{p_['image']}?v={asset_v('assets/media/' + p_['image'])}" alt="" width="1100" height="620"></figure>
+    <figure class="post-figure reveal"><img src="../assets/media/{p_['image']}?v={asset_v('assets/media/' + p_['image'])}" alt="{p_['title']}" width="1100" height="620"></figure>
     {body_html}
     <div class="post-cta sym-card">
       <h2>Talk to the team</h2>
