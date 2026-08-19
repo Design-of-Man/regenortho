@@ -293,7 +293,7 @@
     show(i, true);
   });
 
-  root.querySelector("[data-download]").addEventListener("click", function () {
+  function downloadFile() {
     var blob = new Blob([asText(done.__data || collect(false))], { type: "text/plain;charset=utf-8" });
     var url = URL.createObjectURL(blob);
     var a = document.createElement("a");
@@ -303,7 +303,39 @@
     a.click();
     document.body.removeChild(a);
     setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
-  });
+  }
+
+  root.querySelector("[data-download]").addEventListener("click", downloadFile);
+
+  /* ---------------------------------------------------- email a copy */
+  /* Still HIPAA-safe: no server involved. mailto: can't attach a file (no
+     browser supports that), and its body has a hard length cap most mail
+     clients silently truncate around ~1800-2000 chars — a full intake form
+     summary blows past that. So this downloads the file (same as above)
+     and opens a short, PHI-free mailto: draft asking the patient to attach
+     the file they just downloaded before sending it. The "to" field
+     defaults to the patient's own address from the form, never the
+     practice's — it's the patient's mail client, the patient's choice
+     where it goes from there. */
+  var emailBtn = root.querySelector("[data-email]");
+  if (emailBtn) {
+    emailBtn.addEventListener("click", function () {
+      downloadFile();
+      var emailEl = form.querySelector("#email");
+      var to = emailEl ? emailEl.value.trim() : "";
+      var formName = document.title.split("|")[0].trim();
+      var subject = formName + " — RegenOrtho Palm Beach";
+      var body = "Your completed " + formName + " just downloaded to this device " +
+        "(check Downloads) as a text file.\n\n" +
+        "To send it, attach that file to this email before you hit send — " +
+        "then forward it to our front desk or bring it to your appointment.\n\n" +
+        "RegenOrtho Palm Beach · 833-783-6561";
+      var href = "mailto:" + encodeURIComponent(to) +
+        "?subject=" + encodeURIComponent(subject) +
+        "&body=" + encodeURIComponent(body);
+      setTimeout(function () { location.href = href; }, 300);
+    });
+  }
 
   root.querySelector("[data-erase]").addEventListener("click", function () {
     if (!window.confirm("Erase your answers from this device? This cannot be undone.")) return;
