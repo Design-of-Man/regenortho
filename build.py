@@ -172,7 +172,7 @@ def head(title, desc, depth=0, canonical="", og_image="assets/media/og-team.jpg"
     og_alt = (OG_TEAM_ALT if og_image == "assets/media/og-team.jpg" else title)
     og_type = "image/png" if og_image.lower().endswith(".png") else "image/jpeg"
     schema = org_schema()
-    # MedicalWebPage on clinical pages (services, conditions, infusions): it tells
+    # MedicalWebPage on clinical pages (services, conditions): it tells
     # Google and the AI crawlers the page is health content about a named entity
     # rather than generic marketing copy. medicalAudience is a structural fact.
     # NOTE: reviewedBy/lastReviewed are deliberately absent — those assert that a
@@ -275,7 +275,6 @@ SERVICES_NAV = [
     ("services/neuropathy-program.html", "Neuropathy Restoration Program"),
     ("services/medical-weight-loss.html", "Medical Weight Loss & GLP-1"),
     ("services/concierge-care.html", "Concierge & Direct-Pay Care"),
-    ("infusions/index.html", "Specialty Infusion Center"),
 ]
 
 CONDITIONS_NAV = [
@@ -744,29 +743,6 @@ IV_MENU = [
     {"name": 'Athletic Recovery & Performance (Myers + Amino-6)', "short": "Athletic Recovery", "cat": "recovery", "ingredients": "Myers’ cocktail · Amino-6", "price": 225, "bag": "bag-athletic.png", "desc": 'Rebuilds and refuels muscles with amino acids and electrolytes to enhance performance, reduce soreness, and accelerate recovery.'},
     {"name": 'Neuro Restore', "short": "Neuro Restore", "cat": "wellness", "ingredients": "Cognitive &amp; nerve support", "price": 231, "bag": "bag-nad.png", "desc": 'Antioxidant and nerve support with Alpha Lipoic Acid (ALA) and Vitamin B12 to help promote healthy nerve function and neurological wellness.'},
     {"name": 'All-Inclusive', "short": "All-Inclusive", "cat": "wellness", "ingredients": "Every add-in on the menu", "price": 399, "bag": "bag-all-inclusive.png", "desc": 'Comprehensive full-body infusion delivering vitamins, minerals, amino acids, antioxidants, and hydration for total wellness optimization.'},
-]
-
-INFUSIONS = [
-    {"slug": "ivig", "name": "IVIG (Intravenous Immunoglobulin)",
-     "title": "IVIG Infusion Therapy Palm Beach Gardens | RegenOrtho",
-     "desc": "Physician-supervised IVIG (intravenous immunoglobulin) infusion therapy in a private Palm Beach Gardens suite. Insurance coordination and flexible scheduling.",
-     "lede": "Intravenous immunoglobulin therapy delivered in a private, clinician-supervised infusion suite — without the hospital.",
-     "body": "IVIG (intravenous immunoglobulin) is a physician-prescribed infusion used to support patients with certain immune-mediated and neurological conditions. Our infusion center administers IVIG in a calm, private suite with clinical monitoring throughout your visit, coordinating directly with your referring physician on protocol, frequency, and follow-up."},
-    {"slug": "krystexxa", "name": "Krystexxa Infusion Therapy",
-     "title": "Krystexxa Infusion Therapy Palm Beach Gardens | RegenOrtho",
-     "desc": "Krystexxa (pegloticase) infusion therapy for uncontrolled gout, administered under physician supervision in our Palm Beach Gardens infusion suite.",
-     "lede": "Physician-supervised Krystexxa (pegloticase) infusions for chronic, uncontrolled gout — in a private outpatient setting.",
-     "body": "Krystexxa is an infusion medication prescribed for adults with chronic gout that has not responded to conventional urate-lowering therapy. Treatment is administered in our monitored infusion suite, with pre-infusion screening and coordination with your prescribing physician at every step."},
-    {"slug": "ocrevus", "name": "Ocrevus Treatment",
-     "title": "Ocrevus Infusion Palm Beach Gardens | RegenOrtho",
-     "desc": "Ocrevus (ocrelizumab) infusion treatment administered under clinical supervision in a private Palm Beach Gardens suite, coordinated with your neurologist.",
-     "lede": "Ocrevus (ocrelizumab) infusions coordinated with your neurologist and delivered in a private, monitored suite.",
-     "body": "Ocrevus is a prescription infusion used in the management of certain forms of multiple sclerosis. Our team works with your neurologist's treatment plan, provides pre-infusion screening, and monitors you throughout each visit in a comfortable outpatient environment."},
-    {"slug": "ultomiris", "name": "Ultomiris Infusion Therapy",
-     "title": "Ultomiris Infusion Therapy Palm Beach Gardens | RegenOrtho",
-     "desc": "Ultomiris (ravulizumab) infusion therapy in a private, physician-supervised Palm Beach Gardens outpatient suite with insurance coordination.",
-     "lede": "Ultomiris (ravulizumab) infusion therapy in a private outpatient suite, with clinical monitoring and insurance coordination.",
-     "body": "Ultomiris is a physician-prescribed infusion used in the management of certain rare complement-mediated conditions. We administer it on your prescriber's protocol in a monitored, private infusion suite — a calmer, more convenient alternative to hospital-based infusion."},
 ]
 
 # Shared across the five regenerative modality pages. All of these are quoted
@@ -1792,7 +1768,6 @@ def build_home():
       <h3>Care &amp; wellness</h3>
       <ul class="path-links">
         <li><a href="iv-therapy.html">IV Lounge — full menu &amp; pricing</a></li>
-        <li><a href="infusions/index.html">Specialty Infusion Center</a></li>
         <li><a href="services/medical-weight-loss.html">Medical Weight Loss &amp; GLP-1</a></li>
         <li><a href="services/neuropathy-program.html">Neuropathy Restoration Program</a></li>
         <li><a href="services/concierge-care.html">Concierge &amp; Direct-Pay Care</a></li>
@@ -2114,11 +2089,6 @@ def build_services():
       <span class="svc-num" aria-hidden="true">{len(TOP_SERVICES) + 1:02d}</span>
       <span class="svc-media"><img src="../assets/media/iv-hero.jpg?v={asset_v('assets/media/iv-hero.jpg')}" alt="IV recovery and wellness lounge at RegenOrtho Palm Beach" width="640" height="420" loading="lazy"></span>
       <span class="svc-body"><strong>IV Recovery &amp; Wellness Lounge</strong><span>Twelve clinician-supervised drips — hydration, immunity, NAD⁺, athletic recovery…</span><em class="svc-more">Explore <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></span>
-    </a>
-    <a class="svc-card reveal" href="../infusions/index.html">
-      <span class="svc-num" aria-hidden="true">{len(TOP_SERVICES) + 2:02d}</span>
-      <span class="svc-media"><img src="../assets/media/infusion-room.jpg?v={asset_v('assets/media/infusion-room.jpg')}" alt="Private infusion suite at RegenOrtho Palm Beach" width="640" height="420" loading="lazy"></span>
-      <span class="svc-body"><strong>Specialty Infusion Center</strong><span>IVIG, Krystexxa, Ocrevus &amp; Ultomiris in a private, monitored outpatient suite…</span><em class="svc-more">Explore <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></span>
     </a>
   </div>
 </section>
@@ -2522,7 +2492,6 @@ def build_emily():
         "Meet Emily Bahnick, MSN, RN — the IV infusion nurse and care coordinator at RegenOrtho Palm Beach in Palm Beach Gardens, with 10+ years of nursing experience.",
         [
             ("../iv-therapy.html", "IV Recovery & Wellness Lounge"),
-            ("../infusions/index.html", "Specialty Infusion Center"),
             ("../services/neuropathy-program.html", "Neuropathy Restoration Program"),
             ("../services/medical-weight-loss.html", "Medical Weight Loss & GLP-1"),
             ("../services/concierge-care.html", "Concierge & Direct-Pay Care"),
@@ -2723,105 +2692,6 @@ def build_iv():
     write("iv-therapy.html", page)
 
 
-def build_infusions():
-    d = 1
-    # hub
-    tiles = "".join(
-        f"""<a class="svc-card reveal" href="{inf['slug']}.html" style="--d:{(i % 2) * 100}ms">
-        <span class="svc-num" aria-hidden="true">{i + 1:02d}</span>
-        <span class="svc-body svc-body-pad"><strong>{inf['name']}</strong><span>{inf['lede']}</span><em class="svc-more">Learn more <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></span>
-      </a>"""
-        for i, inf in enumerate(INFUSIONS)
-    )
-    crumbs_html = crumbs([("", "Specialty Infusion Center")], depth=d)
-    body = f"""{nav(d)}
-<main id="main">
-{page_hero("Specialty Infusion Center", "Hospital-Grade Infusions. Boutique Setting.", "Physician-prescribed specialty infusions — IVIG, Krystexxa, Ocrevus, and Ultomiris — administered in a private, monitored outpatient suite with insurance coordination and flexible scheduling.", crumbs_html, depth=d)}
-<section class="section">
-  <div class="svc-intro-grid">
-    <figure class="svc-photo reveal"><img src="../assets/media/infusion-room.jpg?v={asset_v('assets/media/infusion-room.jpg')}" alt="Private infusion suite at RegenOrtho Palm Beach" width="700" height="470"></figure>
-    <div class="svc-why reveal" style="--d:120ms">
-      <p class="eyebrow">Why infuse here</p>
-      <h2>The alternative to the <em>hospital chair</em></h2>
-      <ul class="check-list">
-        <li>Private, monitored infusion suites — not an open hospital bay</li>
-        <li>Clinical supervision and pre-infusion screening at every visit</li>
-        <li>Coordination with your prescribing physician's protocol</li>
-        <li>Insurance coordination and simple scheduling</li>
-      </ul>
-      <a class="btn btn-navy" href="../contact.html#book">Ask about your infusion</a>
-    </div>
-  </div>
-</section>
-<section class="section section-tint">
-  <div class="section-head reveal"><p class="eyebrow">Available Therapies</p><h2>Specialty <em>infusions</em></h2></div>
-  <div class="svc-grid svc-grid-2">{tiles}</div>
-</section>
-{cta_band(d)}
-</main>
-{footer(d)}"""
-    schema = breadcrumb_schema([("", "Home"), ("infusions/index.html", "Specialty Infusion Center")])
-    page = head("Specialty Infusion Center Palm Beach Gardens | RegenOrtho",
-                "IVIG, Krystexxa, Ocrevus & Ultomiris infusions in a private Palm Beach Gardens outpatient suite — clinician-monitored with insurance coordination.",
-                depth=d, canonical="infusions/index.html", webpage_type="MedicalWebPage", speakable=True,
-                og_image="assets/media/infusion-room.jpg",
-                extra_schema=schema) + '<body class="page-infusions">\n' + body
-    write("infusions/index.html", page)
-
-    # individual infusion pages
-    for inf in INFUSIONS:
-        crumbs_html = crumbs([("infusions/index.html", "Infusion Center"), ("", inf["name"])], depth=d)
-        body = f"""{nav(d)}
-<main id="main">
-{page_hero("Specialty Infusion Center", inf['name'], inf['lede'], crumbs_html, depth=d)}
-<section class="section">
-  <div class="cond-grid">
-    <div class="cond-main reveal">
-      <h2>About this therapy</h2>
-      <p>{inf['body']}</p>
-      <h2>What every infusion visit includes</h2>
-      <ul class="check-list">
-        <li>Pre-infusion screening and vitals check</li>
-        <li>Clinical monitoring throughout your infusion</li>
-        <li>A private, comfortable suite — bring headphones, a book, or just rest</li>
-        <li>Coordination with your prescribing physician on protocol and follow-up</li>
-      </ul>
-      <p class="note-line">Specialty infusions are administered on a physician's prescription. Our team helps coordinate referrals, insurance authorization, and scheduling — call <a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a> to get started.</p>
-    </div>
-    <aside class="cond-side reveal" style="--d:120ms">
-      <div class="sym-card">
-        <h2>Getting scheduled</h2>
-        <ul class="check-list">
-          <li>Have your prescription or referral ready</li>
-          <li>We verify insurance and authorization</li>
-          <li>Choose an appointment window that fits your week</li>
-        </ul>
-        <a class="btn btn-gold" href="../contact.html#book">Request scheduling</a>
-        <p class="sym-call">Or call <a href="tel:{PHONE_TEL}">{PHONE_VANITY}</a></p>
-      </div>
-    </aside>
-  </div>
-</section>
-{cta_band(d)}
-</main>
-{footer(d)}"""
-        schema = (
-            extra_ld({
-                "@context": "https://schema.org",
-                "@type": "MedicalTherapy",
-                "name": inf["name"],
-                "url": f"{BASE}/infusions/{inf['slug']}.html",
-                "provider": {"@id": ORG_ID},
-            })
-            + breadcrumb_schema([("", "Home"), ("infusions/index.html", "Infusion Center"), (f"infusions/{inf['slug']}.html", inf["name"])])
-        )
-        page = head(inf["title"], inf["desc"], depth=d,
-                    canonical=f"infusions/{inf['slug']}.html",
-                    webpage_type="MedicalWebPage", speakable=True,
-                    og_image="assets/media/infusion-room.jpg",
-                    extra_schema=schema) + '<body class="page-infusion">\n' + body
-        write(f"infusions/{inf['slug']}.html", page)
-
 def build_faq():
     d = 0
     cats = all_faq_categories()
@@ -2912,7 +2782,6 @@ def build_contact():
           <option>Neuropathy Restoration Program</option>
           <option>Medical Weight Loss / GLP-1</option>
           <option>Concierge &amp; Cash-Pay Services</option>
-          <option>Specialty Infusion (IVIG, Krystexxa, Ocrevus, Ultomiris)</option>
           <option>Not sure — help me choose</option>
         </select>
       </label>
@@ -3407,13 +3276,12 @@ def build_meta():
              "patient-resources.html", "privacy-policy.html", "terms.html",
              "forms/index.html", "forms/new-patient.html",
              "forms/peptide-glp-questionnaire.html",
-             "services/index.html", "infusions/index.html", "blog/index.html",
+             "services/index.html", "blog/index.html",
              "providers/dr-marc-matarazzo.html", "providers/dr-orlando-cedeno.html",
              "providers/emily-bahnick.html"]
     pages += [f"services/{s['slug']}.html" for s in SERVICES]
     pages += [f"conditions/{c['slug']}.html" for c in CONDITIONS]
     pages += [f"locations/{l['slug']}.html" for l in LOCATIONS]
-    pages += [f"infusions/{i['slug']}.html" for i in INFUSIONS]
     pages += [f"blog/{p['slug']}.html" for p in BLOG_POSTS]
 
     # Crawl priority mirrors commercial intent: the money pages are the homepage,
@@ -3423,7 +3291,7 @@ def build_meta():
     def _prio(u):
         if u == "index.html":
             return "1.0", "weekly"
-        if u.startswith(("services/", "conditions/", "infusions/")) or u == "iv-therapy.html":
+        if u.startswith(("services/", "conditions/")) or u == "iv-therapy.html":
             return "0.9", "monthly"
         if u.startswith("locations/"):
             return "0.8", "monthly"
@@ -3586,7 +3454,6 @@ No price is published for these; do not infer or estimate one. Cost depends on
 the plan, and most are billed through insurance where covered.
 
 {unpriced}
-- Specialty Infusion Center (IVIG, Krystexxa, Ocrevus, Ultomiris): {BASE}/infusions/index.html
 
 ## Insurance & payment
 
@@ -3644,7 +3511,6 @@ the plan, and most are billed through insurance where covered.
 ## Services
 {svc_lines}
 - IV Recovery & Wellness Lounge: {BASE}/iv-therapy.html — 12 clinician-supervised infusions, $189–$499.
-- Specialty Infusion Center: {BASE}/infusions/index.html — IVIG, Krystexxa, Ocrevus, Ultomiris.
 
 ## Conditions treated
 {cond_lines}
@@ -3696,7 +3562,6 @@ def main():
     build_conditions()
     build_locations()
     build_iv()
-    build_infusions()
     build_faq()
     build_contact()
     build_resources()
