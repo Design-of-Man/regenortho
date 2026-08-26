@@ -39,8 +39,8 @@ pre-screen. Menu: https://www.regenorthopb.com/iv-therapy.html
 | Performance / Energy (Myers + Amino-6) | $225 | Myers’ cocktail · Amino-6 |
 | Beauty / Glow / Anti-Aging (Myers + Biotin) | $259 | Myers’ cocktail · biotin · glutathione |
 | Hydration / Basic Electrolyte | $189 | Saline · balanced electrolytes |
-| Myers’ PLUS | $225 | The classic Myers’, reinforced |
-| Immune Boost (Vit C + Zinc + GSH) | $259 | Vitamin C · zinc · glutathione |
+| Myers’ PLUS | $259 | The classic Myers’, reinforced |
+| Immune Boost (Vit C + Zinc + GSH) | $225 | Vitamin C · zinc · glutathione |
 | Cleanse | $349 | Detox support · glutathione |
 | NAD⁺ 500 mg | $499 | 500 mg NAD⁺ · cellular energy |
 | Athletic Recovery & Performance (Myers + Amino-6) | $225 | Myers’ cocktail · Amino-6 |
