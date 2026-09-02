@@ -1336,7 +1336,9 @@ CONDITIONS = [
      "desc": "Knee pain treatment in Palm Beach Gardens — PRP, orthobiologics, and joint-preservation therapy to relieve pain and restore function without surgery.",
      "h1": "Knee Pain, Treated at Every Stage",
      "lede": "From early arthritis to advanced wear — regenerative, joint-preserving care matched to your knee's actual stage, not a one-size-fits-all protocol.",
-     "img": "knee-implant.jpg",
+     # No "img" here on purpose: knee-implant.jpg was a mislabeled weight-loss
+     # product shot, removed 2026-09. Leave this slot empty until a real photo
+     # is supplied rather than reusing another page's image for it.
      "symptoms": ["Pain on stairs, standing, or first steps in the morning", "Swelling or stiffness after activity", "Instability, catching, or giving way", "Deep aching in the inner (medial) knee", "Pain that has outlasted rest, meds, or injections"],
      "body": "Knee pain is the most common reason patients walk through our doors. Our focus is joint preservation — regenerative medicine and advanced non-surgical therapies designed to protect the joint you have rather than rush toward replacement: PRP and orthobiologic injections that address the joint environment directly, biomechanical correction, and progressive rehabilitation. When a knee is genuinely beyond preservation, we'll tell you honestly and coordinate a referral to a trusted surgical specialist.",
      "services": ["regenerative-medicine-orthobiologics", "advanced-non-surgical-therapies"],
@@ -2178,7 +2180,7 @@ def build_conditions():
         <a class="btn btn-gold" href="../contact.html#book">Get it evaluated</a>
         <p class="sym-call">Or call <a href="tel:{PHONE_TEL}">{PHONE_VANITY}</a> — same-week consultations are usually available.</p>
       </div>
-      <figure class="cond-photo"><img src="../assets/media/{c['img']}?v={asset_v('assets/media/' + c['img'])}" alt="{c['name']} care at RegenOrtho Palm Beach" width="520" height="380" loading="lazy"></figure>
+      {f'''<figure class="cond-photo"><img src="../assets/media/{c['img']}?v={asset_v('assets/media/' + c['img'])}" alt="{c['name']} care at RegenOrtho Palm Beach" width="520" height="380" loading="lazy"></figure>''' if c.get('img') else ''}
     </aside>
   </div>
 </section>
@@ -2205,7 +2207,7 @@ def build_conditions():
         page = head(c["title"], c["desc"], depth=d,
                     canonical=f"conditions/{c['slug']}.html",
                     webpage_type="MedicalWebPage", speakable=True,
-                    og_image=f"assets/media/{c['img']}",
+                    og_image=(f"assets/media/{c['img']}" if c.get('img') else "assets/media/og-team.jpg"),
                     page_type="article", extra_schema=schema) + '<body class="page-condition">\n' + body
         write(f"conditions/{c['slug']}.html", page)
 
