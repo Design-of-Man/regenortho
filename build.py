@@ -445,7 +445,7 @@ def footer(depth=0, extra_js="", analytics=True, assistant=True):
         <a href="{MAP_URL}" rel="noopener" target="_blank">{ADDRESS_STREET}<br>{ADDRESS_CITY}, {ADDRESS_STATE} {ADDRESS_ZIP}</a>
       </address>
       <p class="footer-hours">{HOURS}</p>
-      <p><a class="footer-tel" href="tel:{PHONE_TEL}">{PHONE_VANITY}<span> · {PHONE_DISPLAY}</span></a></p>
+      <p><a class="footer-tel" href="tel:{PHONE_TEL}" data-call-location="footer">{PHONE_VANITY}<span> · {PHONE_DISPLAY}</span></a></p>
       <p><a class="footer-mail" href="mailto:{EMAIL}">{EMAIL}</a></p>
     </div>
   </div>
@@ -453,7 +453,7 @@ def footer(depth=0, extra_js="", analytics=True, assistant=True):
     <p>© {year} {NAME} · {TAGLINE}</p>
     <p><a href="{p}privacy-policy.html">Privacy Policy</a> · <a href="{p}terms.html">Terms &amp; Conditions</a></p>
   </div>
-  <a class="mobile-call" href="tel:{PHONE_TEL}"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8c1.5 2.9 3.7 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .7-.2 1l-2.3 2.2z"/></svg>Call Now</a>
+  <a class="mobile-call" href="tel:{PHONE_TEL}" data-call-location="sticky"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8c1.5 2.9 3.7 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .7-.2 1l-2.3 2.2z"/></svg>Call Now</a>
 </footer>
 <script src="{p}assets/js/main.js?v={asset_v('assets/js/main.js')}"></script>
 {assist_tag}{analytics_tag}{extra_js_tag}</body>
@@ -480,7 +480,7 @@ def page_hero(eyebrow, title, lede, crumbs_html="", cta=True, depth=0):
     if cta:
         cta_html = f"""<div class="hero-cta-row">
       <a class="btn btn-gold" href="{p}contact.html#book">Book a Consultation</a>
-      <a class="btn btn-ghost-light" href="tel:{PHONE_TEL}">Call {PHONE_VANITY}</a>
+      <a class="btn btn-ghost-light" href="tel:{PHONE_TEL}" data-call-location="page_hero">Call {PHONE_VANITY}</a>
     </div>"""
     return f"""<section class="page-hero">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
@@ -518,7 +518,7 @@ def cta_band(depth=0, heading="Ready to feel like <em>yourself</em> again?",
     <p>{sub}</p>
     <div class="cta-row">
       <a class="btn btn-gold" href="{p}contact.html#book">Book a Consultation</a>
-      <a class="btn btn-ghost-light" href="tel:{PHONE_TEL}">{PHONE_VANITY} · {PHONE_DISPLAY}</a>
+      <a class="btn btn-ghost-light" href="tel:{PHONE_TEL}" data-call-location="cta_band">{PHONE_VANITY} · {PHONE_DISPLAY}</a>
     </div>
   </div>
 </section>
@@ -1647,7 +1647,7 @@ def build_home():
       <p class="lede h-rise" style="--hd:.82s">Personalized regenerative medicine, non-surgical therapies, and vein care in Palm Beach Gardens — led by board-certified specialists with over 40 years of combined experience.</p>
       <div class="hero-cta-row h-rise" style="--hd:1s">
         <a class="btn btn-gold" href="contact.html#book">Book a Consultation</a>
-        <a class="btn btn-teal" href="tel:{PHONE_TEL}">Call {PHONE_VANITY}</a>
+        <a class="btn btn-teal" href="tel:{PHONE_TEL}" data-call-location="home_hero">Call {PHONE_VANITY}</a>
       </div>
       <dl class="hero-stats h-rise" style="--hd:1.18s">
         <div><dt><span class="stat-num" data-count="40">40</span>+</dt><dd>years of combined clinical experience</dd></div>
@@ -2176,7 +2176,7 @@ def build_conditions():
         <h2>{c['name']} symptoms we see</h2>
         <ul class="check-list">{symptoms}</ul>
         <a class="btn btn-gold" href="../contact.html#book">Get it evaluated</a>
-        <p class="sym-call">Or call <a href="tel:{PHONE_TEL}">{PHONE_VANITY}</a> — same-week consultations are usually available.</p>
+        <p class="sym-call">Or call <a href="tel:{PHONE_TEL}" data-call-location="condition_sidebar">{PHONE_VANITY}</a> — same-week consultations are usually available.</p>
       </div>
       <figure class="cond-photo"><img src="../assets/media/{c['img']}?v={asset_v('assets/media/' + c['img'])}" alt="{c['name']} care at RegenOrtho Palm Beach" width="520" height="380" loading="lazy"></figure>
     </aside>
@@ -2242,7 +2242,7 @@ def build_locations():
         <address>{ADDRESS_STREET}<br>{ADDRESS_CITY}, {ADDRESS_STATE} {ADDRESS_ZIP}</address>
         <p class="loc-hours">{HOURS}</p>
         <a class="btn btn-gold" href="../contact.html#book">Book a Consultation</a>
-        <p class="sym-call">Call <a href="tel:{PHONE_TEL}">{PHONE_VANITY} · {PHONE_DISPLAY}</a></p>
+        <p class="sym-call">Call <a href="tel:{PHONE_TEL}" data-call-location="location_sidebar">{PHONE_VANITY} · {PHONE_DISPLAY}</a></p>
         <a class="loc-map-link" href="{MAP_URL}" rel="noopener" target="_blank">Get directions →</a>
       </div>
       <nav class="sym-card loc-others" aria-label="Other areas we serve">
@@ -2727,7 +2727,7 @@ def build_faq():
   <div class="faq-panels" data-faq>
     {panels}
   </div>
-  <p class="faq-empty" hidden>No matches — try a different word, or call <a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a>.</p>
+  <p class="faq-empty" hidden>No matches — try a different word, or call <a href="tel:{PHONE_TEL}" data-call-location="faq_empty">{PHONE_DISPLAY}</a>.</p>
 </section>
 {cta_band(d, heading="Still have <em>questions?</em>", sub="Our front desk answers real questions from real humans, Monday through Friday 8–5.")}
 </main>
@@ -2751,7 +2751,7 @@ def build_contact():
       <h2>Get in touch to book your <em>first appointment</em></h2>
       <p>Book your first appointment today and experience personalized care, advanced treatments, and expert support tailored to your health needs.</p>
       <ul class="contact-list">
-        <li><strong>Call or text</strong><a href="tel:{PHONE_TEL}">{PHONE_VANITY} · {PHONE_DISPLAY}</a></li>
+        <li><strong>Call or text</strong><a href="tel:{PHONE_TEL}" data-call-location="contact_list">{PHONE_VANITY} · {PHONE_DISPLAY}</a></li>
         <li><strong>Email</strong><a href="mailto:{EMAIL}">{EMAIL}</a></li>
         <li><strong>Visit</strong><a href="{MAP_URL}" rel="noopener" target="_blank">{ADDRESS_STREET}<br>{ADDRESS_CITY}, {ADDRESS_STATE} {ADDRESS_ZIP}</a></li>
         <li><strong>Office hours</strong><span>{HOURS}</span></li>
@@ -2793,13 +2793,13 @@ def build_contact():
       <p class="form-fine form-fine-inline">Please don't include medical history or symptoms here — we'll take that securely at your visit.</p>
       <button class="btn btn-gold btn-block" type="submit">Book Appointment</button>
       <p class="form-fine">Submitting sends your request straight to our front desk. For anything urgent, call {PHONE_DISPLAY}.</p>
-      <p class="form-error" id="contact-error" hidden>Something went wrong sending that — please call <a href="tel:{PHONE_TEL}">{PHONE_VANITY}</a> and we'll get you booked directly.</p>
+      <p class="form-error" id="contact-error" hidden>Something went wrong sending that — please call <a href="tel:{PHONE_TEL}" data-call-location="contact_error">{PHONE_VANITY}</a> and we'll get you booked directly.</p>
     </form>
     <div class="contact-form contact-success reveal" id="contact-success" style="--d:120ms" hidden tabindex="-1">
       <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#FDC929"/><path fill="none" stroke="#092D5C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M6.5 12.5 10 16l7.5-8"/></svg>
       <h2 class="form-title">Thanks, <span id="contact-success-name">there</span>!</h2>
       <p>We've received your request and our front desk will reach out to confirm your appointment — usually within one business day.</p>
-      <p class="form-fine">Need us sooner? Call <a href="tel:{PHONE_TEL}">{PHONE_VANITY} · {PHONE_DISPLAY}</a>.</p>
+      <p class="form-fine">Need us sooner? Call <a href="tel:{PHONE_TEL}" data-call-location="contact_success">{PHONE_VANITY} · {PHONE_DISPLAY}</a>.</p>
     </div>
   </div>
 </section>
@@ -3190,7 +3190,7 @@ def build_blog():
     {body_html}
     <div class="post-cta sym-card">
       <h2>Talk to the team</h2>
-      <p>Questions about whether this applies to you? Book a consultation or call <a href="tel:{PHONE_TEL}">{PHONE_VANITY} · {PHONE_DISPLAY}</a>.</p>
+      <p>Questions about whether this applies to you? Book a consultation or call <a href="tel:{PHONE_TEL}" data-call-location="blog_cta">{PHONE_VANITY} · {PHONE_DISPLAY}</a>.</p>
       <a class="btn btn-gold" href="../contact.html#book">Book a Consultation</a>
     </div>
   </div>
