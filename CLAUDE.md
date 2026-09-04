@@ -50,7 +50,7 @@ Static site, 56 pages, generated — do not edit HTML files directly.
 ## Business facts (canonical)
 - RegenOrtho Palm Beach · "The Regeneration of Orthopedics"
 - 11380 Prosperity Farms Road, Suite 204–208, Palm Beach Gardens, FL 33410
-- 833-STEM561 = 833-783-6561 · info@regenorthopalmbeach.com · Mon–Fri 8 AM–5 PM
+- 833-STEM561 = 833-783-6561 · emily@regenorthopb.com · Mon–Fri 8 AM–5 PM
 - Instagram: @regenortho_palmbeach (only real social profile — X/YouTube don't exist)
 - Dr. Marc Matarazzo, MD (ortho/sports medicine, MAKO-certified) · Dr. Orlando Cedeno, DPM
   (podiatric surgery + vein) · Emily Bahnick, MSN, RN (IV infusion nurse)
