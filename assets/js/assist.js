@@ -241,7 +241,14 @@
       { label: "Request an appointment", gold: true, go: startBooking },
       { label: "Ask a question", go: startAsk },
       { label: "IV Lounge menu", go: function () { location.href = root + "iv-therapy.html"; } },
-      { label: "Call " + PHONE, go: function () { location.href = "tel:" + PHONE_TEL; } },
+      { label: "Call " + PHONE, go: function () {
+          try {
+            if (window.va) {
+              window.va("event", { name: "click_to_call", data: { path: location.pathname, location: "assistant" } });
+            }
+          } catch (err) {}
+          location.href = "tel:" + PHONE_TEL;
+        } },
     ]);
   }
 

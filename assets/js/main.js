@@ -351,6 +351,27 @@
     playWords();
   }
 
+  /* ---------------------------------------------------- call tracking */
+  /* Vercel Web Analytics custom event, fired on every tel: link so leads
+     driven by Call Now / phone buttons are countable. Fire-and-forget: a
+     blocked or missing window.va must never throw or delay the tel: dial.
+     Silently no-ops on /forms/* — no analytics script loads there (HIPAA). */
+  document.addEventListener("click", function (e) {
+    var link = e.target.closest && e.target.closest('a[href^="tel:"]');
+    if (!link) return;
+    try {
+      if (window.va) {
+        window.va("event", {
+          name: "click_to_call",
+          data: {
+            path: window.location.pathname,
+            location: link.getAttribute("data-call-location") || "unknown"
+          }
+        });
+      }
+    } catch (err) {}
+  });
+
   /* ------------------------------------------- assistant deep-link hook */
   document.querySelectorAll("[data-open-assist]").forEach(function (btn) {
     btn.addEventListener("click", function () {
