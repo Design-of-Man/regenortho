@@ -136,14 +136,43 @@ CSS coastline scene stays underneath as the no-video fallback. asset_v() returns
 "pending" for missing files so builds work before renditions land.
 
 ## SEO — keep maximized
-- Org node: MedicalClinic+MedicalBusiness @id https://www.regenorthopb.com/#organization.
+- `BASE` (top of build.py) is `https://regenorthopb.com` — non-www, no trailing .html. This is
+  the ONE canonical host+style for the whole site: rel=canonical, og:url, every schema @id/url,
+  and the sitemap all derive from it. Non-www because the best-ranking pages (the two doctor
+  profiles) already lived there when this was fixed — see the canonical-fix PR. Never point BASE
+  at www; a domain-level `www -> non-www` 301 lives in vercel.json's redirects (host-matched via
+  `has`), so www still resolves, it just isn't canonical.
+- Org node: MedicalClinic+MedicalBusiness @id {BASE}/#organization.
   Per page: Physician (providers), MedicalTherapy (services), MedicalCondition (conditions),
   FAQPage (faq + service/condition pages), Service-per-city (locations), BlogPosting (posts),
   BreadcrumbList (interior). sitemap.xml/robots.txt/llms.txt regenerate on build.
-- The homepage canonical is the ROOT (`canonical=""` -> https://www.regenorthopb.com/), not
-  /index.html, and the sitemap emits the root to match. Inbound links, GBP and the social
-  profiles all point at the root — canonicalising to /index.html consolidates the wrong way.
-  If you ever change one of the two, change both or they contradict each other.
+- The homepage canonical is the ROOT (`canonical=""` -> {BASE}/), not /index.html, and the
+  sitemap emits the root to match. Inbound links, GBP and the social profiles all point at the
+  root — canonicalising to /index.html consolidates the wrong way. If you ever change one of the
+  two, change both or they contradict each other.
+- Most pages have a clean, extensionless canonical URL that differs from their on-disk .html
+  path (e.g. `services/vein-care.html` is served, and canonicalizes, at
+  `/our-services/vein-care-medical-cosmetic`; most other services just drop the extension, e.g.
+  `/services/exosome-therapy`; the two doctors are `/dr-marc-matarazzo-md` and
+  `/dr-orlando-cedeno-dpm`). Never hand-edit a `canonical=` argument to a `head()` call to
+  "clean it up" — that argument is also the git-lookup key `page_lastmod()` uses, and must stay
+  the real on-disk path. Instead every internal href AND every canonical/og:url/schema URL is
+  rewritten to its clean form by `rewrite_links()` in `write()` — one substitution table
+  (`clean_url_map()`), driven off SERVICES/BLOG_POSTS/FORMS, applied uniformly to every generated
+  file (pages, sitemap, feed, robots.txt, pricing.md, llms.txt) on its way to disk. Add a new
+  service/blog post/form and it picks up a clean URL automatically; a genuinely new vanity slug
+  (another vein-care- or doctor-style rename) needs an explicit entry in that same map, PLUS a
+  matching rewrite+redirect pair in vercel.json (`fix_vercel.py`-style: rewrite the clean path to
+  the real file, redirect the old .html path to the clean one — never the other way, or you get
+  a redirect loop).
+  Conditions and locations pages are the deliberate exception: they keep their plain .html
+  address (self-canonical, non-www) because they've never had a second URL that was actually
+  earning clicks — don't add them to the clean-URL map without checking Search Console first.
+  A page whose own file is one directory deep but whose clean canonical is a single bare segment
+  (our-services, blog, forms) resolves relative links against the SITE ROOT, not its own
+  directory — any same-directory "sibling" link on that specific page (the tile/card grids on
+  services/index.html, blog/index.html, forms/index.html) must spell out the directory prefix
+  (`services/{slug}.html`, not bare `{slug}.html`) so `rewrite_links()` has a full path to match.
 - `page_lastmod()` derives per-page dates from the last commit that touched the file (one
   `git log` walk, cached). It feeds sitemap <lastmod>, WebPage.dateModified and
   BlogPosting.dateModified. Do NOT put SITE_UPDATED back in those three places — a sitewide

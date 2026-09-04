@@ -18,7 +18,7 @@ import re
 import subprocess
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-BASE = "https://www.regenorthopb.com"
+BASE = "https://regenorthopb.com"
 
 # Host used ONLY for og:image / twitter:image. Link-preview scrapers (iMessage,
 # Slack, Facebook, LinkedIn) actually fetch that URL; if it 404s they fall back
@@ -661,9 +661,90 @@ def smart_punctuation(html_str):
     return "".join(parts)
 
 
+# ---------------------------------------------------------------------------
+# Canonical URL rewriting
+# ---------------------------------------------------------------------------
+#
+# Every page, nav link, footer link, schema @id/url and sitemap <loc> is built
+# throughout this file from the page's on-disk .html path (e.g.
+# "services/vein-care.html") — that's also the string page_lastmod() looks up
+# in git history, so it must stay untouched at generation time. Rather than
+# rethread a second "clean URL" value through every call site that builds a
+# link, every fully-rendered page/meta file is passed through this one
+# substitution on its way to disk (write(), below). One table, one place —
+# the map is also read out by generate_vercel_redirects.py to keep vercel.json
+# in sync.
+#
+# Providers, IV therapy, and most services get a clean, extensionless URL
+# because that's what's actually been ranking (see the canonical-fix PR).
+# Two get a hand-picked vanity slug instead of a mechanical ".html" strip —
+# vein-care and the two doctors — because that's the URL already earning
+# clicks in Search Console. Conditions and locations pages are deliberately
+# EXCLUDED: they keep their .html address (self-canonical, non-www) because
+# they have no second URL that's actually earning anything; see CLAUDE.md.
+_clean_map_cache = None
+
+
+def clean_url_map():
+    global _clean_map_cache
+    if _clean_map_cache is not None:
+        return _clean_map_cache
+    from blog_content import BLOG_POSTS
+    from forms_content import FORMS
+    m = {
+        "about.html": "about",
+        "iv-therapy.html": "iv-therapy",
+        "faq.html": "faq",
+        "contact.html": "contact",
+        "patient-resources.html": "patient-resources",
+        "privacy-policy.html": "privacy-policy",
+        "terms.html": "terms",
+        "services/index.html": "our-services",
+        "forms/index.html": "forms",
+        "blog/index.html": "blog",
+        "providers/dr-marc-matarazzo.html": "dr-marc-matarazzo-md",
+        "providers/dr-orlando-cedeno.html": "dr-orlando-cedeno-dpm",
+        "providers/emily-bahnick.html": "providers/emily-bahnick",
+        # Confirmed live: this is the slug actually ranking, not "services/vein-care".
+        "services/vein-care.html": "our-services/vein-care-medical-cosmetic",
+    }
+    for f in FORMS:
+        m[f"forms/{f['slug']}.html"] = f"forms/{f['slug']}"
+    for s in SERVICES:
+        if s["slug"] != "vein-care":
+            m[f"services/{s['slug']}.html"] = f"services/{s['slug']}"
+    for b in BLOG_POSTS:
+        m[f"blog/{b['slug']}.html"] = f"blog/{b['slug']}"
+    _clean_map_cache = m
+    return m
+
+
+def rewrite_links(content):
+    """Rewrite every rendered .html path to its clean canonical equivalent.
+
+    Longest keys first so a specific override (services/vein-care.html) can
+    never be shadowed by a more general one applied first. The homepage link
+    is handled as a full href value, never a bare substring — a bare
+    "index.html" rule would also eat the "index.html" inside
+    "services/index.html" before that more specific rule got to run.
+    """
+    for src in sorted(clean_url_map(), key=len, reverse=True):
+        if src in content:
+            content = content.replace(src, clean_url_map()[src])
+    content = content.replace('href="index.html"', 'href="/"')
+    content = content.replace('href="../index.html"', 'href="/"')
+    # Safety net for hand-authored copy (e.g. a blog post body in
+    # blog_content.py) that hardcodes an absolute URL instead of a relative
+    # link — those don't flow through BASE, so the host swap above never
+    # reaches them.
+    content = content.replace("https://www.regenorthopb.com", BASE)
+    return content
+
+
 def write(path, content):
     full = os.path.join(ROOT, path)
     os.makedirs(os.path.dirname(full), exist_ok=True)
+    content = rewrite_links(content)
     if path.endswith(".html"):
         content = smart_punctuation(content)
     with open(full, "w") as f:
@@ -1929,7 +2010,7 @@ def build_services():
         subsvc_html = ""
         if sub_slugs:
             sub_cards = "".join(
-                f"""<a class="svc-card reveal" href="{sub['slug']}.html" style="--d:{i * 70}ms">
+                f"""<a class="svc-card reveal" href="{sub['slug']}" style="--d:{i * 70}ms">
         <span class="svc-num" aria-hidden="true">{i + 1:02d}</span>
         <span class="svc-media"><img src="../assets/media/{sub['img']}?v={asset_v('assets/media/' + sub['img'])}" alt="{sub['img_alt']}" width="640" height="420" loading="lazy"></span>
         <span class="svc-body"><strong>{sub['name']}</strong><span>{sub['lede'][:130].rsplit(' ', 1)[0]}…</span><em class="svc-more">Explore <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></span>
@@ -2042,7 +2123,7 @@ def build_services():
 
     # ---- services index ----
     tiles = "".join(
-        f"""<a class="svc-card reveal" href="{s['slug']}.html" style="--d:{(i % 3) * 90}ms">
+        f"""<a class="svc-card reveal" href="services/{s['slug']}.html" style="--d:{(i % 3) * 90}ms">
         <span class="svc-num" aria-hidden="true">{i + 1:02d}</span>
         <span class="svc-media"><img src="../assets/media/{s['img']}?v={asset_v('assets/media/' + s['img'])}" alt="{s['img_alt']}" width="640" height="420" loading="lazy"></span>
         <span class="svc-body"><strong>{s['name']}</strong><span>{s['lede'][:130].rsplit(' ', 1)[0]}…</span><em class="svc-more">Explore <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></span>
@@ -2064,7 +2145,7 @@ def build_services():
     regen_cards = ""
     if regen_parent:
         regen_cards = "".join(
-            f"""<a class="subsvc-card reveal" href="{k['slug']}.html" style="--d:{(i % 3) * 80}ms">
+            f"""<a class="subsvc-card reveal" href="services/{k['slug']}.html" style="--d:{(i % 3) * 80}ms">
         <strong>{k['name']}</strong>
         <span>{k['lede'][:120].rsplit(' ', 1)[0]}…</span>
         <em class="svc-more">Explore <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em>
@@ -2974,7 +3055,7 @@ def build_forms():
 
     cards = "".join(f"""<article class="form-card reveal" style="--d:{i * 110}ms">
       <span class="form-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">{f['card']['icon']}</svg></span>
-      <h2><a href="{f['slug']}.html">{f['name']}</a></h2>
+      <h2><a href="forms/{f['slug']}.html">{f['name']}</a></h2>
       <p class="form-card-who">{f['card']['for_who']}</p>
       <ul class="form-card-list">{"".join(f'<li>{c}</li>' for c in f['card']['covers'])}</ul>
       <p class="form-card-meta"><span>{_steps(f)} sections</span><span>Save or resume anytime</span></p>
@@ -3137,7 +3218,7 @@ def build_blog():
     cards = ""
     for i, p_ in enumerate(BLOG_POSTS):
         date_h = "{}/{}/{}".format(p_["date"][5:7], p_["date"][8:10], p_["date"][:4])
-        cards += f"""<a class="post-card reveal" href="{p_['slug']}.html" style="--d:{(i % 3) * 90}ms">
+        cards += f"""<a class="post-card reveal" href="blog/{p_['slug']}.html" style="--d:{(i % 3) * 90}ms">
       <span class="post-media"><img src="../assets/media/{p_['image']}?v={asset_v('assets/media/' + p_['image'])}" alt="{p_['title']}" width="640" height="400" loading="lazy"></span>
       <span class="post-tag">{p_['category']}</span>
       <strong>{p_['title']}</strong>
@@ -3168,7 +3249,7 @@ def build_blog():
         crumbs_html = crumbs([("blog/index.html", "Blog"), ("", p_["title"])], depth=d)
         related = [x for x in BLOG_POSTS if x["slug"] != p_["slug"] and x["category"] == p_["category"]][:2]
         rel_html = "".join(
-            f"""<a class="post-card" href="{r['slug']}.html"><span class="post-tag">{r['category']}</span><strong>{r['title']}</strong><em class="svc-more">Read article →</em></a>"""
+            f"""<a class="post-card" href="{r['slug']}"><span class="post-tag">{r['category']}</span><strong>{r['title']}</strong><em class="svc-more">Read article →</em></a>"""
             for r in related
         )
         rel_sec = f"""<section class="section section-tint"><div class="section-head reveal"><p class="eyebrow">Keep Reading</p><h2>Related <em>articles</em></h2></div><div class="post-grid">{rel_html}</div></section>""" if related else ""
@@ -3520,7 +3601,7 @@ the plan, and most are billed through insurance where covered.
 - Hours: {HOURS}
 - Instagram: {INSTAGRAM}
 - Specialists: Dr. Marc Matarazzo, MD (board-certified sports medicine & orthopedic surgeon, 23+ years, MAKO-certified); Dr. Orlando Cedeno, DPM (board-certified podiatric surgeon & vein specialist); Emily Bahnick, MSN, RN (IV infusion nurse & care coordinator).
-- Patient forms: {BASE}/forms/ — new patient intake, peptide/GLP-1 questionnaire, and IV therapy informed consent, completed privately in the browser (nothing transmitted).
+- Patient forms: {BASE}/forms — new patient intake, peptide/GLP-1 questionnaire, and IV therapy informed consent, completed privately in the browser (nothing transmitted).
 - New patients accepted; no referral required; most major insurance accepted; concierge/direct-pay bundles available.
 
 ## Services

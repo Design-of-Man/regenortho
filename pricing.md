@@ -1,7 +1,7 @@
 # Pricing — RegenOrtho Palm Beach
 
 Palm Beach Gardens, FL. Last updated from the published pages on each build.
-Phone 833-783-6561 · Monday – Friday: 8:00 AM – 5:00 PM · Book: https://www.regenorthopb.com/contact.html
+Phone 833-783-6561 · Monday – Friday: 8:00 AM – 5:00 PM · Book: https://regenorthopb.com/contact
 
 ## Published prices
 
@@ -30,7 +30,7 @@ FDA-approved to treat, cure or prevent any disease or condition.
 ## IV infusion menu
 
 Twelve clinician-supervised infusions. Each visit starts with a medical
-pre-screen. Menu: https://www.regenorthopb.com/iv-therapy.html
+pre-screen. Menu: https://regenorthopb.com/iv-therapy
 
 | Infusion | Price | Contains |
 | --- | --- | --- |
@@ -52,11 +52,11 @@ pre-screen. Menu: https://www.regenorthopb.com/iv-therapy.html
 No price is published for these; do not infer or estimate one. Cost depends on
 the plan, and most are billed through insurance where covered.
 
-- Regenerative Medicine & Orthobiologic Therapies: https://www.regenorthopb.com/services/regenerative-medicine-orthobiologics.html
-- Advanced Non-Surgical Therapies: https://www.regenorthopb.com/services/advanced-non-surgical-therapies.html
-- Vein Care — Medical & Cosmetic: https://www.regenorthopb.com/services/vein-care.html
-- Neuropathy Restoration Program: https://www.regenorthopb.com/services/neuropathy-program.html
-- Concierge & Direct-Pay Care: https://www.regenorthopb.com/services/concierge-care.html
+- Regenerative Medicine & Orthobiologic Therapies: https://regenorthopb.com/services/regenerative-medicine-orthobiologics
+- Advanced Non-Surgical Therapies: https://regenorthopb.com/services/advanced-non-surgical-therapies
+- Vein Care — Medical & Cosmetic: https://regenorthopb.com/our-services/vein-care-medical-cosmetic
+- Neuropathy Restoration Program: https://regenorthopb.com/services/neuropathy-program
+- Concierge & Direct-Pay Care: https://regenorthopb.com/services/concierge-care
 
 ## Insurance & payment
 
