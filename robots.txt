@@ -1,4 +1,4 @@
-# RegenOrtho Palm Beach — https://www.regenorthopb.com
+# RegenOrtho Palm Beach — https://regenorthopb.com
 
 User-agent: *
 Allow: /
@@ -69,4 +69,4 @@ Allow: /
 User-agent: YouBot
 Allow: /
 
-Sitemap: https://www.regenorthopb.com/sitemap.xml
+Sitemap: https://regenorthopb.com/sitemap.xml
