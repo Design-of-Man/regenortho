@@ -4,7 +4,7 @@ Static site for **regenorthopb.com**. 56 pages, fully generated — a complete r
 practice's WordPress site, built to be handed over and self-managed.
 
 **The Regeneration of Orthopedics** · 11380 Prosperity Farms Road, Suite 204–208, Palm Beach
-Gardens, FL 33410 · 833-STEM561 (833-783-6561) · info@regenorthopalmbeach.com
+Gardens, FL 33410 · 833-STEM561 (833-783-6561) · emily@regenorthopb.com
 
 ## How it works
 
