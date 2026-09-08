@@ -159,12 +159,39 @@ def img_dims(path, fallback=(1200, 630)):
 # Shared chrome
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# Google Analytics 4
+# ---------------------------------------------------------------------------
+# G-2Z542HBXHS is RegenOrtho Palm Beach's OWN GA4 property (property 553166520,
+# account a361086439, stream https://regenorthopb.com). It must never appear on
+# another client's site — jupiterlaser.com and firstrehabnpb.com each have their
+# own property, and a stray measurement ID silently merges two businesses'
+# traffic into one report. The tag is emitted by head() immediately after
+# <head>, so it lands exactly once per page and is never hand-written into HTML.
+# NOT emitted on /forms/* (analytics=False there): those pages collect PHI and
+# the HIPAA rule in README/CLAUDE.md forbids any tracker on them, which is also
+# what the on-page notice and the privacy policy promise.
+GA_MEASUREMENT_ID = "G-2Z542HBXHS"
+
+GA_TAG = f"""<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id={GA_MEASUREMENT_ID}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){{dataLayer.push(arguments);}}
+  gtag('js', new Date());
+
+  gtag('config', '{GA_MEASUREMENT_ID}');
+</script>
+"""
+
+
 # Default share card: the care-team photo, cropped to 1200x630. A link preview
 # that shows the people beats one that shows the logo — and the logo is already
 # in the org schema, so nothing is lost.
 def head(title, desc, depth=0, canonical="", og_image="assets/media/og-team.jpg",
          page_type="website", extra_schema="", preload_hero=False, extra_css="",
-         webpage_type="WebPage", speakable=False, assistant=True):
+         webpage_type="WebPage", speakable=False, assistant=True,
+         analytics=True):
     p = "../" * depth
     canonical_url = f"{BASE}/{canonical}" if canonical else f"{BASE}/"
     og_url = f"{SHARE_BASE}/{og_image}?v={asset_v(og_image)}"
@@ -215,10 +242,11 @@ def head(title, desc, depth=0, canonical="", og_image="assets/media/og-team.jpg"
     extra_css_tag = ""
     if extra_css:
         extra_css_tag = f'<link rel="stylesheet" href="{p}{extra_css}?v={asset_v(extra_css)}">\n'
+    ga_tag = GA_TAG if analytics else ""
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+{ga_tag}<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(desc)}">
@@ -3032,7 +3060,7 @@ def build_forms():
                "Complete RegenOrtho Palm Beach patient forms at home — the new patient intake and peptide & GLP-1 questionnaire, filled out privately in your browser.",
                depth=d, canonical="forms/index.html", extra_css="assets/css/forms.css",
                extra_schema=breadcrumb_schema([("", "Home"), ("forms/index.html", "Patient Forms")]),
-               assistant=False,
+               assistant=False, analytics=False,
                ) + '<body class="page-forms">\n' + hub_body
     write("forms/index.html", hub)
 
@@ -3122,7 +3150,7 @@ def build_forms():
                     extra_css="assets/css/forms.css",
                     extra_schema=breadcrumb_schema([("", "Home"), ("forms/index.html", "Patient Forms"),
                                                     (f"forms/{f['slug']}.html", f["plain_name"])]),
-                    assistant=False,
+                    assistant=False, analytics=False,
                     ) + '<body class="page-form">\n' + body
         write(f"forms/{f['slug']}.html", page)
 
