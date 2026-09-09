@@ -658,7 +658,16 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
 .price-list dt { font-size: .95rem; color: #C6D4E2; }
 .price-list dd { font-family: var(--serif); font-size: 1.6rem; font-weight: 600; color: var(--gold); white-space: nowrap; }
 .price-note { font-size: .82rem; line-height: 1.55; color: #A9BDD0; margin-bottom: 1.2rem; }
-@media (max-width: 860px) { .price-grid { grid-template-columns: 1fr; gap: 1.6rem; } }
+/* Concierge publishes a pricing MECHANISM, not a figure, so there is no
+   "what's included" column beside it — collapse to one so the card is not
+   stranded next to dead space. */
+.price-grid-solo { grid-template-columns: minmax(0, 720px); justify-content: center; }
+.price-card-explainer h2 { color: #fff; font-size: 1.6rem; margin: .5rem 0 1rem; }
+.price-card-explainer h2 em { color: var(--gold); }
+.price-card-explainer p { color: #C6D4E2; font-size: .95rem; line-height: 1.7; margin-bottom: .9rem; }
+.price-card-explainer .price-note { color: #A9BDD0; font-size: .82rem; }
+@media (max-width: 860px) { .price-grid { grid-template-columns: 1fr; gap: 1.6rem; }
+  .price-grid-solo { grid-template-columns: 1fr; } }
 
 .section-disclaimer { padding-top: 0; }
 .disclaimer { max-width: 900px; margin: 0 auto; border-top: 1px solid var(--line); padding-top: 1.6rem; }
@@ -868,6 +877,20 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
 .cta-band h2 { color: #fff; margin-bottom: .9rem; }
 .cta-band p { color: #A9BCCE; max-width: 52ch; margin: 0 auto; }
 .cta-band .cta-row { display: flex; gap: .9rem; justify-content: center; flex-wrap: wrap; margin-top: 1.8rem; }
+
+/* Appointment form inside the CTA band.
+   COLLISION 1: `.cta-band h2 { color: #fff }` above paints the form headings
+   white on a white card. Scope them back inside the wrapper. Same for the band's
+   muted <p> colour, which is tuned for the navy background, not the card. */
+.cta-band-form .cta-band-inner { max-width: 860px; }
+.appt-form-wrap { margin-top: 2.4rem; text-align: left; }
+.cta-band .appt-form-wrap h2, .cta-band .appt-form-wrap .form-title { color: var(--navy-900); }
+.cta-band .appt-form-wrap p { color: var(--ink); max-width: none; margin: 0; }
+.cta-band .appt-form-wrap .form-fine { color: var(--muted); }
+.cta-band .appt-form-wrap .form-error { color: #B3261E; }
+.cta-band .appt-form-wrap label { color: var(--navy-900); }
+.appt-lede { font-size: .95rem; line-height: 1.6; }
+.appt-form .btn-block { margin-top: .3rem; }
 
 /* ------------------------------ page hero -------------------------------- */
 
@@ -1113,6 +1136,9 @@ address { font-style: normal; line-height: 1.5; }
    rather than below the submit button where it arrives too late to matter. */
 .form-fine-inline { margin-top: -.4rem; }
 .form-error { color: #B3261E; font: 700 .85rem/1.4 var(--sans); }
+/* COLLISION 2: `.contact-form { display: flex }` beats the hidden attribute's
+   implicit display:none, so the success card renders on page load. */
+.contact-form[hidden] { display: none !important; }
 .contact-success { align-items: flex-start; text-align: left; }
 .contact-success p { color: var(--muted); }
 .map-wrap { border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-sm); max-width: var(--wrap); margin: 0 auto; }

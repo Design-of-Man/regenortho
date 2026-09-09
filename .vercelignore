@@ -1,0 +1,21 @@
+# Files that live in the repo but must NOT be served from regenorthopb.com.
+# robots.txt is Allow: / with no Disallow, so anything deployed is also
+# crawlable — the exclusion has to happen at the deploy, not in robots.
+
+# The generator and its content modules. build.py alone is ~250KB of source,
+# including internal comments; the site is fully static once built.
+*.py
+
+# Internal docs — CLAUDE.md, README.md.
+*.md
+
+# EXCEPTION: pricing.md is published on purpose. It is the machine-readable
+# price sheet for AI assistants and buying agents (linked from llms.txt, served
+# text/plain via vercel.json). It restates only already-published figures and
+# explicitly fences the consultation-quoted services under "do not infer or
+# estimate one" — that fence is what stops an assistant inventing a number.
+!pricing.md
+
+# NOT excluded: a7f3c1e94b2d48f6ae05d7c318b6f240.txt — the IndexNow key file is
+# a public ownership token, not a secret. IndexNow requires it to be fetchable
+# at the site root; excluding it breaks every Bing/Yandex ping.
