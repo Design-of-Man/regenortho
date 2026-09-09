@@ -1442,7 +1442,13 @@ CONDITIONS = [
      "desc": "Knee pain treatment in Palm Beach Gardens — PRP, orthobiologics, and joint-preservation therapy to relieve pain and restore function without surgery.",
      "h1": "Knee Pain, Treated at Every Stage",
      "lede": "From early arthritis to advanced wear — regenerative, joint-preserving care matched to your knee's actual stage, not a one-size-fits-all protocol.",
-     "img": "knee-implant.jpg",
+     # Was knee-implant.jpg — an AI-generated GLP-1 vial carrying a baked-in
+     # "WEIGHT LOSS WARRANTY" seal. A warranty of outcome is an efficacy
+     # guarantee the practice cannot substantiate, and it contradicted the
+     # weight-loss page's own "individual results vary" line. The file is
+     # deleted; this shows the PRP/orthobiologic preparation the body copy
+     # below actually describes. Do not reintroduce a GLP-1 image here.
+     "img": "exam-room.jpg",
      "symptoms": ["Pain on stairs, standing, or first steps in the morning", "Swelling or stiffness after activity", "Instability, catching, or giving way", "Deep aching in the inner (medial) knee", "Pain that has outlasted rest, meds, or injections"],
      "body": "Knee pain is the most common reason patients walk through our doors. Our focus is joint preservation — regenerative medicine and advanced non-surgical therapies designed to protect the joint you have rather than rush toward replacement: PRP and orthobiologic injections that address the joint environment directly, biomechanical correction, and progressive rehabilitation. When a knee is genuinely beyond preservation, we'll tell you honestly and coordinate a referral to a trusted surgical specialist.",
      "services": ["regenerative-medicine-orthobiologics", "advanced-non-surgical-therapies"],
