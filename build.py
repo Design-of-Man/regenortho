@@ -535,10 +535,70 @@ def crumbs(items, depth=0):
     return "".join(out)
 
 
-def cta_band(depth=0, heading="Ready to feel like <em>yourself</em> again?",
-             sub="Book a consultation with our board-certified specialists and get a personalized plan — often with same-week availability."):
+def appt_form(depth=0, service="", source="", form_id=""):
+    """Short appointment form for in-page conversion outside the contact page.
+
+    DELIBERATELY has no textarea and no message field of any kind. This posts to
+    FormSubmit, which carries NO BAA (see the comment on the contact page form),
+    and a free-text box is the one field that invites a visitor to type symptoms
+    or history into a non-BAA endpoint. On a service page the visitor has already
+    told us what they want by being on the page, so the hidden `service` field
+    carries that instead.
+
+    `source` is the only per-page lead attribution the practice has — CallRail is
+    not connected and GA4 defines no key events — so it is what tells Emily which
+    page produced the lead. Keep it specific.
+    """
     p = "../" * depth
-    return f"""<section class="cta-band">
+    svc_attr = html.escape(service, quote=True)
+    src_attr = html.escape(source, quote=True)
+    fid = form_id or "appt-" + re.sub(r"[^a-z0-9]+", "-", source.lower()).strip("-")
+    subject = html.escape(f"[Website] Appointment Request · {source or 'regenorthopb.com'}", quote=True)
+    return f"""<div class="appt-form-wrap">
+    <form class="contact-form appt-form reveal" id="{fid}" data-appt-form style="--d:120ms" action="https://formsubmit.co/{FORM_TARGET_EMAIL}" method="POST">
+      <h2 class="form-title">Request an appointment</h2>
+      <p class="appt-lede">Leave your details and our front desk will call you back — usually within one business day.</p>
+      <input type="hidden" name="_subject" value="{subject}">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_cc" value="nicholasbkashuba@gmail.com">
+      <input type="hidden" name="service" value="{svc_attr}">
+      <input type="hidden" name="source" value="{src_attr}">
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="form-row">
+        <label>Name<input type="text" name="name" required autocomplete="name"></label>
+        <label>Phone Number<input type="tel" name="phone" required autocomplete="tel"></label>
+      </div>
+      <label>Email<input type="email" name="email" required autocomplete="email"></label>
+      <p class="form-fine form-fine-inline">Please don&rsquo;t include medical history or symptoms &mdash; we&rsquo;ll take that securely at your visit.</p>
+      <button class="btn btn-gold btn-block" type="submit">Request Appointment</button>
+      <p class="form-fine">Prefer to talk now? Call <a href="tel:{PHONE_TEL}" data-call-location="appt_form">{PHONE_DISPLAY}</a>.</p>
+      <p class="form-error" id="{fid}-error" hidden>Something went wrong sending that &mdash; please call <a href="tel:{PHONE_TEL}" data-call-location="appt_form_error">{PHONE_VANITY}</a> and we&rsquo;ll get you booked directly.</p>
+    </form>
+    <div class="contact-form appt-form contact-success reveal" id="{fid}-success" style="--d:120ms" hidden tabindex="-1">
+      <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#FDC929"/><path fill="none" stroke="#092D5C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M6.5 12.5 10 16l7.5-8"/></svg>
+      <h2 class="form-title">Thanks, <span class="appt-success-name" id="{fid}-success-name">there</span>!</h2>
+      <p>We&rsquo;ve received your request and our front desk will reach out to confirm your appointment &mdash; usually within one business day.</p>
+      <p class="form-fine">Need us sooner? Call <a href="tel:{PHONE_TEL}" data-call-location="appt_success">{PHONE_VANITY} &middot; {PHONE_DISPLAY}</a>.</p>
+    </div>
+  </div>"""
+
+
+def cta_band(depth=0, heading="Ready to feel like <em>yourself</em> again?",
+             sub="Book a consultation with our board-certified specialists and get a personalized plan — often with same-week availability.",
+             form_service=None, form_source=None):
+    """The closing band. Pass form_service/form_source to drop an appt_form into it.
+
+    Pages that render the form must also load contact-form.js:
+    footer(d, extra_js="assets/js/contact-form.js").
+    """
+    p = "../" * depth
+    form_html = ""
+    band_class = "cta-band"
+    if form_service is not None:
+        form_html = "\n    " + appt_form(depth=depth, service=form_service,
+                                         source=form_source or form_service)
+        band_class = "cta-band cta-band-form"
+    return f"""<section class="{band_class}">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="cta-band-inner reveal">
     <div class="cta-mark" aria-hidden="true"><svg viewBox="0 0 64 64" width="56" height="56"><circle cx="32" cy="32" r="30" fill="#FDC929"/><path d="M32 18c-2 5-8 7-12 6 3 3 8 4 10 3-4 3-9 9-9 15 0 0 5-8 11-11-1 6 0 12 3 16 1-5 1-11 0-16 4 2 8 7 9 11 1-6-3-12-7-15 3 0 7-2 9-5-4 1-9 0-12-3 0 0-1-1-2-1z" fill="#092D5C"/></svg></div>
@@ -547,7 +607,7 @@ def cta_band(depth=0, heading="Ready to feel like <em>yourself</em> again?",
     <div class="cta-row">
       <a class="btn btn-gold" href="{p}contact.html#book">Book a Consultation</a>
       <a class="btn btn-ghost-light" href="tel:{PHONE_TEL}" data-call-location="cta_band">{PHONE_VANITY} · {PHONE_DISPLAY}</a>
-    </div>
+    </div>{form_html}
   </div>
 </section>
 """
@@ -1348,6 +1408,22 @@ SERVICES = [
             ("Do you take insurance for concierge services?", "Concierge and bundled services are direct-pay with transparent pricing; many other services at the practice do work with major insurance — our team will walk you through both paths."),
             ("What is included in bundled pricing?", "Bundles are structured around procedures and recovery programs so you know the full cost upfront — your coordinator will detail inclusions before you commit."),
         ],
+        # No figure: pricing.md is explicit that no price is published for this
+        # service and none may be inferred. What this block publishes is the
+        # MECHANISM — how the quote is produced and what it covers — which is the
+        # part a price-shopping visitor is actually missing. Every claim here is
+        # already made elsewhere on this page (bundled pricing, private suites,
+        # coordination, aftercare); nothing new is asserted.
+        "price_explainer": {
+            "eyebrow": "How Pricing Works",
+            "heading": "Transparent, <em>bundled</em>, direct-pay",
+            "body": [
+                "Concierge care is direct-pay rather than insurance-billed. That is what makes a single upfront figure possible: there is no claim, no network adjustment, and no explanation-of-benefits arriving weeks later.",
+                "A bundle is quoted as one price covering the consultation and imaging review, the procedure itself in a private suite, structured aftercare, your scheduled follow-ups, and the coordination that ties them together.",
+                "Your quote is written down before you commit anything, and it does not change afterwards. Because every plan is built around your evaluation, the figure is set at consultation rather than published as a list price.",
+            ],
+            "note": "Many other services at the practice do work with major insurance — our team will walk you through both paths before you decide.",
+        },
         "cta": "Fast, Private, <em>Transparent</em> Care",
         "cta_sub": "Reserve a concierge appointment for same-day evaluation, private procedures, and a personalized recovery plan with transparent direct-pay pricing.",
         "conditions": ["sports-injuries", "knee-pain", "shoulder-pain"],
@@ -1842,9 +1918,9 @@ def build_home():
   </ul>
 </section>
 
-{cta_band(d)}
+{cta_band(d, form_service="Not sure — help me choose", form_source="Homepage")}
 </main>
-{footer(d)}"""
+{footer(d, extra_js="assets/js/contact-form.js")}"""
 
     schema = breadcrumb_schema([("", "Home")])
     page = head(
@@ -1978,8 +2054,9 @@ def build_services():
 
         includes = "".join(f"<li>{t}</li>" for t in svc.get("includes", []))
         price = svc.get("price")
+        explainer = svc.get("price_explainer")
         price_html = ""
-        if includes or price:
+        if includes or price or explainer:
             price_block = ""
             if price:
                 price_block = f"""<div class="price-card reveal" style="--d:90ms">
@@ -1991,13 +2068,25 @@ def build_services():
       <p class="price-note">{price['note']}</p>
       <a class="btn btn-gold" href="../contact.html#book">Book a Consultation</a>
     </div>"""
+            if explainer and not price:
+                paras = "".join(f"<p>{t}</p>" for t in explainer["body"])
+                price_block = f"""<div class="price-card price-card-explainer reveal" style="--d:90ms">
+      <p class="eyebrow">{explainer['eyebrow']}</p>
+      <h2>{explainer['heading']}</h2>
+      {paras}
+      <p class="price-note">{explainer['note']}</p>
+      <a class="btn btn-gold" href="../contact.html#book">Request a Quote</a>
+    </div>"""
             inc_block = f"""<div class="reveal">
       <p class="eyebrow">Treatment Includes</p>
       <h2>What&rsquo;s <em>included</em></h2>
       <ul class="check-list">{includes}</ul>
     </div>""" if includes else ""
+            # With no includes column the card would sit beside dead space, so the
+            # two-column grid collapses to one.
+            grid_class = "price-grid" if inc_block else "price-grid price-grid-solo"
             price_html = f"""<section class="section section-tint">
-  <div class="price-grid">
+  <div class="{grid_class}">
     {inc_block}
     {price_block}
   </div>
@@ -2048,10 +2137,10 @@ def build_services():
   <div class="faq-list">{faqs}</div>
   <p class="section-foot"><a href="../faq.html">Browse the full FAQ →</a></p>
 </section>
-{cta_band(d, heading=svc['cta'], sub=svc['cta_sub'])}
+{cta_band(d, heading=svc['cta'], sub=svc['cta_sub'], form_service=svc['name'], form_source='Service — ' + svc['name'])}
 {disclaimer_html}
 </main>
-{footer(d)}"""
+{footer(d, extra_js="assets/js/contact-form.js")}"""
         crumb_schema_parts = [("", "Home"), ("services/index.html", "Services")]
         if parent:
             crumb_schema_parts.append((f"services/{parent['slug']}.html", parent["name"]))
@@ -2133,9 +2222,9 @@ def build_services():
     {pathways}
   </ol>
 </section>
-{cta_band(d)}
+{cta_band(d, form_service="Not sure — help me choose", form_source="Services index")}
 </main>
-{footer(d)}"""
+{footer(d, extra_js="assets/js/contact-form.js")}"""
     schema = breadcrumb_schema([("", "Home"), ("services/index.html", "Our Services")])
     page = head("Our Services | RegenOrtho Palm Beach — Palm Beach Gardens",
                 "RegenOrtho Palm Beach services: regenerative medicine, advanced non-surgical therapies, vein care, IV therapy, neuropathy care, weight loss, and concierge care.",
@@ -2709,9 +2798,9 @@ def build_iv():
   <div class="section-head reveal"><p class="eyebrow">Patient Guide &amp; Answers</p><h2>IV therapy <em>questions</em></h2></div>
   <div class="faq-list">{faqs}</div>
 </section>
-{cta_band(d, heading="Feel better <em>today</em>", sub="Visit our infusion lounge for clinically guided IV therapy tailored to recovery, immune support, energy, and metabolic health.")}
+{cta_band(d, heading="Feel better <em>today</em>", sub="Visit our infusion lounge for clinically guided IV therapy tailored to recovery, immune support, energy, and metabolic health.", form_service="IV Recovery & Wellness Therapy", form_source="IV therapy page")}
 </main>
-{footer(d)}"""
+{footer(d, extra_js="assets/js/contact-form.js")}"""
     schema = offers + faq_schema(IV_FAQS) + breadcrumb_schema([("", "Home"), ("iv-therapy.html", "IV Therapy")])
     page = head("IV Therapy Palm Beach Gardens | Drip Lounge | RegenOrtho",
                 "IV therapy in Palm Beach Gardens: hydration, immune boost, NAD+ 500mg, athletic recovery & more — clinician-supervised drips from $189 in a private lounge.",
@@ -2790,7 +2879,7 @@ def build_contact():
         <button class="btn btn-navy" data-open-assist>Open the assistant</button>
       </div>
     </div>
-    <form class="contact-form reveal" id="contact-form" style="--d:120ms" action="https://formsubmit.co/{FORM_TARGET_EMAIL}" method="POST">
+    <form class="contact-form reveal" id="contact-form" data-appt-form style="--d:120ms" action="https://formsubmit.co/{FORM_TARGET_EMAIL}" method="POST">
       <h2 class="form-title">Request an appointment</h2>
       <input type="hidden" name="_subject" value="[Contact Form] New Appointment Request — regenorthopb.com">
       <input type="hidden" name="_captcha" value="false">

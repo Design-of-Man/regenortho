@@ -369,6 +369,15 @@
           }
         });
       }
+      /* Same event to GA4, so property key events reconcile with the Vercel
+         numbers. Guarded on window.gtag, which is deliberately absent on
+         /forms/* (HIPAA) — and on any page where gtag has not loaded. */
+      if (window.gtag) {
+        window.gtag("event", "click_to_call", {
+          path: window.location.pathname,
+          location: link.getAttribute("data-call-location") || "unknown"
+        });
+      }
     } catch (err) {}
   });
 
