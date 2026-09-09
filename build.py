@@ -548,6 +548,13 @@ def appt_form(depth=0, service="", source="", form_id=""):
     `source` is the only per-page lead attribution the practice has — CallRail is
     not connected and GA4 defines no key events — so it is what tells Emily which
     page produced the lead. Keep it specific.
+
+    The hidden `_cc` is DELIBERATE — do not strip it as a privacy cleanup. It
+    is the practice's only current confirmation that the forms are delivering
+    at all: CallRail is not connected and GA4 has no key events defined, so a
+    silent FormSubmit failure would otherwise go unnoticed. Revisit once
+    generate_lead is marked a key event in GA4 — that confirms delivery without
+    a patient's contact details reaching a third mailbox.
     """
     p = "../" * depth
     svc_attr = html.escape(service, quote=True)
@@ -560,9 +567,7 @@ def appt_form(depth=0, service="", source="", form_id=""):
       <p class="appt-lede">Leave your details and our front desk will call you back — usually within one business day.</p>
       <input type="hidden" name="_subject" value="{subject}">
       <input type="hidden" name="_captcha" value="false">
-      <!-- No _cc: submissions carry a patient's name, phone, email and stated
-           service interest, and go to the practice address only. Do not add a
-           personal or agency mailbox here. -->
+      <input type="hidden" name="_cc" value="nicholasbkashuba@gmail.com">
       <input type="hidden" name="service" value="{svc_attr}">
       <input type="hidden" name="source" value="{src_attr}">
       <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -2865,6 +2870,8 @@ def build_faq():
 
 
 def build_contact():
+    # The form below carries the same deliberate hidden `_cc` as appt_form() —
+    # see that docstring for why it is there and when it can come out.
     d = 0
     crumbs_html = crumbs([("", "Contact Us")], depth=d)
     body = f"""{nav(d)}
@@ -2891,9 +2898,7 @@ def build_contact():
       <h2 class="form-title">Request an appointment</h2>
       <input type="hidden" name="_subject" value="[Contact Form] New Appointment Request — regenorthopb.com">
       <input type="hidden" name="_captcha" value="false">
-      <!-- No _cc: submissions carry a patient's name, phone, email and stated
-           service interest, and go to the practice address only. Do not add a
-           personal or agency mailbox here. -->
+      <input type="hidden" name="_cc" value="nicholasbkashuba@gmail.com">
       <input type="hidden" name="source" value="regenorthopb.com contact page form">
       <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
       <div class="form-row">
