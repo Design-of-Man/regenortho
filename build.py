@@ -560,7 +560,9 @@ def appt_form(depth=0, service="", source="", form_id=""):
       <p class="appt-lede">Leave your details and our front desk will call you back — usually within one business day.</p>
       <input type="hidden" name="_subject" value="{subject}">
       <input type="hidden" name="_captcha" value="false">
-      <input type="hidden" name="_cc" value="nicholasbkashuba@gmail.com">
+      <!-- No _cc: submissions carry a patient's name, phone, email and stated
+           service interest, and go to the practice address only. Do not add a
+           personal or agency mailbox here. -->
       <input type="hidden" name="service" value="{svc_attr}">
       <input type="hidden" name="source" value="{src_attr}">
       <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -2883,7 +2885,9 @@ def build_contact():
       <h2 class="form-title">Request an appointment</h2>
       <input type="hidden" name="_subject" value="[Contact Form] New Appointment Request — regenorthopb.com">
       <input type="hidden" name="_captcha" value="false">
-      <input type="hidden" name="_cc" value="nicholasbkashuba@gmail.com">
+      <!-- No _cc: submissions carry a patient's name, phone, email and stated
+           service interest, and go to the practice address only. Do not add a
+           personal or agency mailbox here. -->
       <input type="hidden" name="source" value="regenorthopb.com contact page form">
       <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
       <div class="form-row">
