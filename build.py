@@ -331,7 +331,10 @@ LOCATIONS_NAV = [
 def nav(depth=0, current=""):
     p = "../" * depth
     svc_items = []
-    featured_html = ""
+    # A LIST, not a string: this used to be a single assignment, so the moment a
+    # second service grew children the earlier parent's whole shelf vanished from
+    # the mega menu. Every parent gets its own shelf, in SERVICES_NAV order.
+    featured_shelves = []
     for href, label in SERVICES_NAV:
         slug = href.rsplit("/", 1)[-1].removesuffix(".html")
         kids = [s for s in SERVICES if s.get("parent") == slug]
@@ -344,13 +347,14 @@ def nav(depth=0, current=""):
             pills = "".join(
                 f'<a class="drop-pill" href="{p}services/{k["slug"]}.html">{k["nav"]}</a>' for k in kids
             )
-            featured_html = f"""<li class="drop-featured">
+            featured_shelves.append(f"""<li class="drop-featured">
               <a class="drop-featured-link" href="{p}{href}">{label}<svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></a>
               <div class="drop-pill-row">{pills}</div>
-            </li>"""
+            </li>""")
         else:
             svc_items.append(f'<li><a href="{p}{href}">{label}</a></li>')
     svc = "\n".join(svc_items)
+    featured_html = "\n".join(featured_shelves)
     cond = "\n".join(
         f'<li><a href="{p}{href}">{label}</a></li>' for href, label in CONDITIONS_NAV
     )
@@ -1190,6 +1194,138 @@ SERVICES = [
         "cta": "The First Step to <em>Healthier Legs</em>",
         "cta_sub": "Relief and cosmetic improvement start with a vascular evaluation — schedule your appointment for a personalized, evidence-based vein plan.",
         "conditions": ["varicose-spider-veins"],
+        "subservices": ["sclerotherapy", "endovenous-ablation", "microphlebectomy"],
+        "subservices_eyebrow": "Explore Each Procedure",
+        "subservices_heading": "Three ways we <em>close a failing vein</em>",
+    },
+    # WHY THESE THREE EXIST AS PAGES. Search Console, week ending 2026-09-07:
+    # the site drew impressions for ~15 distinct vein queries and ranked 35-57
+    # for almost all of them, with zero clicks. Every procedure those queries
+    # name -- sclerotherapy, endovenous ablation, microphlebectomy -- was
+    # already described on this site, as one bullet inside the vein-care page.
+    # Google knew the site was relevant and had no specific URL to rank.
+    #
+    # FACTS DISCIPLINE: no clinical claim below is new. Every sentence restates
+    # copy already published in the vein-care service page and the
+    # varicose-spider-veins condition page; the FAQs are lifted from those two
+    # pages verbatim in substance. Nothing here was written from outside
+    # knowledge, and no price appears -- vein care publishes none.
+    {
+        "slug": "sclerotherapy",
+        "parent": "vein-care",
+        "name": "Sclerotherapy",
+        "nav": "Sclerotherapy",
+        "title": "Sclerotherapy Palm Beach Gardens | Spider Vein Treatment",
+        "desc": "Sclerotherapy for spider and reticular veins in Palm Beach Gardens — targeted in-office injections, ultrasound-guided planning, minimal recovery.",
+        "eyebrow": "Sclerotherapy",
+        "h1": "Sclerotherapy for Spider &amp; Reticular Veins",
+        "lede": "Targeted injections close small surface veins to improve leg appearance and reduce localized symptoms — quick, in-office, with minimal recovery.",
+        "img": "vein-treatment.jpg",
+        "img_alt": "Sclerotherapy treatment of spider veins on the leg in Palm Beach Gardens",
+        "why": [
+            "Duplex ultrasound mapping first, so surface veins are treated in the right order",
+            "Performed in-office with minimal recovery and a quick return to activity",
+            "Medical and cosmetic goals addressed together rather than separately",
+            "Structured follow-up and prevention strategies to minimize recurrence",
+        ],
+        "expertise": [
+            ("Spider &amp; Reticular Vein Injections", "Targeted injections close small surface veins to improve leg appearance and reduce localized symptoms — quick, in-office, minimal recovery."),
+            ("Mapping Before Treatment", "A detailed duplex ultrasound maps reflux and identifies the source of symptoms, so surface veins are not treated while the failing valve feeding them is left alone."),
+            ("Cosmetic Work on Legs, Feet &amp; Ankles", "From surface sclerotherapy to micro-laser treatments, cosmetic techniques refine leg contours and correct visible veins with natural, even results."),
+            ("Recurrence Planning", "Treated veins are closed permanently, but new veins can develop over time — structured follow-up and prevention strategies minimize recurrence."),
+        ],
+        "steps": [
+            ("Evaluation &amp; Mapping", "Duplex ultrasound identifies problematic veins and guides the treatment plan."),
+            ("Targeted In-Office Treatment", "Injections delivered with ultrasound precision, in a comfortable office setting."),
+            ("Recovery &amp; Prevention", "Post-procedure compression, activity guidance, and follow-up visits preserve results and reduce recurrence."),
+        ],
+        "faqs": [
+            ("What causes varicose and spider veins?", "Weakened vein valves and venous reflux cause blood pooling; risk factors include genetics, pregnancy, prolonged standing, and age."),
+            ("Is vein treatment painful?", "Most procedures use local anesthesia or numbing techniques and involve minimal discomfort; post-procedure soreness is usually mild."),
+            ("How long until I can resume normal activities?", "Patients often resume light activity the same day, with specific guidance based on the procedure performed."),
+            ("Is sclerotherapy covered by insurance?", "Medical vein care — treating symptoms and circulation problems — is often covered; cosmetic treatment is usually elective. We verify your benefits before treatment."),
+        ],
+        "cta": "Clearer Legs, <em>Fewer Aches</em>",
+        "cta_sub": "Sclerotherapy starts with a vascular evaluation — schedule yours for a personalized, evidence-based vein plan.",
+        "conditions": ["varicose-spider-veins"],
+    },
+    {
+        "slug": "endovenous-ablation",
+        "parent": "vein-care",
+        "name": "Endovenous Laser &amp; RF Ablation",
+        "nav": "Endovenous Ablation",
+        "title": "Endovenous Ablation Palm Beach Gardens | Varicose Vein Care",
+        "desc": "Endovenous laser and radiofrequency ablation in Palm Beach Gardens — ultrasound-guided treatment of diseased saphenous veins with a quick return to activity.",
+        "eyebrow": "Endovenous Laser &amp; RF Ablation",
+        "h1": "Endovenous Laser &amp; Radiofrequency Ablation",
+        "lede": "Thermal ablation seals diseased saphenous veins under ultrasound guidance, rerouting blood to healthy vessels and relieving the root cause of varicose veins.",
+        "img": "svc-vein.jpg",
+        "img_alt": "Ultrasound-guided endovenous ablation of a leg vein in Palm Beach Gardens",
+        "why": [
+            "Treats the underlying reflux, not just the veins you can see",
+            "Ultrasound-guided and performed in a comfortable office setting",
+            "Relieves pain and swelling as well as appearance",
+            "Structured follow-up and prevention strategies to minimize recurrence",
+        ],
+        "expertise": [
+            ("Thermal Ablation of Diseased Saphenous Veins", "Thermal ablation seals diseased saphenous veins under ultrasound guidance, rerouting blood to healthy vessels and relieving pain, swelling, and the root cause of varicose veins."),
+            ("Comprehensive Ultrasound-Guided Evaluation", "A detailed duplex ultrasound maps reflux and identifies the source of symptoms, allowing a precise, individualized treatment plan that avoids unnecessary procedures."),
+            ("Treating the Cause, Not Just the Surface", "Treating the visible veins without finding the underlying reflux is why so many treatments elsewhere don't last. Every vein plan here starts with mapping the failing valves."),
+            ("Advanced Wound Care for Venous Insufficiency", "For venous ulcers or skin changes, specialized wound management, compression strategies, and coordinated care promote healing and prevent recurrence."),
+        ],
+        "steps": [
+            ("Evaluation &amp; Mapping", "Duplex ultrasound identifies problematic veins and guides the treatment plan."),
+            ("Targeted In-Office Treatment", "Ablation delivered with ultrasound precision, in a comfortable office setting."),
+            ("Recovery &amp; Prevention", "Post-procedure compression, activity guidance, and follow-up visits preserve results and reduce recurrence."),
+        ],
+        "faqs": [
+            ("What causes varicose and spider veins?", "Weakened vein valves and venous reflux cause blood pooling; risk factors include genetics, pregnancy, prolonged standing, and age."),
+            ("Do varicose veins come back after treatment?", "Treated veins are closed permanently, but new veins can develop over time — structured follow-up and prevention strategies minimize recurrence."),
+            ("Is vein treatment painful?", "Most procedures use local anesthesia or numbing techniques and involve minimal discomfort; post-procedure soreness is usually mild."),
+            ("How long until I can resume normal activities?", "Patients often resume light activity the same day, with specific guidance based on the procedure performed."),
+        ],
+        "cta": "Fix the <em>Cause</em>, Not the Symptom",
+        "cta_sub": "Ablation begins with duplex mapping — schedule a vascular evaluation for a personalized, evidence-based vein plan.",
+        "conditions": ["varicose-spider-veins"],
+    },
+    {
+        "slug": "microphlebectomy",
+        "parent": "vein-care",
+        "name": "Ambulatory Microphlebectomy",
+        "nav": "Microphlebectomy",
+        "title": "Microphlebectomy Palm Beach Gardens | Vein Removal In-Office",
+        "desc": "Ambulatory microphlebectomy in Palm Beach Gardens — micro-incision removal of superficial varicose veins in-office, with immediate contour improvement.",
+        "eyebrow": "Ambulatory Phlebectomy",
+        "h1": "Ambulatory Microphlebectomy &amp; In-Office Vein Removal",
+        "lede": "Micro-incision phlebectomy removes superficial varicose veins in-office for immediate contour improvement and symptom relief, with a quick return to activity.",
+        "img": "vein-treatment.jpg",
+        "img_alt": "Micro-incision phlebectomy removing a superficial varicose vein in Palm Beach Gardens",
+        "why": [
+            "Micro-incision technique performed in a comfortable office setting",
+            "Immediate contour improvement alongside symptom relief",
+            "Planned from duplex mapping, so the underlying reflux is addressed too",
+            "Structured follow-up and prevention strategies to minimize recurrence",
+        ],
+        "expertise": [
+            ("Micro-Incision Vein Removal", "Micro-incision phlebectomy removes superficial varicose veins in-office for immediate contour improvement and symptom relief with a quick return to activity."),
+            ("Mapping First", "A detailed duplex ultrasound maps reflux and identifies the source of symptoms, allowing a precise, individualized treatment plan that avoids unnecessary procedures."),
+            ("Combined With Ablation Where Needed", "Where a diseased saphenous vein feeds the surface varicosities, thermal ablation seals it under ultrasound guidance so the surface result lasts."),
+            ("Cosmetic Refinement", "From surface sclerotherapy to micro-laser treatments, cosmetic techniques refine leg contours and correct visible veins with natural, even results."),
+        ],
+        "steps": [
+            ("Evaluation &amp; Mapping", "Duplex ultrasound identifies problematic veins and guides the treatment plan."),
+            ("Targeted In-Office Treatment", "Phlebectomy delivered with ultrasound precision, in a comfortable office setting."),
+            ("Recovery &amp; Prevention", "Post-procedure compression, activity guidance, and follow-up visits preserve results and reduce recurrence."),
+        ],
+        "faqs": [
+            ("Is vein treatment painful?", "Most procedures use local anesthesia or numbing techniques and involve minimal discomfort; post-procedure soreness is usually mild."),
+            ("How long until I can resume normal activities?", "Patients often resume light activity the same day, with specific guidance based on the procedure performed."),
+            ("Do varicose veins come back after treatment?", "Treated veins are closed permanently, but new veins can develop over time — structured follow-up and prevention strategies minimize recurrence."),
+            ("What is the difference between medical and cosmetic vein care?", "Medical care treats symptoms and circulation problems and is often covered by insurance; cosmetic care improves appearance and is usually elective."),
+        ],
+        "cta": "Veins Gone, <em>Same Day Back</em>",
+        "cta_sub": "Phlebectomy is planned from duplex mapping — schedule a vascular evaluation for a personalized, evidence-based vein plan.",
+        "conditions": ["varicose-spider-veins"],
     },
     {
         "slug": "neuropathy-program",
@@ -1964,8 +2100,12 @@ def build_services():
       </a>"""
                 for i, sub in enumerate(next(x for x in SERVICES if x["slug"] == s) for s in sub_slugs)
             )
+            # Heading is per-service; the defaults reproduce the regenerative
+            # page byte-for-byte, so only a service that sets them changes.
+            sub_eyebrow = svc.get("subservices_eyebrow", "Explore Each Therapy")
+            sub_heading = svc.get("subservices_heading", "Five ways we <em>regenerate tissue</em>")
             subsvc_html = f"""<section class="section section-tint">
-  <div class="section-head reveal"><p class="eyebrow">Explore Each Therapy</p><h2>Five ways we <em>regenerate tissue</em></h2></div>
+  <div class="section-head reveal"><p class="eyebrow">{sub_eyebrow}</p><h2>{sub_heading}</h2></div>
   <div class="svc-grid svc-grid-3">{sub_cards}</div>
 </section>"""
         # Optional blocks, all keyed off the service dict so the services that
