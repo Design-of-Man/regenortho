@@ -55,6 +55,9 @@ the plan, and most are billed through insurance where covered.
 - Regenerative Medicine & Orthobiologic Therapies: https://regenorthopb.com/services/regenerative-medicine-orthobiologics
 - Advanced Non-Surgical Therapies: https://regenorthopb.com/services/advanced-non-surgical-therapies
 - Vein Care — Medical & Cosmetic: https://regenorthopb.com/our-services/vein-care-medical-cosmetic
+- Sclerotherapy: https://regenorthopb.com/services/sclerotherapy
+- Endovenous Laser &amp; RF Ablation: https://regenorthopb.com/services/endovenous-ablation
+- Ambulatory Microphlebectomy: https://regenorthopb.com/services/microphlebectomy
 - Neuropathy Restoration Program: https://regenorthopb.com/services/neuropathy-program
 - Concierge & Direct-Pay Care: https://regenorthopb.com/services/concierge-care
 
