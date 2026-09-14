@@ -2,17 +2,6 @@
   "trailingSlash": false,
   "redirects": [
     {
-      "source": "/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.regenorthopb.com"
-        }
-      ],
-      "destination": "https://regenorthopb.com/:path*",
-      "permanent": true
-    },
-    {
       "source": "/about.html",
       "destination": "/about",
       "permanent": true
