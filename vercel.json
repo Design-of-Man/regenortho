@@ -2,28 +2,224 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.regenorthopb.com"
+        }
+      ],
+      "destination": "https://regenorthopb.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/about.html",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/blog/five-pillar-concierge-orthopedic-recovery.html",
+      "destination": "/blog/five-pillar-concierge-orthopedic-recovery",
+      "permanent": true
+    },
+    {
+      "source": "/blog/healing-without-surgery.html",
+      "destination": "/blog/healing-without-surgery",
+      "permanent": true
+    },
+    {
+      "source": "/blog/index.html",
+      "destination": "/blog",
+      "permanent": true
+    },
+    {
+      "source": "/blog/iv-hydration-in-palm-beach-gardens-what-to-expect-and-how-to-choose-a-clinic.html",
+      "destination": "/blog/iv-hydration-in-palm-beach-gardens-what-to-expect-and-how-to-choose-a-clinic",
+      "permanent": true
+    },
+    {
+      "source": "/blog/iv-therapy-recovery-wellness.html",
+      "destination": "/blog/iv-therapy-recovery-wellness",
+      "permanent": true
+    },
+    {
+      "source": "/blog/knee-shoulder-hip-pain-without-surgery.html",
+      "destination": "/blog/knee-shoulder-hip-pain-without-surgery",
+      "permanent": true
+    },
+    {
+      "source": "/blog/minimally-invasive-foot-ankle-surgery.html",
+      "destination": "/blog/minimally-invasive-foot-ankle-surgery",
+      "permanent": true
+    },
+    {
+      "source": "/blog/modern-vein-care-varicose-spider-veins.html",
+      "destination": "/blog/modern-vein-care-varicose-spider-veins",
+      "permanent": true
+    },
+    {
+      "source": "/blog/orthopedic-sports-medicine-pain-free-living.html",
+      "destination": "/blog/orthopedic-sports-medicine-pain-free-living",
+      "permanent": true
+    },
+    {
+      "source": "/blog/prp-therapy-knee-osteoarthritis.html",
+      "destination": "/blog/prp-therapy-knee-osteoarthritis",
+      "permanent": true
+    },
+    {
+      "source": "/blog/regenerative-medicine-future-of-healing.html",
+      "destination": "/blog/regenerative-medicine-future-of-healing",
+      "permanent": true
+    },
+    {
+      "source": "/blog/regenerative-medicine-vs-joint-replacement.html",
+      "destination": "/blog/regenerative-medicine-vs-joint-replacement",
+      "permanent": true
+    },
+    {
+      "source": "/contact.html",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/faq.html",
+      "destination": "/faq",
+      "permanent": true
+    },
+    {
+      "source": "/forms/index.html",
+      "destination": "/forms",
+      "permanent": true
+    },
+    {
+      "source": "/forms/iv-therapy-consent.html",
+      "destination": "/forms/iv-therapy-consent",
+      "permanent": true
+    },
+    {
+      "source": "/forms/new-patient.html",
+      "destination": "/forms/new-patient",
+      "permanent": true
+    },
+    {
+      "source": "/forms/peptide-glp-questionnaire.html",
+      "destination": "/forms/peptide-glp-questionnaire",
+      "permanent": true
+    },
+    {
+      "source": "/iv-therapy.html",
+      "destination": "/iv-therapy",
+      "permanent": true
+    },
+    {
+      "source": "/patient-resources.html",
+      "destination": "/patient-resources",
+      "permanent": true
+    },
+    {
+      "source": "/privacy-policy.html",
+      "destination": "/privacy-policy",
+      "permanent": true
+    },
+    {
+      "source": "/providers/dr-marc-matarazzo.html",
+      "destination": "/dr-marc-matarazzo-md",
+      "permanent": true
+    },
+    {
+      "source": "/providers/dr-orlando-cedeno.html",
+      "destination": "/dr-orlando-cedeno-dpm",
+      "permanent": true
+    },
+    {
+      "source": "/providers/emily-bahnick.html",
+      "destination": "/providers/emily-bahnick",
+      "permanent": true
+    },
+    {
+      "source": "/services/advanced-non-surgical-therapies.html",
+      "destination": "/services/advanced-non-surgical-therapies",
+      "permanent": true
+    },
+    {
+      "source": "/services/concierge-care.html",
+      "destination": "/services/concierge-care",
+      "permanent": true
+    },
+    {
+      "source": "/services/exosome-therapy.html",
+      "destination": "/services/exosome-therapy",
+      "permanent": true
+    },
+    {
+      "source": "/services/index.html",
+      "destination": "/our-services",
+      "permanent": true
+    },
+    {
+      "source": "/services/medical-weight-loss.html",
+      "destination": "/services/medical-weight-loss",
+      "permanent": true
+    },
+    {
+      "source": "/services/mesenchymal-stem-cell-therapy.html",
+      "destination": "/services/mesenchymal-stem-cell-therapy",
+      "permanent": true
+    },
+    {
+      "source": "/services/muse-infused-rpa-therapy.html",
+      "destination": "/services/muse-infused-rpa-therapy",
+      "permanent": true
+    },
+    {
+      "source": "/services/neuropathy-program.html",
+      "destination": "/services/neuropathy-program",
+      "permanent": true
+    },
+    {
+      "source": "/services/peptide-therapy.html",
+      "destination": "/services/peptide-therapy",
+      "permanent": true
+    },
+    {
+      "source": "/services/regenerative-medicine-orthobiologics.html",
+      "destination": "/services/regenerative-medicine-orthobiologics",
+      "permanent": true
+    },
+    {
+      "source": "/services/traditional-muse-cell-therapy.html",
+      "destination": "/services/traditional-muse-cell-therapy",
+      "permanent": true
+    },
+    {
+      "source": "/services/vein-care.html",
+      "destination": "/our-services/vein-care-medical-cosmetic",
+      "permanent": true
+    },
+    {
+      "source": "/services/whartons-jelly-therapy.html",
+      "destination": "/services/whartons-jelly-therapy",
+      "permanent": true
+    },
+    {
+      "source": "/terms.html",
+      "destination": "/terms",
+      "permanent": true
+    },
+    {
       "source": "/home",
       "destination": "/",
       "permanent": true
     },
     {
       "source": "/about-us",
-      "destination": "/about.html",
-      "permanent": true
-    },
-    {
-      "source": "/dr-marc-matarazzo-md",
-      "destination": "/providers/dr-marc-matarazzo.html",
+      "destination": "/about",
       "permanent": true
     },
     {
       "source": "/dr-orlando-cedano-dpm",
-      "destination": "/providers/dr-orlando-cedeno.html",
-      "permanent": true
-    },
-    {
-      "source": "/our-services",
-      "destination": "/services/index.html",
+      "destination": "/dr-orlando-cedeno-dpm",
       "permanent": true
     },
     {
@@ -48,47 +244,42 @@
     },
     {
       "source": "/our-services/regenerative-medicine-orthobiologic-therapies",
-      "destination": "/services/regenerative-medicine-orthobiologics.html",
+      "destination": "/services/regenerative-medicine-orthobiologics",
       "permanent": true
     },
     {
       "source": "/our-services/regenerative-medicine-orthobiologic-therapies/exosome-therapy",
-      "destination": "/services/exosome-therapy.html",
+      "destination": "/services/exosome-therapy",
       "permanent": true
     },
     {
       "source": "/our-services/regenerative-medicine-orthobiologic-therapies/mesenchymal-stem-cell-therapy",
-      "destination": "/services/mesenchymal-stem-cell-therapy.html",
+      "destination": "/services/mesenchymal-stem-cell-therapy",
       "permanent": true
     },
     {
       "source": "/our-services/regenerative-medicine-orthobiologic-therapies/whartons-jelly-therapy",
-      "destination": "/services/whartons-jelly-therapy.html",
+      "destination": "/services/whartons-jelly-therapy",
       "permanent": true
     },
     {
       "source": "/our-services/regenerative-medicine-orthobiologic-therapies/muse-infused-rpa-therapy",
-      "destination": "/services/muse-infused-rpa-therapy.html",
+      "destination": "/services/muse-infused-rpa-therapy",
       "permanent": true
     },
     {
       "source": "/our-services/regenerative-medicine-orthobiologic-therapies/traditional-muse-cell-therapy",
-      "destination": "/services/traditional-muse-cell-therapy.html",
+      "destination": "/services/traditional-muse-cell-therapy",
       "permanent": true
     },
     {
       "source": "/our-services/advanced-non-surgical-therapies",
-      "destination": "/services/advanced-non-surgical-therapies.html",
-      "permanent": true
-    },
-    {
-      "source": "/our-services/vein-care-medical-cosmetic",
-      "destination": "/services/vein-care.html",
+      "destination": "/services/advanced-non-surgical-therapies",
       "permanent": true
     },
     {
       "source": "/our-services/iv-recovery-wellness-therapy",
-      "destination": "/iv-therapy.html",
+      "destination": "/iv-therapy",
       "permanent": true
     },
     {
@@ -103,12 +294,12 @@
     },
     {
       "source": "/our-services/concierge-cash-pay-services",
-      "destination": "/services/concierge-care.html",
+      "destination": "/services/concierge-care",
       "permanent": true
     },
     {
       "source": "/our-services/neuropathy-treatment-pathway",
-      "destination": "/services/neuropathy-program.html",
+      "destination": "/services/neuropathy-program",
       "permanent": true
     },
     {
@@ -133,202 +324,192 @@
     },
     {
       "source": "/glp-1-program",
-      "destination": "/services/medical-weight-loss.html",
+      "destination": "/services/medical-weight-loss",
       "permanent": true
     },
     {
       "source": "/weightlosspalmbeach",
-      "destination": "/services/medical-weight-loss.html",
+      "destination": "/services/medical-weight-loss",
       "permanent": true
     },
     {
       "source": "/peptide-glp-questionnaire",
-      "destination": "/services/medical-weight-loss.html",
+      "destination": "/services/medical-weight-loss",
       "permanent": true
     },
     {
       "source": "/saphenous-vein-insufficiency-treatment",
-      "destination": "/services/vein-care.html",
+      "destination": "/our-services/vein-care-medical-cosmetic",
       "permanent": true
     },
     {
       "source": "/greater-or-lesser-saphenous-veins",
-      "destination": "/services/vein-care.html",
+      "destination": "/our-services/vein-care-medical-cosmetic",
       "permanent": true
     },
     {
       "source": "/hangover",
-      "destination": "/iv-therapy.html",
+      "destination": "/iv-therapy",
       "permanent": true
     },
     {
       "source": "/recovery",
-      "destination": "/iv-therapy.html",
+      "destination": "/iv-therapy",
       "permanent": true
     },
     {
       "source": "/cleanse",
-      "destination": "/iv-therapy.html",
+      "destination": "/iv-therapy",
       "permanent": true
     },
     {
       "source": "/myers-plus",
-      "destination": "/iv-therapy.html",
+      "destination": "/iv-therapy",
       "permanent": true
     },
     {
       "source": "/nad%E2%81%BA-500-mg",
-      "destination": "/iv-therapy.html",
+      "destination": "/iv-therapy",
       "permanent": true
     },
     {
       "source": "/immune-boost-vit-c-zinc-gsh",
-      "destination": "/iv-therapy.html",
+      "destination": "/iv-therapy",
       "permanent": true
     },
     {
       "source": "/dhydration-basic-electrolyte",
-      "destination": "/iv-therapy.html",
+      "destination": "/iv-therapy",
       "permanent": true
     },
     {
       "source": "/athletic-recovery-performance-myers-amino-6",
-      "destination": "/iv-therapy.html",
+      "destination": "/iv-therapy",
       "permanent": true
     },
     {
       "source": "/beauty-glow-anti-aging-myers-biotin",
-      "destination": "/iv-therapy.html",
+      "destination": "/iv-therapy",
       "permanent": true
     },
     {
       "source": "/performance-energy-myers-amino-6",
-      "destination": "/iv-therapy.html",
+      "destination": "/iv-therapy",
       "permanent": true
     },
     {
       "source": "/all-inclusive",
-      "destination": "/iv-therapy.html",
+      "destination": "/iv-therapy",
       "permanent": true
     },
     {
       "source": "/neuro-restore-iv-infusion",
-      "destination": "/iv-therapy.html",
+      "destination": "/iv-therapy",
       "permanent": true
     },
     {
       "source": "/ivig-intravenous-immunoglobulin",
-      "destination": "/contact.html",
+      "destination": "/contact",
       "permanent": true
     },
     {
       "source": "/krystexxa-infusion-therapy",
-      "destination": "/contact.html",
+      "destination": "/contact",
       "permanent": true
     },
     {
       "source": "/ocrevus-treatment",
-      "destination": "/contact.html",
+      "destination": "/contact",
       "permanent": true
     },
     {
       "source": "/ultomiris-infusion",
-      "destination": "/contact.html",
-      "permanent": true
-    },
-    {
-      "source": "/patient-resources",
-      "destination": "/patient-resources.html",
+      "destination": "/contact",
       "permanent": true
     },
     {
       "source": "/new-patient-intake",
-      "destination": "/patient-resources.html",
+      "destination": "/patient-resources",
       "permanent": true
     },
     {
       "source": "/iv-interval-screening",
-      "destination": "/patient-resources.html",
+      "destination": "/patient-resources",
       "permanent": true
     },
     {
       "source": "/consent-medical-screening",
-      "destination": "/patient-resources.html",
+      "destination": "/patient-resources",
       "permanent": true
     },
     {
       "source": "/contact-us",
-      "destination": "/contact.html",
+      "destination": "/contact",
       "permanent": true
     },
     {
       "source": "/thank-you",
-      "destination": "/contact.html",
-      "permanent": true
-    },
-    {
-      "source": "/blog",
-      "destination": "/blog/index.html",
+      "destination": "/contact",
       "permanent": true
     },
     {
       "source": "/category/:slug*",
-      "destination": "/blog/index.html",
+      "destination": "/blog",
       "permanent": true
     },
     {
       "source": "/blog/prp-therapy-knee-osteoarthritis-palm-beach",
-      "destination": "/blog/prp-therapy-knee-osteoarthritis.html",
+      "destination": "/blog/prp-therapy-knee-osteoarthritis",
       "permanent": true
     },
     {
       "source": "/blog/five-pillar-concierge-orthopedic-recovery-palm-beach",
-      "destination": "/blog/five-pillar-concierge-orthopedic-recovery.html",
+      "destination": "/blog/five-pillar-concierge-orthopedic-recovery",
       "permanent": true
     },
     {
       "source": "/blog/regenerative-medicine-vs-joint-replacement-palm-beach",
-      "destination": "/blog/regenerative-medicine-vs-joint-replacement.html",
+      "destination": "/blog/regenerative-medicine-vs-joint-replacement",
       "permanent": true
     },
     {
       "source": "/regenerative-medicine/regenerative-medicine-joint-pain-palm-beach",
-      "destination": "/blog/knee-shoulder-hip-pain-without-surgery.html",
+      "destination": "/blog/knee-shoulder-hip-pain-without-surgery",
       "permanent": true
     },
     {
       "source": "/blog/the-role-of-orthopedic-sports-medicine-in-pain-free-living",
-      "destination": "/blog/orthopedic-sports-medicine-pain-free-living.html",
+      "destination": "/blog/orthopedic-sports-medicine-pain-free-living",
       "permanent": true
     },
     {
       "source": "/blog/regenerative-medicine-the-future-of-healing-and-recovery",
-      "destination": "/blog/regenerative-medicine-future-of-healing.html",
+      "destination": "/blog/regenerative-medicine-future-of-healing",
       "permanent": true
     },
     {
       "source": "/blog/the-future-of-regenerative-medicine-healing-without-surgery",
-      "destination": "/blog/healing-without-surgery.html",
+      "destination": "/blog/healing-without-surgery",
       "permanent": true
     },
     {
       "source": "/blog/the-future-of-podiatric-medicine-minimally-invasive-foot-ankle-surgery",
-      "destination": "/blog/minimally-invasive-foot-ankle-surgery.html",
+      "destination": "/blog/minimally-invasive-foot-ankle-surgery",
       "permanent": true
     },
     {
       "source": "/blog/the-future-of-vein-care-modern-treatments-for-varicose-spider-veins",
-      "destination": "/blog/modern-vein-care-varicose-spider-veins.html",
+      "destination": "/blog/modern-vein-care-varicose-spider-veins",
       "permanent": true
     },
     {
       "source": "/blog/iv-therapy-for-recovery-wellness-recharge-your-body-from-within",
-      "destination": "/blog/iv-therapy-recovery-wellness.html",
+      "destination": "/blog/iv-therapy-recovery-wellness",
       "permanent": true
     },
     {
       "source": "/terms-conditions",
-      "destination": "/terms.html",
+      "destination": "/terms",
       "permanent": true
     },
     {
@@ -339,61 +520,6 @@
     {
       "source": "/wp-json/:path*",
       "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/about",
-      "destination": "/about.html",
-      "permanent": true
-    },
-    {
-      "source": "/blog/five-pillar-concierge-orthopedic-recovery",
-      "destination": "/blog/five-pillar-concierge-orthopedic-recovery.html",
-      "permanent": true
-    },
-    {
-      "source": "/blog/healing-without-surgery",
-      "destination": "/blog/healing-without-surgery.html",
-      "permanent": true
-    },
-    {
-      "source": "/blog/iv-therapy-recovery-wellness",
-      "destination": "/blog/iv-therapy-recovery-wellness.html",
-      "permanent": true
-    },
-    {
-      "source": "/blog/knee-shoulder-hip-pain-without-surgery",
-      "destination": "/blog/knee-shoulder-hip-pain-without-surgery.html",
-      "permanent": true
-    },
-    {
-      "source": "/blog/minimally-invasive-foot-ankle-surgery",
-      "destination": "/blog/minimally-invasive-foot-ankle-surgery.html",
-      "permanent": true
-    },
-    {
-      "source": "/blog/modern-vein-care-varicose-spider-veins",
-      "destination": "/blog/modern-vein-care-varicose-spider-veins.html",
-      "permanent": true
-    },
-    {
-      "source": "/blog/orthopedic-sports-medicine-pain-free-living",
-      "destination": "/blog/orthopedic-sports-medicine-pain-free-living.html",
-      "permanent": true
-    },
-    {
-      "source": "/blog/prp-therapy-knee-osteoarthritis",
-      "destination": "/blog/prp-therapy-knee-osteoarthritis.html",
-      "permanent": true
-    },
-    {
-      "source": "/blog/regenerative-medicine-future-of-healing",
-      "destination": "/blog/regenerative-medicine-future-of-healing.html",
-      "permanent": true
-    },
-    {
-      "source": "/blog/regenerative-medicine-vs-joint-replacement",
-      "destination": "/blog/regenerative-medicine-vs-joint-replacement.html",
       "permanent": true
     },
     {
@@ -437,36 +563,6 @@
       "permanent": true
     },
     {
-      "source": "/contact",
-      "destination": "/contact.html",
-      "permanent": true
-    },
-    {
-      "source": "/faq",
-      "destination": "/faq.html",
-      "permanent": true
-    },
-    {
-      "source": "/forms/iv-therapy-consent",
-      "destination": "/forms/iv-therapy-consent.html",
-      "permanent": true
-    },
-    {
-      "source": "/forms/new-patient",
-      "destination": "/forms/new-patient.html",
-      "permanent": true
-    },
-    {
-      "source": "/forms/peptide-glp-questionnaire",
-      "destination": "/forms/peptide-glp-questionnaire.html",
-      "permanent": true
-    },
-    {
-      "source": "/iv-therapy",
-      "destination": "/iv-therapy.html",
-      "permanent": true
-    },
-    {
       "source": "/locations/juno-beach",
       "destination": "/locations/juno-beach.html",
       "permanent": true
@@ -507,88 +603,18 @@
       "permanent": true
     },
     {
-      "source": "/privacy-policy",
-      "destination": "/privacy-policy.html",
-      "permanent": true
-    },
-    {
       "source": "/providers/dr-marc-matarazzo",
-      "destination": "/providers/dr-marc-matarazzo.html",
+      "destination": "/dr-marc-matarazzo-md",
       "permanent": true
     },
     {
       "source": "/providers/dr-orlando-cedeno",
-      "destination": "/providers/dr-orlando-cedeno.html",
-      "permanent": true
-    },
-    {
-      "source": "/providers/emily-bahnick",
-      "destination": "/providers/emily-bahnick.html",
-      "permanent": true
-    },
-    {
-      "source": "/services/advanced-non-surgical-therapies",
-      "destination": "/services/advanced-non-surgical-therapies.html",
-      "permanent": true
-    },
-    {
-      "source": "/services/concierge-care",
-      "destination": "/services/concierge-care.html",
-      "permanent": true
-    },
-    {
-      "source": "/services/exosome-therapy",
-      "destination": "/services/exosome-therapy.html",
-      "permanent": true
-    },
-    {
-      "source": "/services/medical-weight-loss",
-      "destination": "/services/medical-weight-loss.html",
-      "permanent": true
-    },
-    {
-      "source": "/services/mesenchymal-stem-cell-therapy",
-      "destination": "/services/mesenchymal-stem-cell-therapy.html",
-      "permanent": true
-    },
-    {
-      "source": "/services/muse-infused-rpa-therapy",
-      "destination": "/services/muse-infused-rpa-therapy.html",
-      "permanent": true
-    },
-    {
-      "source": "/services/neuropathy-program",
-      "destination": "/services/neuropathy-program.html",
-      "permanent": true
-    },
-    {
-      "source": "/services/peptide-therapy",
-      "destination": "/services/peptide-therapy.html",
-      "permanent": true
-    },
-    {
-      "source": "/services/regenerative-medicine-orthobiologics",
-      "destination": "/services/regenerative-medicine-orthobiologics.html",
-      "permanent": true
-    },
-    {
-      "source": "/services/traditional-muse-cell-therapy",
-      "destination": "/services/traditional-muse-cell-therapy.html",
+      "destination": "/dr-orlando-cedeno-dpm",
       "permanent": true
     },
     {
       "source": "/services/vein-care",
-      "destination": "/services/vein-care.html",
-      "permanent": true
-    },
-    {
-      "source": "/services/whartons-jelly-therapy",
-      "destination": "/services/whartons-jelly-therapy.html",
-      "permanent": true
-    },
-    {
-      "source": "/terms",
-      "destination": "/terms.html",
+      "destination": "/our-services/vein-care-medical-cosmetic",
       "permanent": true
     }
   ],
@@ -648,6 +674,164 @@
           "value": "camera=(), microphone=(), geolocation=()"
         }
       ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/about",
+      "destination": "/about.html"
+    },
+    {
+      "source": "/blog/five-pillar-concierge-orthopedic-recovery",
+      "destination": "/blog/five-pillar-concierge-orthopedic-recovery.html"
+    },
+    {
+      "source": "/blog/healing-without-surgery",
+      "destination": "/blog/healing-without-surgery.html"
+    },
+    {
+      "source": "/blog",
+      "destination": "/blog/index.html"
+    },
+    {
+      "source": "/blog/iv-hydration-in-palm-beach-gardens-what-to-expect-and-how-to-choose-a-clinic",
+      "destination": "/blog/iv-hydration-in-palm-beach-gardens-what-to-expect-and-how-to-choose-a-clinic.html"
+    },
+    {
+      "source": "/blog/iv-therapy-recovery-wellness",
+      "destination": "/blog/iv-therapy-recovery-wellness.html"
+    },
+    {
+      "source": "/blog/knee-shoulder-hip-pain-without-surgery",
+      "destination": "/blog/knee-shoulder-hip-pain-without-surgery.html"
+    },
+    {
+      "source": "/blog/minimally-invasive-foot-ankle-surgery",
+      "destination": "/blog/minimally-invasive-foot-ankle-surgery.html"
+    },
+    {
+      "source": "/blog/modern-vein-care-varicose-spider-veins",
+      "destination": "/blog/modern-vein-care-varicose-spider-veins.html"
+    },
+    {
+      "source": "/blog/orthopedic-sports-medicine-pain-free-living",
+      "destination": "/blog/orthopedic-sports-medicine-pain-free-living.html"
+    },
+    {
+      "source": "/blog/prp-therapy-knee-osteoarthritis",
+      "destination": "/blog/prp-therapy-knee-osteoarthritis.html"
+    },
+    {
+      "source": "/blog/regenerative-medicine-future-of-healing",
+      "destination": "/blog/regenerative-medicine-future-of-healing.html"
+    },
+    {
+      "source": "/blog/regenerative-medicine-vs-joint-replacement",
+      "destination": "/blog/regenerative-medicine-vs-joint-replacement.html"
+    },
+    {
+      "source": "/contact",
+      "destination": "/contact.html"
+    },
+    {
+      "source": "/faq",
+      "destination": "/faq.html"
+    },
+    {
+      "source": "/forms",
+      "destination": "/forms/index.html"
+    },
+    {
+      "source": "/forms/iv-therapy-consent",
+      "destination": "/forms/iv-therapy-consent.html"
+    },
+    {
+      "source": "/forms/new-patient",
+      "destination": "/forms/new-patient.html"
+    },
+    {
+      "source": "/forms/peptide-glp-questionnaire",
+      "destination": "/forms/peptide-glp-questionnaire.html"
+    },
+    {
+      "source": "/iv-therapy",
+      "destination": "/iv-therapy.html"
+    },
+    {
+      "source": "/patient-resources",
+      "destination": "/patient-resources.html"
+    },
+    {
+      "source": "/privacy-policy",
+      "destination": "/privacy-policy.html"
+    },
+    {
+      "source": "/dr-marc-matarazzo-md",
+      "destination": "/providers/dr-marc-matarazzo.html"
+    },
+    {
+      "source": "/dr-orlando-cedeno-dpm",
+      "destination": "/providers/dr-orlando-cedeno.html"
+    },
+    {
+      "source": "/providers/emily-bahnick",
+      "destination": "/providers/emily-bahnick.html"
+    },
+    {
+      "source": "/services/advanced-non-surgical-therapies",
+      "destination": "/services/advanced-non-surgical-therapies.html"
+    },
+    {
+      "source": "/services/concierge-care",
+      "destination": "/services/concierge-care.html"
+    },
+    {
+      "source": "/services/exosome-therapy",
+      "destination": "/services/exosome-therapy.html"
+    },
+    {
+      "source": "/our-services",
+      "destination": "/services/index.html"
+    },
+    {
+      "source": "/services/medical-weight-loss",
+      "destination": "/services/medical-weight-loss.html"
+    },
+    {
+      "source": "/services/mesenchymal-stem-cell-therapy",
+      "destination": "/services/mesenchymal-stem-cell-therapy.html"
+    },
+    {
+      "source": "/services/muse-infused-rpa-therapy",
+      "destination": "/services/muse-infused-rpa-therapy.html"
+    },
+    {
+      "source": "/services/neuropathy-program",
+      "destination": "/services/neuropathy-program.html"
+    },
+    {
+      "source": "/services/peptide-therapy",
+      "destination": "/services/peptide-therapy.html"
+    },
+    {
+      "source": "/services/regenerative-medicine-orthobiologics",
+      "destination": "/services/regenerative-medicine-orthobiologics.html"
+    },
+    {
+      "source": "/services/traditional-muse-cell-therapy",
+      "destination": "/services/traditional-muse-cell-therapy.html"
+    },
+    {
+      "source": "/our-services/vein-care-medical-cosmetic",
+      "destination": "/services/vein-care.html"
+    },
+    {
+      "source": "/services/whartons-jelly-therapy",
+      "destination": "/services/whartons-jelly-therapy.html"
+    },
+    {
+      "source": "/terms",
+      "destination": "/terms.html"
     }
   ]
 }
