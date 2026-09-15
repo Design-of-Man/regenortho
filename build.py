@@ -361,8 +361,17 @@ def head(title, desc, depth=0, canonical="", og_image="assets/media/og-team.jpg"
     hero_preload = ""
     if preload_hero:
         # The hero poster is the homepage's LCP image — the <video> ships
-        # preload="none", so the poster is what paints first on every device.
-        _pp = f"assets/video/juno-poster.jpg?v={asset_v('assets/video/juno-poster.jpg')}"
+        # preload="none", so the poster is what paints first on every device,
+        # and stays on screen for the whole 17-28MB video download.
+        #
+        # It used to be juno-poster.jpg at 1600x900, which object-fit:cover
+        # upscaled 1.94x on a Retina laptop and 2.40x at 1920/DPR2 — that is
+        # the "blurry hero" report, and it was the POSTER, not the video (the
+        # 2688 master only upscales 1.16-1.43x on the same screens).
+        # juno-poster-2560.jpg is the same frame of the same graded loop,
+        # decoded at 2560x1440 (see tools/build_poster.py): 1.21x and 1.50x,
+        # for +175KB. Do not shrink it back without redoing that arithmetic.
+        _pp = f"assets/video/juno-poster-2560.jpg?v={asset_v('assets/video/juno-poster-2560.jpg')}"
         hero_preload = (f'<link rel="preload" as="image" href="{p}{_pp}" '
                         f'fetchpriority="high">\n')
     extra_css_tag = ""
@@ -1978,7 +1987,7 @@ def build_home():
   <div class="hero-scene" aria-hidden="true">
     <div class="hero-video-slot">
       <video class="hero-video" autoplay muted loop playsinline preload="none"
-             poster="assets/video/juno-poster.jpg?v={asset_v('assets/video/juno-poster.jpg')}"
+             poster="assets/video/juno-poster-2560.jpg?v={asset_v('assets/video/juno-poster-2560.jpg')}"
              data-hero-video
              data-poster-portrait="assets/video/juno-poster-portrait.jpg?v={asset_v('assets/video/juno-poster-portrait.jpg')}"
              data-mp4-max="assets/video/juno-max.mp4?v={asset_v('assets/video/juno-max.mp4')}"

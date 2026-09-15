@@ -768,13 +768,46 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
 /* ------------------------------ sections --------------------------------- */
 
 .section { position: relative; padding: clamp(var(--s-7), 8vh, var(--s-9)) 1.2rem; }
+.section-dark { padding-block: clamp(var(--s-8), 13vh, var(--s-10)); }
+.section:not(.section-dark) + .section:not(.section-dark) { padding-top: var(--s-6); }
 .section > * { max-width: var(--wrap); margin-left: auto; margin-right: auto; }
 .section-tint { background: var(--sand); }
 .section-dark { background: linear-gradient(178deg, var(--navy-900), var(--navy-950)); color: var(--on-navy-strong); overflow: hidden; }
 .section-dark h2, .section-dark h3 { color: var(--white); }
-.section-head { text-align: center; max-width: 62ch; margin-bottom: var(--s-6); }
-.section-head h2 { margin-top: .8rem; }
-.section-sub { color: var(--muted); margin-top: .9rem; }
+/* Section heads used to be centred on every one of the fifty-six pages, which
+   is what made the site read as one flat column: a centred multi-line heading
+   moves the eye's return point on every line, and with a card grid under it
+   there is no left edge anywhere on the page for the eye to anchor to.
+   Left-aligned by default now; the hero and the CTA band opt back IN, because
+   a short headline over a single action is exactly where centring belongs. */
+.section-head {
+  /* Stays the full wrap width so it aligns to the same left edge as the grid
+     beneath it — the measure belongs on the text, not on the block, or the
+     auto margins from `.section > *` re-centre the whole thing. */
+  max-width: var(--wrap);
+  margin-inline: auto;
+  margin-bottom: var(--s-7);
+  padding-left: var(--s-5);
+  border-left: 3px solid var(--gold);
+}
+.section-head h2 { margin-top: var(--s-2); font-size: var(--t-4xl); max-width: 18ch; }
+.section-head .section-sub { max-width: 54ch; }
+
+/* Prose measure. Long-form columns were unconstrained, so a 1440px viewport
+   gave them 80-90 characters a line — past the point where the eye reliably
+   finds the start of the next one. */
+.loc-main > p, .cond-body > p, .post-body > p, .svc-copy > p { max-width: 68ch; }
+
+/* Centred only where it earns it. */
+.section-head--center {
+  max-width: 62ch;
+  margin-inline: auto;
+  text-align: center;
+  padding-left: 0;
+  border-left: 0;
+}
+.cta-band .section-head { max-width: 62ch; margin-inline: auto; text-align: center; padding-left: 0; border-left: 0; }
+.section-sub { color: var(--muted); margin-top: var(--s-3); font-size: var(--t-lg); line-height: var(--lh-normal); }
 .section-dark .section-sub { color: var(--on-navy-muted); }
 .section-foot { text-align: center; margin-top: 2.4rem; }
 .section-foot a:not(.btn) { font-weight: 700; color: var(--navy-800); }
@@ -1024,6 +1057,41 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
 .post-media { overflow: hidden; aspect-ratio: 16 / 10; }
 .post-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease); }
 .post-card:hover .post-media img { transform: scale(1.06); }
+
+/* Feature the newest post. An eleven-post index of identical cards gives the
+   eye nowhere to land and no sense of what is current; the first card spans
+   two columns and runs side-by-side, which is enough hierarchy to make the
+   grid read as edited rather than dumped. Scoped to the blog index's own
+   3-column grid so the 3-up "related posts" rails elsewhere keep equal cards.
+
+   The media is positioned, not a grid or flex child. Two dead ends first:
+   flex-direction:row makes each of the card's four loose text children its own
+   column and wraps the title one word per line; grid with `grid-row: 1 / -1`
+   silently collapses to a single row, because -1 counts back from the last
+   EXPLICIT row line and this grid declares no rows. Absolute fill is the one
+   that does not depend on how many children the card happens to have. */
+@media (min-width: 900px) {
+  .post-grid-3 > .post-card:first-child {
+    grid-column: span 2;
+    display: block;
+    position: relative;
+    padding: var(--s-6) var(--s-6) var(--s-6) calc(46% + var(--s-6));
+  }
+  .post-grid-3 > .post-card:first-child .post-media {
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 46%;
+    aspect-ratio: auto;
+  }
+  .post-grid-3 > .post-card:first-child .post-media img { height: 100%; }
+  .post-grid-3 > .post-card:first-child > :not(.post-media) { padding-inline: 0; }
+  .post-grid-3 > .post-card:first-child strong {
+    display: block;
+    font-size: var(--t-2xl);
+    max-width: 20ch;
+    margin: var(--s-3) 0;
+  }
+}
 .post-tag { font: 800 var(--t-3xs)/1 var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--bronze-text); padding: .6rem 1.2rem 0; }
 .post-card strong { font-family: var(--serif); font-weight: 600; font-size: var(--t-md); line-height: 1.35; color: var(--navy-900); padding: 0 1.2rem; }
 .post-date { font-size: var(--t-2xs); color: var(--muted); padding: 0 1.2rem; }
@@ -1074,8 +1142,13 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
 .svc-photo { position: relative; border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-lg); }
 .svc-photo::after { content: ""; position: absolute; inset: 0; border: 1px solid rgba(9, 45, 92, .18); border-radius: var(--r-lg); translate: 10px 10px; pointer-events: none; }
 .svc-photo img { width: 100%; height: 100%; object-fit: cover; }
-.svc-why h2 { margin: .8rem 0 1.1rem; }
-.svc-why .btn { margin-top: 1.4rem; }
+.svc-why h2 { margin: var(--s-2) 0 var(--s-4); }
+.svc-why .btn { margin-top: var(--s-5); }
+/* A paragraph and the list under it are separate groups, so the gap between
+   them has to beat the gap *inside* the list (.65rem) or they read as one
+   undifferentiated block — which is how this column looked. */
+.svc-why > p { max-width: 62ch; line-height: var(--lh-normal); }
+.svc-why > p + .check-list { margin-top: var(--s-5); }
 
 .check-list { list-style: none; display: flex; flex-direction: column; gap: .65rem; }
 .check-list li { padding-left: 1.9rem; position: relative; font-size: var(--t-base); }
@@ -1510,15 +1583,20 @@ body.nav-locked .mobile-call { display: none !important; }
     }
 
     /* Section headings rise a little later than the body beneath them, which
-       is what gives a long page its cadence instead of one flat fade. */
+       is what gives a long page its cadence instead of one flat fade.
+       TRANSFORM ONLY — no opacity. An opacity-from-0 scroll animation leaves
+       the heading genuinely invisible whenever the range has not been entered
+       (a print, a full-page capture, a browser that reports the timeline but
+       mis-ranges it), and a heading you cannot read is a worse failure than a
+       heading that does not move. Same reason .h-rise wipes instead of fading. */
     .section-head h2 {
       animation: head-rise var(--ease) both;
       animation-timeline: view();
       animation-range: entry 10% entry 90%;
     }
     @keyframes head-rise {
-      from { opacity: 0; transform: translateY(var(--s-3)); }
-      to   { opacity: 1; transform: none; }
+      from { transform: translateY(var(--s-3)); }
+      to   { transform: none; }
     }
   }
 }
