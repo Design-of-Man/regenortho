@@ -1009,7 +1009,7 @@ IV_MENU = [
 ]
 
 # ---------------------------------------------------------------------------
-# Shop — white-label vitamins/supplements (OTC, Snipcart checkout) and
+# Shop — practice-formulated vitamins/supplements (OTC, Snipcart checkout) and
 # compounded/prescription "script" items (no checkout — routed to a consult
 # request instead). See build_shop() for how each category renders.
 #
@@ -3255,7 +3255,7 @@ def build_shop():
     </div>"""
 
     otc_html = ("".join(_card(p, i) for i, p in enumerate(otc)) if otc else
-                _empty("Our white-label vitamin and wellness line is in development — check back soon, or "
+                _empty("Our practice-formulated vitamin and wellness line is in development — check back soon, or "
                        "<a href=\"../contact.html#book\">contact us</a> to be notified when it launches."))
     script_html = ("".join(_card(p, i) for i, p in enumerate(script_items)) if script_items else
                    _empty("Compounded and prescription-strength formulations are in development. "
@@ -3280,7 +3280,7 @@ def build_shop():
     crumbs_html = crumbs([("", "Shop")], depth=d)
     body = f"""{nav(d)}
 <main id="main">
-{page_hero("Shop", "White-label vitamins &amp; recovery support", "Practice-formulated supplements and physician-directed formulations, built around the same regenerative and recovery goals as our in-clinic care.", crumbs_html, cta=False, depth=d)}
+{page_hero("Shop", "Practice-formulated vitamins &amp; recovery support", "Practice-formulated supplements and physician-directed formulations, built around the same regenerative and recovery goals as our in-clinic care.", crumbs_html, cta=False, depth=d)}
 <section class="section">
   <div class="section-head reveal"><p class="eyebrow">Over-the-Counter</p><h2>Ship straight to <em>your door</em></h2></div>
   <div class="svc-grid svc-grid-3 shop-grid">{otc_html}</div>
@@ -3303,7 +3303,7 @@ def build_shop():
 </main>
 {snipcart_embed}{footer(d)}"""
     schema = faq_schema(SHOP_FAQS) + breadcrumb_schema([("", "Home"), ("shop/index.html", "Shop")])
-    page = head("Shop | White-Label Vitamins &amp; Recovery Support | RegenOrtho Palm Beach",
+    page = head("Shop | Practice-Formulated Vitamins &amp; Recovery Support | RegenOrtho Palm Beach",
                 "Shop practice-formulated vitamins, wellness supplements, and physician-directed compounded formulations from RegenOrtho Palm Beach.",
                 depth=d, canonical="shop/index.html", extra_schema=schema + snipcart_head
                 ) + '<body class="page-shop">\n' + body
