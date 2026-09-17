@@ -1662,6 +1662,209 @@ SERVICES = [
         "cta": "Healing, <em>signalled</em>",
         "cta_sub": "Book a consultation to find out whether a physician-supervised peptide protocol fits your recovery, performance, or longevity goals.",
         "conditions": ["tendon-ligament-injuries", "arthritis-joint-pain", "sports-injuries"],
+        "subservices": ["ghk-cu", "kpv", "tesamorelin", "mots-c"],
+        "subservices_eyebrow": "Explore Each Peptide",
+        "subservices_heading": "Four protocols we are <em>asked about most</em>",
+    },
+    {
+        "slug": "ghk-cu",
+        "name": "GHK-Cu Peptide Therapy",
+        "nav": "GHK-Cu",
+        "parent": "peptide-therapy",
+        "title": "GHK-Cu Peptide Therapy Palm Beach Gardens | RegenOrtho",
+        "desc": "Physician-supervised GHK-Cu peptide protocols in Palm Beach Gardens \u2014 studied for collagen synthesis, tissue remodeling and inflammatory balance. Programs from $249/month.",
+        "eyebrow": "Peptide Therapy",
+        "h1": "GHK-Cu for Collagen, Connective Tissue &amp; Skin Quality",
+        "lede": "A copper-binding peptide the body makes on its own. The literature on it centres on collagen and the extracellular matrix, which is why we reach for it when connective tissue is the bottleneck in someone&rsquo;s recovery.",
+        "img": "cells-macro.jpg",
+        "img_alt": "Cellular-level view illustrating GHK-Cu peptide therapy at RegenOrtho Palm Beach",
+        "why": [
+            "Physician-supervised from screening through follow-up",
+            "Prescribed as part of a plan, not sold as a standalone stack",
+            "Compounds sourced from licensed U.S. 503A/503B pharmacies",
+            "Pairs with regenerative injections, shockwave and rehabilitation",
+            "Programs from $249 per month",
+        ],
+        "expertise": [
+            ("What GHK-Cu Is", "GHK-Cu is short for Glycyl-L-Histidyl-L-Lysine copper. Your own plasma, saliva and urine contain it already \u2014 this is not a foreign compound. Published work has looked at what it does in tissue remodelling, wound repair and cellular regeneration."),
+            ("Why It Is Used in Orthopedic Care", "We consider it where the limiting factor is connective tissue: soft-tissue repair that has stalled, collagen quality, joint and tendon health, remodelling after an injury, or an inflammatory load that will not settle."),
+            ("What the Research Suggests", "The proposed mechanisms in the literature are collagen and extracellular-matrix production, wound-healing pathways, inflammatory signalling, and gene expression tied to repair. We want to be straight with you: this is an active research area, not settled science."),
+            ("How It Fits Your Plan", "Nobody here will hand you GHK-Cu as a standalone fix. It is dosed to you, monitored by a physician, and it sits alongside the rehabilitation work \u2014 it does not replace it."),
+        ],
+        "steps": [
+            ("Consultation &amp; Screening", "A physician reviews your history, goals and labs where indicated to determine whether a GHK-Cu protocol is appropriate for you."),
+            ("Your Protocol", "You receive dosing, administration and timeline in plain language, coordinated with any injection, shockwave or rehabilitation work already underway."),
+            ("Monitoring &amp; Adjustment", "Progress is reviewed and the protocol adjusted. Peptides work best inside a coordinated plan, not on their own."),
+        ],
+        "treats": [
+            "Tendon and ligament repair that has plateaued",
+            "Cartilage wear with an inflammatory component",
+            "Muscle strains slow to settle",
+            "Tissue healing after surgery",
+            "Long-running inflammatory conditions",
+            "Skin quality and collagen support",
+        ],
+        "disclaimer": REGEN_DISCLAIMER,
+        "faqs": [
+            ("What is GHK-Cu?", "GHK-Cu is a copper-binding peptide your body already makes \u2014 it is present in plasma, saliva and urine. Published work examines what it does in tissue remodelling, wound repair and cellular regeneration."),
+            ("What might GHK-Cu be used to support?", "We consider it where connective tissue is the bottleneck \u2014 repair that has stalled, collagen quality, tendon and joint health, remodelling after injury, or inflammation that will not settle."),
+            ("How much does it cost?", "Peptide programs start at $249 per month. Your exact protocol and cost are set at consultation based on your goals."),
+            ("Is it supervised by a physician?", "Yes. Every protocol is prescribed and monitored by our physicians, and compounds are sourced from licensed U.S. 503A/503B pharmacies."),
+            ("Who is not a candidate?", "Candidacy depends on your medical history, medications and goals. Some patients are not appropriate for peptide therapy, and our physicians will tell you honestly at consultation."),
+        ],
+        "cta": "Repair, <em>signalled</em>",
+        "cta_sub": "If you are dealing with chronic soft-tissue discomfort or delayed recovery, book a consultation to find out whether a GHK-Cu protocol fits your plan.",
+        "conditions": ["tendon-ligament-injuries", "sports-injuries"],
+    },
+    {
+        "slug": "kpv",
+        "name": "KPV Peptide Therapy",
+        "nav": "KPV",
+        "parent": "peptide-therapy",
+        "title": "KPV Peptide Therapy Palm Beach Gardens | RegenOrtho",
+        "desc": "Physician-supervised KPV peptide protocols in Palm Beach Gardens \u2014 studied for inflammatory regulation and immune balance in joint and soft-tissue recovery. From $249/month.",
+        "eyebrow": "Peptide Therapy",
+        "h1": "KPV for Inflammatory Load &amp; Soft-Tissue Recovery",
+        "lede": "A three-amino-acid fragment of a hormone your body already produces. We use it when inflammation is the thing blocking progress \u2014 quiet that down and the injections, the laser and the rehab all start working better.",
+        "img": "cells-macro.jpg",
+        "img_alt": "Cellular-level view illustrating KPV peptide therapy at RegenOrtho Palm Beach",
+        "why": [
+            "Physician-supervised from screening through follow-up",
+            "Aimed at the inflammatory load underneath the symptom",
+            "Compounds sourced from licensed U.S. 503A/503B pharmacies",
+            "Coordinated with injections, laser and rehabilitation timing",
+            "Programs from $249 per month",
+        ],
+        "expertise": [
+            ("What KPV Is", "KPV is a three-amino-acid fragment derived from alpha-melanocyte-stimulating hormone (&alpha;-MSH). Research interest in it sits in two places: anti-inflammatory activity, and how it influences immune signalling."),
+            ("Why It Is Used in Orthopedic Care", "It comes up most often for the patient whose inflammation never fully resolves \u2014 the joint that stays irritable, the overuse injury that keeps flaring, the rehab programme that stalls every time load increases."),
+            ("What the Research Suggests", "Proposed mechanisms include cytokine activity, immune signalling balance, cell-level inflammatory response, and the pathways behind persistent tissue irritation. Clinical research is still developing and we will say so rather than oversell it."),
+            ("How It Fits Your Plan", "Dosing is set for you and reviewed by a physician. In practice it is almost always running alongside a rehabilitation programme, not instead of one."),
+        ],
+        "steps": [
+            ("Consultation &amp; Screening", "A physician reviews your history, medications and goals to determine whether a KPV protocol is appropriate."),
+            ("Your Protocol", "You receive dosing, administration and timeline in plain language, sequenced against the rest of your treatment."),
+            ("Monitoring &amp; Adjustment", "Progress is reviewed and the protocol adjusted as your inflammatory picture changes."),
+        ],
+        "treats": [
+            "Joints that stay inflamed between flares",
+            "Tendonitis and persistent soft-tissue irritation",
+            "Overuse and repetitive-load injuries",
+            "An inflammatory response that outlasts the injury",
+            "Auto-inflammatory musculoskeletal presentations",
+            "Rehabilitation that stalls when load increases",
+        ],
+        "disclaimer": REGEN_DISCLAIMER,
+        "faqs": [
+            ("What is KPV?", "KPV is a three-amino-acid fragment derived from alpha-melanocyte-stimulating hormone. Research interest centres on its anti-inflammatory activity and its effect on immune signalling."),
+            ("What might KPV be used to support?", "Usually for the patient whose inflammation never fully resolves: the joint that stays irritable, ongoing soft-tissue irritation, or an overuse injury that keeps flaring."),
+            ("How much does it cost?", "Peptide programs start at $249 per month. Your exact protocol and cost are set at consultation based on your goals."),
+            ("Is it supervised by a physician?", "Yes. Every protocol is prescribed and monitored by our physicians, and compounds are sourced from licensed U.S. 503A/503B pharmacies."),
+            ("Who is not a candidate?", "Candidacy depends on your medical history, medications and goals. Some patients are not appropriate for peptide therapy, and our physicians will tell you honestly at consultation."),
+        ],
+        "cta": "Inflammation, <em>quieted</em>",
+        "cta_sub": "If inflammatory-related discomfort is holding up your recovery, book a consultation to find out whether a KPV protocol fits your plan.",
+        "conditions": ["arthritis-joint-pain", "tendon-ligament-injuries"],
+    },
+    {
+        "slug": "tesamorelin",
+        "name": "Tesamorelin Therapy",
+        "nav": "Tesamorelin",
+        "parent": "peptide-therapy",
+        "title": "Tesamorelin Therapy Palm Beach Gardens | RegenOrtho",
+        "desc": "Physician-supervised Tesamorelin protocols in Palm Beach Gardens \u2014 a GHRH analog studied for lean-mass maintenance, visceral fat and recovery. Programs from $249/month.",
+        "eyebrow": "Peptide Therapy",
+        "h1": "Tesamorelin for Recovery, Body Composition &amp; Metabolic Support",
+        "lede": "Rather than giving you growth hormone, this prompts your own pituitary to release more of it. We use it where recovery has slowed, lean mass is going the wrong way, or the metabolic picture needs addressing.",
+        "img": "cells-macro.jpg",
+        "img_alt": "Cellular-level view illustrating Tesamorelin peptide therapy at RegenOrtho Palm Beach",
+        "why": [
+            "Physician-supervised, with labs reviewed where indicated",
+            "Personalized dosing rather than a fixed protocol",
+            "Compounds sourced from licensed U.S. 503A/503B pharmacies",
+            "Coordinated with our medical weight-loss and GLP-1 programs",
+            "Programs from $249 per month",
+        ],
+        "expertise": [
+            ("What Tesamorelin Is", "Tesamorelin is a synthetic version of growth hormone-releasing hormone (GHRH). The distinction matters: it signals your pituitary to make more growth hormone rather than replacing it. Growth hormone in turn affects tissue repair, metabolism and body composition."),
+            ("Why It Is Used", "The patients we discuss it with are usually healing slower than they should after a musculoskeletal injury, losing lean mass, carrying visceral fat that will not shift, or dealing with the growth-hormone decline that comes with age."),
+            ("How It Works", "Downstream of that pituitary signal, growth hormone acts on protein synthesis, muscle repair, fat metabolism and cellular recovery \u2014 which is the chain we are actually trying to influence."),
+            ("How It Fits Your Plan", "Dosing is built around you and reviewed against labs. Where it makes sense we run it in step with our medical weight-loss and GLP-1 programme rather than treating the two separately."),
+        ],
+        "steps": [
+            ("Consultation &amp; Screening", "A physician reviews your history, labs and goals to determine whether a Tesamorelin protocol is appropriate."),
+            ("Your Protocol", "You receive a personalized dosing strategy with administration and timeline explained in plain language."),
+            ("Monitoring &amp; Adjustment", "Progress and labs are reviewed on a schedule and the protocol is adjusted accordingly."),
+        ],
+        "treats": [
+            "Healing slower than the injury should take",
+            "Growth-hormone decline that comes with age",
+            "Visceral fat that will not shift",
+            "Losing lean mass",
+            "Metabolic markers moving the wrong way",
+            "Rebuilding after surgery",
+        ],
+        "disclaimer": REGEN_DISCLAIMER,
+        "faqs": [
+            ("What is Tesamorelin?", "Tesamorelin is a synthetic form of growth hormone-releasing hormone (GHRH). It signals the pituitary to produce more growth hormone rather than supplying the hormone itself."),
+            ("What might Tesamorelin be used to support?", "Typically where healing is slower than the injury warrants, lean mass is dropping, visceral fat will not shift, or growth-hormone levels have declined with age."),
+            ("How much does it cost?", "Peptide programs start at $249 per month. Your exact protocol and cost are set at consultation based on your goals."),
+            ("Is it supervised by a physician?", "Yes. Every protocol is prescribed and monitored by our physicians, and compounds are sourced from licensed U.S. 503A/503B pharmacies."),
+            ("Who is not a candidate?", "Candidacy depends on your medical history, medications and goals. Some patients are not appropriate for peptide therapy, and our physicians will tell you honestly at consultation."),
+        ],
+        "cta": "Recovery, <em>supported</em>",
+        "cta_sub": "If delayed recovery, body-composition change or metabolic concerns are the issue, book a consultation to find out whether Tesamorelin fits your plan.",
+        "conditions": ["sports-injuries"],
+    },
+    {
+        "slug": "mots-c",
+        "name": "MOTS-c Peptide Therapy",
+        "nav": "MOTS-c",
+        "parent": "peptide-therapy",
+        "title": "MOTS-c Peptide Therapy Palm Beach Gardens | RegenOrtho",
+        "desc": "Physician-supervised MOTS-c protocols in Palm Beach Gardens \u2014 a mitochondria-derived peptide studied for cellular energy, metabolic efficiency and endurance. From $249/month.",
+        "eyebrow": "Peptide Therapy",
+        "h1": "MOTS-c for Cellular Energy, Metabolism &amp; Endurance",
+        "lede": "This one comes from the mitochondria themselves. We look at it when the problem is not the injury but the tank behind it \u2014 fatigue, poor exercise tolerance, recovery that takes far longer than it should.",
+        "img": "cells-macro.jpg",
+        "img_alt": "Cellular-level view illustrating MOTS-c peptide therapy at RegenOrtho Palm Beach",
+        "why": [
+            "Physician-supervised from screening through follow-up",
+            "Aimed at recovery capacity, not just symptoms",
+            "Compounds sourced from licensed U.S. 503A/503B pharmacies",
+            "Pairs with IV therapy and our recovery programs",
+            "Programs from $249 per month",
+        ],
+        "expertise": [
+            ("What MOTS-c Is", "MOTS-c is encoded in mitochondrial DNA and is involved in how cells regulate energy. Since mitochondria are where muscle tissue generates most of its energy, that is the system this peptide is aimed at."),
+            ("Why It Is Used", "It is worth a conversation if you are training hard and not recovering, if endurance has dropped off, or if the metabolic changes that arrive with age are showing up as flat energy."),
+            ("What the Research Suggests", "Areas under investigation include glucose metabolism, insulin sensitivity, mitochondrial energy output, and how the body adapts metabolically to physical stress. Human clinical data is still thin and we will not pretend otherwise."),
+            ("How It Fits Your Plan", "Dosing is individual, physician-monitored, and planned as one part of a recovery strategy rather than a standalone intervention."),
+        ],
+        "steps": [
+            ("Consultation &amp; Screening", "A physician reviews your history, labs where indicated and training or recovery goals to determine whether MOTS-c is appropriate."),
+            ("Your Protocol", "You receive dosing, administration and timeline in plain language, coordinated with the rest of your recovery plan."),
+            ("Monitoring &amp; Adjustment", "Progress is reviewed and the protocol adjusted as your energy and recovery capacity change."),
+        ],
+        "treats": [
+            "Fatigue that tracks with training load",
+            "Metabolic markers out of balance",
+            "Exercise tolerance that has dropped off",
+            "Flat energy arriving with age",
+            "Recovery between hard training blocks",
+            "Support alongside a weight-management plan",
+        ],
+        "disclaimer": REGEN_DISCLAIMER,
+        "faqs": [
+            ("What is MOTS-c?", "MOTS-c is encoded in mitochondrial DNA and takes part in how cells regulate energy \u2014 most relevantly in muscle, where mitochondria do the bulk of the work."),
+            ("What might MOTS-c be used to support?", "Where the limiting factor is the tank rather than the injury \u2014 fatigue tracking with training load, endurance dropping off, or flat energy arriving with age."),
+            ("How much does it cost?", "Peptide programs start at $249 per month. Your exact protocol and cost are set at consultation based on your goals."),
+            ("Is it supervised by a physician?", "Yes. Every protocol is prescribed and monitored by our physicians, and compounds are sourced from licensed U.S. 503A/503B pharmacies."),
+            ("Who is not a candidate?", "Candidacy depends on your medical history, medications and goals. Some patients are not appropriate for peptide therapy, and our physicians will tell you honestly at consultation."),
+        ],
+        "cta": "Energy, <em>restored</em>",
+        "cta_sub": "If reduced energy, slow recovery or metabolic concerns are the issue, book a consultation to find out whether a MOTS-c protocol fits your plan.",
+        "conditions": ["sports-injuries"],
     },
     {
         "slug": "concierge-care",
@@ -2217,6 +2420,15 @@ def build_home():
 SERVICE_FROM_PRICE = {
     "medical-weight-loss": 239,
     "peptide-therapy": 249,
+    # The four compound pages are the same programme sold by protocol, and each
+    # one publishes "Peptide programs start at $249 per month" in its own FAQ.
+    # They must carry the price here too, or pricing.md files them under
+    # "quoted at consultation" while the page they link to quotes a figure —
+    # exactly the contradiction that file exists to prevent.
+    "ghk-cu": 249,
+    "kpv": 249,
+    "tesamorelin": 249,
+    "mots-c": 249,
 }
 
 # The five regenerative modalities publish a one-time "Treatment Starting From
@@ -3826,6 +4038,15 @@ Sitemap: {BASE}/sitemap.xml
     iv_rows = "\n".join(
         f"| {html.unescape(m['name'])} | ${m['price']} | {m['ingredients'].replace('&amp;', '&')} |"
         for m in IV_MENU)
+    # The per-compound peptide pages are the same $249/month programme sold by
+    # protocol. They carry the price in SERVICE_FROM_PRICE, so they fall out of
+    # `unpriced` — without a row here they would vanish from this file entirely,
+    # which is worse than either listing, because an agent then has no link at all.
+    peptide_rows = "\n".join(
+        f"| {html.unescape(s['name'])} | from ${SERVICE_FROM_PRICE[s['slug']]}/month | "
+        f"Protocol page for the peptide programme: {BASE}/services/{s['slug']}.html |"
+        for s in SERVICES
+        if s.get("parent") == "peptide-therapy" and s["slug"] in SERVICE_FROM_PRICE)
     unpriced = "\n".join(
         f"- {s['name']}: {BASE}/services/{s['slug']}.html"
         for s in SERVICES
@@ -3848,6 +4069,7 @@ consultation — see "Quoted at consultation" below.
 | --- | --- | --- |
 | Medical Weight Loss & GLP-1 | from $239/month | Plan depends on medication and monitoring your physician recommends. |
 | Peptide Therapy | from $249/month | Protocol and cost set at consultation based on your goals. |
+{peptide_rows}
 | IV Recovery & Wellness Lounge | $189–$499 per infusion | Per-formula prices below. |
 
 ## Regenerative therapies

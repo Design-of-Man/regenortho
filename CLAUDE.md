@@ -203,8 +203,9 @@ CSS coastline scene stays underneath as the no-video fallback. asset_v() returns
 - DELIBERATE: no `reviewedBy` / `lastReviewed` on MedicalWebPage. Both assert that a named
   clinician vetted the page for accuracy; that sign-off does not exist on record. Add them
   only when the practice names a reviewer and a real review date — not from a build script.
-- Prices in schema come from `SERVICE_FROM_PRICE` (the two services that publish a "from"
-  price) and `IV_MENU` (the 12-item OfferCatalog). Never add an offer for a service that
+- Prices in schema come from `SERVICE_FROM_PRICE` (the services that publish a "from"
+  price — medical weight loss, peptide therapy, and the four per-compound peptide protocol
+  pages, which are the same $249/month programme and publish that figure in their own FAQ) and `IV_MENU` (the 12-item OfferCatalog). Never add an offer for a service that
   does not publish a price on the page — an invented price is a fact violation and a
   structured-data penalty.
 - New pages: unique title (~50–60 chars, keyword + city front-loaded), desc (~150–160),
