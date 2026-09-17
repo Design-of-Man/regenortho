@@ -3,3 +3,11 @@ __pycache__/
 node_modules/
 .DS_Store
 .vercel/
+
+# Client-facing reports generated into the repo root.
+# Vercel serves this repo's ROOT as the static site (vercel.json sets no
+# outputDirectory and there is no build step), so ANY file committed here is
+# published at https://regenorthopb.com/<filename> with no auth. Performance
+# reports are for the practice, not for the public web — keep them untracked
+# and deliver them out of band.
+RegenOrtho-Performance-Report-*.pdf

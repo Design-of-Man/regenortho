@@ -141,7 +141,16 @@ CSS coastline scene stays underneath as the no-video fallback. asset_v() returns
   and the sitemap all derive from it. Non-www because the best-ranking pages (the two doctor
   profiles) already lived there when this was fixed — see the canonical-fix PR. Never point BASE
   at www; a domain-level `www -> non-www` 301 lives in vercel.json's redirects (host-matched via
-  `has`), so www still resolves, it just isn't canonical.
+  `has`), so www still resolves, it just isn't canonical. That rule is the FIRST entry in
+  `redirects` and must stay first — Vercel evaluates in order, so normalising the host before the
+  path rules keeps `www/x.html` to a two-hop chain instead of serving a live duplicate. It is also
+  the only `has`-based rule in the file; it matches `www.regenorthopb.com` exactly, so preview
+  deploys on `*.vercel.app` are unaffected.
+  This rule went MISSING at some point and the doc above described a redirect that did not exist.
+  The cost, measured 2026-08-18 to 09-14: www served the whole site as a live 200 duplicate and
+  absorbed 5,185 impressions (45% of all) at avg position 38.8 and a 0.06% CTR, against non-www's
+  6,372 impressions at position 11.8 and 0.67%. If www ever returns 200 again, this is why.
+  Check with `curl -s -o /dev/null -w '%{http_code}' https://www.regenorthopb.com/` — expect 308.
 - Org node: MedicalClinic+MedicalBusiness @id {BASE}/#organization.
   Per page: Physician (providers), MedicalTherapy (services), MedicalCondition (conditions),
   FAQPage (faq + service/condition pages), Service-per-city (locations), BlogPosting (posts),
