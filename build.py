@@ -1058,39 +1058,39 @@ SERVICES = [
         "desc": "PRP injections, cellular and exosome therapies, peptides, and ultrasound-guided orthobiologics in Palm Beach Gardens — natural healing without surgery.",
         "eyebrow": "Regenerative Medicine & Orthobiologics",
         "h1": "Advanced Regenerative Therapies for Lasting Healing",
-        "lede": "Experience natural healing with cutting-edge regenerative therapies designed to repair tissues, restore mobility, and promote faster recovery.",
+        "lede": "Treatments that aim at the tissue itself rather than the symptom — placed under ultrasound, matched to what the imaging actually shows, and paired with the rehabilitation that makes them hold.",
         "img": "svc-regen.jpg",
         "img_alt": "Regenerative medicine specialist preparing an orthobiologic treatment at RegenOrtho Palm Beach",
         "why": [
-            "Evidence-based biologic therapies for natural healing",
-            "Non-surgical solutions with minimal downtime",
-            "Ultrasound-guided precision treatments",
-            "Personalized plans tailored to specific injuries",
-            "Innovative therapies combining science and recovery",
+            "Biologic treatment chosen on evidence, not on what is fashionable",
+            "An appointment rather than an operation, and you drive yourself home",
+            "Every injection placed under ultrasound — this is what decides the result",
+            "A plan built from your imaging, not a standard protocol",
+            "Honest guidance on what is well supported and what is still emerging",
         ],
         "expertise": [
-            ("PRP (Platelet-Rich Plasma) Injections", "PRP therapy uses a patient's own blood platelets to boost repair — highly effective for tendons, ligaments, and chronic joint conditions."),
-            ("Cellular & Exosome Therapies", "Cellular therapies and exosomes help regenerate damaged tissues at the cellular level, accelerating healing and supporting long-term tissue health."),
-            ("Peptide Therapy for Recovery, Repair & Performance", "Peptide treatments support muscle recovery, tissue repair, and enhanced cellular communication to improve healing and physical performance."),
-            ("Ultrasound-Guided Regenerative Procedures", "Real-time ultrasound guidance ensures treatments are placed exactly where needed — increasing accuracy and improving outcomes."),
-            ("Therapies for Joint, Tendon, Ligament & Soft Tissue Injuries", "Targeted biologic treatment for sports injuries, arthritis, and chronic pain promotes natural regeneration where it's needed most."),
-            ("Combination Surgical & Regenerative Treatment Plans", "For complex injuries, regenerative medicine can be combined with surgical care to maximize healing, shorten recovery, and improve outcomes."),
+            ("PRP (Platelet-Rich Plasma) Injections", "Platelets concentrated from your own blood carry the growth factors the body uses to direct repair. Most useful in tendon, ligament and long-standing joint problems."),
+            ("Cellular & Exosome Therapies", "Where PRP alone is not enough, cellular and exosome treatments work further upstream — at the signalling that tells tissue to repair itself."),
+            ("Peptide Therapy for Recovery, Repair & Performance", "Peptide protocols support connective-tissue repair and recovery capacity. They sit alongside injections and rehabilitation, never instead of them."),
+            ("Ultrasound-Guided Regenerative Procedures", "Live ultrasound puts the material in the tissue we are targeting rather than near it. When a patient tells us PRP elsewhere did nothing, this is usually why."),
+            ("Therapies for Joint, Tendon, Ligament & Soft Tissue Injuries", "Sports injuries, arthritis and chronic joint pain — treated at the structure that is actually failing."),
+            ("Combination Surgical & Regenerative Treatment Plans", "For the more involved cases, biologics and surgery are not alternatives. Used together they can shorten the recovery and improve what the operation achieves."),
         ],
         "steps": [
-            ("Comprehensive Evaluation", "A full assessment and imaging to determine the right regenerative therapy."),
-            ("Personalized Treatment Plan", "Selection of PRP, cellular therapy, or combination approaches based on your condition."),
-            ("Recovery & Monitoring", "Follow-up care and progressive rehabilitation ensure safe healing and long-term results."),
+            ("Comprehensive Evaluation", "Examination and imaging first — including the cases where the answer is that this is not the right treatment."),
+            ("Personalized Treatment Plan", "PRP, cellular therapy or a combination, chosen from what the imaging showed."),
+            ("Recovery & Monitoring", "Follow-up and staged rehabilitation, because tissue only remodels properly if it is loaded properly."),
         ],
         "faqs": [
-            ("What is regenerative medicine?", "Regenerative medicine uses biologic therapies like PRP, cellular treatments, and peptides to repair tissues and stimulate natural healing."),
-            ("Are regenerative treatments safe?", "Most therapies use the patient's own cells or biologic materials, making them minimally invasive and well-tolerated. Every plan is personalized and physician-supervised."),
-            ("What conditions benefit from regenerative therapies?", "They are used for arthritis, tendon injuries, ligament tears, soft tissue injuries, sports injuries, and chronic joint pain."),
-            ("How long does it take to see results?", "Some patients experience improvement within weeks, while full benefits may develop over several months as tissues heal naturally."),
-            ("What is the difference between PRP and cellular therapy?", "PRP stimulates healing with concentrated platelets from your own blood, while cellular and exosome therapies work at the cellular level to support tissue regeneration."),
-            ("Can regenerative medicine replace surgery?", "In many cases regenerative therapies may delay or reduce the need for surgery by promoting natural healing — your specialist will advise what's realistic for your condition."),
+            ("What is regenerative medicine?", "It uses biologic material — PRP, cellular treatments, peptides — to restart repair in tissue that has stopped healing on its own."),
+            ("Are regenerative treatments safe?", "Most use your own cells or screened biologic material, which is why they are generally well tolerated. Every plan is physician-supervised, and we will tell you when you are not a good candidate."),
+            ("What conditions benefit from regenerative therapies?", "Arthritis, tendon and ligament injuries, soft-tissue damage, sports injuries, and joint pain that has not resolved with conservative care."),
+            ("How long does it take to see results?", "Expect weeks rather than days. The first fortnight can feel like nothing is happening, and the fuller benefit builds across several months."),
+            ("What is the difference between PRP and cellular therapy?", "PRP delivers concentrated platelets from your own blood. Cellular and exosome treatments act further upstream, on the signalling that drives repair — generally reserved for more involved damage."),
+            ("Can regenerative medicine replace surgery?", "Sometimes it postpones surgery, and occasionally it removes the need. It will not rebuild a joint already worn to bone, and we would rather say so than sell you a course that cannot work."),
         ],
         "cta": "Heal Naturally. <em>Recover Stronger.</em>",
-        "cta_sub": "Discover the power of regenerative medicine. Schedule your consultation today and take the first step toward natural, lasting recovery.",
+        "cta_sub": "Come in, let us image it properly, and you will get a straight answer about whether there is enough tissue left for this to work.",
         "conditions": ["knee-pain", "shoulder-pain", "arthritis-joint-pain", "tendon-ligament-injuries", "sports-injuries"],
         "subservices": ["exosome-therapy", "mesenchymal-stem-cell-therapy", "whartons-jelly-therapy",
                          "muse-infused-rpa-therapy", "traditional-muse-cell-therapy"],
@@ -1338,23 +1338,23 @@ SERVICES = [
         "desc": "EPAT shockwave, cold laser, peptide, and exosome therapies in Palm Beach Gardens — non-surgical pain relief and faster healing with minimal downtime.",
         "eyebrow": "Advanced Non-Surgical Therapies",
         "h1": "Advanced Non-Surgical Therapies for Faster Recovery",
-        "lede": "Non-surgical therapies using shockwave, cold laser, peptides, and exosomes to reduce pain, speed healing, and restore function with minimal downtime.",
+        "lede": "Shockwave, cold laser, peptides and exosomes — used to settle pain and restart repair in tissue that has stalled, without an incision and without time off your feet.",
         "img": "svc-nonsurgical.jpg",
         "img_alt": "Advanced non-surgical therapy session at RegenOrtho Palm Beach",
         "why": [
-            "Clinically proven regenerative and energy-based therapies",
-            "Targeted, image-guided delivery for precision results",
-            "Faster return to daily life and sport versus traditional surgery",
-            "Personalized protocols tailored to condition and goals",
-            "Integrated rehab plans to maximize long-term outcomes",
+            "Energy-based and biologic treatments with evidence behind them",
+            "Placed under imaging, so the treatment reaches the tissue at fault",
+            "Back to work and training far sooner than surgery allows",
+            "Protocols set by the diagnosis and what you need to get back to",
+            "Rehabilitation built in, because that is what makes the gains hold",
         ],
         "expertise": [
-            ("EPAT Shockwave Therapy", "High-energy acoustic pulses stimulate blood flow and collagen remodeling in tendons and soft tissue — effective for chronic tendon problems, plantar heel pain, and persistent sports injuries."),
-            ("Cold Laser Therapy", "Low-level laser accelerates cellular repair while reducing inflammation and pain, promoting faster tissue regeneration and improved functional recovery."),
-            ("Peptide Therapy for Recovery & Performance", "Targeted peptides support connective-tissue repair, reduce inflammation, and optimize recovery timelines — customized for rehabilitation and athletic performance."),
-            ("Exosome Therapy", "Exosome treatments deliver cell-signaling vesicles to injured areas to enhance repair, modulate inflammation, and support long-term tissue health."),
-            ("Ultrasound-Guided Delivery", "Real-time ultrasound ensures accurate placement of biologics and energy treatments for maximal benefit, safety, and effectiveness."),
-            ("Combination & Integrative Protocols", "Shockwave, laser, peptides, and targeted rehab are combined for synergistic healing effects that shorten recovery and reduce recurrence."),
+            ("EPAT Shockwave Therapy", "Acoustic pressure waves drive circulation and collagen remodelling in tendon and soft tissue. It is our workhorse for stubborn tendon problems, heel pain and overuse injuries that rest has not fixed."),
+            ("Cold Laser Therapy", "Light at specific wavelengths is absorbed by the cells underneath, raising their metabolic activity while calming inflammation and pain."),
+            ("Peptide Therapy for Recovery & Performance", "Peptide protocols aimed at connective-tissue repair and inflammatory load, timed around your rehabilitation rather than sold separately from it."),
+            ("Exosome Therapy", "Signalling vesicles delivered into the injury to prompt repair and moderate the inflammatory response."),
+            ("Ultrasound-Guided Delivery", "Live ultrasound confirms placement. Precision is not a refinement here — it is the difference between working and not."),
+            ("Combination & Integrative Protocols", "These are rarely used alone. Combining them, in the right order, shortens recovery and makes the problem less likely to return."),
         ],
         "steps": [
             ("Evaluation & Diagnosis", "A focused exam — with imaging when needed — identifies the tissue at fault and whether energy-based or biologic therapy fits."),
@@ -1379,33 +1379,33 @@ SERVICES = [
         "desc": "Ultrasound-guided vein care in Palm Beach Gardens — sclerotherapy, endovenous laser & RF ablation, phlebectomy, and cosmetic vein treatment with quick recovery.",
         "eyebrow": "Vein Care — Medical & Cosmetic",
         "h1": "Comprehensive Vein Care — Medical & Cosmetic",
-        "lede": "Ultrasound-guided diagnosis and minimally invasive treatments to relieve symptoms, restore healthy circulation, and improve leg appearance with quick recovery.",
+        "lede": "We image the legs before we treat them, then close the failing veins through a needle rather than an incision. Most patients drive themselves home and are back to normal within a day or two.",
         "img": "vein-treatment.jpg",
         "img_alt": "Vein specialist performing an ultrasound-guided leg vein evaluation in Palm Beach Gardens",
         "why": [
-            "Duplex ultrasound mapping for targeted, evidence-based treatment",
-            "Minimally invasive procedures performed in a comfortable office setting",
-            "Integrated medical and cosmetic care for both symptoms and appearance",
-            "Structured follow-up and prevention strategies to minimize recurrence",
+            "Every leg is mapped on ultrasound before anything is treated",
+            "Done here in the office, under local anaesthetic",
+            "The ache and the appearance handled together, not as separate visits",
+            "Follow-up imaging and prevention, so the veins do not simply come back",
         ],
         "expertise": [
-            ("Comprehensive Ultrasound-Guided Vein Evaluation", "A detailed duplex ultrasound maps reflux and identifies the source of symptoms, allowing a precise, individualized treatment plan that avoids unnecessary procedures."),
-            ("Sclerotherapy for Spider & Reticular Veins", "Targeted injections close small surface veins to improve leg appearance and reduce localized symptoms — quick, in-office, minimal recovery."),
-            ("Endovenous Laser & Radiofrequency (RF) Ablation", "Thermal ablation seals diseased saphenous veins under ultrasound guidance, rerouting blood to healthy vessels and relieving pain, swelling, and the root cause of varicose veins."),
-            ("Cosmetic Vein Procedures for Legs, Feet & Ankles", "From surface sclerotherapy to micro-laser treatments, cosmetic techniques refine leg contours and correct visible veins with natural, even results."),
-            ("Advanced Wound Care for Venous Insufficiency", "For venous ulcers or skin changes, specialized wound management, compression strategies, and coordinated care promote healing and prevent recurrence."),
-            ("Ambulatory Phlebectomy & In-Office Vein Removal", "Micro-incision phlebectomy removes superficial varicose veins in-office for immediate contour improvement and symptom relief with a quick return to activity."),
+            ("Comprehensive Ultrasound-Guided Vein Evaluation", "Duplex ultrasound shows which valves have failed and where the reflux actually starts — which is frequently not the vein you can see. Treating the visible one instead is the usual reason veins return."),
+            ("Sclerotherapy for Spider & Reticular Veins", "A solution injected into spider and reticular veins collapses them, and the body clears them over the following weeks. Minutes in the chair, no downtime."),
+            ("Endovenous Laser & Radiofrequency (RF) Ablation", "Heat delivered inside the failed saphenous vein seals it shut, and circulation reroutes through healthy vessels. This addresses the cause rather than the bulging vein you can see."),
+            ("Cosmetic Vein Procedures for Legs, Feet & Ankles", "Surface sclerotherapy and micro-laser for patients whose concern is how the legs look. The aim is an even result rather than an obviously treated one."),
+            ("Advanced Wound Care for Venous Insufficiency", "Where poor venous return has caused skin changes or an ulcer, wound management and compression run alongside treating the underlying reflux — an ulcer will not stay healed while the pressure behind it remains."),
+            ("Ambulatory Phlebectomy & In-Office Vein Removal", "Surface varicosities lifted out through punctures small enough not to need stitches. The improvement is visible the same day."),
         ],
         "steps": [
-            ("Evaluation & Mapping", "Duplex ultrasound identifies problematic veins and guides the treatment plan."),
-            ("Targeted In-Office Treatment", "Ablation, sclerotherapy, phlebectomy, or wound care delivered with ultrasound precision."),
-            ("Recovery & Prevention", "Post-procedure compression, activity guidance, and follow-up visits preserve results and reduce recurrence."),
+            ("Evaluation & Mapping", "Ultrasound first — what has failed, and where."),
+            ("Targeted In-Office Treatment", "Treatment in the office, chosen from what the imaging showed."),
+            ("Recovery & Prevention", "Compression, movement, and a follow-up scan to confirm the vein stayed closed."),
         ],
         "faqs": [
-            ("What causes varicose and spider veins?", "Weakened vein valves and venous reflux cause blood pooling; risk factors include genetics, pregnancy, prolonged standing, and age."),
-            ("What is the difference between medical and cosmetic vein care?", "Medical care treats symptoms and circulation problems and is often covered by insurance; cosmetic care improves appearance and is usually elective."),
-            ("Is vein treatment painful?", "Most procedures use local anesthesia or numbing techniques and involve minimal discomfort; post-procedure soreness is usually mild."),
-            ("How long until I can resume normal activities?", "Patients often resume light activity the same day, with specific guidance based on the procedure performed."),
+            ("What causes varicose and spider veins?", "The one-way valves that keep blood moving upward stop sealing, so blood falls back and pools, stretching the vein. Family history, pregnancy, age and hours spent standing all raise the odds."),
+            ("What is the difference between medical and cosmetic vein care?", "Medical treatment addresses symptoms and circulation, and insurance often covers it where symptoms justify it. Cosmetic work is about appearance and is elective. Many patients need some of both."),
+            ("Is vein treatment painful?", "Not meaningfully. Local anaesthetic covers the procedure itself, and afterwards most people describe mild soreness rather than pain."),
+            ("How long until I can resume normal activities?", "Most people walk out and carry on the same day. What you should avoid, and for how long, depends on which procedure you had."),
         ],
         "cta": "The First Step to <em>Healthier Legs</em>",
         "cta_sub": "Relief and cosmetic improvement start with a vascular evaluation — schedule your appointment for a personalized, evidence-based vein plan.",
@@ -1874,34 +1874,34 @@ SERVICES = [
         "desc": "Private concierge and direct-pay orthopedic care in Palm Beach Gardens — same-day diagnostics, private suites, bundled pricing, and direct specialist access.",
         "eyebrow": "Concierge & Cash-Pay Services",
         "h1": "Private Concierge & Direct-Pay Care",
-        "lede": "Private, direct-pay care offering same-day diagnostics, tailored treatment planning, private suites, and transparent bundled pricing for streamlined, personalized recovery.",
+        "lede": "Direct access to the surgeon, diagnostics and a plan in a single visit where possible, private suites, and a price you know before you agree to anything.",
         "img": "clinic-lounge.jpg",
         "img_alt": "Private concierge lounge inside RegenOrtho Palm Beach",
         "why": [
-            "Direct access to board-certified specialists with one-on-one consultations",
-            "Same-day diagnostic workup and treatment planning for urgent needs",
-            "Private infusion and procedure suites for comfort and safety",
-            "Transparent direct-pay and bundled pricing to avoid surprises",
-            "Customized recovery pathways designed for faster, measurable outcomes",
+            "You see the surgeon, and you get their full attention",
+            "Imaging, testing and a plan inside one visit where it is clinically possible",
+            "Private suites for infusions and procedures",
+            "A price agreed upfront, with no billing surprises afterwards",
+            "A recovery plan with milestones you can actually measure against",
         ],
         "expertise": [
-            ("One-on-One Consultations with Board-Certified Surgeons", "Private, undivided consultation time with senior clinicians to review history, imaging, and individualized goals — allowing deeper evaluation and immediate clinical decision-making."),
-            ("Same-Day Diagnostics & Treatment Planning", "Imaging, labs, and functional testing arranged and reviewed in a single visit when needed, with a personalized treatment plan produced the same day."),
-            ("Private IV Therapy & Procedure Suites", "Dedicated infusion and procedure rooms provide a discreet, comfortable environment — staffed and monitored to clinical standards."),
-            ("Transparent Bundled Pricing", "Clear, upfront pricing with bundled packages for procedures and recovery programs removes billing uncertainty for private-pay patients."),
-            ("Customized Recovery Protocols", "Recovery plans tailored to your lifestyle and goals combine medical, rehab, and wellness components with milestone tracking."),
-            ("Concierge Coordination & Aftercare", "Appointments, imaging, home-care instructions, follow-ups, and referrals — managed for you by dedicated care coordinators."),
+            ("One-on-One Consultations with Board-Certified Surgeons", "Unhurried time with a senior clinician who has read your history and your imaging beforehand — long enough to examine properly and decide on the spot rather than booking you back."),
+            ("Same-Day Diagnostics & Treatment Planning", "Where it is clinically sensible, imaging, labs and functional testing happen and are reviewed in the same visit, and you leave with the plan rather than waiting on one."),
+            ("Private IV Therapy & Procedure Suites", "Infusions and procedures happen in private rooms, staffed and monitored properly — discreet, and not a curtain in a corridor."),
+            ("Transparent Bundled Pricing", "Procedures and recovery programmes are quoted as a bundle, agreed before you start. You will not receive an unexpected bill six weeks later."),
+            ("Customized Recovery Protocols", "A plan built around your life and what you are trying to get back to, combining treatment, rehabilitation and recovery support, with checkpoints along the way."),
+            ("Concierge Coordination & Aftercare", "Scheduling, imaging, aftercare instructions, follow-ups and any onward referrals are handled by a coordinator rather than left to you."),
         ],
         "steps": [
-            ("Book & Pre-Screen", "Schedule your concierge visit and complete a brief medical pre-screen to prioritize immediate needs."),
-            ("Same-Day Evaluation & Plan", "Comprehensive diagnostics and a tailored treatment plan delivered during the visit."),
-            ("Therapy & Coordinated Recovery", "Procedures or therapies in private suites, followed by structured aftercare and scheduled follow-ups."),
+            ("Book & Pre-Screen", "Book, then a short pre-screen so we know what matters most before you arrive."),
+            ("Same-Day Evaluation & Plan", "Assessment, imaging and a written plan in the same visit."),
+            ("Therapy & Coordinated Recovery", "Treatment in a private suite, then aftercare and follow-ups already booked."),
         ],
         "faqs": [
-            ("Who is concierge care best for?", "Patients who value speed, privacy, and direct clinician access — including executives, athletes, and anyone wanting streamlined, bespoke care."),
-            ("Are diagnostics and procedures performed the same day?", "When clinically appropriate, yes — imaging, labs, and treatment planning are frequently completed in a single visit."),
-            ("Do you take insurance for concierge services?", "Concierge and bundled services are direct-pay with transparent pricing; many other services at the practice do work with major insurance — our team will walk you through both paths."),
-            ("What is included in bundled pricing?", "Bundles are structured around procedures and recovery programs so you know the full cost upfront — your coordinator will detail inclusions before you commit."),
+            ("Who is concierge care best for?", "Anyone who cannot spend six weeks in a referral queue, values privacy, or simply wants to deal with the surgeon directly rather than through a front desk."),
+            ("Are diagnostics and procedures performed the same day?", "Often, yes — where it is clinically appropriate. We will not compress something into one day if doing it properly takes two."),
+            ("Do you take insurance for concierge services?", "Concierge and bundled services are direct-pay at a quoted price. Plenty of what we do elsewhere in the practice does run through major insurance, and we will show you both routes before you choose."),
+            ("What is included in bundled pricing?", "Each bundle is built around a procedure or a recovery programme, with the inclusions written down and explained before you commit to anything."),
         ],
         "cta": "Fast, Private, <em>Transparent</em> Care",
         "cta_sub": "Reserve a concierge appointment for same-day evaluation, private procedures, and a personalized recovery plan with transparent direct-pay pricing.",
@@ -2040,22 +2040,22 @@ LOCATIONS = [
 ]
 
 IV_FAQS = [
-    ("How long does an infusion take?", "Most IV sessions last 30–60 minutes depending on the formula and infusion rate chosen."),
-    ("Are IV infusions safe?", "Yes. All treatments are clinician-supervised, start with a medical pre-screen, and use sterile, pharmaceutical-grade solutions."),
-    ("When will I notice benefits?", "Many patients feel improvement within hours; some metabolic or cellular benefits develop over several days with follow-up sessions."),
-    ("Can I combine IV therapy with other treatments?", "Yes. IV therapy can complement rehabilitation, recovery plans, or other medical treatments — we will coordinate timing and compatibility."),
-    ("How often should I receive infusions?", "Frequency depends on goals: acute recovery may need a short series, while maintenance can be monthly or as advised by your clinician."),
-    ("Are there side effects?", "Side effects are uncommon but can include mild bruising or temporary lightheadedness; clinicians monitor you closely during treatment."),
-    ("Do you offer packages for athletes or post-op recovery?", "Yes — tailored packages and protocols are available for athletic recovery, surgical recuperation, and chronic support programs."),
+    ("How long does an infusion take?", "Usually 30 to 60 minutes, depending on which formula you are having and the rate it runs at."),
+    ("Are IV infusions safe?", "Yes. Nothing starts without a medical pre-screen, a clinician supervises the session, and every solution is sterile and pharmaceutical grade."),
+    ("When will I notice benefits?", "Plenty of people notice something the same afternoon. The metabolic and cellular effects build more slowly, over days and across repeat sessions."),
+    ("Can I combine IV therapy with other treatments?", "Yes, and it usually is. We will sequence it around your rehabilitation or other treatment rather than running the two blind to each other."),
+    ("How often should I receive infusions?", "It depends what you are after. Recovering from something acute may warrant a short run of sessions; maintenance is often monthly."),
+    ("Are there side effects?", "Uncommon, and minor when they happen — some bruising at the site, occasionally brief lightheadedness. You are monitored throughout."),
+    ("Do you offer packages for athletes or post-op recovery?", "Yes. There are protocols built for training blocks, for recovery after an operation, and for patients on an ongoing programme."),
 ]
 
 GENERAL_FAQS = [
-    ("What types of patients do you typically help?", "We treat individuals experiencing joint pain, sports injuries, foot and ankle concerns, vein issues, and those exploring regenerative medicine. Our goal is to help patients regain mobility, reduce discomfort, and improve quality of life."),
-    ("Do I need a referral to book an appointment?", "No referral is required. You can book directly with our specialists for a consultation and begin your personalized treatment plan."),
-    ("Will I definitely need surgery for my condition?", "Not necessarily. Many conditions can be treated with advanced, non-surgical, or minimally invasive procedures. Surgery is only recommended when it's the safest and most effective solution."),
-    ("What can I expect at my first appointment?", "Your first visit includes a thorough consultation, medical history review, and diagnostic evaluation if needed. Our team will then create a personalized treatment plan and answer any questions you may have."),
-    ("How soon can I see results from treatment?", "Results vary depending on the condition and type of treatment. Some patients notice improvement within days, while others may experience gradual progress over several weeks."),
-    ("How safe are regenerative medicine treatments?", "All our regenerative therapies are backed by clinical research and performed by highly trained specialists. Every treatment plan is personalized and designed with patient safety as the top priority."),
+    ("What types of patients do you typically help?", "Joint pain, sports injuries, foot and ankle problems, vein disease — and patients who want to understand what regenerative options realistically offer them. What they have in common is wanting to move without thinking about it."),
+    ("Do I need a referral to book an appointment?", "No. You can book with us directly — no referral needed."),
+    ("Will I definitely need surgery for my condition?", "Often not. A great deal of what we see responds to non-surgical or minimally invasive treatment. We recommend an operation when it is genuinely the better route, and say so plainly when it is not."),
+    ("What can I expect at my first appointment?", "A proper consultation, a review of your history, and imaging where it is warranted. You leave with a plan and the reasoning behind it, not a follow-up appointment to find out."),
+    ("How soon can I see results from treatment?", "That depends on the condition and the treatment. Some people improve within days; for others it builds gradually over weeks, and we will tell you which to expect."),
+    ("How safe are regenerative medicine treatments?", "They are performed by physicians, placed under imaging, and matched to what your scans show. We will also tell you where the evidence is strong and where it is still developing, rather than presenting all of it as settled."),
     ("Where are you located?", "11380 Prosperity Farms Road, Suite 204–208, Palm Beach Gardens, FL 33410 — serving Jupiter, North Palm Beach, Juno Beach, Tequesta, Palm Beach, West Palm Beach, and surrounding communities."),
     ("What are your office hours?", "Monday through Friday, 8:00 AM to 5:00 PM. Call 833-783-6561 (833-STEM561) to schedule."),
 ]
@@ -2888,16 +2888,16 @@ def build_locations():
         write(f"locations/{loc['slug']}.html", page)
 
 MATARAZZO_BIO = [
-    "Marc F. Matarazzo, MD is a Board Certified and Fellowship Trained Orthopedic Surgeon specializing in sports medicine and related injuries. He is an expert in minimally invasive procedures and complex reconstructions, as well as joint replacements, of the shoulder and knee. He is certified in the MAKO robotic-assisted knee replacement system and has more than 23 years of clinical and surgical experience. He has a special interest in combining regenerative medicine technology with cutting edge orthopedic surgical and non-surgical care.",
-    "Dr. Matarazzo earned his medical degree from The Lewis Katz School of Medicine at Temple University and completed his general surgery internship and orthopedic surgery residency at the Medical College of Pennsylvania and Hahnemann University, now Drexel University in Philadelphia. He then completed a sports medicine and arthroscopy fellowship at Lenox Hill Hospital in New York City where he served as an Assistant Team Physician to the New York Jets, the New York Islanders, and the Hofstra University and Hunter College Athletic Departments.",
-    "Dr. Matarazzo is the founder and principal of Elite Sports Medicine serving Palm Beach, Martin, and St Lucie counties of Florida. He has served South Florida since 2002. He held an academic appointment as the Medical Director of the Athletic Training Program at Palm Beach Atlantic University, where he served as their head team physician for over 10 years. Between 2007 and 2020 he served as head team physician for Palm Beach State College and several Palm Beach County high schools. In 2020 he was offered the opportunity to lead the inception of the Sports Medicine Department at Christus Trinity Clinic in Longview, Texas. There, he led a team of certified Athletic Trainers and was head team physician for the athletic departments of East Texas Baptist University and LeTourneau University, as well as over 10 local high schools. He spent countless hours covering Friday night and Saturday football games, supervising Saturday morning injury clinics, and making weekly training room visits.",
-    "Dr. Matarazzo is a Fellow of the American Academy of Orthopedic Surgeons and active member of the American Orthopedic Society for Sports Medicine. He has presented both nationally and internationally on a variety of sports medicine topics since 1999.",
+    "Marc F. Matarazzo, MD is a board-certified, fellowship-trained orthopedic surgeon whose practice centres on sports medicine and the injuries that come with it. His surgical work covers minimally invasive procedures, complex reconstruction, and shoulder and knee joint replacement, and he is certified in the MAKO robotic-assisted knee replacement system. Behind more than 23 years of clinical and surgical experience sits a particular conviction: that regenerative technology and conventional orthopedic care belong in the same plan rather than in competing ones.",
+    "He earned his medical degree at The Lewis Katz School of Medicine at Temple University, then completed a general surgery internship and orthopedic surgery residency at the Medical College of Pennsylvania and Hahnemann University — now Drexel University — in Philadelphia. His sports medicine and arthroscopy fellowship was at Lenox Hill Hospital in New York City, where he served as an Assistant Team Physician to the New York Jets, the New York Islanders, and the athletic departments of Hofstra University and Hunter College.",
+    "Dr. Matarazzo founded Elite Sports Medicine, which serves Palm Beach, Martin and St Lucie counties, and he has practised in South Florida since 2002. He held an academic appointment as Medical Director of the Athletic Training Program at Palm Beach Atlantic University and was their head team physician for over 10 years. From 2007 to 2020 he was head team physician for Palm Beach State College and a number of Palm Beach County high schools. In 2020 he was asked to build the Sports Medicine Department at Christus Trinity Clinic in Longview, Texas from the ground up, leading a team of certified Athletic Trainers and covering East Texas Baptist University, LeTourneau University and more than 10 local high schools — Friday night football, Saturday morning injury clinics, and weekly training room rounds.",
+    "He is a Fellow of the American Academy of Orthopedic Surgeons and an active member of the American Orthopedic Society for Sports Medicine, and has presented nationally and internationally on sports medicine topics since 1999.",
 ]
 
 CEDENO_BIO = [
-    "Dr. Cedeno brings a wealth of knowledge and experience to our practice, with a focus on both conservative and surgical treatments for diabetic conditions affecting the lower extremities. His commitment to excellence is evident in his extensive education and training, making him a trusted professional in the field.",
-    "After earning his bachelor's degree in chemistry from the University of Pittsburgh in Pennsylvania, Dr. Cedeno pursued his passion for podiatric medicine and surgery at Barry University School of Podiatric Medicine & Surgery in Miami, Florida. Following his academic achievements, he completed a comprehensive three-year surgical residency in reconstructive and trauma surgery of the foot and ankle at the Chestnut Hill Hospital/University of Pennsylvania in Philadelphia. During this intensive program, Dr. Cedeno honed his skills in foot, ankle, and leg surgery under the guidance of renowned podiatric and orthopedic surgeons.",
-    "As a testament to his dedication and proficiency, Dr. Cedeno is Board Certified in foot surgery by the American Board of Foot & Ankle Surgery. He is a fellow of the American College of Foot and Ankle Surgeons and a diplomate of the American Board of Podiatric Surgery. Dr. Cedeno is also an esteemed member of the American Podiatric Medical Association, as well as the Florida and Virginia Podiatric Medical Associations. Additionally, he holds the title of Associate of the American Podiatric Sports Medicine Association, showcasing his commitment to advancing podiatric care in all aspects.",
+    "Dr. Cedeno’s practice sits where conservative care and surgery meet, with a particular focus on the diabetic foot and the complications that follow it in the lower limb. Deciding when a problem needs an operation and when it does not is most of the work, and it is the part his training prepared him for.",
+    "He read chemistry at the University of Pittsburgh before taking his podiatric medical and surgical degree at Barry University School of Podiatric Medicine & Surgery in Miami. He then completed a three-year surgical residency in reconstructive and trauma surgery of the foot and ankle at Chestnut Hill Hospital / University of Pennsylvania in Philadelphia, training in foot, ankle and leg surgery under both podiatric and orthopedic surgeons.",
+    "Dr. Cedeno is Board Certified in foot surgery by the American Board of Foot & Ankle Surgery, a fellow of the American College of Foot and Ankle Surgeons, and a diplomate of the American Board of Podiatric Surgery. He is a member of the American Podiatric Medical Association and of the Florida and Virginia Podiatric Medical Associations, and an Associate of the American Podiatric Sports Medicine Association.",
 ]
 
 
@@ -3147,19 +3147,19 @@ def build_about():
     crumbs_html = crumbs([("", "About Us")], depth=d)
     body = f"""{nav(d)}
 <main id="main">
-{page_hero("Our Story", "About RegenOrtho Palm Beach", "Our concierge-based practice blends orthopedic, podiatric, regenerative, and vein care — led by board-certified surgeons with decades of expertise.", crumbs_html, depth=d)}
+{page_hero("Our Story", "About RegenOrtho Palm Beach", "One practice covering orthopedics, podiatry, regenerative treatment and vein care, led by board-certified surgeons — so your care is coordinated rather than referred onward.", crumbs_html, depth=d)}
 <section class="section">
   <div class="svc-intro-grid">
     <figure class="svc-photo reveal">{photo("clinic-interior", "Inside the RegenOrtho Palm Beach clinic in Palm Beach Gardens", 700, 470, sizes="(max-width:900px) 94vw, 620px")}</figure>
     <div class="svc-why reveal" style="--d:120ms">
       <p class="eyebrow">Our Mission</p>
       <h2>Move better. Heal faster. <em>Live healthier.</em></h2>
-      <p>At RegenOrtho Palm Beach, we believe every patient deserves personalized, innovative care. From advanced orthopedic and podiatric treatments to cutting-edge regenerative therapies, our mission is to help you move better, heal faster, and live healthier — all in a concierge-level environment.</p>
+      <p>Most orthopedic care is organised around the procedure. Ours is organised around the patient in front of it — which in practice means longer appointments, a surgeon who has read your imaging before you sit down, and an honest answer about whether you need an operation at all.</p>
       <ul class="check-list">
-        <li>Personalized treatment plans tailored to each patient's unique needs</li>
-        <li>Cutting-edge orthopedic, podiatric, regenerative, and vein therapies</li>
-        <li>Concierge-level care with a focus on comfort and convenience</li>
-        <li>Board-certified specialists committed to patient success and recovery</li>
+        <li>Plans built from your imaging and your goals, not a template</li>
+        <li>Orthopedic, podiatric, regenerative and vein care under one roof</li>
+        <li>Concierge access — the same clinician, reachable when something flares</li>
+        <li>Board-certified surgeons who will tell you when surgery is not the answer</li>
       </ul>
     </div>
   </div>
@@ -3294,7 +3294,7 @@ def build_iv():
   <div class="section-head reveal"><p class="eyebrow">Patient Guide &amp; Answers</p><h2>IV therapy <em>questions</em></h2></div>
   <div class="faq-list">{faqs}</div>
 </section>
-{cta_band(d, heading="Feel better <em>today</em>", sub="Visit our infusion lounge for clinically guided IV therapy tailored to recovery, immune support, energy, and metabolic health.")}
+{cta_band(d, heading="Feel better <em>today</em>", sub="Come and sit in the lounge for an hour. Every formula is chosen with a clinician, and if an infusion is not what you need we will say so.")}
 </main>
 {footer(d)}"""
     schema = offers + faq_schema(IV_FAQS) + breadcrumb_schema([("", "Home"), ("iv-therapy.html", "IV Therapy")])
@@ -3357,7 +3357,7 @@ def build_contact():
     crumbs_html = crumbs([("", "Contact Us")], depth=d)
     body = f"""{nav(d)}
 <main id="main">
-{page_hero("Contact Us", "Your Health Journey Starts Here", "We're here to answer your questions, guide your treatment options, and help you take the next step toward recovery and wellness.", crumbs_html, cta=False, depth=d)}
+{page_hero("Contact Us", "Let's Work Out What's Actually Wrong", "Call the office or send a message and we will get you booked in — and tell you what to bring, so the first appointment is not spent gathering records.", crumbs_html, cta=False, depth=d)}
 <section class="section" id="book">
   <div class="contact-grid">
     <div class="contact-info reveal">
@@ -3438,9 +3438,9 @@ def build_resources():
     crumbs_html = crumbs([("", "Patient Resources")], depth=d)
     faqs = [
         ("Do I need a referral to book an appointment?", "No referral is required. You can book directly with our specialists for a consultation and begin your personalized treatment plan."),
-        ("How do regenerative treatments work?", "Regenerative therapies use your body's natural healing mechanisms — such as growth factors, peptides, or cellular repair — to restore damaged tissues and accelerate recovery."),
-        ("How long is recovery after a minimally invasive procedure?", "Recovery is typically much faster than with traditional surgery. Most patients return to normal activities within a few days, depending on the treatment."),
-        ("Will my insurance cover the treatment?", "Coverage varies by plan and procedure. Our team will guide you through your insurance options and also provide direct-pay packages."),
+        ("How do regenerative treatments work?", "They supply the signals your body already uses to repair tissue — growth factors, peptides, cellular material — concentrated and placed where the damage is."),
+        ("How long is recovery after a minimally invasive procedure?", "Considerably quicker than open surgery. Most people are back to ordinary activity within days, though it depends on what was done."),
+        ("Will my insurance cover the treatment?", "It depends on your plan and the procedure. We will check your benefits before you commit, and show you the direct-pay price alongside it."),
     ]
     faq_html = "".join(
         f"""<details class="faq-item"><summary>{q}</summary><div class="faq-a"><p>{a}</p></div></details>"""
@@ -3448,29 +3448,29 @@ def build_resources():
     )
     body = f"""{nav(d)}
 <main id="main">
-{page_hero("Patient Resources", "Confident, Informed, Supported", "Answers to common questions, guidance through the treatment process, and helpful tips for before and after your visits — all in one place.", crumbs_html, depth=d)}
+{page_hero("Patient Resources", "Confident, Informed, Supported", "What happens at a first visit, what to bring, how payment works, and what to do afterwards — the practical things, in one place.", crumbs_html, depth=d)}
 <section class="section">
   <div class="res-grid">
     <article class="res-card reveal"><span class="res-num" aria-hidden="true">01</span>
       <h2>Getting Started</h2>
-      <p>Whether it's your first visit or a follow-up, knowing what to expect makes your experience smoother.</p>
-      <ul class="check-list"><li>What to expect during your first consultation</li><li>Preparing questions for your doctor</li><li>Understanding treatment timelines</li></ul>
+      <p>Knowing how the visit will actually run takes most of the friction out of it.</p>
+      <ul class="check-list"><li>How a first consultation is structured</li><li>Questions worth writing down beforehand</li><li>What a realistic treatment timeline looks like</li></ul>
     </article>
     <article class="res-card reveal" style="--d:90ms"><span class="res-num" aria-hidden="true">02</span>
       <h2>Insurance &amp; Payment Options</h2>
-      <p>We accept a wide range of insurance providers and also offer concierge and direct-pay options for patients seeking flexible care.</p>
-      <ul class="check-list"><li>Accepted insurance plans overview</li><li>Transparent billing practices</li><li>Flexible concierge &amp; cash-pay packages</li></ul>
+      <p>We work with most major insurers, and we also offer concierge and direct-pay routes for patients who would rather not go through one.</p>
+      <ul class="check-list"><li>Which plans we accept</li><li>Billing you can see before you agree to it</li><li>Concierge and direct-pay packages</li></ul>
     </article>
     <article class="res-card reveal" style="--d:180ms"><span class="res-num" aria-hidden="true">03</span>
       <h2>Preparing for Your Appointment</h2>
-      <p>Your time with our specialists is valuable. Arriving prepared ensures you get the most out of your visit.</p>
-      <ul class="check-list"><li>Bring a list of medications</li><li>Wear comfortable clothing for exams</li><li>Note any recent symptoms or health changes</li></ul>
+      <p>Ten minutes of preparation is usually the difference between leaving with answers and leaving with another appointment.</p>
+      <ul class="check-list"><li>A current list of your medications</li><li>Clothing we can examine the joint through</li><li>Any recent change in symptoms, written down</li></ul>
       <p style="margin-top:1rem;"><a href="forms/index.html">Complete your patient forms before you arrive →</a></p>
     </article>
     <article class="res-card reveal" style="--d:270ms"><span class="res-num" aria-hidden="true">04</span>
       <h2>Post-Treatment Care</h2>
-      <p>After your treatment, proper care and lifestyle adjustments support faster recovery and better outcomes.</p>
-      <ul class="check-list"><li>General recovery tips</li><li>Nutrition and wellness guidance</li><li>When to follow up with your provider</li></ul>
+      <p>What you do in the weeks after treatment matters as much as the treatment. This is the part patients most often get wrong.</p>
+      <ul class="check-list"><li>How to load the area as it heals</li><li>What supports recovery day to day</li><li>When to call us rather than wait</li></ul>
     </article>
   </div>
 </section>
@@ -3479,7 +3479,7 @@ def build_resources():
   <div class="faq-list">{faq_html}</div>
   <p class="section-foot"><a href="faq.html">Browse the full FAQ →</a></p>
 </section>
-{cta_band(d, heading="Need more <em>help?</em>", sub="Our patient support team is always available to answer questions, explain treatment options, and guide you through every step of your journey.")}
+{cta_band(d, heading="Need more <em>help?</em>", sub="Call us. Someone here will talk you through the options and what they cost, without putting you on a plan you did not ask about.")}
 </main>
 {footer(d)}"""
     schema = faq_schema(faqs) + breadcrumb_schema([("", "Home"), ("patient-resources.html", "Patient Resources")])
