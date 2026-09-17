@@ -1621,3 +1621,30 @@ body.nav-locked .mobile-call { display: none !important; }
   line-height: var(--lh-normal);
   color: var(--text-muted);
 }
+
+/* ---------------------------------- Shop --------------------------------- */
+/* .shop-card reuses .svc-card's frame/radius/border but is an <article>, not
+   a link — it holds a real form control (Snipcart's add-to-cart button or a
+   consult link), so the whole card can't be one giant <a>. */
+.shop-card { position: relative; display: flex; flex-direction: column; gap: .6rem;
+  background: var(--white); border: 1px solid var(--line); border-radius: var(--r-lg);
+  padding: 1.4rem 1.3rem 1.5rem; }
+.shop-badge { align-self: flex-start; font: 700 var(--t-3xs)/1 var(--sans); letter-spacing: .08em;
+  text-transform: uppercase; padding: .38rem .65rem; border-radius: 8px; }
+.shop-badge-otc { background: rgba(253, 201, 41, .18); color: var(--bronze-text); }
+.shop-badge-script { background: var(--navy-800); color: var(--gold); }
+.shop-media { display: flex; align-items: center; justify-content: center; aspect-ratio: 16 / 10.5;
+  background: var(--sand); border-radius: var(--r-md); overflow: hidden; }
+.shop-media .photo-fit { width: 100%; height: 100%; object-fit: cover; }
+.shop-bottle-wrap { display: grid; place-items: center; }
+.shop-bottle { display: block; }
+.shop-card h3 { font-family: var(--serif); font-weight: 600; font-size: var(--t-lg); margin: 0; }
+.shop-card h3 a { color: var(--navy-900); text-decoration: none; }
+.shop-card h3 a:hover { color: var(--bronze-text); }
+.shop-tagline { font-size: var(--t-sm); color: var(--muted); line-height: 1.5; margin: 0 0 .3rem; }
+.shop-empty { grid-column: 1 / -1; text-align: center; padding: 2.4rem 1.5rem; background: var(--white);
+  border: 1px dashed var(--line); border-radius: var(--r-lg); color: var(--muted); }
+.shop-empty a { color: var(--bronze-text); font-weight: 700; }
+.shop-photo { display: flex; align-items: center; justify-content: center; aspect-ratio: 16 / 10.7;
+  background: var(--sand); border-radius: var(--r-lg); overflow: hidden; }
+.shop-photo .shop-bottle-wrap svg { width: 96px; height: 132px; }

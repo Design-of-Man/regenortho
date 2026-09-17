@@ -37,6 +37,18 @@ SITE_UPDATED = "2026-08-03"
 # ownership). Ping Bing/Yandex on content changes; see README.
 INDEXNOW_KEY = "a7f3c1e94b2d48f6ae05d7c318b6f240"
 
+# Snipcart powers the /shop cart + checkout on this otherwise-static site: it
+# is a client-side JS cart, hosted checkout and payment processor, so no
+# server, database or PCI scope lives in this repo. The API key below is a
+# PUBLIC key (safe to ship in markup, same as a Stripe publishable key) — get
+# the real one from the Snipcart dashboard -> Account -> API Keys -> Public
+# Test/Live API Key once the practice creates an account and connects a
+# payment processor, then replace this placeholder and rebuild. Until then,
+# "Add to Cart" renders but checkout will fail Snipcart's own auth check —
+# main() prints a reminder every build.
+SNIPCART_PUBLIC_KEY = "SNIPCART_KEY_PENDING"
+SNIPCART_VERSION = "3.7.1"
+
 NAME = "RegenOrtho Palm Beach"
 TAGLINE = "The Regeneration of Orthopedics"
 PHONE_DISPLAY = "833-783-6561"
@@ -525,6 +537,7 @@ def nav(depth=0, current=""):
           </ul>
         </li>
         <li><a class="nav-link" href="{p}iv-therapy.html">IV Lounge</a></li>
+        <li><a class="nav-link" href="{p}shop/index.html">Shop</a></li>
         <li class="has-drop"><button class="drop-btn" aria-expanded="false">Patient Forms<svg viewBox="0 0 12 8" width="10" height="7" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 1.5 6 6.5 11 1.5"/></svg></button>
           <ul class="drop">
             <li><a href="{p}forms/index.html">All patient forms</a></li>
@@ -586,6 +599,7 @@ def footer(depth=0, extra_js="", analytics=True, assistant=True):
         <li><a href="{p}about.html">About Us</a></li>
         <li><a href="{p}services/index.html">Our Services</a></li>
         <li><a href="{p}iv-therapy.html">IV Therapy Lounge</a></li>
+        <li><a href="{p}shop/index.html">Shop</a></li>
         <li><a href="{p}patient-resources.html">Patient Resources</a></li>
         <li><a href="{p}forms/index.html">Patient Forms</a></li>
         <li><a href="{p}faq.html">FAQ</a></li>
@@ -993,6 +1007,44 @@ IV_MENU = [
     {"name": 'Neuro Restore', "short": "Neuro Restore", "cat": "wellness", "ingredients": "Cognitive &amp; nerve support", "price": 231, "bag": "bag-nad.png", "desc": 'Antioxidant and nerve support with Alpha Lipoic Acid (ALA) and Vitamin B12 to help promote healthy nerve function and neurological wellness.'},
     {"name": 'All-Inclusive', "short": "All-Inclusive", "cat": "wellness", "ingredients": "Every add-in on the menu", "price": 399, "bag": "bag-all-inclusive.png", "desc": 'Comprehensive full-body infusion delivering vitamins, minerals, amino acids, antioxidants, and hydration for total wellness optimization.'},
 ]
+
+# ---------------------------------------------------------------------------
+# Shop — practice-formulated vitamins/supplements (OTC, Snipcart checkout) and
+# compounded/prescription "script" items (no checkout — routed to a consult
+# request instead). See build_shop() for how each category renders.
+#
+# DELIBERATELY EMPTY: no products are formulated or published by the practice
+# yet, and facts discipline forbids inventing product names, ingredients,
+# dosages, or prices. build_shop() renders a "coming soon" state for each
+# category when its list is empty, so the page never asserts an unpublished
+# product exists. The full pipeline (product pages, Snipcart cart buttons,
+# consult-request routing, Product/Offer schema, sitemap) is wired and
+# tested — add real entries here once the practice has formulated and
+# priced a product, in this shape:
+#
+# {
+#     "slug": "kebab-case-slug",                # -> /shop/{slug}.html
+#     "name": "Full Product Name",
+#     "category": "otc",                        # "otc" or "script"
+#     "tagline": "One-line shelf description.",
+#     "desc": "Longer paragraph for the product page intro.",
+#     "highlights": ["Bullet one", "Bullet two", "Bullet three"],
+#     "price": 49.00,                           # OTC ONLY — omit for "script"
+#     "size": "30-day supply · 60 capsules",     # or dosage/servings, etc.
+#     "img_alt": "Product bottle description for alt text",
+#     # img: optional — filename in assets/media/, rendered via photo() once
+#     # real product photography exists. Falls back to a generic bottle icon.
+# }
+#
+# "script" items are compounded/prescription-adjacent and must NOT get a
+# Snipcart buy button — CLAUDE.md and the practice agreed a checkout button
+# alone is not legally sufficient to sell a prescription item online. They
+# route to /shop/consult-request.html instead. Do not wire them to checkout
+# until the practice has contracted a licensed pharmacy/telehealth partner
+# to handle verification and fulfillment — that partner integration is a
+# separate piece of work from anything in this file.
+PRODUCTS = []
+
 
 # Shared across the five regenerative modality pages. All of these are quoted
 # from the practice's own published pages — the conditions list, the inclusions
@@ -2280,6 +2332,37 @@ def therapy_schema(svc):
     return extra_ld(node)
 
 
+def product_schema(p):
+    """Product schema for a /shop product page.
+
+    Only OTC items carry a price (see PRODUCTS' schema note), so only they
+    get an Offer — a "script" item with no published price gets a bare
+    Product node, same gating rule as therapy_schema()/SERVICE_FROM_PRICE:
+    never assert a price that isn't actually published on the page.
+    """
+    node = {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "@id": f"{BASE}/shop/{p['slug']}.html#product",
+        "name": p["name"],
+        "description": p.get("desc", p.get("tagline", "")),
+        "url": f"{BASE}/shop/{p['slug']}.html",
+        "brand": {"@id": ORG_ID},
+    }
+    if p.get("img"):
+        node["image"] = f"{BASE}/assets/media/{p['img']}"
+    if p["category"] == "otc" and p.get("price"):
+        node["offers"] = {
+            "@type": "Offer",
+            "price": p["price"],
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock",
+            "url": f"{BASE}/shop/{p['slug']}.html",
+            "seller": {"@id": ORG_ID},
+        }
+    return extra_ld(node)
+
+
 def build_services():
     d = 1
     # ---- individual service pages ----
@@ -3094,6 +3177,235 @@ def build_iv():
     write("iv-therapy.html", page)
 
 
+SHOP_FAQS = [
+    ("How do I order an over-the-counter product?",
+     "Add it to your cart and complete checkout online. Payment and order "
+     "processing are handled by our secure third-party checkout provider — "
+     "no card details are stored on this site."),
+    ("Why can't I just add a prescription or compounded item to my cart?",
+     "Compounded and prescription-strength formulations require a completed "
+     "consultation with our clinical team before they can be filled. Request "
+     "a consult below and our team will follow up to get you started."),
+    ("Who do I contact about an existing order?",
+     f"Email <a href=\"mailto:{EMAIL}\">{EMAIL}</a> or call "
+     f"<a href=\"tel:{PHONE_TEL}\" data-call-location=\"shop_faq\">{PHONE_DISPLAY}</a> "
+     "and our front desk can help."),
+]
+
+# Standard DSHEA supplement disclaimer — legally required boilerplate, not a
+# product-specific claim, so it's safe to publish before any product exists.
+SHOP_SUPPLEMENT_DISCLAIMER = (
+    "These statements have not been evaluated by the Food and Drug "
+    "Administration. These products are not intended to diagnose, treat, "
+    "cure, or prevent any disease. Compounded and prescription-strength "
+    "formulations are only dispensed following a completed consultation and "
+    "are not available for direct online purchase. Products and pricing are "
+    "self-pay and are not covered by insurance or Medicare."
+)
+
+
+def _bottle_icon():
+    """Generic placeholder product mark — gold/navy, no photography needed.
+
+    Used on a shop card/page until the practice supplies real product
+    photography for that item (then pass img= on the PRODUCTS entry and
+    photo() takes over, same as every other section of the site).
+    """
+    return ('<svg class="shop-bottle" viewBox="0 0 64 88" width="64" height="88" '
+            'aria-hidden="true"><rect x="24" y="4" width="16" height="10" rx="2" '
+            'fill="#092D5C"/><path d="M18 20c0-4 3-6 3-6h22s3 2 3 6v56a8 8 0 0 1-8 8H26a8 '
+            '8 0 0 1-8-8z" fill="#FDC929"/><rect x="18" y="36" width="28" height="14" '
+            'fill="#092D5C"/></svg>')
+
+
+def build_shop():
+    d = 1
+    otc = [p for p in PRODUCTS if p.get("category") == "otc"]
+    script_items = [p for p in PRODUCTS if p.get("category") == "script"]
+
+    def _media(p, prefix=""):
+        if p.get("img"):
+            return photo(p["img"].rsplit(".", 1)[0], p.get("img_alt", p["name"]),
+                        640, 420, prefix=prefix, sizes="(max-width:700px) 92vw, 380px")
+        return f'<span class="shop-bottle-wrap">{_bottle_icon()}</span>'
+
+    def _card(p, i):
+        if p["category"] == "otc":
+            badge = "Over-the-counter"
+            cta = (f'<button type="button" class="btn btn-gold btn-block shop-add snipcart-add-item" '
+                   f'data-item-id="{p["slug"]}" data-item-price="{p["price"]:.2f}" '
+                   f'data-item-url="/shop/{p["slug"]}.html" '
+                   f'data-item-name="{html.escape(p["name"], quote=True)}">'
+                   f'Add to cart — ${p["price"]:.2f}</button>')
+        else:
+            badge = "Consult required"
+            cta = (f'<a class="btn btn-navy btn-block" '
+                   f'href="consult-request.html?product={p["slug"]}">Request a consult</a>')
+        return f"""<article class="shop-card reveal" style="--d:{(i % 3) * 90}ms">
+      <span class="shop-badge shop-badge-{p['category']}">{badge}</span>
+      <span class="shop-media">{_media(p, prefix="../")}</span>
+      <h3><a href="{p['slug']}.html">{p['name']}</a></h3>
+      <p class="shop-tagline">{p['tagline']}</p>
+      {cta}
+    </article>"""
+
+    def _empty(label):
+        return f"""<div class="shop-empty reveal">
+      <p>{label}</p>
+    </div>"""
+
+    otc_html = ("".join(_card(p, i) for i, p in enumerate(otc)) if otc else
+                _empty("Our practice-formulated vitamin and wellness line is in development — check back soon, or "
+                       "<a href=\"../contact.html#book\">contact us</a> to be notified when it launches."))
+    script_html = ("".join(_card(p, i) for i, p in enumerate(script_items)) if script_items else
+                   _empty("Compounded and prescription-strength formulations are in development. "
+                          "<a href=\"consult-request.html\">Request a consult</a> to be notified when they're available."))
+
+    faqs = "".join(
+        f"""<details class="faq-item"><summary>{q}</summary><div class="faq-a"><p>{a}</p></div></details>"""
+        for q, a in SHOP_FAQS
+    )
+    snipcart_head = (
+        '<link rel="preconnect" href="https://app.snipcart.com">\n'
+        '<link rel="preconnect" href="https://cdn.snipcart.com">\n'
+        f'<link rel="stylesheet" href="https://cdn.snipcart.com/themes/v{SNIPCART_VERSION}/default/snipcart.css">\n'
+    )
+    snipcart_embed = (
+        f'<div hidden id="snipcart" data-api-key="{SNIPCART_PUBLIC_KEY}" '
+        'data-config-modal-style="side"></div>\n'
+        f'<script async src="https://cdn.snipcart.com/themes/v{SNIPCART_VERSION}/default/snipcart.js"></script>\n'
+    )
+
+    # ---- shop index ----
+    crumbs_html = crumbs([("", "Shop")], depth=d)
+    body = f"""{nav(d)}
+<main id="main">
+{page_hero("Shop", "Practice-formulated vitamins &amp; recovery support", "Practice-formulated supplements and physician-directed formulations, built around the same regenerative and recovery goals as our in-clinic care.", crumbs_html, cta=False, depth=d)}
+<section class="section">
+  <div class="section-head reveal"><p class="eyebrow">Over-the-Counter</p><h2>Ship straight to <em>your door</em></h2></div>
+  <div class="svc-grid svc-grid-3 shop-grid">{otc_html}</div>
+</section>
+<section class="section section-tint">
+  <div class="section-head reveal"><p class="eyebrow">Compounded &amp; Prescription</p><h2>Available after a <em>consult</em></h2>
+  <p class="section-sub">These formulations are physician-directed and require a completed consultation before they can be filled — they are not available for direct checkout.</p></div>
+  <div class="svc-grid svc-grid-3 shop-grid">{script_html}</div>
+</section>
+<section class="section section-tint">
+  <div class="section-head reveal"><p class="eyebrow">Shop Questions</p><h2>Common <em>questions</em></h2></div>
+  <div class="faq-list">{faqs}</div>
+</section>
+<section class="section section-disclaimer">
+  <div class="disclaimer reveal">
+    <p class="eyebrow">Important Information</p>
+    <p>{SHOP_SUPPLEMENT_DISCLAIMER}</p>
+  </div>
+</section>
+</main>
+{snipcart_embed}{footer(d)}"""
+    schema = faq_schema(SHOP_FAQS) + breadcrumb_schema([("", "Home"), ("shop/index.html", "Shop")])
+    page = head("Shop | Practice-Formulated Vitamins &amp; Recovery Support | RegenOrtho Palm Beach",
+                "Shop practice-formulated vitamins, wellness supplements, and physician-directed compounded formulations from RegenOrtho Palm Beach.",
+                depth=d, canonical="shop/index.html", extra_schema=schema + snipcart_head
+                ) + '<body class="page-shop">\n' + body
+    write("shop/index.html", page)
+
+    # ---- individual product pages ----
+    for p in PRODUCTS:
+        highlights = "".join(f"<li>{h}</li>" for h in p.get("highlights", []))
+        if p["category"] == "otc":
+            cta_block = (f'<button type="button" class="btn btn-gold btn-block shop-add snipcart-add-item" '
+                         f'data-item-id="{p["slug"]}" data-item-price="{p["price"]:.2f}" '
+                         f'data-item-url="/shop/{p["slug"]}.html" '
+                         f'data-item-name="{html.escape(p["name"], quote=True)}">'
+                         f'Add to cart — ${p["price"]:.2f}</button>')
+        else:
+            cta_block = (f'<a class="btn btn-navy btn-block" '
+                         f'href="consult-request.html?product={p["slug"]}">Request a consult</a>')
+        crumbs_html = crumbs([("shop/index.html", "Shop"), ("", p["name"])], depth=d)
+        body = f"""{nav(d)}
+<main id="main">
+{page_hero("Shop", p["name"], p["tagline"], crumbs_html, cta=False, depth=d)}
+<section class="section svc-intro">
+  <div class="svc-intro-grid">
+    <figure class="svc-photo shop-photo reveal">{_media(p, prefix="../")}</figure>
+    <div class="svc-why reveal" style="--d:120ms">
+      <p class="eyebrow">{p.get("size", "")}</p>
+      <h2>About this <em>{"formula" if p["category"] == "otc" else "formulation"}</em></h2>
+      <p>{p["desc"]}</p>
+      {f'<ul class="check-list">{highlights}</ul>' if highlights else ""}
+      {cta_block}
+    </div>
+  </div>
+</section>
+<section class="section section-disclaimer">
+  <div class="disclaimer reveal">
+    <p class="eyebrow">Important Information</p>
+    <p>{SHOP_SUPPLEMENT_DISCLAIMER}</p>
+  </div>
+</section>
+</main>
+{snipcart_embed if p["category"] == "otc" else ""}{footer(d)}"""
+        schema = (
+            product_schema(p)
+            + breadcrumb_schema([("", "Home"), ("shop/index.html", "Shop"), (f"shop/{p['slug']}.html", p["name"])])
+        )
+        extra_schema = schema + (snipcart_head if p["category"] == "otc" else "")
+        page = head(f"{p['name']} | Shop | RegenOrtho Palm Beach",
+                    p.get("tagline", p["name"]), depth=d, canonical=f"shop/{p['slug']}.html",
+                    extra_schema=extra_schema) + '<body class="page-shop">\n' + body
+        write(f"shop/{p['slug']}.html", page)
+
+    # ---- consult request (script-gated items) ----
+    crumbs_html = crumbs([("shop/index.html", "Shop"), ("", "Request a Consult")], depth=d)
+    product_options = "".join(f'<option value="{p["slug"]}">{p["name"]}</option>' for p in script_items)
+    body = f"""{nav(d)}
+<main id="main">
+{page_hero("Shop", "Request a consult", "Compounded and prescription-strength formulations require a completed consultation before they can be filled. Tell us what you're interested in and our team will follow up.", crumbs_html, cta=False, depth=d)}
+<section class="section" id="request">
+  <div class="contact-grid">
+    <div class="contact-info reveal">
+      <h2>Prefer to talk it <em>through first</em>?</h2>
+      <p>Call or email our front desk directly and we'll walk you through the consult process.</p>
+      <ul class="contact-list">
+        <li><strong>Call or text</strong><a href="tel:{PHONE_TEL}" data-call-location="shop_consult_list">{PHONE_VANITY} · {PHONE_DISPLAY}</a></li>
+        <li><strong>Email</strong><a href="mailto:{EMAIL}">{EMAIL}</a></li>
+      </ul>
+    </div>
+    <form class="contact-form reveal" id="shop-consult-form" style="--d:120ms" action="https://formsubmit.co/{FORM_TARGET_EMAIL}" method="POST">
+      <h2 class="form-title">Request a consult</h2>
+      <input type="hidden" name="_subject" value="[Shop] New Consult Request — regenorthopb.com">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_cc" value="nicholasbkashuba@gmail.com">
+      <input type="hidden" name="source" value="regenorthopb.com shop consult-request page">
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="form-row">
+        <label>Name<input type="text" name="name" required autocomplete="name"></label>
+        <label>Phone Number<input type="tel" name="phone" required autocomplete="tel"></label>
+      </div>
+      <label>Email<input type="email" name="email" required autocomplete="email"></label>
+      <label>Which formulation are you interested in?
+        <select name="product">
+          {product_options}
+          <option>Not sure — help me choose</option>
+        </select>
+      </label>
+      <label>Message<textarea name="message" rows="4" placeholder="Anything you'd like our team to know before your consult."></textarea></label>
+      <p class="form-fine form-fine-inline">Please don't include medical history or symptoms here — we'll take that securely at your visit.</p>
+      <button class="btn btn-gold btn-block" type="submit">Request Consult</button>
+      <p class="form-fine">Submitting sends your request straight to our front desk. For anything urgent, call {PHONE_DISPLAY}.</p>
+    </form>
+  </div>
+</section>
+</main>
+{footer(d)}"""
+    schema = breadcrumb_schema([("", "Home"), ("shop/index.html", "Shop"), ("shop/consult-request.html", "Request a Consult")])
+    page = head("Request a Consult | Shop | RegenOrtho Palm Beach",
+                "Request a consultation for compounded and prescription-strength formulations from RegenOrtho Palm Beach.",
+                depth=d, canonical="shop/consult-request.html", extra_schema=schema
+                ) + '<body class="page-shop">\n' + body
+    write("shop/consult-request.html", page)
+
+
 def build_faq():
     d = 0
     cats = all_faq_categories()
@@ -3695,7 +4007,8 @@ def build_meta():
     pages = ["index.html", "about.html", "contact.html", "faq.html", "iv-therapy.html",
              "patient-resources.html", "privacy-policy.html", "terms.html",
              "forms/index.html",
-             "services/index.html", "blog/index.html",
+             "services/index.html", "blog/index.html", "shop/index.html",
+             "shop/consult-request.html",
              "providers/dr-marc-matarazzo.html", "providers/dr-orlando-cedeno.html",
              "providers/emily-bahnick.html"]
     pages += [f"forms/{f['slug']}.html" for f in FORMS]
@@ -3703,6 +4016,7 @@ def build_meta():
     pages += [f"conditions/{c['slug']}.html" for c in CONDITIONS]
     pages += [f"locations/{l['slug']}.html" for l in LOCATIONS]
     pages += [f"blog/{p['slug']}.html" for p in BLOG_POSTS]
+    pages += [f"shop/{p['slug']}.html" for p in PRODUCTS]
 
     # Crawl priority mirrors commercial intent: the money pages are the homepage,
     # services, conditions and locations — not the legal boilerplate.
@@ -3717,6 +4031,8 @@ def build_meta():
             return "0.8", "monthly"
         if u.startswith("providers/") or u in ("about.html", "contact.html", "faq.html"):
             return "0.8", "monthly"
+        if u.startswith("shop/"):
+            return "0.7", "monthly"
         if u.startswith("blog/"):
             return "0.6", "yearly"
         if u.startswith("forms/"):
@@ -3982,6 +4298,7 @@ def main():
     build_conditions()
     build_locations()
     build_iv()
+    build_shop()
     build_faq()
     build_contact()
     build_resources()
@@ -3992,6 +4309,13 @@ def main():
     if SHARE_BASE != BASE:
         print(f"\nNOTE: share cards (og:image) point at {SHARE_BASE}, not {BASE}.")
         print("      Once regenorthopb.com resolves to Vercel, set SHARE_BASE = BASE and rebuild.")
+    if SNIPCART_PUBLIC_KEY == "SNIPCART_KEY_PENDING":
+        print("\nNOTE: /shop checkout uses a placeholder Snipcart key — cart buttons render but")
+        print("      checkout will fail. Set SNIPCART_PUBLIC_KEY to the real public API key once")
+        print("      the practice creates a Snipcart account, then rebuild.")
+    if not PRODUCTS:
+        print("NOTE: PRODUCTS is empty — /shop renders its 'coming soon' state. Add real")
+        print("      formulated/priced products to PRODUCTS once the practice has them.")
     print("\nDone.")
 
 

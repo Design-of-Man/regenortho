@@ -276,6 +276,32 @@ rewritten in the same change. Full checklist in README.md → "Patient forms & H
 The site's other forms (contact, assistant) may keep using FormSubmit — they collect
 contact details and a reason for calling, not clinical history.
 
+## Shop (`/shop`) — Snipcart cart, no server
+`build_shop()` generates the shop off `PRODUCTS` (defined next to `IV_MENU`), the same
+data-drives-markup pattern as everything else. Checkout is Snipcart — a client-side cart +
+hosted checkout + payment processor — so this stays a static site with no server, database
+or PCI scope. `SNIPCART_PUBLIC_KEY` is a placeholder until the practice creates a Snipcart
+account; `main()` prints a reminder every build until it's real, same idiom as the
+`SHARE_BASE` reminder.
+`PRODUCTS` is deliberately empty: no products are formulated/priced yet, and facts
+discipline forbids inventing a name, ingredient, dosage or price. Both shop sections
+("Over-the-Counter", "Compounded & Prescription") render a "coming soon" empty state when
+their list is empty rather than assert an unpublished product exists — the schema comment
+above `PRODUCTS` shows the exact dict shape to add once the practice has a real one.
+Each product's `category` is `"otc"` or `"script"` and controls the whole rendering path —
+never blur this distinction:
+- `"otc"` gets a Snipcart `snipcart-add-item` button (real checkout, real payment).
+- `"script"` (compounded/prescription-adjacent) gets a link to `/shop/consult-request.html`
+  instead — a FormSubmit lead form, same contact-details-only rule as the contact page (no
+  clinical history). A checkout button is not legally sufficient to sell a prescription
+  item online; do not wire a `"script"` product to Snipcart until the practice has
+  contracted a licensed pharmacy/telehealth partner to handle verification and fulfillment
+  — that partner integration is separate work from anything in build.py.
+Shop pages are self-canonical `.html`, not added to `clean_url_map()` — same exception as
+conditions/locations (a brand-new section with no legacy URL earning clicks yet).
+`product_schema()` mirrors `therapy_schema()`'s price-gating: only an `"otc"` item with a
+real `price` gets a schema.org `Offer` — never assert a price that isn't on the page.
+
 ## Facts discipline
 All claims/credentials/prices/reviews are from the practice's own published content. Never
 invent credentials, statistics, outcomes, or testimonials. Reviews stay verbatim.
