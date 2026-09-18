@@ -351,26 +351,75 @@
     playWords();
   }
 
-  /* ---------------------------------------------------- call tracking */
-  /* Vercel Web Analytics custom event, fired on every tel: link so leads
-     driven by Call Now / phone buttons are countable. Fire-and-forget: a
-     blocked or missing window.va must never throw or delay the tel: dial.
-     Silently no-ops on /forms/* — no analytics script loads there (HIPAA). */
-  document.addEventListener("click", function (e) {
-    var link = e.target.closest && e.target.closest('a[href^="tel:"]');
-    if (!link) return;
+  /* ---------------------------------------------------- lead tracking */
+  /* Three events describe this practice's entire lead funnel: a call started,
+     an appointment CTA followed, a form sent. They go to BOTH Vercel Web
+     Analytics and GA4 — GA4 because that is what Google Ads can import as a
+     conversion, and Ads currently optimises blind.
+
+     Two naming rules that look inconsistent and are not:
+       - Vercel keeps "click_to_call". Renaming it would orphan the history
+         already recorded under that name.
+       - GA4 gets "call_click", matching jupiterlaser.com. Both properties
+         then expose the SAME three event names, so marking key events is one
+         decision applied twice rather than two bespoke ones.
+
+     Payload is placement and path only. Never a condition, a service name or
+     a field value: attaching "knee pain" to an individual visitor's action is
+     the line where analytics becomes a health-privacy problem.
+
+     Fire-and-forget. A blocked or missing window.va / window.gtag must never
+     throw or delay a tel: dial. Both are absent on /forms/* (no analytics
+     script loads there, per the HIPAA rule), so every call below silently
+     no-ops on exactly the pages that must not be tracked. */
+  function leadEvent(vercelName, gaName, data) {
     try {
-      if (window.va) {
-        window.va("event", {
-          name: "click_to_call",
-          data: {
-            path: window.location.pathname,
-            location: link.getAttribute("data-call-location") || "unknown"
-          }
-        });
-      }
+      if (window.va) window.va("event", { name: vercelName, data: data || {} });
     } catch (err) {}
+    try {
+      if (typeof window.gtag === "function") window.gtag("event", gaName, data || {});
+    } catch (err) {}
+  }
+
+  function placementOf(el) {
+    var explicit = el.getAttribute("data-call-location");
+    if (explicit) return explicit;
+    if (el.closest(".mobile-call")) return "sticky";
+    if (el.closest(".site-header")) return "header";
+    if (el.closest(".site-footer")) return "footer";
+    if (el.closest(".rga-panel, [data-open-assist]")) return "assistant";
+    return "body";
+  }
+
+  document.addEventListener("click", function (e) {
+    var link = e.target.closest && e.target.closest("a[href]");
+    if (!link) return;
+    var href = link.getAttribute("href") || "";
+
+    if (href.indexOf("tel:") === 0) {
+      leadEvent("click_to_call", "call_click", {
+        path: window.location.pathname,
+        location: placementOf(link)
+      });
+      return;
+    }
+
+    /* Internal hrefs ship extensionless and relative ("contact#book",
+       "../contact#book") because rewrite_links() rewrites every one of them,
+       so match the RESOLVED pathname rather than the raw attribute. */
+    if (link.host && link.host !== window.location.host) return;
+    var path = (link.pathname || "").replace(/\/+$/, "");
+    if (path === "/contact" || path === "/contact.html") {
+      leadEvent("appointment_cta", "appointment_cta", {
+        path: window.location.pathname,
+        location: placementOf(link)
+      });
+    }
   });
+
+  /* Exposed so contact-form.js can report the completed submit through the
+     same guarded path instead of re-implementing the window.va/gtag dance. */
+  window.RGLead = { track: leadEvent };
 
   /* ------------------------------------------- assistant deep-link hook */
   document.querySelectorAll("[data-open-assist]").forEach(function (btn) {

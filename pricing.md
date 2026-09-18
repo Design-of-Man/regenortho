@@ -12,6 +12,10 @@ consultation — see "Quoted at consultation" below.
 | --- | --- | --- |
 | Medical Weight Loss & GLP-1 | from $239/month | Plan depends on medication and monitoring your physician recommends. |
 | Peptide Therapy | from $249/month | Protocol and cost set at consultation based on your goals. |
+| GHK-Cu Peptide Therapy | from $249/month | Protocol page for the peptide programme: https://regenorthopb.com/services/ghk-cu |
+| KPV Peptide Therapy | from $249/month | Protocol page for the peptide programme: https://regenorthopb.com/services/kpv |
+| Tesamorelin Therapy | from $249/month | Protocol page for the peptide programme: https://regenorthopb.com/services/tesamorelin |
+| MOTS-c Peptide Therapy | from $249/month | Protocol page for the peptide programme: https://regenorthopb.com/services/mots-c |
 | IV Recovery & Wellness Lounge | $189–$499 per infusion | Per-formula prices below. |
 
 ## Regenerative therapies

@@ -384,6 +384,11 @@
       "permanent": true
     },
     {
+      "source": "/nad%e2%81%ba-500-mg",
+      "destination": "/iv-therapy",
+      "permanent": true
+    },
+    {
       "source": "/immune-boost-vit-c-zinc-gsh",
       "destination": "/iv-therapy",
       "permanent": true
@@ -627,6 +632,26 @@
       "source": "/services/vein-care",
       "destination": "/our-services/vein-care-medical-cosmetic",
       "permanent": true
+    },
+    {
+      "source": "/services/ghk-cu.html",
+      "destination": "/services/ghk-cu",
+      "permanent": true
+    },
+    {
+      "source": "/services/kpv.html",
+      "destination": "/services/kpv",
+      "permanent": true
+    },
+    {
+      "source": "/services/tesamorelin.html",
+      "destination": "/services/tesamorelin",
+      "permanent": true
+    },
+    {
+      "source": "/services/mots-c.html",
+      "destination": "/services/mots-c",
+      "permanent": true
     }
   ],
   "headers": [
@@ -843,6 +868,22 @@
     {
       "source": "/terms",
       "destination": "/terms.html"
+    },
+    {
+      "source": "/services/ghk-cu",
+      "destination": "/services/ghk-cu.html"
+    },
+    {
+      "source": "/services/kpv",
+      "destination": "/services/kpv.html"
+    },
+    {
+      "source": "/services/tesamorelin",
+      "destination": "/services/tesamorelin.html"
+    },
+    {
+      "source": "/services/mots-c",
+      "destination": "/services/mots-c.html"
     }
   ]
 }
