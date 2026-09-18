@@ -41,6 +41,12 @@
       if (successName) successName.textContent = first || "there";
       form.hidden = true;
       if (success) { success.hidden = false; success.focus(); }
+      /* Completed submit — the end of the lead funnel main.js tracks. Routed
+         through RGLead so the window.va / window.gtag guards live in one
+         place. Deliberately NO field values in the payload: the visitor has
+         just typed their name, phone and reason for calling, and none of that
+         belongs in an analytics event. */
+      if (window.RGLead) window.RGLead.track("form_submit", "form_submit", { form: "contact" });
     }).catch(function () {
       if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = submitLabel; }
       if (errorBox) errorBox.hidden = false;
