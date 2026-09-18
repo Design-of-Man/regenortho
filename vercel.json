@@ -384,6 +384,11 @@
       "permanent": true
     },
     {
+      "source": "/nad%e2%81%ba-500-mg",
+      "destination": "/iv-therapy",
+      "permanent": true
+    },
+    {
       "source": "/immune-boost-vit-c-zinc-gsh",
       "destination": "/iv-therapy",
       "permanent": true
