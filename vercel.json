@@ -652,6 +652,21 @@
       "source": "/services/mots-c.html",
       "destination": "/services/mots-c",
       "permanent": true
+    },
+    {
+      "source": "/services/sclerotherapy.html",
+      "destination": "/services/sclerotherapy",
+      "permanent": true
+    },
+    {
+      "source": "/services/endovenous-ablation.html",
+      "destination": "/services/endovenous-ablation",
+      "permanent": true
+    },
+    {
+      "source": "/services/microphlebectomy.html",
+      "destination": "/services/microphlebectomy",
+      "permanent": true
     }
   ],
   "headers": [
@@ -884,6 +899,18 @@
     {
       "source": "/services/mots-c",
       "destination": "/services/mots-c.html"
+    },
+    {
+      "source": "/services/sclerotherapy",
+      "destination": "/services/sclerotherapy.html"
+    },
+    {
+      "source": "/services/endovenous-ablation",
+      "destination": "/services/endovenous-ablation.html"
+    },
+    {
+      "source": "/services/microphlebectomy",
+      "destination": "/services/microphlebectomy.html"
     }
   ]
 }
