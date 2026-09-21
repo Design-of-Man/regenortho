@@ -37,6 +37,16 @@
       body: JSON.stringify(payload),
     }).then(function (r) {
       if (!r.ok) throw new Error("http " + r.status);
+      return r.json();
+    }).then(function (data) {
+      /* FormSubmit answers 200 with {"success":"false"} when the recipient
+         address has never been activated: the submission is accepted and
+         dropped. Reading only the status code would hide the form, show the
+         thank-you panel and fire the form_submit conversion for a lead that
+         never arrived. Believe the body instead. */
+      if (!data || String(data.success).toLowerCase() !== "true") {
+        throw new Error("not delivered");
+      }
       var first = (payload.name || "").trim().split(" ")[0];
       if (successName) successName.textContent = first || "there";
       form.hidden = true;
