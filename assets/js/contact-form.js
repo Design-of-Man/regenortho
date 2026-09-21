@@ -31,6 +31,24 @@
     var payload = {};
     data.forEach(function (value, key) { payload[key] = value; });
 
+    /* Mark the submission as having come through this page.
+       Every hidden field in the form -- _subject included -- arrives at
+       FormSubmit identically whether a person filled the form in or
+       something scraped the markup and replayed it, so the inbox cannot
+       tell the two apart and neither can anything reading it afterwards.
+       Only a value set HERE, by script, at submit time, can: anything
+       posting straight to formsubmit.co never runs this line and keeps the
+       bare subject built into the markup.
+       The prefix is left alone so existing inbox filters on
+       "[Contact Form]" keep matching; the suffix is additive.
+       LABELLING, NOT BLOCKING. Nothing here rejects or drops a submission
+       -- an unmarked one is still a lead, delivered identically, and may
+       well be a real patient whose JavaScript simply did not run (this
+       form posts natively without it, by design). The marker exists so the
+       question "was this a person on the site?" is answerable at all. */
+    payload._subject = (payload._subject || "") + " (from website)";
+    payload.verified = "yes";
+
     fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json", "Accept": "application/json" },
