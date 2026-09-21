@@ -368,6 +368,17 @@
         body: JSON.stringify(payload()),
       }).then(function (r) {
         if (!r.ok) throw new Error("http " + r.status);
+        return r.json();
+      }).then(function (data) {
+        /* FormSubmit answers 200 with {"success":"false"} for a recipient
+           address that was never activated -- it accepts the submission and
+           drops it. Trusting the status code alone would clear the draft and
+           tell the patient we have their request when nothing was sent, which
+           is exactly how jupiterlaser.com lost leads silently. Believe the
+           body, and let the catch below queue it for retry. */
+        if (!data || String(data.success).toLowerCase() !== "true") {
+          throw new Error("not delivered");
+        }
         m.remove();
         say("Sent! 🎉 Our team will reach out to confirm your appointment — usually within one business day.<br>Need us sooner? Call <a href=\"tel:" + PHONE_TEL + "\">" + PHONE + "</a>.");
         localStorage.removeItem(LS_DRAFT);
@@ -396,6 +407,14 @@
       body: JSON.stringify(item),
     }).then(function (r) {
       if (!r.ok) throw new Error("http " + r.status);
+      return r.json();
+    }).then(function (data) {
+      /* Same rule as deliver(): a 200 that says success:"false" delivered
+         nothing, so the item stays queued rather than being shifted off and
+         lost for good. */
+      if (!data || String(data.success).toLowerCase() !== "true") {
+        throw new Error("not delivered");
+      }
       q.shift();
       save(LS_QUEUE, q);
       if (q.length) retryQueue();
