@@ -106,7 +106,11 @@ To deploy:
 
 1. Import this repo into Vercel. No build step and no framework — it's static output that
    is committed, and `vercel.json` is already configured.
-2. Set the production domain to `www.regenorthopb.com`.
+2. Set the production domain to `regenorthopb.com` — non-www. That is the canonical
+   host for every canonical, `og:url`, schema `@id` and sitemap entry the build emits
+   (`BASE` in `build.py`), and `vercel.json` 301s `www` to it. Setting www as production
+   puts the redirect back to front and hands Google two hosts again; see CLAUDE.md for
+   what that cost last time.
 3. Point DNS: `A @ → 76.76.21.21`, `CNAME www → cname.vercel-dns.com`.
 4. **Set `SHARE_BASE = BASE` in `build.py` and rebuild.** Until the domain resolves,
    `og:image` has to point at the live `*.vercel.app` host, because link-preview
@@ -150,11 +154,14 @@ The key file `a7f3c1e94b2d48f6ae05d7c318b6f240.txt` at the site root proves doma
 ownership. It does nothing on its own — you have to ping when content changes:
 
 ```
-curl -s "https://api.indexnow.org/indexnow?url=https://www.regenorthopb.com/&key=a7f3c1e94b2d48f6ae05d7c318b6f240"
+curl -s "https://api.indexnow.org/indexnow?url=https://regenorthopb.com/&key=a7f3c1e94b2d48f6ae05d7c318b6f240"
 ```
 
-Swap `url=` for whichever page changed. Google ignores IndexNow; Bing, Yandex and
-several AI crawlers act on it within minutes instead of waiting for a crawl.
+Swap `url=` for whichever page changed. The host must be the canonical, non-www one:
+IndexNow fetches the key file from the host in `url=`, and `www` only 301s there, so a
+www URL submits a page that canonicalizes somewhere else. Google ignores IndexNow;
+Bing, Yandex and several AI crawlers act on it within minutes instead of waiting for a
+crawl.
 
 ## SEO — do not regress
 
