@@ -380,6 +380,16 @@
           throw new Error("not delivered");
         }
         m.remove();
+        /* A booking taken here is a lead, and until now it was the only lead path
+           on this site that reported nothing. The contact form fires form_submit
+           on confirmed delivery; the assistant -- which is where the real
+           enquiries actually arrive -- fired only click_to_call, so Vercel
+           recorded zero form submissions on days the practice received one.
+           Same guarded path as contact-form.js, same rule: on CONFIRMED delivery
+           only, never on a 200 that said success:"false". Deliberately NO field
+           values: the visitor has just typed their name, phone and what they
+           need, and none of that belongs in an analytics event. */
+        if (window.RGLead) window.RGLead.track("form_submit", "form_submit", { form: "assistant" });
         say("Sent! 🎉 Our team will reach out to confirm your appointment — usually within one business day.<br>Need us sooner? Call <a href=\"tel:" + PHONE_TEL + "\">" + PHONE + "</a>.");
         localStorage.removeItem(LS_DRAFT);
         draft = {};
@@ -415,6 +425,11 @@
       if (!data || String(data.success).toLowerCase() !== "true") {
         throw new Error("not delivered");
       }
+      /* A request that was saved offline and delivered later is still an
+         enquiry, and it can only be counted here -- the live attempt threw, so
+         it never reached the line above. Exactly one event per booking either
+         way: the item is shifted off the queue immediately below. */
+      if (window.RGLead) window.RGLead.track("form_submit", "form_submit", { form: "assistant" });
       q.shift();
       save(LS_QUEUE, q);
       if (q.length) retryQueue();
