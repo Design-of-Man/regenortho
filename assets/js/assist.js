@@ -12,6 +12,9 @@
   var EMAIL = "emily@regenorthopb.com";
   var FORM_TARGET_EMAIL = "emily@regenorthopb.com";
   var ENDPOINT = "https://formsubmit.co/ajax/" + FORM_TARGET_EMAIL;
+  /* Mirrors FORM_CC_EMAILS in build.py. build.py does not generate this file, so
+     the two lists only stay in step if both are edited together. */
+  var FORM_CC = "nicholasbkashuba@gmail.com,matarazzomd@gmail.com,doctor.cedeno@gmail.com";
   var LS_DRAFT = "rga-draft-v1";
   var LS_QUEUE = "rga-queue-v1";
 
@@ -352,7 +355,7 @@
   function payload() {
     return {
       _subject: "[Site Assistant] New Appointment Request — " + draft.name,
-      _cc: "nicholasbkashuba@gmail.com",
+      _cc: FORM_CC,
       name: draft.name, phone: draft.phone, email: draft.email,
       service: draft.service, preferred_time: draft.timing, message: draft.message || "",
       source: "regenorthopb.com concierge assistant, " + location.pathname,
