@@ -44,6 +44,15 @@ PHONE_VANITY = "833-STEM561"
 PHONE_TEL = "+18337836561"
 EMAIL = "emily@regenorthopb.com"
 FORM_TARGET_EMAIL = "emily@regenorthopb.com"  # FormSubmit delivery address (contact form + assistant)
+# Copied on every enquiry, from the contact form and the assistant alike. FormSubmit
+# reads _cc as one comma-separated string. This list is mirrored by hand in
+# assets/js/assist.js, which build.py does not generate — changing it here is only
+# half the change. Note these addresses ship in the page source of a public site.
+FORM_CC_EMAILS = (
+    "nicholasbkashuba@gmail.com,"
+    "matarazzomd@gmail.com,"      # Dr. Marc Matarazzo
+    "doctor.cedeno@gmail.com"     # Dr. Orlando Cedeno
+)
 ADDRESS_STREET = "11380 Prosperity Farms Road, Suite 204–208"
 ADDRESS_CITY = "Palm Beach Gardens"
 ADDRESS_STATE = "FL"
@@ -3427,7 +3436,7 @@ def build_contact():
       <h2 class="form-title">Request an appointment</h2>
       <input type="hidden" name="_subject" value="[Contact Form] New Appointment Request — regenorthopb.com">
       <input type="hidden" name="_captcha" value="false">
-      <input type="hidden" name="_cc" value="nicholasbkashuba@gmail.com">
+      <input type="hidden" name="_cc" value="{FORM_CC_EMAILS}">
       <input type="hidden" name="source" value="regenorthopb.com contact page form">
       <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
       <div class="form-row">
