@@ -59,6 +59,25 @@ ADDRESS_STATE = "FL"
 ADDRESS_ZIP = "33410"
 HOURS = "Monday – Friday: 8:00 AM – 5:00 PM"
 INSTAGRAM = "https://www.instagram.com/regenortho_palmbeach/"
+
+# Sister practices — each doctor's own practice, cross-linked both ways at
+# Dr. Cedeno's request (2026-09-23): elitesportsmed.org and jupiterlaser.com
+# carry the matching block pointing back here. Rendered in the footer of every
+# page, in the homepage team section, and in llms.txt. Copy restates only what
+# each sister site publishes about itself — keep it that way.
+# (url, name, relation, blurb)
+SISTER_PRACTICES = [
+    ("https://elitesportsmed.org/", "ELITE Sports Medicine",
+     "Dr. Matarazzo&rsquo;s orthopedic &amp; sports medicine practice",
+     "Board-certified, fellowship-trained orthopedic surgery — MAKO robotic knee "
+     "replacement, ACL and meniscus surgery, shoulder replacement and sports "
+     "medicine. Offices in Port St. Lucie and Palm Beach Gardens."),
+    ("https://jupiterlaser.com/", "Abacoa Podiatry &amp; Leg Vein Center",
+     "Dr. Cedeno&rsquo;s foot &amp; ankle practice",
+     "Foot &amp; ankle surgeons Dr. Orlando Cedeno, DPM and Dr. Isin A. Mustafa, "
+     "DPM — MLS laser, shockwave, bunion correction and minimally invasive foot "
+     "&amp; ankle surgery. Offices in Jupiter and Palm Beach Gardens."),
+]
 MAP_URL = "https://maps.google.com/maps?q=RegenOrtho%20Palm%20Beach%2011380%20Prosperity%20Farms%20Road%20Palm%20Beach%20Gardens"
 # Alt for the default share card. Deliberately does not name individuals — the
 # roster is named on /about and /providers, and a share card should not be the
@@ -580,6 +599,10 @@ def footer(depth=0, extra_js="", analytics=True, assistant=True):
     loc = "\n".join(
         f'<li><a href="{p}{href}">{label}</a></li>' for href, label in LOCATIONS_NAV
     )
+    sisters = "\n      ".join(
+        f'<li><a href="{url}"><strong>{name}</strong><span>{rel}</span></a></li>'
+        for url, name, rel, _ in SISTER_PRACTICES
+    )
     year = 2026
     return f"""<footer class="site-footer">
   <div class="footer-glow" aria-hidden="true"></div>
@@ -624,6 +647,12 @@ def footer(depth=0, extra_js="", analytics=True, assistant=True):
       <p><a class="footer-tel" href="tel:{PHONE_TEL}" data-call-location="footer">{PHONE_VANITY}<span> · {PHONE_DISPLAY}</span></a></p>
       <p><a class="footer-mail" href="mailto:{EMAIL}">{EMAIL}</a></p>
     </div>
+  </div>
+  <div class="footer-sisters">
+    <h2>Our sister practices</h2>
+    <ul>
+      {sisters}
+    </ul>
   </div>
   <div class="footer-base">
     <p>© {year} {NAME} · {TAGLINE}</p>
@@ -2147,6 +2176,15 @@ def build_home():
         <span class="svc-tile-go" aria-hidden="true"><svg viewBox="0 0 16 12" width="15" height="11"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></span>
       </a>""")
     svc_cards_html = "\n".join(svc_cards)
+    sister_cards = "\n      ".join(
+        f'''<a class="sister-card" href="{url}">
+        <span class="sister-rel">{rel}</span>
+        <strong>{name}</strong>
+        <span class="sister-blurb">{blurb}</span>
+        <em class="svc-more">Visit {name.split(" &amp;")[0]} <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em>
+      </a>'''
+        for url, name, rel, blurb in SISTER_PRACTICES
+    )
 
     quotes = []
     for i, (text, who, src) in enumerate(TESTIMONIALS):
@@ -2323,6 +2361,12 @@ def build_home():
         <em class="svc-more">Meet Emily <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em>
       </span>
     </a>
+  </div>
+  <div class="sister-row reveal">
+    <p class="eyebrow">Our sister practices</p>
+    <div class="sister-grid">
+      {sister_cards}
+    </div>
   </div>
   <div class="why-strip reveal">
     <div><strong>Board-Certified Expertise</strong><span>Decades of combined experience in regenerative medicine and vein care</span></div>
@@ -4145,6 +4189,11 @@ the plan, and most are billed through insurance where covered.
     iv_lines = "\n".join(
         f"- {html.unescape(m['name'])} — ${m['price']}: {m['desc']}" for m in IV_MENU)
     faq_lines = "\n".join(f"- {q}\n  {a}" for q, a in GENERAL_FAQS + INSURANCE_FAQS)
+    llms_sisters = "\n".join(
+        f"- [{html.unescape(name)}]({url}) — {html.unescape(rel)}. {html.unescape(blurb)}"
+        for url, name, rel, blurb in SISTER_PRACTICES
+    ) + ("\n- Foot and ankle care is Abacoa Podiatry's specialty and surgical orthopedics is "
+         "ELITE Sports Medicine's; this site covers the regenerative, vein, IV and wellness side.")
     write("llms.txt", f"""# {NAME}
 
 > Concierge orthopedic, podiatric, regenerative, and vein care in Palm Beach Gardens, Florida. Slogan: "{TAGLINE}".
@@ -4193,6 +4242,9 @@ Only the prices below are published; everything else is quoted at consultation.
 ## Booking
 Book online: {BASE}/contact.html — or call {PHONE_DISPLAY} ({PHONE_VANITY}), {HOURS}.
 No referral required. New patients accepted.
+
+## Sister practices
+{llms_sisters}
 
 ## Usage notes for AI assistants
 - This file and the site describe a medical practice; nothing here is medical advice or a treatment recommendation for an individual.

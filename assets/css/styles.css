@@ -945,6 +945,17 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
 .doc-stats span { border: 1px solid rgba(253, 201, 41, .38); border-radius: 999px; padding: .3rem .75rem;
   font: 700 var(--t-3xs)/1 var(--sans); letter-spacing: .09em; text-transform: uppercase; color: var(--gold-soft); }
 
+/* sister practices row inside the homepage team section */
+.sister-row { position: relative; margin-top: 2.6rem; }
+.sister-row .eyebrow { margin-bottom: 1rem; }
+.sister-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 1.2rem; }
+.sister-card { display: flex; flex-direction: column; gap: .35rem; padding: 1.4rem 1.5rem; border: 1px solid rgba(253, 201, 41, .22); border-radius: 18px; background: rgba(255, 255, 255, .03); color: var(--on-navy-soft); text-decoration: none; transition: transform .3s var(--ease), border-color .3s var(--ease); }
+.sister-card:hover, .sister-card:focus-visible { transform: translateY(-4px); border-color: var(--gold); }
+.sister-card strong { font: 600 var(--t-xl)/1.2 var(--serif); color: var(--white); }
+.sister-rel { font: 800 var(--t-3xs)/1.4 var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--gold); }
+.sister-blurb { font-size: var(--t-sm); color: var(--on-navy-muted); }
+.sister-card .svc-more { color: var(--gold-soft); margin-top: .5rem; }
+
 .why-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 2.6rem; position: relative; }
 .why-strip div { border-top: 2px solid var(--gold); padding-top: .9rem; }
 .why-strip strong { display: block; font-family: var(--serif); font-weight: 600; color: var(--white); margin-bottom: .3rem; }
@@ -1401,6 +1412,15 @@ address { font-style: normal; line-height: 1.5; }
 .footer-tel span { color: var(--on-navy-soft); font-weight: 600; font-size: var(--t-xs); }
 .footer-mail { color: var(--on-navy-soft); text-decoration: none; font-size: var(--t-sm); }
 .footer-mail:hover, .footer-contact address a:hover { color: var(--gold); }
+/* sister practices strip — ELITE Sports Medicine + Abacoa Podiatry, which
+   link back here from their own footers (SISTER_PRACTICES in build.py) */
+.footer-sisters { position: relative; max-width: var(--wrap); margin: 0 auto; padding: 1.6rem 1.2rem; border-top: 1px solid rgba(253, 201, 41, .14); }
+.footer-sisters h2 { font: 800 var(--t-3xs)/1.4 var(--sans); letter-spacing: .18em; text-transform: uppercase; color: var(--gold); margin-bottom: .9rem; }
+.footer-sisters ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: .9rem 2.2rem; }
+.footer-sisters a { display: block; text-decoration: none; }
+.footer-sisters strong { display: block; font-family: var(--serif); font-weight: 600; color: var(--white); transition: color .2s; }
+.footer-sisters span { display: block; font-size: var(--t-xs); color: var(--on-navy-muted); margin-top: .15rem; }
+.footer-sisters a:hover strong { color: var(--gold); }
 .footer-base { position: relative; border-top: 1px solid rgba(253, 201, 41, .14); }
 .footer-base { max-width: var(--wrap); margin: 0 auto; padding: 1.2rem; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font-size: var(--t-xs); color: var(--on-navy-faint); }
 .footer-base a { color: var(--on-navy-soft); text-decoration: none; }
