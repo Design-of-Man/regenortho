@@ -130,7 +130,14 @@ The <video> ships with NO <source> children and preload="none"; main.js attaches
 ONE rendition pair via matchMedia, mp4 before webm; nothing downloads under
 reduced-motion or Save-Data. .hero-video-scrim stays LIGHT (desktop .34→0 across,
 mobile .2/.16/.3) — the client asked twice for a bright hero; legibility comes
-from the text shadow. The marquee under the hero keeps its flat rgba(4,16,31,.72)
+from the text shadow — but on phones (<=767px) that shadow MUST stay tight
+(2px/12px, lede 2/6/16px): the desktop 26px/50px halos on centred copy filling
+~75% of the hero merged into a dark smear that read as a "blurry" video, and the
+.hero-stats backdrop blur smeared a quarter of the frame (removed on phones).
+The mobile overrides need `.hero .hero-copy` / `.hero .hero-stats` specificity —
+the base rules come later in the file and silently won with bare selectors.
+Headless Chromium screenshots of a PLAYING video can composite a dark stale
+frame; pause + seek before judging the hero from a screenshot. The marquee under the hero keeps its flat rgba(4,16,31,.72)
 band (flat fill, NOT backdrop-filter — compositing cost over playing video). The
 CSS coastline scene stays underneath as the no-video fallback. asset_v() returns
 "pending" for missing files so builds work before renditions land.

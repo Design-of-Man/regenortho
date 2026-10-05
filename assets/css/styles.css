@@ -388,13 +388,25 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
    Legibility comes entirely from .hero-copy's text-shadow below. */
 .hero-video-scrim { position: absolute; inset: 0; pointer-events: none; background: none; }
 @media (max-width: 767px) {
-  .hero-copy { text-align: center; margin-inline: auto; max-width: 34ch;
-    text-shadow: 0 1px 3px rgba(4, 16, 31, .9), 0 2px 22px rgba(4, 16, 31, .85), 0 0 44px rgba(4, 16, 31, .6); }
+  /* `.hero .hero-copy`, not `.hero-copy`: the base rule further down has the
+     same specificity and comes later, so a bare selector here never applied and
+     phones got the desktop shadow. That shadow's 26px/50px halos, on centred
+     copy filling ~75% of a phone hero, merged into one dark smear that made the
+     whole video read as blurry. Keep these halos tight. */
+  .hero-copy { text-align: center; margin-inline: auto; max-width: 34ch; }
+  .hero .hero-copy { text-shadow: 0 1px 2px rgba(4, 16, 31, .9), 0 0 12px rgba(4, 16, 31, .55); }
+  /* The lede is the thin, light text that sits on the bright sand and surf, so
+     it gets a solid white fill and a crisp outline instead of a wide glow. */
+  .hero .hero-copy .lede { color: #fff; font-weight: 500;
+    text-shadow: 0 1px 2px rgba(4, 16, 31, .95), 0 0 6px rgba(4, 16, 31, .8), 0 0 16px rgba(4, 16, 31, .5); }
   .hero-copy h1 { max-width: none; margin-inline: auto; }
   .hero .lede { margin-inline: auto; }
   .hero-cta-row { justify-content: center; }
   .hero .hero-eyebrow::before { display: none; }   /* only reads as a lead-in when left-aligned */
-  .hero-stats { justify-content: center; margin-inline: auto; text-align: center; }
+  /* No backdrop blur on phones: the box covers a quarter of the hero there and
+     the blur smeared that whole slab of video. A flat fill reads the same. */
+  .hero .hero-stats { justify-content: center; margin-inline: auto; text-align: center;
+    -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(4, 16, 31, .74); }
   .hero-stats div:last-child { grid-column: 1 / -1; }
 }
 /* keep the copy above the video */
@@ -585,8 +597,6 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='14'%3E%3Cpath d='M0 8 Q30 3 60 8 T120 8 T180 8 T240 8' fill='none' stroke='%23E8DFC8' stroke-opacity='.5' stroke-width='1.4'/%3E%3C/svg%3E") repeat-x;
   animation: foamDrift 26s linear infinite alternate; }
 @keyframes foamDrift { to { transform: translateX(-120px); } }
-
- }
 
 /* vignette + live film grain */
 .scene-vignette { position: absolute; inset: 0;
