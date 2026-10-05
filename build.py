@@ -591,7 +591,10 @@ def footer(depth=0, extra_js="", analytics=True, assistant=True):
     # a page collecting PHI. Excluded on /forms/* alongside analytics, so the
     # "nothing is transmitted" promise on those pages is actually true of
     # everything loaded there, not just forms.js itself.
-    assist_tag = (f'<script src="{p}assets/js/assist.js?v={asset_v("assets/js/assist.js")}" defer></script>\n'
+    # lead-log.js rides the same gate: it POSTs appointment requests to the
+    # practice's Supabase lead table, so it must never load on /forms/*.
+    assist_tag = (f'<script src="{p}assets/js/lead-log.js?v={asset_v("assets/js/lead-log.js")}" defer></script>\n'
+                  f'<script src="{p}assets/js/assist.js?v={asset_v("assets/js/assist.js")}" defer></script>\n'
                   if assistant else "")
     svc = "\n".join(
         f'<li><a href="{p}{href}">{label}</a></li>' for href, label in SERVICES_NAV[:8]

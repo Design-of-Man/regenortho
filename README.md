@@ -54,6 +54,20 @@ Both the contact form and the assistant deliver to **formsubmit.co → emily@reg
 email to that inbox — click it (check spam) or leads will not arrive. If delivery fails,
 the assistant queues the lead in the visitor's browser and retries automatically.
 
+**Lead log (Supabase).** Each request is also written to the `intake_leads` table in the
+practice's Supabase project by `assets/js/lead-log.js`, so leads can be counted
+(`select count(*) from intake_leads where coalesce(status,'new') <> 'test'`). It is
+fire-and-forget: a failed write never blocks the email. Rows are recorded on submit, before
+email delivery is known, so a request whose email fails is still on record; the assistant's
+offline retry re-sends the email only and does not record it twice. The no-JavaScript contact
+form fallback posts straight to FormSubmit and is not recorded.
+- Schema + RLS: `supabase/migrations/20261005000000_intake_leads.sql`. The site uses the
+  PUBLIC publishable key; RLS allows anon INSERT only, so the key cannot read leads back.
+  Never put the service-role/secret key in the site.
+- Logging is off while `SUPABASE_URL`/`SUPABASE_KEY` at the top of `lead-log.js` are empty.
+- Mark test submissions `status = 'test'` in the dashboard so reports exclude them.
+- `lead-log.js` loads only where the assistant does, so never on `/forms/*`.
+
 ## Patient forms & HIPAA — read before changing anything here
 
 `/forms/new-patient.html` and `/forms/peptide-glp-questionnaire.html` collect protected

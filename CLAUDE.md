@@ -42,6 +42,10 @@ Static site, 56 pages, generated — do not edit HTML files directly.
   external API, no medical advice; route unknowns to 833-783-6561. Leads deliver via
   FormSubmit (formsubmit.co/ajax/emily@regenorthopb.com) with a localStorage retry queue.
   Never put secret keys in it.
+- `assets/js/lead-log.js` — also records every contact-form/assistant request in Supabase
+  `intake_leads` (public publishable key, RLS insert-only, fire-and-forget beside FormSubmit).
+  Loaded through the same gate as assist.js, so never on /forms/*. Schema in
+  `supabase/migrations/`. Contact details only, the same fields FormSubmit already gets.
 - `assets/js/forms.js` + `assets/css/forms.css` + `forms_content.py` — the two patient
   forms (`/forms/new-patient.html`, `/forms/peptide-glp-questionnaire.html`). Questions are
   declarative in `forms_content.py`; the renderer (`_field`/`_section`/`build_forms` in

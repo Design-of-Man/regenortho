@@ -363,6 +363,11 @@
   }
 
   function deliver() {
+    /* Record the booking (lead-log.js). Here and only here: retryQueue()
+       re-sends the SAME booking by email, so logging there would double-count
+       it. Logged before delivery is known, so a request that ends up queued
+       on the device is still on record. */
+    if (window.RGLeadLog) window.RGLeadLog("assistant", payload());
     typing(function () {
       var m = say("Sending…");
       fetch(ENDPOINT, {

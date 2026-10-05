@@ -15,6 +15,7 @@
   var errorBox = document.getElementById("contact-error");
   var submitBtn = form.querySelector('button[type="submit"]');
   var submitLabel = submitBtn ? submitBtn.textContent : "";
+  var logged = false;
 
   // The form's action already points at formsubmit.co/{email} for the
   // no-JS fallback — insert "ajax/" to get the JSON endpoint rather than
@@ -48,6 +49,11 @@
        question "was this a person on the site?" is answerable at all. */
     payload._subject = (payload._subject || "") + " (from website)";
     payload.verified = "yes";
+
+    /* Record the lead (lead-log.js) once per page load, before delivery is
+       known: a request whose email fails is still someone who tried to book,
+       and a retry after the error box must not count them twice. */
+    if (!logged && window.RGLeadLog) { logged = true; window.RGLeadLog("contact_form", payload); }
 
     fetch(endpoint, {
       method: "POST",
