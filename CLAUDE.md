@@ -136,8 +136,13 @@ from the text shadow — but on phones (<=767px) that shadow MUST stay tight
 .hero-stats backdrop blur smeared a quarter of the frame (removed on phones).
 The mobile overrides need `.hero .hero-copy` / `.hero .hero-stats` specificity —
 the base rules come later in the file and silently won with bare selectors.
-Headless Chromium screenshots of a PLAYING video can composite a dark stale
-frame; pause + seek before judging the hero from a screenshot. The marquee under the hero keeps its flat rgba(4,16,31,.72)
+DARK TINT TRAP: the `.video-live` rule that parks the CSS scene's animations
+must NOT match .hero-scene itself or .hero-video-slot. .hero-scene runs the 1.8s
+sceneIn opacity fade and CONTAINS the video; pausing it froze the hero at
+whatever opacity the fade had reached when playback began (0.08 measured), so
+the navy background showed through as a dark tint whenever the video played and
+vanished whenever it paused. If the hero ever looks dark only while playing,
+check `getComputedStyle(.hero-scene).opacity` first. The marquee under the hero keeps its flat rgba(4,16,31,.72)
 band (flat fill, NOT backdrop-filter — compositing cost over playing video). The
 CSS coastline scene stays underneath as the no-video fallback. asset_v() returns
 "pending" for missing files so builds work before renditions land.

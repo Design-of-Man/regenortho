@@ -379,11 +379,19 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
    and iOS suspends a playing video when the tab is backgrounded or memory runs
    short. Removing it from the render tree meant that once the video stopped
    painting the hero went flat navy with nothing behind it. Pausing keeps the
-   fallback underneath at effectively no cost and cannot fail open. */
-.hero.video-live .hero-scene,
-.hero.video-live .hero-scene *,
-.hero.video-live .hero-scene *::before,
-.hero.video-live .hero-scene *::after { animation-play-state: paused; }
+   fallback underneath at effectively no cost and cannot fail open.
+   NOT .hero-scene itself, and NOT the video slot: .hero-scene runs the 1.8s
+   sceneIn opacity fade and CONTAINS the video. Pausing it froze the whole hero
+   at whatever opacity the fade had reached when the video started playing --
+   measured at 0.08 locally -- so the navy section background showed through as
+   a dark tint over the footage. The slot also carries the scroll-driven
+   hero-recede animation, which must keep running. */
+.hero.video-live .hero-scene > :not(.hero-video-slot),
+.hero.video-live .hero-scene > :not(.hero-video-slot) *,
+.hero.video-live .hero-scene > :not(.hero-video-slot)::before,
+.hero.video-live .hero-scene > :not(.hero-video-slot)::after,
+.hero.video-live .hero-scene > :not(.hero-video-slot) *::before,
+.hero.video-live .hero-scene > :not(.hero-video-slot) *::after { animation-play-state: paused; }
 /* No scrim over the footage — kept fully bright per the client's request.
    Legibility comes entirely from .hero-copy's text-shadow below. */
 .hero-video-scrim { position: absolute; inset: 0; pointer-events: none; background: none; }
