@@ -24,6 +24,26 @@
       "permanent": true
     },
     {
+      "source": "/conditions/index.html",
+      "destination": "/conditions",
+      "permanent": true
+    },
+    {
+      "source": "/locations/index.html",
+      "destination": "/locations",
+      "permanent": true
+    },
+    {
+      "source": "/providers/emily-bahnick.html",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/providers/emily-bahnick",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
       "source": "/about.html",
       "destination": "/about",
       "permanent": true
@@ -141,11 +161,6 @@
     {
       "source": "/providers/dr-orlando-cedeno.html",
       "destination": "/dr-orlando-cedeno-dpm",
-      "permanent": true
-    },
-    {
-      "source": "/providers/emily-bahnick.html",
-      "destination": "/providers/emily-bahnick",
       "permanent": true
     },
     {
@@ -425,7 +440,7 @@
     },
     {
       "source": "/ivig-intravenous-immunoglobulin",
-      "destination": "/contact",
+      "destination": "/iv-therapy",
       "permanent": true
     },
     {
@@ -729,6 +744,14 @@
   ],
   "rewrites": [
     {
+      "source": "/conditions",
+      "destination": "/conditions/index.html"
+    },
+    {
+      "source": "/locations",
+      "destination": "/locations/index.html"
+    },
+    {
       "source": "/about",
       "destination": "/about.html"
     },
@@ -823,10 +846,6 @@
     {
       "source": "/dr-orlando-cedeno-dpm",
       "destination": "/providers/dr-orlando-cedeno.html"
-    },
-    {
-      "source": "/providers/emily-bahnick",
-      "destination": "/providers/emily-bahnick.html"
     },
     {
       "source": "/services/advanced-non-surgical-therapies",

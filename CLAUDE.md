@@ -51,9 +51,19 @@ Static site, 56 pages, generated — do not edit HTML files directly.
 - RegenOrtho Palm Beach · "The Regeneration of Orthopedics"
 - 11380 Prosperity Farms Road, Suite 204–208, Palm Beach Gardens, FL 33410
 - 833-STEM561 = 833-783-6561 · emily@regenorthopb.com · Mon–Fri 8 AM–5 PM
-- Instagram: @regenortho_palmbeach (only real social profile — X/YouTube don't exist)
+- Instagram: @regenortho_palmbeach (the only profile linked on the page). LinkedIn company page
+  linkedin.com/company/regenorthopb is in the org schema sameAs. A 1-subscriber YouTube channel
+  "Regen Ortho Palm Beach" exists (found 2026-10) but is NOT linked until the practice confirms it.
 - Dr. Marc Matarazzo, MD (ortho/sports medicine, MAKO-certified) · Dr. Orlando Cedeno, DPM
-  (podiatric surgery + vein) · Emily Bahnick, MSN, RN (IV infusion nurse)
+  (podiatric surgery + vein). Those two are the whole named roster.
+- Emily Bahnick, MSN, RN (IV nurse) LEFT the practice in October 2026 and was removed from
+  every page, the schema, llms.txt, the assistant and the share card (the old team-group
+  photo had her in it, so og-team.jpg was replaced by og-physicians-v1.jpg, composed from
+  the two portraits). /providers/emily-bahnick 301s to /about. Do not re-add her.
+  The address emily@regenorthopb.com is DELIBERATELY still the public email and the
+  FormSubmit lead inbox — the owner said keep it for now. Changing it is a two-file change
+  (build.py EMAIL/FORM_TARGET_EMAIL + assets/js/assist.js) and needs FormSubmit's one-time
+  activation click from the new inbox, or leads hold undelivered.
 - Palm Beach Gardens deliberately has NO location page — the homepage owns that keyword;
   8 nearby cities have /locations/ pages, linked in the header dropdown + footer.
 
@@ -208,6 +218,26 @@ CSS coastline scene stays underneath as the no-video fallback. asset_v() returns
   comes from its LAST commit, so the build that introduces a change still emits the previous
   date; the next build after committing picks up the new one. Don't "fix" this by stamping
   today's date at build time — that makes every page look changed on every build.
+- H1 LEADS: service, condition, location, IV, services-hub and homepage H1s open with a
+  plain "<treatment> in Palm Beach Gardens" span (`page_hero(h1_lead=...)`, tables
+  `SERVICE_H1_LEAD` / `CONDITION_H1_LEAD`), rendered in the eyebrow's place. The brand-voice
+  line follows it inside the same <h1>. Added 2026-10 because the stem cell, exosome, Wharton's
+  jelly and MUSE pages never named the treatment in their H1. Keep the lead when editing a
+  title; a new service needs an entry in SERVICE_H1_LEAD.
+- /conditions and /locations are hub pages (`build_hubs()`), served at bare segments via
+  vercel.json rewrites. Every condition and location breadcrumb linked to them for months while
+  they did not exist (404 on 16 pages). Hub child links spell out their directory.
+- Location pages lead with a per-city service list (`LOCATION_SERVICES`) ordered by that city's
+  Search Console demand. They are not SERVICES[:6] on every page any more, which made the eight
+  pages near-duplicates.
+- Sub-service cards on a parent service page link `../services/<slug>.html`. A bare slug 404'd
+  on the vein page (served at /our-services/...) until 2026-10.
+- /ivig-intravenous-immunoglobulin 301s to /iv-therapy (was /contact). IVIG is NOT on the
+  current menu; do not write an IVIG page unless the practice confirms it offers it.
+- GA4: the gtag.js library loads after onload/idle (`GA_TAG`); the dataLayer stub stays inline
+  so no event is lost. The hero poster is chosen by an inline script after the <video> (no
+  poster="" in markup), matching main.js's isPortrait and the two media-split preloads. Change
+  all three together.
 - Clinical pages (services, conditions, infusions, IV) pass `webpage_type="MedicalWebPage"`;
   pages built on `page_hero()` pass `speakable=True` (selectors `.page-hero h1` /
   `.page-hero .lede` — if you rename either class, update the SpeakableSpecification).
@@ -257,9 +287,10 @@ CSS coastline scene stays underneath as the no-video fallback. asset_v() returns
   are in the file now. Any new rule with a `%XX` in it needs both.
 
 ### Share cards (og:image)
-- Default card is `assets/media/og-team.jpg` — the care-team photo cropped to 1200×630
-  from `assets/team/team-group.jpg`. Pages that pass their own `og_image=` keep theirs.
-  Re-crop with Pillow from the team photo if the roster photo is replaced.
+- Default card is `assets/media/og-physicians-v1.jpg` — the two physician portraits side by
+  side over a navy band with the logo, composed with Pillow from `assets/team/`. Pages that
+  pass their own `og_image=` keep theirs. If the roster changes, compose a NEW filename
+  (assets are immutable-cached) rather than overwriting it.
 - `og:image:width/height` come from `img_dims()`, a stdlib JPEG/PNG header reader — they
   used to be hardcoded 1200×630 while service/condition pages shipped 1400×933 photos,
   which makes scrapers lay the card out wrong. Never hardcode them again.

@@ -1,37 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2Z542HBXHS"></script>
+<!-- Google tag (gtag.js), loaded after onload -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-2Z542HBXHS');
+  (function () {
+    function load() {
+      var s = document.createElement('script'); s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-2Z542HBXHS';
+      document.head.appendChild(s);
+    }
+    function idle() { (window.requestIdleCallback || function (f) { setTimeout(f, 1); })(load, { timeout: 2500 }); }
+    if (document.readyState === 'complete') idle(); else window.addEventListener('load', idle);
+  })();
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Regenerative Medicine &amp; Vein Care | RegenOrtho Palm Beach</title>
-<meta name="description" content="Concierge regenerative medicine, non-surgical therapies &amp; vein care in Palm Beach Gardens. Board-certified specialists, 40+ years combined experience.">
+<title>Stem Cell &amp; Regenerative Medicine Palm Beach Gardens | RegenOrtho</title>
+<meta name="description" content="Stem cell, PRP and regenerative medicine, vein care and IV therapy in Palm Beach Gardens, led by board-certified specialists. Same-week visits: 833-STEM561.">
 <link rel="canonical" href="https://regenorthopb.com/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="RegenOrtho Palm Beach">
 <meta property="og:locale" content="en_US">
-<meta property="og:title" content="Regenerative Medicine &amp; Vein Care | RegenOrtho Palm Beach">
-<meta property="og:description" content="Concierge regenerative medicine, non-surgical therapies &amp; vein care in Palm Beach Gardens. Board-certified specialists, 40+ years combined experience.">
+<meta property="og:title" content="Stem Cell &amp; Regenerative Medicine Palm Beach Gardens | RegenOrtho">
+<meta property="og:description" content="Stem cell, PRP and regenerative medicine, vein care and IV therapy in Palm Beach Gardens, led by board-certified specialists. Same-week visits: 833-STEM561.">
 <meta property="og:url" content="https://regenorthopb.com/">
-<meta property="og:image" content="https://regenorthopb.com/assets/media/og-team.jpg?v=df0ae135">
-<meta property="og:image:secure_url" content="https://regenorthopb.com/assets/media/og-team.jpg?v=df0ae135">
+<meta property="og:image" content="https://regenorthopb.com/assets/media/og-physicians-v1.jpg?v=5de3f6c0">
+<meta property="og:image:secure_url" content="https://regenorthopb.com/assets/media/og-physicians-v1.jpg?v=5de3f6c0">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The RegenOrtho Palm Beach care team — regenerative medicine, vein care, and IV wellness specialists at the Palm Beach Gardens clinic">
+<meta property="og:image:alt" content="The RegenOrtho Palm Beach physicians — orthopedic, regenerative and vein care at the Palm Beach Gardens clinic">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Regenerative Medicine &amp; Vein Care | RegenOrtho Palm Beach">
-<meta name="twitter:description" content="Concierge regenerative medicine, non-surgical therapies &amp; vein care in Palm Beach Gardens. Board-certified specialists, 40+ years combined experience.">
-<meta name="twitter:image" content="https://regenorthopb.com/assets/media/og-team.jpg?v=df0ae135">
-<meta name="twitter:image:alt" content="The RegenOrtho Palm Beach care team — regenerative medicine, vein care, and IV wellness specialists at the Palm Beach Gardens clinic">
+<meta name="twitter:title" content="Stem Cell &amp; Regenerative Medicine Palm Beach Gardens | RegenOrtho">
+<meta name="twitter:description" content="Stem cell, PRP and regenerative medicine, vein care and IV therapy in Palm Beach Gardens, led by board-certified specialists. Same-week visits: 833-STEM561.">
+<meta name="twitter:image" content="https://regenorthopb.com/assets/media/og-physicians-v1.jpg?v=5de3f6c0">
+<meta name="twitter:image:alt" content="The RegenOrtho Palm Beach physicians — orthopedic, regenerative and vein care at the Palm Beach Gardens clinic">
 <link rel="alternate" type="application/rss+xml" title="RegenOrtho Palm Beach — Blog" href="blog/feed.xml">
 <meta name="theme-color" content="#071A38">
 <meta name="color-scheme" content="light dark">
@@ -51,11 +58,12 @@
 <link rel="manifest" href="site.webmanifest">
 <link rel="preload" href="assets/fonts/newsreader-v1.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" as="image" href="assets/video/juno-poster-2560.jpg?v=93174855" fetchpriority="high">
-<link rel="stylesheet" href="assets/css/styles.css?v=eac659bf">
+<link rel="preload" as="image" href="assets/video/juno-poster-2560.jpg?v=93174855" media="not all and (max-width: 767px) and (orientation: portrait) and (prefers-reduced-motion: no-preference)" fetchpriority="high">
+<link rel="preload" as="image" href="assets/video/juno-poster-portrait.jpg?v=d1d51d32" media="(max-width: 767px) and (orientation: portrait) and (prefers-reduced-motion: no-preference)" fetchpriority="high">
+<link rel="stylesheet" href="assets/css/styles.css?v=22d1fd60">
 <link rel="stylesheet" href="assets/css/assist.css?v=4fb52b5a">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":["MedicalClinic","MedicalBusiness"],"@id":"https://regenorthopb.com/#organization","name":"RegenOrtho Palm Beach","alternateName":["Regen Ortho","RegenOrtho","Regen Ortho PB"],"slogan":"The Regeneration of Orthopedics","description":"Concierge regenerative orthopedic and vein care in Palm Beach Gardens, FL \u2014 board-certified specialists offering orthobiologic therapies, peptide therapy, IV wellness, and minimally invasive vein treatment.","url":"https://regenorthopb.com/","logo":{"@type":"ImageObject","@id":"https://regenorthopb.com/#logo","url":"https://regenorthopb.com/assets/media/logo-dark.png","contentUrl":"https://regenorthopb.com/assets/media/logo-dark.png","caption":"RegenOrtho Palm Beach"},"image":{"@type":"ImageObject","url":"https://regenorthopb.com/assets/media/og-team.jpg","caption":"The RegenOrtho Palm Beach care team \u2014 regenerative medicine, vein care, and IV wellness specialists at the Palm Beach Gardens clinic"},"telephone":"+1-833-783-6561","email":"emily@regenorthopb.com","priceRange":"$$","currenciesAccepted":"USD","paymentAccepted":"Cash, Credit Card, Insurance, HSA/FSA","availableLanguage":[{"@type":"Language","name":"English"}],"knowsAbout":["Regenerative medicine","Platelet-rich plasma therapy","Orthobiologics","Peptide therapy","Varicose vein treatment","Peripheral neuropathy","GLP-1 medical weight loss","IV infusion therapy"],"isAcceptingNewPatients":true,"medicalSpecialty":["Regenerative medicine","Phlebology"],"address":{"@type":"PostalAddress","streetAddress":"11380 Prosperity Farms Road, Suite 204\u2013208","addressLocality":"Palm Beach Gardens","addressRegion":"FL","postalCode":"33410","addressCountry":"US"},"geo":{"@type":"GeoCoordinates","latitude":26.8449,"longitude":-80.0693},"hasMap":"https://maps.google.com/maps?q=RegenOrtho%20Palm%20Beach%2011380%20Prosperity%20Farms%20Road%20Palm%20Beach%20Gardens","openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"08:00","closes":"17:00"}],"areaServed":[{"@type":"City","name":"Palm Beach Gardens"},{"@type":"City","name":"Jupiter"},{"@type":"City","name":"North Palm Beach"},{"@type":"City","name":"Juno Beach"},{"@type":"City","name":"Tequesta"},{"@type":"City","name":"Palm Beach"},{"@type":"City","name":"West Palm Beach"},{"@type":"City","name":"Singer Island"},{"@type":"City","name":"Lake Park"},{"@type":"City","name":"Riviera Beach"}],"sameAs":["https://www.instagram.com/regenortho_palmbeach/"],"availableService":[{"@type":"MedicalTherapy","@id":"https://regenorthopb.com/services/regenerative-medicine-orthobiologics#service"},{"@type":"MedicalTherapy","@id":"https://regenorthopb.com/our-services/vein-care-medical-cosmetic#service"},{"@type":"MedicalTherapy","@id":"https://regenorthopb.com/iv-therapy#service"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://regenorthopb.com/#website","url":"https://regenorthopb.com/","name":"RegenOrtho Palm Beach","inLanguage":"en-US","publisher":{"@id":"https://regenorthopb.com/#organization"}},{"@type":"WebPage","@id":"https://regenorthopb.com/#webpage","url":"https://regenorthopb.com/","name":"Regenerative Medicine & Vein Care | RegenOrtho Palm Beach","description":"Concierge regenerative medicine, non-surgical therapies & vein care in Palm Beach Gardens. Board-certified specialists, 40+ years combined experience.","inLanguage":"en-US","isPartOf":{"@id":"https://regenorthopb.com/#website"},"about":{"@id":"https://regenorthopb.com/#organization"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://regenorthopb.com/assets/media/og-team.jpg?v=df0ae135"},"datePublished":"2026-07-30","dateModified":"2026-10-05"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":["MedicalClinic","MedicalBusiness"],"@id":"https://regenorthopb.com/#organization","name":"RegenOrtho Palm Beach","alternateName":["Regen Ortho","RegenOrtho","Regen Ortho PB"],"slogan":"The Regeneration of Orthopedics","description":"Concierge regenerative orthopedic and vein care in Palm Beach Gardens, FL \u2014 board-certified specialists offering orthobiologic therapies, peptide therapy, IV wellness, and minimally invasive vein treatment.","url":"https://regenorthopb.com/","logo":{"@type":"ImageObject","@id":"https://regenorthopb.com/#logo","url":"https://regenorthopb.com/assets/media/logo-dark.png","contentUrl":"https://regenorthopb.com/assets/media/logo-dark.png","caption":"RegenOrtho Palm Beach"},"image":{"@type":"ImageObject","url":"https://regenorthopb.com/assets/media/og-physicians-v1.jpg","caption":"The RegenOrtho Palm Beach physicians \u2014 orthopedic, regenerative and vein care at the Palm Beach Gardens clinic"},"telephone":"+1-833-783-6561","email":"emily@regenorthopb.com","priceRange":"$$","currenciesAccepted":"USD","paymentAccepted":"Cash, Credit Card, Insurance, HSA/FSA","availableLanguage":[{"@type":"Language","name":"English"}],"knowsAbout":["Regenerative medicine","Platelet-rich plasma therapy","Orthobiologics","Peptide therapy","Varicose vein treatment","Peripheral neuropathy","GLP-1 medical weight loss","IV infusion therapy"],"isAcceptingNewPatients":true,"medicalSpecialty":["Regenerative medicine","Phlebology"],"address":{"@type":"PostalAddress","streetAddress":"11380 Prosperity Farms Road, Suite 204\u2013208","addressLocality":"Palm Beach Gardens","addressRegion":"FL","postalCode":"33410","addressCountry":"US"},"geo":{"@type":"GeoCoordinates","latitude":26.8449,"longitude":-80.0693},"hasMap":"https://maps.google.com/maps?q=RegenOrtho%20Palm%20Beach%2011380%20Prosperity%20Farms%20Road%20Palm%20Beach%20Gardens","openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"08:00","closes":"17:00"}],"areaServed":[{"@type":"City","name":"Palm Beach Gardens"},{"@type":"City","name":"Jupiter"},{"@type":"City","name":"North Palm Beach"},{"@type":"City","name":"Juno Beach"},{"@type":"City","name":"Tequesta"},{"@type":"City","name":"Palm Beach"},{"@type":"City","name":"West Palm Beach"},{"@type":"City","name":"Singer Island"},{"@type":"City","name":"Lake Park"},{"@type":"City","name":"Riviera Beach"}],"sameAs":["https://www.instagram.com/regenortho_palmbeach/","https://www.linkedin.com/company/regenorthopb"],"availableService":[{"@type":"MedicalTherapy","@id":"https://regenorthopb.com/services/regenerative-medicine-orthobiologics#service"},{"@type":"MedicalTherapy","@id":"https://regenorthopb.com/our-services/vein-care-medical-cosmetic#service"},{"@type":"MedicalTherapy","@id":"https://regenorthopb.com/iv-therapy#service"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://regenorthopb.com/#website","url":"https://regenorthopb.com/","name":"RegenOrtho Palm Beach","inLanguage":"en-US","publisher":{"@id":"https://regenorthopb.com/#organization"}},{"@type":"WebPage","@id":"https://regenorthopb.com/#webpage","url":"https://regenorthopb.com/","name":"Stem Cell & Regenerative Medicine Palm Beach Gardens | RegenOrtho","description":"Stem cell, PRP and regenerative medicine, vein care and IV therapy in Palm Beach Gardens, led by board-certified specialists. Same-week visits: 833-STEM561.","inLanguage":"en-US","isPartOf":{"@id":"https://regenorthopb.com/#website"},"about":{"@id":"https://regenorthopb.com/#organization"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://regenorthopb.com/assets/media/og-physicians-v1.jpg?v=5de3f6c0"},"datePublished":"2026-07-30","dateModified":"2026-10-12"}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://regenorthopb.com/"}]}</script>
 </head>
 <body class="page-home">
@@ -74,7 +82,6 @@
             <li><a href="about">About the Practice</a></li>
             <li><a href="dr-marc-matarazzo-md">Dr. Marc Matarazzo, MD</a></li>
             <li><a href="dr-orlando-cedeno-dpm">Dr. Orlando Cedeno, DPM</a></li>
-            <li><a href="providers/emily-bahnick">Emily Bahnick, MSN, RN</a></li>
             <li><a href="patient-resources">Patient Resources</a></li>
           </ul>
         </li>
@@ -102,6 +109,7 @@
         </li>
         <li class="has-drop"><button class="drop-btn" aria-expanded="false">Conditions<svg viewBox="0 0 12 8" width="10" height="7" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 1.5 6 6.5 11 1.5"/></svg></button>
           <ul class="drop">
+            <li><a href="conditions">All conditions we treat</a></li>
             <li><a href="conditions/knee-pain.html">Knee Pain</a></li>
 <li><a href="conditions/shoulder-pain.html">Shoulder Pain</a></li>
 <li><a href="conditions/hip-pain.html">Hip Pain</a></li>
@@ -136,7 +144,7 @@
   <div class="hero-scene" aria-hidden="true">
     <div class="hero-video-slot">
       <video class="hero-video" autoplay muted loop playsinline preload="none"
-             poster="assets/video/juno-poster-2560.jpg?v=93174855"
+             data-poster="assets/video/juno-poster-2560.jpg?v=93174855"
              data-hero-video
              data-poster-portrait="assets/video/juno-poster-portrait.jpg?v=d1d51d32"
              data-mp4-max="assets/video/juno-max.mp4?v=d6689201"
@@ -144,6 +152,19 @@
              data-webm-hd="assets/video/juno-hd.webm?v=8628c23e"
              data-mp4-portrait="assets/video/juno-portrait.mp4?v=e989ae4e" data-webm-portrait="assets/video/juno-portrait.webm?v=4f0d0f9a" data-mp4-mobile="assets/video/juno-mobile.mp4?v=0a8958f5"
              data-webm-mobile="assets/video/juno-mobile.webm?v=9f786e12"></video>
+      <script>
+        /* Pick the poster BEFORE the browser fetches one. A poster="" attribute in
+           the markup was fetched as soon as it was parsed, so every portrait phone
+           downloaded the 329KB landscape frame and then main.js's portrait swap —
+           two posters for one hero. Same test as isPortrait in main.js and the
+           two preloads in head(); both posters are already preloaded, so this
+           only ever reads from cache. Without JS the CSS coastline scene shows. */
+        (function (v) {
+          var mq = "(max-width: 767px) and (orientation: portrait) and (prefers-reduced-motion: no-preference)";
+          var pick = window.matchMedia && matchMedia(mq).matches ? "data-poster-portrait" : "data-poster";
+          v.setAttribute("poster", v.getAttribute(pick));
+        })(document.currentScript.previousElementSibling);
+      </script>
       <div class="hero-video-scrim"></div>
     </div>
     <div class="scene-sky"></div>
@@ -171,8 +192,7 @@
   </div>
   <div class="hero-inner">
     <div class="hero-copy">
-      <p class="eyebrow hero-eyebrow h-rise" style="--hd:.5s">The Regeneration of Orthopedics</p>
-      <h1 class="h-rise" style="--hd:.65s">Where recovery meets <em>innovative regeneration</em></h1>
+      <h1 class="h-rise" style="--hd:.5s"><span class="eyebrow hero-eyebrow h1-lead">Regenerative Medicine in Palm Beach Gardens</span> Where recovery meets <em>innovative regeneration</em></h1>
       <p class="lede h-rise" style="--hd:.82s">Personalized regenerative medicine, non-surgical therapies, and vein care in Palm Beach Gardens — led by board-certified specialists with over 40 years of combined experience.</p>
       <div class="hero-cta-row h-rise" style="--hd:1s">
         <a class="btn btn-gold" href="contact#book">Book a Consultation</a>
@@ -275,16 +295,6 @@
         <span class="doc-role">Board-Certified Podiatric Surgeon &amp; Vein Specialist</span>
         <span class="doc-bio">Board certified by the American Board of Foot &amp; Ankle Surgery · fellowship-level training in reconstructive and trauma surgery of the foot and ankle at Chestnut Hill Hospital/University of Pennsylvania · fellow, American College of Foot and Ankle Surgeons.</span>
         <em class="svc-more">Meet Dr. Cedeno <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em>
-      </span>
-    </a>
-    <a class="doc-card reveal" href="providers/emily-bahnick" style="--d:240ms">
-      <span class="doc-photo"><picture><source type="image/webp" srcset="assets/img/emily-bahnick-480.webp?v=6c6faa55 480w, assets/img/emily-bahnick-875.webp?v=3a0e19af 875w" sizes="(max-width:700px) 90vw, 450px"><img class="photo-fit" src="assets/img/emily-bahnick-875.jpg?v=afc30f0a" srcset="assets/img/emily-bahnick-480.jpg?v=c8f9e497 480w, assets/img/emily-bahnick-875.jpg?v=afc30f0a 875w" sizes="(max-width:700px) 90vw, 450px" alt="Emily Bahnick, MSN, RN — IV infusion nurse and care coordinator at RegenOrtho Palm Beach" width="450" height="560" decoding="async" loading="lazy" style="--focal:50% 15%"></picture></span>
-      <span class="doc-body">
-        <strong>Emily Bahnick, MSN, RN</strong>
-        <span class="doc-role">IV Infusion Nurse &amp; Care Coordinator</span>
-        <span class="doc-bio">Your IV infusion nurse and care coordinator — passionate about regenerative health, focused on longevity, reducing reliance on pharmaceuticals, and healing from deep within through modern, innovative medicine.</span>
-        <span class="doc-stats"><span>10+ years experience</span><span>MSN &middot; BSN</span><span>Registered Nurse</span></span>
-        <em class="svc-more">Meet Emily <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em>
       </span>
     </a>
   </div>
@@ -469,7 +479,7 @@
       </ul>
     </nav>
     <nav class="footer-col" aria-label="Areas we serve">
-      <h2>Areas We Serve</h2>
+      <h2><a href="locations">Areas We Serve</a></h2>
       <ul>
         <li><a href="/">Palm Beach Gardens</a></li>
         <li><a href="locations/jupiter.html">Jupiter</a></li>
@@ -506,7 +516,7 @@
   <a class="mobile-call" href="tel:+18337836561" data-call-location="sticky"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8c1.5 2.9 3.7 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .7-.2 1l-2.3 2.2z"/></svg>Call Now</a>
 </footer>
 <script src="assets/js/main.js?v=790ee745"></script>
-<script src="assets/js/assist.js?v=d87c4589" defer></script>
+<script src="assets/js/assist.js?v=9fab784c" defer></script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

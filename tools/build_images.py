@@ -23,7 +23,7 @@ QUALITY = 82
 
 # og-*.jpg are share cards, sized and cropped for scrapers that fetch one exact
 # URL; clinic-team.jpg is a logo banner, not a photograph.
-SKIP = {"og-image.jpg", "og-team.jpg", "clinic-team.jpg"}
+SKIP = {"og-image.jpg", "og-physicians-v1.jpg", "clinic-team.jpg"}
 
 
 def main():
