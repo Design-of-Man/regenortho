@@ -59,6 +59,9 @@ ADDRESS_STATE = "FL"
 ADDRESS_ZIP = "33410"
 HOURS = "Monday – Friday: 8:00 AM – 5:00 PM"
 INSTAGRAM = "https://www.instagram.com/regenortho_palmbeach/"
+# The practice's LinkedIn company page (its RN job post links back here). Schema
+# sameAs only — not linked in the footer, which stays Instagram-only.
+LINKEDIN = "https://www.linkedin.com/company/regenorthopb"
 
 # Sister practices — each doctor's own practice, cross-linked both ways at
 # Dr. Cedeno's request (2026-09-23): elitesportsmed.org and jupiterlaser.com
@@ -326,14 +329,27 @@ def photo(stem, alt, width, height, cls="", prefix="", sizes="100vw", eager=Fals
 # what the on-page notice and the privacy policy promise.
 GA_MEASUREMENT_ID = "G-2Z542HBXHS"
 
-GA_TAG = f"""<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id={GA_MEASUREMENT_ID}"></script>
+# gtag.js is 176KB and ~390ms of main-thread time on a mid-range phone (Lighthouse,
+# 2026-10), all of it competing with the hero for first paint. The queue stub below
+# stays inline and immediate, so every gtag() call — the config, the lead events in
+# main.js — lands in dataLayer from the first moment; the library itself is fetched
+# once the page has loaded and the main thread is idle, and replays the queue then.
+# The only visits GA4 loses are ones that leave before onload.
+GA_TAG = f"""<!-- Google tag (gtag.js), loaded after onload -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){{dataLayer.push(arguments);}}
   gtag('js', new Date());
-
   gtag('config', '{GA_MEASUREMENT_ID}');
+  (function () {{
+    function load() {{
+      var s = document.createElement('script'); s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id={GA_MEASUREMENT_ID}';
+      document.head.appendChild(s);
+    }}
+    function idle() {{ (window.requestIdleCallback || function (f) {{ setTimeout(f, 1); }})(load, {{ timeout: 2500 }}); }}
+    if (document.readyState === 'complete') idle(); else window.addEventListener('load', idle);
+  }})();
 </script>
 """
 
@@ -398,9 +414,20 @@ def head(title, desc, depth=0, canonical="", og_image="assets/media/og-physician
         # juno-poster-2560.jpg is the same frame of the same graded loop,
         # decoded at 2560x1440 (see tools/build_poster.py): 1.21x and 1.50x,
         # for +175KB. Do not shrink it back without redoing that arithmetic.
+        #
+        # Two preloads split by media query. main.js swaps a portrait phone to
+        # juno-poster-portrait.jpg (unless reduced motion parks it on the default),
+        # so a single unconditional preload made every portrait phone fetch the
+        # 329KB landscape poster at high priority and THEN the portrait one — the
+        # Lighthouse "unused preload" on mobile. These two queries mirror the
+        # isPortrait test in main.js (max-width 767px + portrait + motion allowed).
         _pp = f"assets/video/juno-poster-2560.jpg?v={asset_v('assets/video/juno-poster-2560.jpg')}"
+        _pq = f"assets/video/juno-poster-portrait.jpg?v={asset_v('assets/video/juno-poster-portrait.jpg')}"
+        _portrait_mq = "(max-width: 767px) and (orientation: portrait) and (prefers-reduced-motion: no-preference)"
         hero_preload = (f'<link rel="preload" as="image" href="{p}{_pp}" '
-                        f'fetchpriority="high">\n')
+                        f'media="not all and {_portrait_mq}" fetchpriority="high">\n'
+                        f'<link rel="preload" as="image" href="{p}{_pq}" '
+                        f'media="{_portrait_mq}" fetchpriority="high">\n')
     extra_css_tag = ""
     if extra_css:
         extra_css_tag = f'<link rel="stylesheet" href="{p}{extra_css}?v={asset_v(extra_css)}">\n'
@@ -547,6 +574,7 @@ def nav(depth=0, current=""):
         </li>
         <li class="has-drop"><button class="drop-btn" aria-expanded="false">Conditions<svg viewBox="0 0 12 8" width="10" height="7" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 1.5 6 6.5 11 1.5"/></svg></button>
           <ul class="drop">
+            <li><a href="{p}conditions/index.html">All conditions we treat</a></li>
             {cond}
           </ul>
         </li>
@@ -630,7 +658,7 @@ def footer(depth=0, extra_js="", analytics=True, assistant=True):
       </ul>
     </nav>
     <nav class="footer-col" aria-label="Areas we serve">
-      <h2>Areas We Serve</h2>
+      <h2><a href="{p}locations/index.html">Areas We Serve</a></h2>
       <ul>
         <li><a href="{p}index.html">Palm Beach Gardens</a></li>
         {loc}
@@ -677,7 +705,12 @@ def _hero_orbit():
             f'<span class="ph-ring ph-ring-1"></span><span class="ph-ring ph-ring-2"></span>{dots}</div>')
 
 
-def page_hero(eyebrow, title, lede, crumbs_html="", cta=True, depth=0):
+def page_hero(eyebrow, title, lede, crumbs_html="", cta=True, depth=0, h1_lead=""):
+    """h1_lead: the plain-language "<treatment> in <city>" phrase, rendered INSIDE the
+    h1 in the eyebrow's place (it replaces the eyebrow). Brand-voice titles such as
+    "Advanced Cell-Free Regenerative Therapy…" never named the treatment, so the one
+    heading Google weighs most carried neither the keyword nor the city. The lead
+    looks exactly like the eyebrow did; it is just inside the heading now."""
     p = "../" * depth
     cta_html = ""
     if cta:
@@ -690,8 +723,7 @@ def page_hero(eyebrow, title, lede, crumbs_html="", cta=True, depth=0):
   {_hero_orbit()}
   <div class="page-hero-inner reveal">
     {crumbs_html}
-    <p class="eyebrow">{eyebrow}</p>
-    <h1>{title}</h1>
+    {f'<h1><span class="eyebrow h1-lead">{h1_lead}</span> {title}</h1>' if h1_lead else f'<p class="eyebrow">{eyebrow}</p>{chr(10)}    <h1>{title}</h1>'}
     <p class="lede">{lede}</p>
     {cta_html}
   </div>
@@ -793,7 +825,7 @@ def org_schema():
                     "Lake Park", "Riviera Beach",
                 ]
             ],
-            "sameAs": [INSTAGRAM],
+            "sameAs": [INSTAGRAM, LINKEDIN],
             "availableService": [
                 {"@type": "MedicalTherapy", "@id": f"{BASE}/services/regenerative-medicine-orthobiologics.html#service"},
                 {"@type": "MedicalTherapy", "@id": f"{BASE}/services/vein-care.html#service"},
@@ -905,6 +937,8 @@ def clean_url_map():
         "services/index.html": "our-services",
         "forms/index.html": "forms",
         "blog/index.html": "blog",
+        "conditions/index.html": "conditions",
+        "locations/index.html": "locations",
         "providers/dr-marc-matarazzo.html": "dr-marc-matarazzo-md",
         "providers/dr-orlando-cedeno.html": "dr-orlando-cedeno-dpm",
         # Confirmed live: this is the slug actually ranking, not "services/vein-care".
@@ -1614,8 +1648,8 @@ SERVICES = [
         "slug": "medical-weight-loss",
         "name": "Medical Weight Loss & GLP-1 Program",
         "nav": "Medical Weight Loss & GLP-1",
-        "title": "Medical Weight Loss Palm Beach Gardens | GLP-1 Program",
-        "desc": "Physician-supervised medical weight loss in Palm Beach Gardens — GLP-1 therapy, personalized dosing, and ongoing monitoring. Plans starting at $239/month.",
+        "title": "Medical Weight Loss Palm Beach Gardens | Semaglutide & GLP-1",
+        "desc": "Physician-supervised medical weight loss in Palm Beach Gardens — semaglutide and tirzepatide GLP-1 therapy, personalized dosing and monitoring. From $239/month.",
         "eyebrow": "Physician-Supervised Weight Loss",
         "h1": "Physician-Supervised Medical Weight Loss",
         "lede": "Achieve sustainable weight loss with personalized, medically guided treatment designed to support your overall health, mobility, and long-term wellness — plans starting at $239/month.",
@@ -1629,7 +1663,7 @@ SERVICES = [
         ],
         "expertise": [
             ("How GLP-1 Medications Work", "GLP-1 receptor agonists mimic a naturally occurring hormone that regulates blood sugar, appetite, and digestion. By activating GLP-1 receptors, these medications support healthier blood sugar control and reduce hunger signals."),
-            ("Personalized Medical Solutions", "From compounded therapies to FDA-approved medications such as Ozempic®, Zepbound®, and Wegovy®, each plan is tailored to your health profile with ongoing medical oversight."),
+            ("Personalized Medical Solutions", "From compounded therapies to FDA-approved medications such as Ozempic® and Wegovy® (semaglutide) and Zepbound® (tirzepatide), each plan is tailored to your health profile with ongoing medical oversight."),
             ("What to Expect", "Appetite awareness often begins in weeks 1–2, with steadier control and early progress typically developing over the first month — always under physician monitoring."),
             ("Beyond the Medication", "Weight loss connects directly to joint health and mobility. As an integrative practice, we pair your program with orthopedic, wellness, and IV support when it helps your bigger picture."),
         ],
@@ -1639,7 +1673,7 @@ SERVICES = [
             ("Monitoring & Support", "Regular check-ins track progress, manage side effects, and adjust your plan for sustainable results."),
         ],
         "faqs": [
-            ("What medications are available?", "Our physician-supervised solutions include compounded therapies and FDA-approved GLP-1 medications such as Ozempic®, Zepbound®, and Wegovy® — prescribed only when appropriate for you."),
+            ("What medications are available?", "Our physician-supervised solutions include compounded therapies and FDA-approved GLP-1 medications such as Ozempic® and Wegovy® (both semaglutide) and Zepbound® (tirzepatide) — prescribed only when appropriate for you."),
             ("How much does the program cost?", "Plans start at $239 per month; your exact program depends on the medication and monitoring plan your physician recommends."),
             ("Is GLP-1 therapy safe?", "GLP-1 therapy should always be prescribed and monitored by a qualified medical professional. Outcomes and treatment response differ from person to person — our physicians screen carefully and monitor you throughout."),
             ("When will I see results?", "Many patients notice appetite changes within the first two weeks and early weight loss over the first month; individual results vary."),
@@ -2226,7 +2260,7 @@ def build_home():
   <div class="hero-scene" aria-hidden="true">
     <div class="hero-video-slot">
       <video class="hero-video" autoplay muted loop playsinline preload="none"
-             poster="assets/video/juno-poster-2560.jpg?v={asset_v('assets/video/juno-poster-2560.jpg')}"
+             data-poster="assets/video/juno-poster-2560.jpg?v={asset_v('assets/video/juno-poster-2560.jpg')}"
              data-hero-video
              data-poster-portrait="assets/video/juno-poster-portrait.jpg?v={asset_v('assets/video/juno-poster-portrait.jpg')}"
              data-mp4-max="assets/video/juno-max.mp4?v={asset_v('assets/video/juno-max.mp4')}"
@@ -2234,6 +2268,19 @@ def build_home():
              data-webm-hd="assets/video/juno-hd.webm?v={asset_v('assets/video/juno-hd.webm')}"
              data-mp4-portrait="assets/video/juno-portrait.mp4?v={asset_v('assets/video/juno-portrait.mp4')}" data-webm-portrait="assets/video/juno-portrait.webm?v={asset_v('assets/video/juno-portrait.webm')}" data-mp4-mobile="assets/video/juno-mobile.mp4?v={asset_v('assets/video/juno-mobile.mp4')}"
              data-webm-mobile="assets/video/juno-mobile.webm?v={asset_v('assets/video/juno-mobile.webm')}"></video>
+      <script>
+        /* Pick the poster BEFORE the browser fetches one. A poster="" attribute in
+           the markup was fetched as soon as it was parsed, so every portrait phone
+           downloaded the 329KB landscape frame and then main.js's portrait swap —
+           two posters for one hero. Same test as isPortrait in main.js and the
+           two preloads in head(); both posters are already preloaded, so this
+           only ever reads from cache. Without JS the CSS coastline scene shows. */
+        (function (v) {{
+          var mq = "(max-width: 767px) and (orientation: portrait) and (prefers-reduced-motion: no-preference)";
+          var pick = window.matchMedia && matchMedia(mq).matches ? "data-poster-portrait" : "data-poster";
+          v.setAttribute("poster", v.getAttribute(pick));
+        }})(document.currentScript.previousElementSibling);
+      </script>
       <div class="hero-video-scrim"></div>
     </div>
     <div class="scene-sky"></div>
@@ -2261,8 +2308,7 @@ def build_home():
   </div>
   <div class="hero-inner">
     <div class="hero-copy">
-      <p class="eyebrow hero-eyebrow h-rise" style="--hd:.5s">{TAGLINE}</p>
-      <h1 class="h-rise" style="--hd:.65s">Where recovery meets <em>innovative regeneration</em></h1>
+      <h1 class="h-rise" style="--hd:.5s"><span class="eyebrow hero-eyebrow h1-lead">Regenerative Medicine in Palm Beach Gardens</span> Where recovery meets <em>innovative regeneration</em></h1>
       <p class="lede h-rise" style="--hd:.82s">Personalized regenerative medicine, non-surgical therapies, and vein care in Palm Beach Gardens — led by board-certified specialists with over 40 years of combined experience.</p>
       <div class="hero-cta-row h-rise" style="--hd:1s">
         <a class="btn btn-gold" href="contact.html#book">Book a Consultation</a>
@@ -2435,10 +2481,13 @@ def build_home():
 
     schema = breadcrumb_schema([("", "Home")])
     page = head(
-        # ~57 chars: keyword + city front-loaded, brand last. Google truncates a
-        # title around 600px (~60 chars) and the brand is the cheapest thing to lose.
-        "Regenerative Medicine & Vein Care | RegenOrtho Palm Beach",
-        "Concierge regenerative medicine, non-surgical therapies & vein care in Palm Beach Gardens. Board-certified specialists, 40+ years combined experience.",
+        # Keyword + city front-loaded, brand last — Google truncates around 600px
+        # (~60 chars) and the brand is the cheapest thing to lose. "Stem cell" leads
+        # because Search Console has this page at position 1 for "stem cell therapy
+        # jupiter" with zero clicks: the old title (no city, no "stem cell") did not
+        # look like an answer to the query it was ranking for.
+        "Stem Cell & Regenerative Medicine Palm Beach Gardens | RegenOrtho",
+        "Stem cell, PRP and regenerative medicine, vein care and IV therapy in Palm Beach Gardens, led by board-certified specialists. Same-week visits: 833-STEM561.",
         # canonical="" -> BASE/ (the root), NOT /index.html. Every inbound link,
         # the GBP listing and the social profiles point at the root; canonicalising
         # to /index.html asks Google to consolidate the wrong direction.
@@ -2449,6 +2498,30 @@ def build_home():
 # Published monthly starting prices, quoted verbatim from the service pages
 # ("Plans starting at $239/month", "Programs from $249 per month"). Only these two
 # services publish a price, so only these two get an offer — never infer one.
+# The plain-language phrase that opens each service page's h1 (see page_hero). The
+# name a patient types, then the city — never a claim. Kept in step with the <title>.
+SERVICE_H1_LEAD = {
+    "regenerative-medicine-orthobiologics": "PRP &amp; Regenerative Medicine in Palm Beach Gardens",
+    "exosome-therapy": "Exosome Therapy in Palm Beach Gardens",
+    "mesenchymal-stem-cell-therapy": "Mesenchymal Stem Cell Therapy in Palm Beach Gardens",
+    "whartons-jelly-therapy": "Wharton&rsquo;s Jelly Therapy in Palm Beach Gardens",
+    "muse-infused-rpa-therapy": "MUSE-Infused RPA Therapy in Palm Beach Gardens",
+    "traditional-muse-cell-therapy": "MUSE Stem Cell Therapy in Palm Beach Gardens",
+    "advanced-non-surgical-therapies": "EPAT Shockwave Therapy in Palm Beach Gardens",
+    "vein-care": "Varicose &amp; Spider Vein Treatment in Palm Beach Gardens",
+    "sclerotherapy": "Sclerotherapy in Palm Beach Gardens",
+    "endovenous-ablation": "Endovenous Ablation in Palm Beach Gardens",
+    "microphlebectomy": "Microphlebectomy in Palm Beach Gardens",
+    "neuropathy-program": "Neuropathy Treatment in Palm Beach Gardens",
+    "medical-weight-loss": "Medical Weight Loss &amp; GLP-1 in Palm Beach Gardens",
+    "peptide-therapy": "Peptide Therapy in Palm Beach Gardens",
+    "ghk-cu": "GHK-Cu Peptide Therapy in Palm Beach Gardens",
+    "kpv": "KPV Peptide Therapy in Palm Beach Gardens",
+    "tesamorelin": "Tesamorelin Therapy in Palm Beach Gardens",
+    "mots-c": "MOTS-c Peptide Therapy in Palm Beach Gardens",
+    "concierge-care": "Concierge Orthopedic Care in Palm Beach Gardens",
+}
+
 SERVICE_FROM_PRICE = {
     "medical-weight-loss": 239,
     "peptide-therapy": 249,
@@ -2553,7 +2626,11 @@ def build_services():
         subsvc_html = ""
         if sub_slugs:
             sub_cards = "".join(
-                f"""<a class="svc-card reveal" href="{sub['slug']}" style="--d:{i * 70}ms">
+                # Full ../services/<slug>.html, never a bare sibling: vein-care is served
+                # at /our-services/vein-care-medical-cosmetic, where a bare "sclerotherapy"
+                # resolved to /our-services/sclerotherapy — a 404 on all three cards in
+                # production until 2026-10. rewrite_links() turns this into the clean URL.
+                f"""<a class="svc-card reveal" href="../services/{sub['slug']}.html" style="--d:{i * 70}ms">
         <span class="svc-num" aria-hidden="true">{i + 1:02d}</span>
         <span class="svc-media">{photo(sub["img"].rsplit(".",1)[0], sub["img_alt"], 640, 420, prefix="../", sizes="(max-width:700px) 92vw, 380px")}</span>
         <span class="svc-body"><strong>{sub['name']}</strong><span>{sub['lede'][:130].rsplit(' ', 1)[0]}…</span><em class="svc-more">Explore <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></span>
@@ -2619,7 +2696,7 @@ def build_services():
         crumbs_html = crumbs(crumb_parts, depth=d)
         body = f"""{nav(d)}
 <main id="main">
-{page_hero(svc['eyebrow'], svc['h1'], svc['lede'], crumbs_html, depth=d)}
+{page_hero(svc['eyebrow'], svc['h1'], svc['lede'], crumbs_html, depth=d, h1_lead=SERVICE_H1_LEAD.get(svc['slug'], ''))}
 <section class="section svc-intro">
   <div class="svc-intro-grid">
     <figure class="svc-photo reveal">{photo(svc["img"].rsplit(".",1)[0], svc["img_alt"], 700, 470, prefix="../", sizes="(max-width:900px) 94vw, 620px", eager=True)}</figure>
@@ -2711,7 +2788,7 @@ def build_services():
     crumbs_html = crumbs([("", "Our Services")], depth=d)
     body = f"""{nav(d)}
 <main id="main">
-{page_hero("Our Services", "Specialized treatment, all under one roof", "Regenerative medicine, non-surgical therapies, vein care, IV wellness, and concierge programs — board-certified specialists with one shared goal: help you move better, heal faster, and live healthier.", crumbs_html, depth=d)}
+{page_hero("Our Services", "Specialized treatment, all under one roof", "Regenerative medicine, non-surgical therapies, vein care, IV wellness, and concierge programs — board-certified specialists with one shared goal: help you move better, heal faster, and live healthier.", crumbs_html, depth=d, h1_lead="Regenerative &amp; Orthopedic Services in Palm Beach Gardens")}
 <section class="section">
   <div class="svc-grid svc-grid-3">{tiles}
     <a class="svc-card reveal" href="../iv-therapy.html">
@@ -2737,13 +2814,26 @@ def build_services():
 </main>
 {footer(d)}"""
     schema = breadcrumb_schema([("", "Home"), ("services/index.html", "Our Services")])
-    page = head("Our Services | RegenOrtho Palm Beach — Palm Beach Gardens",
-                "RegenOrtho Palm Beach services: regenerative medicine, advanced non-surgical therapies, vein care, IV therapy, neuropathy care, weight loss, and concierge care.",
+    page = head("Regenerative Medicine Services Palm Beach Gardens | RegenOrtho",
+                "Stem cell, exosome and PRP therapy, shockwave, vein care, IV therapy, peptides, neuropathy care and medical weight loss — all at one Palm Beach Gardens clinic.",
                 depth=d, canonical="services/index.html", extra_schema=schema, speakable=True) + '<body class="page-services">\n' + body
     write("services/index.html", page)
 
 
 CONDITION_FAQ_CAP = 5
+
+# Opens each condition page's h1 (see page_hero) with the phrase people search —
+# "knee pain treatment", not the brand-voice line that follows it.
+CONDITION_H1_LEAD = {
+    "knee-pain": "Knee Pain Treatment",
+    "shoulder-pain": "Shoulder Pain Treatment",
+    "hip-pain": "Hip Pain Treatment",
+    "arthritis-joint-pain": "Arthritis &amp; Joint Pain Treatment",
+    "sports-injuries": "Sports Injury Treatment",
+    "tendon-ligament-injuries": "Tendon &amp; Ligament Injury Treatment",
+    "peripheral-neuropathy": "Peripheral Neuropathy Treatment",
+    "varicose-spider-veins": "Varicose &amp; Spider Vein Treatment",
+}
 
 
 def condition_faqs(c):
@@ -2787,10 +2877,10 @@ def build_conditions():
             f"""<details class="faq-item"><summary>{q}</summary><div class="faq-a"><p>{a}</p></div></details>"""
             for q, a in c_faqs
         )
-        crumbs_html = crumbs([("conditions/", "Conditions"), ("", c["name"])], depth=d)
+        crumbs_html = crumbs([("conditions/index.html", "Conditions"), ("", c["name"])], depth=d)
         body = f"""{nav(d)}
 <main id="main">
-{page_hero("Conditions We Treat", c['h1'], c['lede'], crumbs_html, depth=d)}
+{page_hero("Conditions We Treat", c['h1'], c['lede'], crumbs_html, depth=d, h1_lead=CONDITION_H1_LEAD[c['slug']] + " in Palm Beach Gardens")}
 <section class="section cond-layout">
   <div class="cond-grid">
     <div class="cond-main reveal">
@@ -2828,7 +2918,7 @@ def build_conditions():
                 ],
             })
             + faq_schema(c_faqs)
-            + breadcrumb_schema([("", "Home"), (f"conditions/{c['slug']}.html", c["name"])])
+            + breadcrumb_schema([("", "Home"), ("conditions/index.html", "Conditions We Treat"), (f"conditions/{c['slug']}.html", c["name"])])
         )
         page = head(c["title"], c["desc"], depth=d,
                     canonical=f"conditions/{c['slug']}.html",
@@ -2838,12 +2928,141 @@ def build_conditions():
         write(f"conditions/{c['slug']}.html", page)
 
 
+_ARROW = ('<svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" '
+          'stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg>')
+
+
+def build_hubs():
+    """/conditions and /locations — the two hubs every condition and location page's
+    breadcrumb has always linked to, and which did not exist (a 404 on 16 pages).
+    Both are assembled from data already on the child pages: names, ledes, the
+    services each condition lists, each city's blurb. Nothing here is new copy that
+    would need clinical sign-off.
+
+    Like services/index.html, each is one directory deep but served at a bare
+    segment (/conditions), so relative links resolve against the SITE ROOT — every
+    child link spells out its directory ("conditions/knee-pain.html"), never a
+    bare sibling."""
+    d = 1
+    cards = "".join(
+        f"""<a class="subsvc-card reveal" href="conditions/{c['slug']}.html" style="--d:{(i % 3) * 80}ms">
+        <strong>{c['name']}</strong>
+        <span>{c['lede']}</span>
+        <span class="hub-treats">Treated with: {", ".join(svc_name(s) for s in c['services'])}</span>
+        <em class="svc-more">{CONDITION_H1_LEAD[c['slug']]} {_ARROW}</em>
+      </a>"""
+        for i, c in enumerate(CONDITIONS)
+    )
+    body = f"""{nav(d)}
+<main id="main">
+{page_hero("Conditions We Treat", "Find your condition, see your options",
+           "Joint pain, sports injuries, nerve symptoms and vein problems — each page explains the condition, the symptoms we see, and the treatments we use for it, from regenerative injections to minimally invasive vein care.",
+           crumbs([("", "Conditions")], depth=d), depth=d, h1_lead="Conditions We Treat in Palm Beach Gardens")}
+<section class="section">
+  <div class="subsvc-grid">{cards}</div>
+  <p class="section-foot reveal">Not listed? <a href="services/index.html">Browse every service</a> or call <a href="tel:{PHONE_TEL}" data-call-location="conditions_hub">{PHONE_VANITY}</a> and we will tell you honestly whether we can help.</p>
+</section>
+{cta_band(d)}
+</main>
+{footer(d)}"""
+    schema = (
+        extra_ld({
+            "@context": "https://schema.org", "@type": "ItemList",
+            "name": "Conditions treated at RegenOrtho Palm Beach",
+            "itemListElement": [
+                {"@type": "ListItem", "position": i + 1, "name": c["name"],
+                 "url": f"{BASE}/conditions/{c['slug']}.html"}
+                for i, c in enumerate(CONDITIONS)
+            ],
+        })
+        + breadcrumb_schema([("", "Home"), ("conditions/index.html", "Conditions We Treat")])
+    )
+    page = head("Conditions We Treat | Joint, Nerve & Vein Care Palm Beach Gardens",
+                "Knee, hip and shoulder pain, arthritis, sports injuries, neuropathy and varicose veins — the conditions RegenOrtho Palm Beach treats, and how, in Palm Beach Gardens.",
+                depth=d, canonical="conditions/index.html", webpage_type="MedicalWebPage",
+                speakable=True, extra_schema=schema) + '<body class="page-hub">\n' + body
+    write("conditions/index.html", page)
+
+    city_cards = f"""<a class="subsvc-card reveal" href="index.html">
+        <strong>Palm Beach Gardens</strong>
+        <span>Home of the clinic: {ADDRESS_STREET}, {ADDRESS_CITY}, {ADDRESS_STATE} {ADDRESS_ZIP}.</span>
+        <em class="svc-more">Visit the homepage {_ARROW}</em>
+      </a>""" + "".join(
+        f"""<a class="subsvc-card reveal" href="locations/{l['slug']}.html" style="--d:{((i + 1) % 3) * 80}ms">
+        <strong>{l['city']}</strong>
+        <span>{l['blurb']}</span>
+        <em class="svc-more">Care for {l['city']} patients {_ARROW}</em>
+      </a>"""
+        for i, l in enumerate(LOCATIONS)
+    )
+    body = f"""{nav(d)}
+<main id="main">
+{page_hero("Areas We Serve", "One clinic, the whole north county",
+           f"Patients come to our Palm Beach Gardens clinic from Jupiter to West Palm Beach. Every appointment is at {ADDRESS_STREET} — this is where to find directions and what each community asks us for most.",
+           crumbs([("", "Areas We Serve")], depth=d), depth=d, h1_lead="Areas We Serve near Palm Beach Gardens")}
+<section class="section">
+  <div class="subsvc-grid">{city_cards}</div>
+  <p class="section-foot reveal"><a href="{MAP_URL}" rel="noopener" target="_blank">Get directions to the clinic →</a></p>
+</section>
+{cta_band(d)}
+</main>
+{footer(d)}"""
+    schema = (
+        extra_ld({
+            "@context": "https://schema.org", "@type": "ItemList",
+            "name": "Areas served by RegenOrtho Palm Beach",
+            "itemListElement": [
+                {"@type": "ListItem", "position": i + 1, "name": f"{l['city']}, FL",
+                 "url": f"{BASE}/locations/{l['slug']}.html"}
+                for i, l in enumerate(LOCATIONS)
+            ],
+        })
+        + breadcrumb_schema([("", "Home"), ("locations/index.html", "Areas We Serve")])
+    )
+    page = head("Areas We Serve | Jupiter to West Palm Beach | RegenOrtho",
+                "RegenOrtho Palm Beach serves Jupiter, Juno Beach, Tequesta, North Palm Beach, Palm Beach, Singer Island, Lake Park and West Palm Beach from Palm Beach Gardens.",
+                depth=d, canonical="locations/index.html", speakable=True,
+                extra_schema=schema) + '<body class="page-hub">\n' + body
+    write("locations/index.html", page)
+
+
 # The two interiors below are the practice's OWN clinic, not stock: the suite on
 # Prosperity Farms with its recovery chairs and lounge. Location pages had no
 # photography at all, which left eight of the site's fifty-six pages as pure
 # text — and the one thing a "serving Jupiter" page has to establish is that
 # there is a real room at the other end of the drive. Alternated by index so
 # neighbouring cities do not open on an identical picture.
+# Which six services each city's page leads with. These used to be SERVICES[:6] on
+# all eight pages — the same five stem-cell sub-therapies plus PRP everywhere, which
+# made the location pages near-duplicates of each other. The order now follows what
+# Search Console shows people in each city actually searching for (90 days to
+# 2026-10-09: Jupiter's demand splits stem cell / vein / joint; West Palm Beach
+# skews regenerative + neuropathy; Lake Park is peptides and IV). Cities with no
+# local query data yet get the default.
+LOCATION_SERVICES_DEFAULT = ["regenerative-medicine-orthobiologics", "mesenchymal-stem-cell-therapy",
+                             "exosome-therapy", "advanced-non-surgical-therapies", "vein-care",
+                             "peptide-therapy"]
+LOCATION_SERVICES = {
+    "jupiter": ["mesenchymal-stem-cell-therapy", "vein-care", "regenerative-medicine-orthobiologics",
+                "sclerotherapy", "exosome-therapy", "advanced-non-surgical-therapies"],
+    "north-palm-beach": ["regenerative-medicine-orthobiologics", "mesenchymal-stem-cell-therapy",
+                         "advanced-non-surgical-therapies", "peptide-therapy", "medical-weight-loss",
+                         "concierge-care"],
+    "palm-beach": ["regenerative-medicine-orthobiologics", "mesenchymal-stem-cell-therapy",
+                   "advanced-non-surgical-therapies", "medical-weight-loss", "peptide-therapy",
+                   "concierge-care"],
+    "west-palm-beach": ["regenerative-medicine-orthobiologics", "mesenchymal-stem-cell-therapy",
+                        "neuropathy-program", "vein-care", "advanced-non-surgical-therapies",
+                        "peptide-therapy"],
+    "lake-park": ["peptide-therapy", "medical-weight-loss", "regenerative-medicine-orthobiologics",
+                  "mesenchymal-stem-cell-therapy", "vein-care", "neuropathy-program"],
+    "tequesta": ["regenerative-medicine-orthobiologics", "mesenchymal-stem-cell-therapy",
+                 "vein-care", "advanced-non-surgical-therapies", "exosome-therapy", "concierge-care"],
+    "singer-island": ["regenerative-medicine-orthobiologics", "advanced-non-surgical-therapies",
+                      "mesenchymal-stem-cell-therapy", "vein-care", "peptide-therapy",
+                      "medical-weight-loss"],
+}
+
 LOCATION_INTERIORS = [
     ("clinic-lounge", "The recovery lounge at the RegenOrtho Palm Beach clinic on Prosperity Farms Road"),
     ("clinic-interior", "Inside the RegenOrtho Palm Beach clinic in Palm Beach Gardens"),
@@ -2859,14 +3078,15 @@ def build_locations():
             f'<li><a href="{s}.html">{c2}</a></li>'
             for s, c2 in [(l["slug"], l["city"]) for l in LOCATIONS if l["slug"] != loc["slug"]]
         )
+        by_slug = {s["slug"]: s for s in SERVICES}
         svc_list = "".join(
             f'<a class="treat-card reveal" href="../services/{s["slug"]}.html"><strong>{s["name"]}</strong><em class="svc-more">Learn more <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></a>'
-            for s in SERVICES[:6]
+            for s in (by_slug[k] for k in LOCATION_SERVICES.get(loc["slug"], LOCATION_SERVICES_DEFAULT))
         )
-        crumbs_html = crumbs([("locations/", "Areas We Serve"), ("", city)], depth=d)
+        crumbs_html = crumbs([("locations/index.html", "Areas We Serve"), ("", city)], depth=d)
         body = f"""{nav(d)}
 <main id="main">
-{page_hero(f"Serving {city}", f"Orthopedic, Regenerative &amp; Vein Care for {city}", loc['angle'], crumbs_html, depth=d)}
+{page_hero(f"Serving {city}", f"Orthopedic, Regenerative &amp; Vein Care for {city}", loc['angle'], crumbs_html, depth=d, h1_lead=f"Regenerative Medicine near {city}, FL")}
 <section class="section">
   <div class="loc-grid">
     <div class="loc-main reveal">
@@ -2910,11 +3130,11 @@ def build_locations():
                 "areaServed": {"@type": "City", "name": city},
                 "url": f"{BASE}/locations/{loc['slug']}.html",
             })
-            + breadcrumb_schema([("", "Home"), (f"locations/{loc['slug']}.html", city)])
+            + breadcrumb_schema([("", "Home"), ("locations/index.html", "Areas We Serve"), (f"locations/{loc['slug']}.html", city)])
         )
         page = head(
-            f"Orthopedic & Regenerative Care {city} | RegenOrtho",
-            f"{city} residents: orthopedic, podiatric, regenerative & vein care minutes away in Palm Beach Gardens. Same-week consultations — call 833-STEM561.",
+            f"Regenerative Medicine near {city}, FL | RegenOrtho",
+            f"{city} residents: stem cell, PRP and regenerative care, vein treatment and IV therapy minutes away in Palm Beach Gardens. Same-week visits: 833-STEM561.",
             depth=d, canonical=f"locations/{loc['slug']}.html", extra_schema=schema, speakable=True,
         ) + '<body class="page-location">\n' + body
         write(f"locations/{loc['slug']}.html", page)
@@ -3208,7 +3428,7 @@ def build_iv():
       <a href="contact.html#book">
         <span class="drip-bag"><img src="assets/media/{item['bag']}?v={asset_v('assets/media/' + item['bag'])}" alt="{item['short']} IV drip bag" width="150" height="230" loading="lazy"></span>
         <span class="drip-body">
-          <strong>{item['short']}</strong>
+          <h3 class="drip-name">{item['short']}</h3>
           <span class="drip-ing">{item['ingredients']}</span>
           <span class="drip-desc">{item['desc']}</span>
         </span>
@@ -3251,7 +3471,7 @@ def build_iv():
     crumbs_html = crumbs([("", "IV Therapy Lounge")], depth=d)
     body = f"""{nav(d)}
 <main id="main">
-{page_hero("The IV Lounge", "Repair. Rehydrate. Renew.", "Revitalize your body and restore essential nutrients with IV treatments performed by our medical team — in a lounge designed for comfort, not a hospital corridor.", crumbs_html, depth=d)}
+{page_hero("The IV Lounge", "Repair. Rehydrate. Renew.", "Revitalize your body and restore essential nutrients with IV treatments performed by our medical team — in a lounge designed for comfort, not a hospital corridor.", crumbs_html, depth=d, h1_lead="IV Therapy in Palm Beach Gardens")}
 <section class="section section-dark section-drips" id="menu">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="section-head reveal"><p class="eyebrow">The Menu</p><h2>Twelve formulas, <em>one goal: you at 100%</em></h2>
@@ -3895,6 +4115,7 @@ def build_meta():
              "patient-resources.html", "privacy-policy.html", "terms.html",
              "forms/index.html",
              "services/index.html", "blog/index.html",
+             "conditions/index.html", "locations/index.html",
              "providers/dr-marc-matarazzo.html", "providers/dr-orlando-cedeno.html"]
     pages += [f"forms/{f['slug']}.html" for f in FORMS]
     pages += [f"services/{s['slug']}.html" for s in SERVICES]
@@ -4197,6 +4418,7 @@ def main():
     build_services()
     build_conditions()
     build_locations()
+    build_hubs()
     build_iv()
     build_faq()
     build_contact()

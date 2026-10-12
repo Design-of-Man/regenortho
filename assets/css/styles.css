@@ -746,7 +746,9 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
                        50% { transform: translateY(-11px) rotate(.6deg); } }
 
 .drip-body { display: flex; flex-direction: column; gap: .3rem; flex: 1; }
-.drip-card strong { font-family: var(--serif); font-size: var(--t-lg); font-weight: 600; color: var(--white); }
+/* drip names are h3s so each drip is its own heading in the outline (the menu is
+   the page's main content); the rule pins them to the old <strong> look */
+.drip-card .drip-name { font-family: var(--serif); font-size: var(--t-lg); font-weight: 600; line-height: 1.2; letter-spacing: 0; margin: 0; color: var(--white); }
 .drip-ing { font: 600 var(--t-3xs)/1.4 var(--sans); letter-spacing: .06em; text-transform: uppercase;
   color: var(--gold-soft); }
 /* the full description stays out of the way until there is intent to read it */
@@ -1158,6 +1160,10 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
 @keyframes ph-float { 0%, 100% { transform: translateY(0); opacity: .4; } 50% { transform: translateY(-14px); opacity: 1; } }
 .page-hero-inner { position: relative; max-width: var(--wrap); margin: 0 auto; }
 .page-hero h1 { color: var(--white); margin: .9rem 0 1rem; max-width: 22ch; }
+/* the "<treatment> in <city>" lead sits inside the h1 in the eyebrow's place (see
+   page_hero in build.py) — eyebrow typography, block, same gap the eyebrow had */
+.h1-lead { display: block; margin-bottom: .9rem; }
+.page-hero h1:has(> .h1-lead) { margin-top: 0; }
 .page-hero .lede { max-width: 62ch; }
 .crumbs { margin-bottom: 1.4rem; font-size: var(--t-xs); }
 .crumbs ol { list-style: none; display: flex; flex-wrap: wrap; gap: .5rem; }

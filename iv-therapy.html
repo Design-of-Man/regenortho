@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2Z542HBXHS"></script>
+<!-- Google tag (gtag.js), loaded after onload -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-2Z542HBXHS');
+  (function () {
+    function load() {
+      var s = document.createElement('script'); s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-2Z542HBXHS';
+      document.head.appendChild(s);
+    }
+    function idle() { (window.requestIdleCallback || function (f) { setTimeout(f, 1); })(load, { timeout: 2500 }); }
+    if (document.readyState === 'complete') idle(); else window.addEventListener('load', idle);
+  })();
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -51,10 +58,10 @@
 <link rel="manifest" href="site.webmanifest">
 <link rel="preload" href="assets/fonts/newsreader-v1.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/styles.css?v=b3db64fd">
+<link rel="stylesheet" href="assets/css/styles.css?v=22d1fd60">
 <link rel="stylesheet" href="assets/css/assist.css?v=4fb52b5a">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":["MedicalClinic","MedicalBusiness"],"@id":"https://regenorthopb.com/#organization","name":"RegenOrtho Palm Beach","alternateName":["Regen Ortho","RegenOrtho","Regen Ortho PB"],"slogan":"The Regeneration of Orthopedics","description":"Concierge regenerative orthopedic and vein care in Palm Beach Gardens, FL \u2014 board-certified specialists offering orthobiologic therapies, peptide therapy, IV wellness, and minimally invasive vein treatment.","url":"https://regenorthopb.com/","logo":{"@type":"ImageObject","@id":"https://regenorthopb.com/#logo","url":"https://regenorthopb.com/assets/media/logo-dark.png","contentUrl":"https://regenorthopb.com/assets/media/logo-dark.png","caption":"RegenOrtho Palm Beach"},"image":{"@type":"ImageObject","url":"https://regenorthopb.com/assets/media/og-physicians-v1.jpg","caption":"The RegenOrtho Palm Beach physicians \u2014 orthopedic, regenerative and vein care at the Palm Beach Gardens clinic"},"telephone":"+1-833-783-6561","email":"emily@regenorthopb.com","priceRange":"$$","currenciesAccepted":"USD","paymentAccepted":"Cash, Credit Card, Insurance, HSA/FSA","availableLanguage":[{"@type":"Language","name":"English"}],"knowsAbout":["Regenerative medicine","Platelet-rich plasma therapy","Orthobiologics","Peptide therapy","Varicose vein treatment","Peripheral neuropathy","GLP-1 medical weight loss","IV infusion therapy"],"isAcceptingNewPatients":true,"medicalSpecialty":["Regenerative medicine","Phlebology"],"address":{"@type":"PostalAddress","streetAddress":"11380 Prosperity Farms Road, Suite 204\u2013208","addressLocality":"Palm Beach Gardens","addressRegion":"FL","postalCode":"33410","addressCountry":"US"},"geo":{"@type":"GeoCoordinates","latitude":26.8449,"longitude":-80.0693},"hasMap":"https://maps.google.com/maps?q=RegenOrtho%20Palm%20Beach%2011380%20Prosperity%20Farms%20Road%20Palm%20Beach%20Gardens","openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"08:00","closes":"17:00"}],"areaServed":[{"@type":"City","name":"Palm Beach Gardens"},{"@type":"City","name":"Jupiter"},{"@type":"City","name":"North Palm Beach"},{"@type":"City","name":"Juno Beach"},{"@type":"City","name":"Tequesta"},{"@type":"City","name":"Palm Beach"},{"@type":"City","name":"West Palm Beach"},{"@type":"City","name":"Singer Island"},{"@type":"City","name":"Lake Park"},{"@type":"City","name":"Riviera Beach"}],"sameAs":["https://www.instagram.com/regenortho_palmbeach/"],"availableService":[{"@type":"MedicalTherapy","@id":"https://regenorthopb.com/services/regenerative-medicine-orthobiologics#service"},{"@type":"MedicalTherapy","@id":"https://regenorthopb.com/our-services/vein-care-medical-cosmetic#service"},{"@type":"MedicalTherapy","@id":"https://regenorthopb.com/iv-therapy#service"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://regenorthopb.com/#website","url":"https://regenorthopb.com/","name":"RegenOrtho Palm Beach","inLanguage":"en-US","publisher":{"@id":"https://regenorthopb.com/#organization"}},{"@type":"MedicalWebPage","@id":"https://regenorthopb.com/iv-therapy#webpage","url":"https://regenorthopb.com/iv-therapy","name":"IV Therapy Palm Beach Gardens | Drip Lounge | RegenOrtho","description":"IV therapy in Palm Beach Gardens: hydration, immune boost, NAD+ 500mg, athletic recovery & more \u2014 clinician-supervised drips from $189 in a private lounge.","inLanguage":"en-US","isPartOf":{"@id":"https://regenorthopb.com/#website"},"about":{"@id":"https://regenorthopb.com/#organization"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://regenorthopb.com/assets/media/iv-hero.jpg?v=22389765"},"datePublished":"2026-07-30","dateModified":"2026-10-05","medicalAudience":"Patient","speakable":{"@type":"SpeakableSpecification","cssSelector":[".page-hero h1",".page-hero .lede"]}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":["MedicalClinic","MedicalBusiness"],"@id":"https://regenorthopb.com/#organization","name":"RegenOrtho Palm Beach","alternateName":["Regen Ortho","RegenOrtho","Regen Ortho PB"],"slogan":"The Regeneration of Orthopedics","description":"Concierge regenerative orthopedic and vein care in Palm Beach Gardens, FL \u2014 board-certified specialists offering orthobiologic therapies, peptide therapy, IV wellness, and minimally invasive vein treatment.","url":"https://regenorthopb.com/","logo":{"@type":"ImageObject","@id":"https://regenorthopb.com/#logo","url":"https://regenorthopb.com/assets/media/logo-dark.png","contentUrl":"https://regenorthopb.com/assets/media/logo-dark.png","caption":"RegenOrtho Palm Beach"},"image":{"@type":"ImageObject","url":"https://regenorthopb.com/assets/media/og-physicians-v1.jpg","caption":"The RegenOrtho Palm Beach physicians \u2014 orthopedic, regenerative and vein care at the Palm Beach Gardens clinic"},"telephone":"+1-833-783-6561","email":"emily@regenorthopb.com","priceRange":"$$","currenciesAccepted":"USD","paymentAccepted":"Cash, Credit Card, Insurance, HSA/FSA","availableLanguage":[{"@type":"Language","name":"English"}],"knowsAbout":["Regenerative medicine","Platelet-rich plasma therapy","Orthobiologics","Peptide therapy","Varicose vein treatment","Peripheral neuropathy","GLP-1 medical weight loss","IV infusion therapy"],"isAcceptingNewPatients":true,"medicalSpecialty":["Regenerative medicine","Phlebology"],"address":{"@type":"PostalAddress","streetAddress":"11380 Prosperity Farms Road, Suite 204\u2013208","addressLocality":"Palm Beach Gardens","addressRegion":"FL","postalCode":"33410","addressCountry":"US"},"geo":{"@type":"GeoCoordinates","latitude":26.8449,"longitude":-80.0693},"hasMap":"https://maps.google.com/maps?q=RegenOrtho%20Palm%20Beach%2011380%20Prosperity%20Farms%20Road%20Palm%20Beach%20Gardens","openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"08:00","closes":"17:00"}],"areaServed":[{"@type":"City","name":"Palm Beach Gardens"},{"@type":"City","name":"Jupiter"},{"@type":"City","name":"North Palm Beach"},{"@type":"City","name":"Juno Beach"},{"@type":"City","name":"Tequesta"},{"@type":"City","name":"Palm Beach"},{"@type":"City","name":"West Palm Beach"},{"@type":"City","name":"Singer Island"},{"@type":"City","name":"Lake Park"},{"@type":"City","name":"Riviera Beach"}],"sameAs":["https://www.instagram.com/regenortho_palmbeach/","https://www.linkedin.com/company/regenorthopb"],"availableService":[{"@type":"MedicalTherapy","@id":"https://regenorthopb.com/services/regenerative-medicine-orthobiologics#service"},{"@type":"MedicalTherapy","@id":"https://regenorthopb.com/our-services/vein-care-medical-cosmetic#service"},{"@type":"MedicalTherapy","@id":"https://regenorthopb.com/iv-therapy#service"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://regenorthopb.com/#website","url":"https://regenorthopb.com/","name":"RegenOrtho Palm Beach","inLanguage":"en-US","publisher":{"@id":"https://regenorthopb.com/#organization"}},{"@type":"MedicalWebPage","@id":"https://regenorthopb.com/iv-therapy#webpage","url":"https://regenorthopb.com/iv-therapy","name":"IV Therapy Palm Beach Gardens | Drip Lounge | RegenOrtho","description":"IV therapy in Palm Beach Gardens: hydration, immune boost, NAD+ 500mg, athletic recovery & more \u2014 clinician-supervised drips from $189 in a private lounge.","inLanguage":"en-US","isPartOf":{"@id":"https://regenorthopb.com/#website"},"about":{"@id":"https://regenorthopb.com/#organization"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://regenorthopb.com/assets/media/iv-hero.jpg?v=22389765"},"datePublished":"2026-07-30","dateModified":"2026-10-12","medicalAudience":"Patient","speakable":{"@type":"SpeakableSpecification","cssSelector":[".page-hero h1",".page-hero .lede"]}}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"MedicalTherapy","@id":"https://regenorthopb.com/iv-therapy#service","name":"IV Recovery & Wellness Therapy","description":"Clinician-supervised IV vitamin and nutrient infusions in Palm Beach Gardens \u2014 hydration, immune support, NAD+, athletic recovery, and full-body wellness formulas.","url":"https://regenorthopb.com/iv-therapy","provider":{"@id":"https://regenorthopb.com/#organization"},"image":"https://regenorthopb.com/assets/media/og-physicians-v1.jpg","areaServed":[{"@type":"City","name":"Palm Beach Gardens"},{"@type":"City","name":"Jupiter"},{"@type":"City","name":"North Palm Beach"},{"@type":"City","name":"Juno Beach"},{"@type":"City","name":"Tequesta"},{"@type":"City","name":"Palm Beach"},{"@type":"City","name":"West Palm Beach"},{"@type":"City","name":"Singer Island"},{"@type":"City","name":"Lake Park"}],"offers":{"@type":"OfferCatalog","name":"IV Recovery & Wellness Lounge menu","itemListElement":[{"@type":"Offer","name":"Hangover","description":"Rehydrates, detoxifies, and relieves headaches, nausea, and fatigue from dehydration, alcohol, or overexertion.","price":299,"priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://regenorthopb.com/iv-therapy#menu"},{"@type":"Offer","name":"Recovery","description":"Supports post-surgery healing and sports recovery with rehydration and targeted nutrients.","price":299,"priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://regenorthopb.com/iv-therapy#menu"},{"@type":"Offer","name":"Performance / Energy (Myers + Amino-6)","description":"Increases energy, endurance, and focus with amino acids and B-vitamins to combat fatigue and optimize daily performance.","price":225,"priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://regenorthopb.com/iv-therapy#menu"},{"@type":"Offer","name":"Beauty / Glow / Anti-Aging (Myers + Biotin)","description":"Promotes radiant skin, stronger hair and nails, and overall anti-aging wellness through targeted vitamins and antioxidants.","price":259,"priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://regenorthopb.com/iv-therapy#menu"},{"@type":"Offer","name":"Hydration / Basic Electrolyte","description":"Rapidly restores fluid and electrolyte balance for dehydration, heat exposure, or post-workout recovery.","price":189,"priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://regenorthopb.com/iv-therapy#menu"},{"@type":"Offer","name":"Myers\u2019 PLUS","description":"Foundational wellness infusion supporting energy, immune balance, and recovery by replenishing essential vitamins and minerals lost to stress, fatigue, or illness.","price":259,"priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://regenorthopb.com/iv-therapy#menu"},{"@type":"Offer","name":"Immune Boost (Vit C + Zinc + GSH)","description":"Strengthens the immune system, reduces inflammation, and supports faster recovery from viral or seasonal illness.","price":225,"priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://regenorthopb.com/iv-therapy#menu"},{"@type":"Offer","name":"Cleanse","description":"Deep detox and metabolic reset designed to cleanse the liver, flush toxins, and restore energy and clarity.","price":349,"priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://regenorthopb.com/iv-therapy#menu"},{"@type":"Offer","name":"NAD\u207a 500 mg","description":"High-dose NAD\u207a infusion for deep cellular rejuvenation, energy renewal, and neuroprotective support.","price":499,"priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://regenorthopb.com/iv-therapy#menu"},{"@type":"Offer","name":"Athletic Recovery & Performance (Myers + Amino-6)","description":"Rebuilds and refuels muscles with amino acids and electrolytes to enhance performance, reduce soreness, and accelerate recovery.","price":225,"priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://regenorthopb.com/iv-therapy#menu"},{"@type":"Offer","name":"Neuro Restore","description":"Antioxidant and nerve support with Alpha Lipoic Acid (ALA) and Vitamin B12 to help promote healthy nerve function and neurological wellness.","price":231,"priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://regenorthopb.com/iv-therapy#menu"},{"@type":"Offer","name":"All-Inclusive","description":"Comprehensive full-body infusion delivering vitamins, minerals, amino acids, antioxidants, and hydration for total wellness optimization.","price":399,"priceCurrency":"USD","availability":"https://schema.org/InStock","url":"https://regenorthopb.com/iv-therapy#menu"}]}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How long does an infusion take?","acceptedAnswer":{"@type":"Answer","text":"Usually 30 to 60 minutes, depending on which formula you are having and the rate it runs at."}},{"@type":"Question","name":"Are IV infusions safe?","acceptedAnswer":{"@type":"Answer","text":"Yes. Nothing starts without a medical pre-screen, a clinician supervises the session, and every solution is sterile and pharmaceutical grade."}},{"@type":"Question","name":"When will I notice benefits?","acceptedAnswer":{"@type":"Answer","text":"Plenty of people notice something the same afternoon. The metabolic and cellular effects build more slowly, over days and across repeat sessions."}},{"@type":"Question","name":"Can I combine IV therapy with other treatments?","acceptedAnswer":{"@type":"Answer","text":"Yes, and it usually is. We will sequence it around your rehabilitation or other treatment rather than running the two blind to each other."}},{"@type":"Question","name":"How often should I receive infusions?","acceptedAnswer":{"@type":"Answer","text":"It depends what you are after. Recovering from something acute may warrant a short run of sessions; maintenance is often monthly."}},{"@type":"Question","name":"Are there side effects?","acceptedAnswer":{"@type":"Answer","text":"Uncommon, and minor when they happen \u2014 some bruising at the site, occasionally brief lightheadedness. You are monitored throughout."}},{"@type":"Question","name":"Do you offer packages for athletes or post-op recovery?","acceptedAnswer":{"@type":"Answer","text":"Yes. There are protocols built for training blocks, for recovery after an operation, and for patients on an ongoing programme."}}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://regenorthopb.com/"},{"@type":"ListItem","position":2,"name":"IV Therapy","item":"https://regenorthopb.com/iv-therapy"}]}</script>
@@ -102,6 +109,7 @@
         </li>
         <li class="has-drop"><button class="drop-btn" aria-expanded="false">Conditions<svg viewBox="0 0 12 8" width="10" height="7" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 1.5 6 6.5 11 1.5"/></svg></button>
           <ul class="drop">
+            <li><a href="conditions">All conditions we treat</a></li>
             <li><a href="conditions/knee-pain.html">Knee Pain</a></li>
 <li><a href="conditions/shoulder-pain.html">Shoulder Pain</a></li>
 <li><a href="conditions/hip-pain.html">Hip Pain</a></li>
@@ -137,8 +145,7 @@
   <div class="page-hero-orbit" aria-hidden="true"><span class="ph-ring ph-ring-1"></span><span class="ph-ring ph-ring-2"></span><i class="ph-dot" style="--x:10%;--y:22%;--d:0s"></i><i class="ph-dot" style="--x:86%;--y:14%;--d:1.4s"></i><i class="ph-dot" style="--x:92%;--y:66%;--d:2.6s"></i><i class="ph-dot" style="--x:6%;--y:76%;--d:0.8s"></i><i class="ph-dot" style="--x:46%;--y:8%;--d:2s"></i></div>
   <div class="page-hero-inner reveal">
     <nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li aria-current="page">IV Therapy Lounge</li></ol></nav>
-    <p class="eyebrow">The IV Lounge</p>
-    <h1>Repair. Rehydrate. Renew.</h1>
+    <h1><span class="eyebrow h1-lead">IV Therapy in Palm Beach Gardens</span> Repair. Rehydrate. Renew.</h1>
     <p class="lede">Revitalize your body and restore essential nutrients with IV treatments performed by our medical team — in a lounge designed for comfort, not a hospital corridor.</p>
     <div class="hero-cta-row">
       <a class="btn btn-gold" href="contact#book">Book a Consultation</a>
@@ -164,7 +171,7 @@
       <a href="contact#book">
         <span class="drip-bag"><img src="assets/media/bag-hydration.png?v=217ae011" alt="Hangover IV drip bag" width="150" height="230" loading="lazy"></span>
         <span class="drip-body">
-          <strong>Hangover</strong>
+          <h3 class="drip-name">Hangover</h3>
           <span class="drip-ing">Rehydration · B-complex · anti-nausea</span>
           <span class="drip-desc">Rehydrates, detoxifies, and relieves headaches, nausea, and fatigue from dehydration, alcohol, or overexertion.</span>
         </span>
@@ -174,7 +181,7 @@
       <a href="contact#book">
         <span class="drip-bag"><img src="assets/media/bag-athletic.png?v=976bc703" alt="Recovery IV drip bag" width="150" height="230" loading="lazy"></span>
         <span class="drip-body">
-          <strong>Recovery</strong>
+          <h3 class="drip-name">Recovery</h3>
           <span class="drip-ing">Fluids · electrolytes · amino blend</span>
           <span class="drip-desc">Supports post-surgery healing and sports recovery with rehydration and targeted nutrients.</span>
         </span>
@@ -184,7 +191,7 @@
       <a href="contact#book">
         <span class="drip-bag"><img src="assets/media/bag-myers.png?v=9cf83560" alt="Performance IV drip bag" width="150" height="230" loading="lazy"></span>
         <span class="drip-body">
-          <strong>Performance</strong>
+          <h3 class="drip-name">Performance</h3>
           <span class="drip-ing">Myers’ cocktail · Amino-6</span>
           <span class="drip-desc">Increases energy, endurance, and focus with amino acids and B-vitamins to combat fatigue and optimize daily performance.</span>
         </span>
@@ -194,7 +201,7 @@
       <a href="contact#book">
         <span class="drip-bag"><img src="assets/media/bag-beauty.png?v=173daadd" alt="Beauty &amp; Glow IV drip bag" width="150" height="230" loading="lazy"></span>
         <span class="drip-body">
-          <strong>Beauty &amp; Glow</strong>
+          <h3 class="drip-name">Beauty &amp; Glow</h3>
           <span class="drip-ing">Myers’ cocktail · biotin · glutathione</span>
           <span class="drip-desc">Promotes radiant skin, stronger hair and nails, and overall anti-aging wellness through targeted vitamins and antioxidants.</span>
         </span>
@@ -204,7 +211,7 @@
       <a href="contact#book">
         <span class="drip-bag"><img src="assets/media/bag-hydration.png?v=217ae011" alt="Hydration IV drip bag" width="150" height="230" loading="lazy"></span>
         <span class="drip-body">
-          <strong>Hydration</strong>
+          <h3 class="drip-name">Hydration</h3>
           <span class="drip-ing">Saline · balanced electrolytes</span>
           <span class="drip-desc">Rapidly restores fluid and electrolyte balance for dehydration, heat exposure, or post-workout recovery.</span>
         </span>
@@ -214,7 +221,7 @@
       <a href="contact#book">
         <span class="drip-bag"><img src="assets/media/bag-myers.png?v=9cf83560" alt="Myers’ PLUS IV drip bag" width="150" height="230" loading="lazy"></span>
         <span class="drip-body">
-          <strong>Myers’ PLUS</strong>
+          <h3 class="drip-name">Myers’ PLUS</h3>
           <span class="drip-ing">The classic Myers’, reinforced</span>
           <span class="drip-desc">Foundational wellness infusion supporting energy, immune balance, and recovery by replenishing essential vitamins and minerals lost to stress, fatigue, or illness.</span>
         </span>
@@ -224,7 +231,7 @@
       <a href="contact#book">
         <span class="drip-bag"><img src="assets/media/bag-immune.png?v=594b1113" alt="Immune Boost IV drip bag" width="150" height="230" loading="lazy"></span>
         <span class="drip-body">
-          <strong>Immune Boost</strong>
+          <h3 class="drip-name">Immune Boost</h3>
           <span class="drip-ing">Vitamin C · zinc · glutathione</span>
           <span class="drip-desc">Strengthens the immune system, reduces inflammation, and supports faster recovery from viral or seasonal illness.</span>
         </span>
@@ -234,7 +241,7 @@
       <a href="contact#book">
         <span class="drip-bag"><img src="assets/media/bag-cleanse.png?v=96e16840" alt="Cleanse IV drip bag" width="150" height="230" loading="lazy"></span>
         <span class="drip-body">
-          <strong>Cleanse</strong>
+          <h3 class="drip-name">Cleanse</h3>
           <span class="drip-ing">Detox support · glutathione</span>
           <span class="drip-desc">Deep detox and metabolic reset designed to cleanse the liver, flush toxins, and restore energy and clarity.</span>
         </span>
@@ -244,7 +251,7 @@
       <a href="contact#book">
         <span class="drip-bag"><img src="assets/media/bag-nad.png?v=18fc3b5b" alt="NAD⁺ 500 mg IV drip bag" width="150" height="230" loading="lazy"></span>
         <span class="drip-body">
-          <strong>NAD⁺ 500 mg</strong>
+          <h3 class="drip-name">NAD⁺ 500 mg</h3>
           <span class="drip-ing">500 mg NAD⁺ · cellular energy</span>
           <span class="drip-desc">High-dose NAD⁺ infusion for deep cellular rejuvenation, energy renewal, and neuroprotective support.</span>
         </span>
@@ -254,7 +261,7 @@
       <a href="contact#book">
         <span class="drip-bag"><img src="assets/media/bag-athletic.png?v=976bc703" alt="Athletic Recovery IV drip bag" width="150" height="230" loading="lazy"></span>
         <span class="drip-body">
-          <strong>Athletic Recovery</strong>
+          <h3 class="drip-name">Athletic Recovery</h3>
           <span class="drip-ing">Myers’ cocktail · Amino-6</span>
           <span class="drip-desc">Rebuilds and refuels muscles with amino acids and electrolytes to enhance performance, reduce soreness, and accelerate recovery.</span>
         </span>
@@ -264,7 +271,7 @@
       <a href="contact#book">
         <span class="drip-bag"><img src="assets/media/bag-nad.png?v=18fc3b5b" alt="Neuro Restore IV drip bag" width="150" height="230" loading="lazy"></span>
         <span class="drip-body">
-          <strong>Neuro Restore</strong>
+          <h3 class="drip-name">Neuro Restore</h3>
           <span class="drip-ing">Cognitive &amp; nerve support</span>
           <span class="drip-desc">Antioxidant and nerve support with Alpha Lipoic Acid (ALA) and Vitamin B12 to help promote healthy nerve function and neurological wellness.</span>
         </span>
@@ -274,7 +281,7 @@
       <a href="contact#book">
         <span class="drip-bag"><img src="assets/media/bag-all-inclusive.png?v=00f0538d" alt="All-Inclusive IV drip bag" width="150" height="230" loading="lazy"></span>
         <span class="drip-body">
-          <strong>All-Inclusive</strong>
+          <h3 class="drip-name">All-Inclusive</h3>
           <span class="drip-ing">Every add-in on the menu</span>
           <span class="drip-desc">Comprehensive full-body infusion delivering vitamins, minerals, amino acids, antioxidants, and hydration for total wellness optimization.</span>
         </span>
@@ -345,7 +352,7 @@
       </ul>
     </nav>
     <nav class="footer-col" aria-label="Areas we serve">
-      <h2>Areas We Serve</h2>
+      <h2><a href="locations">Areas We Serve</a></h2>
       <ul>
         <li><a href="/">Palm Beach Gardens</a></li>
         <li><a href="locations/jupiter.html">Jupiter</a></li>

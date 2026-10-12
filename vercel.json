@@ -24,6 +24,16 @@
       "permanent": true
     },
     {
+      "source": "/conditions/index.html",
+      "destination": "/conditions",
+      "permanent": true
+    },
+    {
+      "source": "/locations/index.html",
+      "destination": "/locations",
+      "permanent": true
+    },
+    {
       "source": "/providers/emily-bahnick.html",
       "destination": "/about",
       "permanent": true
@@ -430,7 +440,7 @@
     },
     {
       "source": "/ivig-intravenous-immunoglobulin",
-      "destination": "/contact",
+      "destination": "/iv-therapy",
       "permanent": true
     },
     {
@@ -733,6 +743,14 @@
     }
   ],
   "rewrites": [
+    {
+      "source": "/conditions",
+      "destination": "/conditions/index.html"
+    },
+    {
+      "source": "/locations",
+      "destination": "/locations/index.html"
+    },
     {
       "source": "/about",
       "destination": "/about.html"
