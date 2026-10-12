@@ -24,6 +24,11 @@
       "permanent": true
     },
     {
+      "source": "/pricing.html",
+      "destination": "/pricing",
+      "permanent": true
+    },
+    {
       "source": "/conditions/index.html",
       "destination": "/conditions",
       "permanent": true
@@ -743,6 +748,10 @@
     }
   ],
   "rewrites": [
+    {
+      "source": "/pricing",
+      "destination": "/pricing.html"
+    },
     {
       "source": "/conditions",
       "destination": "/conditions/index.html"

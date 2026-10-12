@@ -230,6 +230,18 @@ FOCAL = {
     "blog-foot-ankle":     "45% 55%",
     "blog-vein":           "45% 55%",
     "blog-iv-recovery":    "45% 50%",
+    "svc-exosome":     "45% 50%",
+    "svc-msc":         "60% 40%",
+    "svc-muse-rpa":    "55% 55%",
+    "svc-muse-cell":   "70% 40%",
+    "svc-sclerotherapy": "45% 55%",
+    "svc-ablation":    "40% 50%",
+    "svc-phlebectomy": "60% 55%",
+    "svc-peptides":    "60% 55%",
+    "svc-ghk-cu":      "40% 55%",
+    "svc-kpv":         "50% 55%",
+    "svc-tesamorelin": "60% 40%",
+    "svc-mots-c":      "65% 55%",
     # real clinic interiors
     "clinic-interior":  "50% 62%",   # top half of this frame is ceiling
     "clinic-lounge":    "45% 55%",
@@ -403,7 +415,7 @@ def head(title, desc, depth=0, canonical="", og_image="assets/media/og-physician
         # pain near me"-style queries; both are present on every page that sets it.
         webpage_node["speakable"] = {
             "@type": "SpeakableSpecification",
-            "cssSelector": [".page-hero h1", ".page-hero .lede"],
+            "cssSelector": [".page-hero h1", ".page-hero .lede", ".split-hero h1", ".split-hero .bl-hero-lede"],
         }
     page_graph = json.dumps({
         "@context": "https://schema.org",
@@ -575,6 +587,7 @@ def nav(depth=0, current=""):
             <li><a href="{p}providers/dr-marc-matarazzo.html">Dr. Marc Matarazzo, MD</a></li>
             <li><a href="{p}providers/dr-orlando-cedeno.html">Dr. Orlando Cedeno, DPM</a></li>
             <li><a href="{p}patient-resources.html">Patient Resources</a></li>
+            <li><a href="{p}pricing.html">Pricing &amp; Insurance</a></li>
           </ul>
         </li>
         <li class="has-drop has-mega"><button class="drop-btn" aria-expanded="false">Services<svg viewBox="0 0 12 8" width="10" height="7" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 1.5 6 6.5 11 1.5"/></svg></button>
@@ -658,6 +671,7 @@ def footer(depth=0, extra_js="", analytics=True, assistant=True):
         <li><a href="{p}iv-therapy.html">IV Therapy Lounge</a></li>
         <li><a href="{p}patient-resources.html">Patient Resources</a></li>
         <li><a href="{p}forms/index.html">Patient Forms</a></li>
+        <li><a href="{p}pricing.html">Pricing &amp; Insurance</a></li>
         <li><a href="{p}faq.html">FAQ</a></li>
         <li><a href="{p}blog/index.html">Blog</a></li>
         <li><a href="{p}contact.html">Contact Us</a></li>
@@ -942,6 +956,7 @@ def clean_url_map():
         "about.html": "about",
         "iv-therapy.html": "iv-therapy",
         "faq.html": "faq",
+        "pricing.html": "pricing",
         "contact.html": "contact",
         "patient-resources.html": "patient-resources",
         "privacy-policy.html": "privacy-policy",
@@ -1110,6 +1125,26 @@ REGEN_PRICE = {
             "services and are not covered by insurance or Medicare.",
 }
 
+# Florida Statutes §458.3245(5)(a) (2025): a physician who performs stem cell therapy
+# that is not FDA-approved "shall include the following in any form of
+# advertisement", and (5)(b) says it must be "clearly legible and in a type size no
+# smaller than the largest type size used in the advertisement". The text below is
+# the statute's own wording — do not edit, paraphrase or trim it. It renders on the
+# regenerative parent page and the five modality pages (FL_NOTICE_PAGES), directly
+# under the header. Its size is ONE token, --fl-notice-size in styles.css: whether a
+# web page's "largest type" is its H1 is the practice's attorney's call, and making
+# it H1-sized is a one-line change there. Source:
+# https://www.flsenate.gov/Laws/Statutes/2025/458.3245
+FL_STEM_CELL_NOTICE = (
+    "THIS NOTICE MUST BE PROVIDED TO YOU UNDER FLORIDA LAW. This physician performs "
+    "one or more stem cell therapies that have not yet been approved by the United "
+    "States Food and Drug Administration. You are encouraged to consult with your "
+    "primary care provider before undergoing any stem cell therapy."
+)
+FL_NOTICE_PAGES = {"regenerative-medicine-orthobiologics", "exosome-therapy",
+                   "mesenchymal-stem-cell-therapy", "whartons-jelly-therapy",
+                   "muse-infused-rpa-therapy", "traditional-muse-cell-therapy"}
+
 REGEN_DISCLAIMER = (
     "None of the therapies described are FDA-approved to treat, cure or prevent any "
     "disease or condition, and they are not a substitute for indicated surgical care. "
@@ -1178,8 +1213,8 @@ SERVICES = [
         "eyebrow": "Regenerative Medicine & Orthobiologics",
         "h1": "Advanced Cell-Free Regenerative Therapy for Pain Relief & Tissue Recovery",
         "lede": "A cell-free treatment using naturally occurring extracellular vesicles rich in growth factors and signaling molecules to support your body's healing response, reduce inflammation, and improve mobility.",
-        "img": "cells-macro.jpg",
-        "img_alt": "Macro view of cell-signaling vesicles used in exosome therapy at RegenOrtho Palm Beach",
+        "img": "svc-exosome.jpg",
+        "img_alt": "Illustration of tiny extracellular vesicles budding from a cell membrane",
         "why": [
             "Cell-free — delivers biological signals rather than living cells",
             "Physician-performed, ultrasound-guided precision",
@@ -1225,8 +1260,8 @@ SERVICES = [
         "eyebrow": "Regenerative Medicine & Orthobiologics",
         "h1": "Advanced Regenerative Medicine for Joint Pain & Tissue Healing",
         "lede": "A non-surgical approach using umbilical cord-derived mesenchymal stem cells to support the body's natural healing response, reduce pain, and improve mobility.",
-        "img": "svc-regen.jpg",
-        "img_alt": "Regenerative medicine specialist preparing mesenchymal stem cell therapy at RegenOrtho Palm Beach",
+        "img": "svc-msc.jpg",
+        "img_alt": "Gloved hands lifting a cryovial from a liquid nitrogen storage vessel in a laboratory",
         "why": [
             "Umbilical cord-derived mesenchymal stem cells",
             "Physician-performed, ultrasound-guided precision",
@@ -1319,8 +1354,8 @@ SERVICES = [
         "eyebrow": "Regenerative Medicine & Orthobiologics",
         "h1": "Advanced Acellular Regenerative Protein Therapy for Joint Health & Recovery",
         "lede": "A specialized protein array enhanced with proteins naturally extracted from MUSE cells, designed to support communication between cells and coordinate the body's natural repair processes.",
-        "img": "cells-macro.jpg",
-        "img_alt": "Regenerative protein array used in MUSE-Infused RPA therapy at RegenOrtho Palm Beach",
+        "img": "svc-muse-rpa.jpg",
+        "img_alt": "A small vial of amber protein solution beside a microscope on a laboratory bench",
         "why": [
             "Acellular and non-DNA protein array",
             "Enhanced with proteins extracted from MUSE cells",
@@ -1366,8 +1401,8 @@ SERVICES = [
         "eyebrow": "Regenerative Medicine & Orthobiologics",
         "h1": "Advanced Live-Cell Regenerative Therapy for Orthopedic & Joint Health",
         "lede": "A live-cell therapy using Multilineage-Differentiating Stress-Enduring (MUSE) cells — a rare population of mesenchymal stem cells — to support the body's natural healing response.",
-        "img": "svc-regen.jpg",
-        "img_alt": "Live-cell preparation used in Traditional MUSE Cell Therapy at RegenOrtho Palm Beach",
+        "img": "svc-muse-cell.jpg",
+        "img_alt": "A scientist looking into a microscope in a sunlit laboratory",
         "why": [
             "Live-cell preparation of rare MUSE cells",
             "May support repair via cell engraftment and signaling",
@@ -1509,8 +1544,8 @@ SERVICES = [
         "eyebrow": "Sclerotherapy",
         "h1": "Sclerotherapy for Spider &amp; Reticular Veins",
         "lede": "Targeted injections close small surface veins to improve leg appearance and reduce localized symptoms — quick, in-office, with minimal recovery.",
-        "img": "vein-treatment.jpg",
-        "img_alt": "Sclerotherapy treatment of spider veins on the leg in Palm Beach Gardens",
+        "img": "svc-sclerotherapy.jpg",
+        "img_alt": "A clinician preparing to treat fine spider veins on the back of a patient’s leg",
         "why": [
             "Duplex ultrasound mapping first, so surface veins are treated in the right order",
             "Performed in-office with minimal recovery and a quick return to activity",
@@ -1548,8 +1583,8 @@ SERVICES = [
         "eyebrow": "Endovenous Laser &amp; RF Ablation",
         "h1": "Endovenous Laser &amp; Radiofrequency Ablation",
         "lede": "Thermal ablation seals diseased saphenous veins under ultrasound guidance, rerouting blood to healthy vessels and relieving the root cause of varicose veins.",
-        "img": "vein-treatment.jpg",
-        "img_alt": "Ultrasound-guided endovenous ablation of a leg vein in Palm Beach Gardens",
+        "img": "svc-ablation.jpg",
+        "img_alt": "A vein procedure room with an ultrasound monitor and a sterile tray holding a thin catheter fiber",
         "why": [
             "Treats the underlying reflux, not just the veins you can see",
             "Ultrasound-guided and performed in a comfortable office setting",
@@ -1587,8 +1622,8 @@ SERVICES = [
         "eyebrow": "Ambulatory Phlebectomy",
         "h1": "Ambulatory Microphlebectomy &amp; In-Office Vein Removal",
         "lede": "Micro-incision phlebectomy removes superficial varicose veins in-office for immediate contour improvement and symptom relief, with a quick return to activity.",
-        "img": "vein-treatment.jpg",
-        "img_alt": "Micro-incision phlebectomy removing a superficial varicose vein in Palm Beach Gardens",
+        "img": "svc-phlebectomy.jpg",
+        "img_alt": "A leg wrapped in a compression bandage resting on a treatment chair after an in-office vein procedure",
         "why": [
             "Micro-incision technique performed in a comfortable office setting",
             "Immediate contour improvement alongside symptom relief",
@@ -1703,8 +1738,8 @@ SERVICES = [
         "eyebrow": "Peptide Therapy",
         "h1": "Targeted Healing, Condition by Condition",
         "lede": "Physician-supervised peptide protocols matched to what you are actually trying to fix — repair, recovery, longevity, and aesthetics. Programs from $249/month.",
-        "img": "cells-macro.jpg",
-        "img_alt": "Cellular-level view illustrating peptide therapy at RegenOrtho Palm Beach",
+        "img": "svc-peptides.jpg",
+        "img_alt": "Small glass vials and a syringe on a marble tray in soft window light",
         "why": [
             "Physician-supervised from screening through follow-up",
             "Protocols matched to your specific concern, not a one-size stack",
@@ -1749,8 +1784,8 @@ SERVICES = [
         "eyebrow": "Peptide Therapy",
         "h1": "GHK-Cu for Collagen, Connective Tissue &amp; Skin Quality",
         "lede": "A copper-binding peptide the body makes on its own. The literature on it centres on collagen and the extracellular matrix, which is why we reach for it when connective tissue is the bottleneck in someone&rsquo;s recovery.",
-        "img": "cells-macro.jpg",
-        "img_alt": "Cellular-level view illustrating GHK-Cu peptide therapy at RegenOrtho Palm Beach",
+        "img": "svc-ghk-cu.jpg",
+        "img_alt": "A small vial of pale blue liquid on white marble beside a linen towel",
         "why": [
             "Physician-supervised from screening through follow-up",
             "Prescribed as part of a plan, not sold as a standalone stack",
@@ -1799,8 +1834,8 @@ SERVICES = [
         "eyebrow": "Peptide Therapy",
         "h1": "KPV for Inflammatory Load &amp; Soft-Tissue Recovery",
         "lede": "A three-amino-acid fragment of a hormone your body already produces. We use it when inflammation is the thing blocking progress \u2014 quiet that down and the injections, the laser and the rehab all start working better.",
-        "img": "cells-macro.jpg",
-        "img_alt": "Cellular-level view illustrating KPV peptide therapy at RegenOrtho Palm Beach",
+        "img": "svc-kpv.jpg",
+        "img_alt": "A peptide vial and a reconstitution syringe on a navy tray",
         "why": [
             "Physician-supervised from screening through follow-up",
             "Aimed at the inflammatory load underneath the symptom",
@@ -1849,8 +1884,8 @@ SERVICES = [
         "eyebrow": "Peptide Therapy",
         "h1": "Tesamorelin for Recovery, Body Composition &amp; Metabolic Support",
         "lede": "Rather than giving you growth hormone, this prompts your own pituitary to release more of it. We use it where recovery has slowed, lean mass is going the wrong way, or the metabolic picture needs addressing.",
-        "img": "cells-macro.jpg",
-        "img_alt": "Cellular-level view illustrating Tesamorelin peptide therapy at RegenOrtho Palm Beach",
+        "img": "svc-tesamorelin.jpg",
+        "img_alt": "A man in his fifties doing a dumbbell row in a bright gym with palm trees outside",
         "why": [
             "Physician-supervised, with labs reviewed where indicated",
             "Personalized dosing rather than a fixed protocol",
@@ -1899,8 +1934,8 @@ SERVICES = [
         "eyebrow": "Peptide Therapy",
         "h1": "MOTS-c for Cellular Energy, Metabolism &amp; Endurance",
         "lede": "This one comes from the mitochondria themselves. We look at it when the problem is not the injury but the tank behind it \u2014 fatigue, poor exercise tolerance, recovery that takes far longer than it should.",
-        "img": "cells-macro.jpg",
-        "img_alt": "Cellular-level view illustrating MOTS-c peptide therapy at RegenOrtho Palm Beach",
+        "img": "svc-mots-c.jpg",
+        "img_alt": "A cyclist riding a coastal road at sunrise, palm trees and ocean beside the road",
         "why": [
             "Physician-supervised from screening through follow-up",
             "Aimed at recovery capacity, not just symptoms",
@@ -2255,15 +2290,15 @@ def build_home():
     cond_chips = "".join(f'<li><a href="{href}">{label}</a></li>' for href, label in CONDITIONS_NAV)
     loc_chips = "".join(f'<li><a href="{href}">{label}</a></li>' for href, label in LOCATIONS_NAV)
 
-    posts = __import__("blog_content").BLOG_POSTS[:3]
+    # Latest three posts, same card as /blog. This block used to be built and
+    # never placed, so the homepage had no route into the blog at all.
+    _home_posts = sorted(__import__("blog_content").BLOG_POSTS, key=lambda x: x["date"], reverse=True)[:3]
     blog_cards = "".join(
-        f"""<a class="post-card reveal" href="blog/{p_['slug']}.html">
-        <span class="post-media">{photo(p_["image"].rsplit(".",1)[0], p_["title"], 640, 400, sizes="(max-width:700px) 92vw, 380px")}</span>
-        <span class="post-tag">{p_['category']}</span>
-        <strong>{p_['title']}</strong>
-        <em class="svc-more">Read article <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em>
+        f"""<a class="bl-card reveal" href="blog/{p_['slug']}.html" style="--d:{i * 80}ms">
+        <span class="bl-card-media">{photo(p_["image"].rsplit(".",1)[0], BLOG_EXTRAS.get(p_["slug"], {}).get("alt", p_["title"]), 640, 400, sizes="(max-width:700px) 92vw, 380px")}</span>
+        <span class="bl-card-body"><span class="bl-kicker">{p_['category']}</span><strong>{p_['title']}</strong><span class="bl-meta">{_reading_minutes(p_['body'])} min read</span></span>
       </a>"""
-        for p_ in posts
+        for i, p_ in enumerate(_home_posts)
     )
 
     body = f"""{nav(d)}
@@ -2466,6 +2501,11 @@ def build_home():
   </div>
 </section>
 
+<section class="section section-tint home-blog" id="blog">
+  <div class="section-head reveal"><p class="eyebrow">From the blog</p><h2>Healing, <em>explained</em></h2><p class="section-sub">Plain-English answers on what treatments actually do, who they suit and what to expect.</p></div>
+  <div class="bl-grid bl-grid-3">{blog_cards}</div>
+  <p class="section-foot reveal"><a class="btn btn-navy" href="blog/index.html">Read the blog</a></p>
+</section>
 <section class="section section-social" id="social">
   <div class="section-head reveal">
     <p class="eyebrow">@regenortho_palmbeach</p>
@@ -2708,16 +2748,27 @@ def build_services():
         crumbs_html = crumbs(crumb_parts, depth=d)
         body = f"""{nav(d)}
 <main id="main">
-{page_hero(svc['eyebrow'], svc['h1'], svc['lede'], crumbs_html, depth=d, h1_lead=SERVICE_H1_LEAD.get(svc['slug'], ''))}
+<header class="bl-hero split-hero svc-hero">
+  <div class="bl-hero-copy">
+    {crumbs_html}
+    <h1><span class="eyebrow h1-lead">{SERVICE_H1_LEAD.get(svc['slug']) or svc['eyebrow']}</span> {svc['h1']}</h1>
+    <p class="bl-hero-lede">{svc['lede']}</p>
+    <div class="hero-cta-row">
+      <a class="btn btn-gold" href="../contact.html#book">Book a Consultation</a>
+      <a class="btn btn-ghost-light" href="tel:{PHONE_TEL}" data-call-location="page_hero">Call {PHONE_VANITY}</a>
+    </div>
+  </div>
+  <figure class="bl-hero-media">{photo(svc["img"].rsplit(".",1)[0], svc["img_alt"], 1400, 900, prefix="../", sizes="(max-width:900px) 100vw, 50vw", eager=True)}</figure>
+</header>
+{f'<aside class="fl-notice" role="note" aria-label="Florida stem cell therapy notice"><p>{FL_STEM_CELL_NOTICE}</p></aside>' if svc['slug'] in FL_NOTICE_PAGES else ''}
 <section class="section svc-intro">
-  <div class="svc-intro-grid">
-    <figure class="svc-photo reveal">{photo(svc["img"].rsplit(".",1)[0], svc["img_alt"], 700, 470, prefix="../", sizes="(max-width:900px) 94vw, 620px", eager=True)}</figure>
-    <div class="svc-why reveal" style="--d:120ms">
+  <div class="why-split">
+    <div class="why-head reveal">
       <p class="eyebrow">Why patients choose us</p>
       <h2>Care built around <em>you</em></h2>
-      <ul class="check-list">{why}</ul>
       <a class="btn btn-navy" href="../contact.html#book">Book a Consultation</a>
     </div>
+    <ul class="check-list why-panel reveal" style="--d:120ms">{why}</ul>
   </div>
 </section>
 <section class="section section-tint">
@@ -2876,45 +2927,156 @@ def condition_faqs(c):
     return out
 
 
+# Which REGEN_TREATS entry (the conditions list the five regenerative therapies
+# publish) each condition page matches. A condition with an entry shows the five
+# therapies as options, labelled with that published phrase; one without does not.
+CONDITION_REGEN_MATCH = {
+    "knee-pain": "Knee osteoarthritis",
+    "hip-pain": "Hip osteoarthritis",
+    "shoulder-pain": "Shoulder arthritis",
+    "arthritis-joint-pain": "Persistent joint pain",
+    "sports-injuries": "Sports injuries",
+    "tendon-ligament-injuries": "Chronic tendon injuries",
+}
+
+# Blog posts worth reading from each condition page (slugs). Order is display order.
+CONDITION_READING = {
+    "knee-pain": ["prp-therapy-knee-osteoarthritis", "regenerative-medicine-vs-joint-replacement", "knee-shoulder-hip-pain-without-surgery"],
+    "shoulder-pain": ["knee-shoulder-hip-pain-without-surgery", "healing-without-surgery", "orthopedic-sports-medicine-pain-free-living"],
+    "hip-pain": ["knee-shoulder-hip-pain-without-surgery", "regenerative-medicine-vs-joint-replacement", "healing-without-surgery"],
+    "arthritis-joint-pain": ["prp-therapy-knee-osteoarthritis", "regenerative-medicine-vs-joint-replacement", "regenerative-medicine-future-of-healing"],
+    "sports-injuries": ["orthopedic-sports-medicine-pain-free-living", "five-pillar-concierge-orthopedic-recovery", "iv-therapy-recovery-wellness"],
+    "tendon-ligament-injuries": ["healing-without-surgery", "five-pillar-concierge-orthopedic-recovery", "orthopedic-sports-medicine-pain-free-living"],
+    "peripheral-neuropathy": ["iv-therapy-recovery-wellness", "five-pillar-concierge-orthopedic-recovery", "healing-without-surgery"],
+    "varicose-spider-veins": ["modern-vein-care-varicose-spider-veins"],
+}
+
+_CHECK = ('<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="9" '
+          'fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M6 10.4l2.6 2.6L14 7.6" fill="none" '
+          'stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+
+
+def _tx_card(slug, depth=1, note="", i=0, small=False):
+    """Photo card for one treatment: published name, image and lede. `note` is a
+    short published line (a price, the condition it is listed for)."""
+    p = "../" * depth
+    if slug == "iv-lounge":
+        href, name, stem = f"{p}iv-therapy.html", "IV Recovery &amp; Wellness Lounge", "iv-hero"
+        lede = "Twelve clinician-supervised drips — hydration, immunity, NAD⁺ and athletic recovery — each starting with a medical pre-screen."
+    else:
+        s = next(x for x in SERVICES if x["slug"] == slug)
+        href, name, stem, lede = f"{p}services/{slug}.html", s["name"], s["img"].rsplit(".", 1)[0], s["lede"]
+    lede = lede if len(lede) <= 140 else lede[:140].rsplit(" ", 1)[0] + "…"
+    note_html = f'<span class="tx-note">{note}</span>' if note else ""
+    # small cards carry no photo: the sub-therapies share a handful of stock
+    # images, and five near-identical thumbnails in a row read as filler
+    media = "" if small else f'<span class="tx-media">{photo(stem, name, 640, 400, prefix=p, sizes="(max-width:700px) 92vw, 380px")}</span>'
+    return f"""<a class="tx-card{' tx-card-sm' if small else ''} reveal" href="{href}" style="--d:{(i % 3) * 80}ms">
+      {media}
+      <span class="tx-body"><strong>{name}</strong>{'' if small else f'<span class="tx-lede">{lede}</span>'}{note_html}<em class="svc-more">Learn more {_BLOG_ARROW}</em></span>
+    </a>"""
+
+
+def _reading_cards(slugs, depth=1):
+    from blog_content import BLOG_POSTS
+    by = {b["slug"]: b for b in BLOG_POSTS}
+    p = "../" * depth
+    out = []
+    for i, sl in enumerate(s for s in slugs if s in by):
+        b = by[sl]
+        out.append(f"""<a class="bl-card reveal" href="{p}blog/{sl}.html" style="--d:{i * 80}ms">
+        <span class="bl-card-media">{photo(b["image"].rsplit(".",1)[0], BLOG_EXTRAS.get(sl, {}).get("alt", b["title"]), 640, 400, prefix=p, sizes="(max-width:700px) 92vw, 380px")}</span>
+        <span class="bl-card-body"><span class="bl-kicker">{b['category']}</span><strong>{b['title']}</strong><span class="bl-meta">{_reading_minutes(b['body'])} min read</span></span>
+      </a>""")
+    return "".join(out)
+
+
 def build_conditions():
     d = 1
     for c in CONDITIONS:
         c_faqs = condition_faqs(c)
-        symptoms = "".join(f"<li>{s}</li>" for s in c["symptoms"])
-        svcs = "".join(
-            f"""<a class="treat-card reveal" href="{svc_href(s, 0).replace('services/', '../services/').replace('iv-therapy.html', '../iv-therapy.html')}"><strong>{svc_name(s)}</strong><em class="svc-more">Learn more <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></a>"""
-            for s in c["services"]
-        )
+        symptoms = "".join(f'<li>{_CHECK}<span>{s}</span></li>' for s in c["symptoms"])
+        primary = "".join(_tx_card(s, d, i=i) for i, s in enumerate(c["services"]))
+        # second row: the published sub-treatments behind each primary service —
+        # the five regenerative therapies where REGEN_TREATS names this condition,
+        # the three vein procedures under vein care.
+        extra_rows = ""
+        match = CONDITION_REGEN_MATCH.get(c["slug"])
+        if match and "regenerative-medicine-orthobiologics" in c["services"]:
+            kids = [s for s in SERVICES if s.get("parent") == "regenerative-medicine-orthobiologics"]
+            cards = "".join(
+                _tx_card(k["slug"], d, i=i, small=True,
+                         note=f"Listed for {match.lower()}" + (f" · from ${SERVICE_ONE_TIME_PRICE[k['slug']]:,}" if k["slug"] in SERVICE_ONE_TIME_PRICE else ""))
+                for i, k in enumerate(kids))
+            extra_rows += f"""<h3 class="tx-subhead reveal">Regenerative therapies listed for {match.lower()}</h3>
+  <div class="tx-grid tx-grid-5">{cards}</div>
+  <p class="tx-fine reveal">Each begins with a ${REGEN_PRICE['consult']} consultation and imaging review, credited toward treatment. Self-pay; none are FDA-approved to treat, cure or prevent any disease.</p>"""
+        for s in c["services"]:
+            svc = next((x for x in SERVICES if x["slug"] == s), None)
+            # the regenerative parent's children are already the row above
+            if svc and svc.get("subservices") and svc["slug"] != "regenerative-medicine-orthobiologics":
+                cards = "".join(_tx_card(k, d, i=i, small=True) for i, k in enumerate(svc["subservices"]))
+                extra_rows += f"""<h3 class="tx-subhead reveal">Procedures within {svc['name'].split(' —')[0].lower()}</h3>
+  <div class="tx-grid tx-grid-3">{cards}</div>"""
         faqs = "".join(
             f"""<details class="faq-item"><summary>{q}</summary><div class="faq-a"><p>{a}</p></div></details>"""
             for q, a in c_faqs
         )
+        reading = _reading_cards(CONDITION_READING.get(c["slug"], []), d)
+        reading_sec = f"""<section class="section">
+  <div class="section-head reveal"><p class="eyebrow">Further reading</p><h2>Read more about <em>{c['name'].lower()}</em></h2></div>
+  <div class="bl-grid bl-grid-3">{reading}</div>
+</section>""" if reading else ""
+        others = "".join(f'<li><a href="../conditions/{x["slug"]}.html">{x["name"]}</a></li>' for x in CONDITIONS if x["slug"] != c["slug"])
+        areas = "".join(f'<li><a href="../locations/{l["slug"]}.html">{l["city"]}</a></li>' for l in LOCATIONS)
         crumbs_html = crumbs([("conditions/index.html", "Conditions"), ("", c["name"])], depth=d)
+        lead = CONDITION_H1_LEAD[c["slug"]] + " in Palm Beach Gardens"
         body = f"""{nav(d)}
 <main id="main">
-{page_hero("Conditions We Treat", c['h1'], c['lede'], crumbs_html, depth=d, h1_lead=CONDITION_H1_LEAD[c['slug']] + " in Palm Beach Gardens")}
-<section class="section cond-layout">
-  <div class="cond-grid">
-    <div class="cond-main reveal">
+<header class="bl-hero split-hero">
+  <div class="bl-hero-copy">
+    {crumbs_html}
+    <h1><span class="eyebrow h1-lead">{lead}</span> {c['h1']}</h1>
+    <p class="bl-hero-lede">{c['lede']}</p>
+    <div class="hero-cta-row">
+      <a class="btn btn-gold" href="../contact.html#book">Book a Consultation</a>
+      <a class="btn btn-ghost-light" href="tel:{PHONE_TEL}" data-call-location="condition_hero">Call {PHONE_VANITY}</a>
+    </div>
+  </div>
+  <figure class="bl-hero-media">{photo(c["img"].rsplit(".",1)[0], f"{c['name']} care at RegenOrtho Palm Beach", 1400, 900, prefix="../", sizes="(max-width:900px) 100vw, 50vw", eager=True)}</figure>
+</header>
+<section class="section">
+  <div class="cond-intro">
+    <div class="cond-intro-copy reveal">
+      <p class="eyebrow">Understanding it</p>
       <h2>What are my options for {c['name'].lower()}?</h2>
       <p>{c['body']}</p>
-      <h2>How do we treat {c['name'].lower()}?</h2>
-      <div class="treat-grid">{svcs}</div>
     </div>
-    <aside class="cond-side reveal" style="--d:120ms">
-      <div class="sym-card">
-        <h2>{c['name']} symptoms we see</h2>
-        <ul class="check-list">{symptoms}</ul>
-        <a class="btn btn-gold" href="../contact.html#book">Get it evaluated</a>
-        <p class="sym-call">Or call <a href="tel:{PHONE_TEL}" data-call-location="condition_sidebar">{PHONE_VANITY}</a> — same-week consultations are usually available.</p>
-      </div>
-      <figure class="cond-photo">{photo(c["img"].rsplit(".",1)[0], f"{c['name']} care at RegenOrtho Palm Beach", 520, 380, prefix="../", sizes="(max-width:900px) 94vw, 520px")}</figure>
+    <aside class="sym-panel reveal" style="--d:120ms">
+      <h2>{c['name']} symptoms we see</h2>
+      <ul class="sym-grid">{symptoms}</ul>
+      <p class="sym-call">Sound familiar? Same-week consultations are usually available — <a href="tel:{PHONE_TEL}" data-call-location="condition_sidebar">{PHONE_VANITY}</a>.</p>
     </aside>
   </div>
 </section>
 <section class="section section-tint">
+  <div class="tx-wrap">
+    <div class="section-head reveal"><p class="eyebrow">Treatment</p><h2>How do we treat {c['name'].lower()}?</h2></div>
+    <div class="tx-grid tx-grid-{min(3, max(2, len(c['services'])))}">{primary}</div>
+    {extra_rows}
+  </div>
+</section>
+<section class="section">
   <div class="section-head reveal"><p class="eyebrow">Patient Questions</p><h2>{c['name']} <em>FAQs</em></h2></div>
   <div class="faq-list">{faqs}</div>
+</section>
+{reading_sec}
+<section class="section section-dark link-panels">
+  <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+  <div class="link-panels-inner">
+    <nav class="link-panel reveal" aria-label="Other conditions we treat"><p class="eyebrow">Other conditions we treat</p><ul class="link-chips">{others}</ul></nav>
+    <nav class="link-panel reveal" style="--d:100ms" aria-label="Areas we serve"><p class="eyebrow">Patients come to us from</p><ul class="link-chips"><li><a href="../index.html">Palm Beach Gardens</a></li>{areas}</ul></nav>
+  </div>
 </section>
 {cta_band(d)}
 </main>
@@ -3087,46 +3249,69 @@ def build_locations():
         city = loc["city"]
         interior, interior_alt = LOCATION_INTERIORS[i % len(LOCATION_INTERIORS)]
         others = "".join(
-            f'<li><a href="{s}.html">{c2}</a></li>'
-            for s, c2 in [(l["slug"], l["city"]) for l in LOCATIONS if l["slug"] != loc["slug"]]
-        )
-        by_slug = {s["slug"]: s for s in SERVICES}
-        svc_list = "".join(
-            f'<a class="treat-card reveal" href="../services/{s["slug"]}.html"><strong>{s["name"]}</strong><em class="svc-more">Learn more <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em></a>'
-            for s in (by_slug[k] for k in LOCATION_SERVICES.get(loc["slug"], LOCATION_SERVICES_DEFAULT))
-        )
+            f'<li><a href="../locations/{l["slug"]}.html">{l["city"]}</a></li>'
+            for l in LOCATIONS if l["slug"] != loc["slug"])
+        svc_cards = "".join(
+            _tx_card(k, d, i=j)
+            for j, k in enumerate(LOCATION_SERVICES.get(loc["slug"], LOCATION_SERVICES_DEFAULT)))
+        cond_chips = "".join(f'<li><a href="../conditions/{c["slug"]}.html">{c["name"]}</a></li>' for c in CONDITIONS)
+        doc_cards = "".join(
+            f"""<a class="doc-mini reveal" href="../providers/{t['slug']}.html" style="--d:{j * 100}ms">
+        <span class="doc-mini-photo">{photo(t["photo"].rsplit("/",1)[1].rsplit(".",1)[0], t["name"], 200, 240, prefix="../", sizes="160px")}</span>
+        <span class="doc-mini-body"><strong>{t['name']}</strong><span class="doc-role">{t['role']}</span><span>{t['short']}</span></span>
+      </a>"""
+            for j, t in enumerate(TEAM))
         crumbs_html = crumbs([("locations/index.html", "Areas We Serve"), ("", city)], depth=d)
         body = f"""{nav(d)}
 <main id="main">
-{page_hero(f"Serving {city}", f"Orthopedic, Regenerative &amp; Vein Care for {city}", loc['angle'], crumbs_html, depth=d, h1_lead=f"Regenerative Medicine near {city}, FL")}
+<header class="bl-hero split-hero">
+  <div class="bl-hero-copy">
+    {crumbs_html}
+    <h1><span class="eyebrow h1-lead">Regenerative Medicine near {city}, FL</span> Orthopedic, Regenerative &amp; Vein Care for {city}</h1>
+    <p class="bl-hero-lede">{loc['angle']}</p>
+    <div class="hero-cta-row">
+      <a class="btn btn-gold" href="../contact.html#book">Book a Consultation</a>
+      <a class="btn btn-ghost-light" href="tel:{PHONE_TEL}" data-call-location="location_hero">Call {PHONE_VANITY}</a>
+    </div>
+  </div>
+  <figure class="bl-hero-media">{photo(interior, interior_alt, 1400, 900, prefix="../", sizes="(max-width:900px) 100vw, 50vw", eager=True)}</figure>
+</header>
 <section class="section">
-  <div class="loc-grid">
-    <div class="loc-main reveal">
+  <div class="cond-intro">
+    <div class="cond-intro-copy reveal">
+      <p class="eyebrow">Serving {city}</p>
       <h2>Care for {city} residents — minutes away in Palm Beach Gardens</h2>
       <p>{loc['blurb']}</p>
       <p>Our clinic at {ADDRESS_STREET}, {ADDRESS_CITY} brings together <strong>Dr. Marc Matarazzo, MD</strong> — a board-certified, fellowship-trained orthopedic surgeon with more than 23 years of experience in sports medicine and minimally invasive arthroscopic surgery — and <strong>Dr. Orlando Cedeno, DPM</strong>, board certified in foot surgery by the American Board of Foot &amp; Ankle Surgery with advanced expertise in vein care. Around them: an IV wellness lounge, regenerative medicine program, advanced non-surgical therapies, and concierge-level coordination.</p>
-      <h2>What {city} patients come to us for</h2>
-      <div class="treat-grid">{svc_list}</div>
-      <p class="loc-more">Also available: the <a href="../services/neuropathy-program.html">Neuropathy Restoration Program</a>, <a href="../services/medical-weight-loss.html">physician-supervised weight loss</a>, and the <a href="../iv-therapy.html">IV Recovery &amp; Wellness Lounge</a>.</p>
     </div>
-    <aside class="loc-side reveal" style="--d:120ms">
-      <div class="sym-card">
-        <h2>Visiting from {city}</h2>
-        <address>{ADDRESS_STREET}<br>{ADDRESS_CITY}, {ADDRESS_STATE} {ADDRESS_ZIP}</address>
-        <p class="loc-hours">{HOURS}</p>
-        <a class="btn btn-gold" href="../contact.html#book">Book a Consultation</a>
-        <p class="sym-call">Call <a href="tel:{PHONE_TEL}" data-call-location="location_sidebar">{PHONE_VANITY} · {PHONE_DISPLAY}</a></p>
-        <a class="loc-map-link" href="{MAP_URL}" rel="noopener" target="_blank">Get directions →</a>
-      </div>
-      <figure class="loc-photo">
-        {photo(interior, interior_alt, 420, 470, prefix="../", sizes="(max-width:900px) 92vw, 380px")}
-        <figcaption>Your appointment is here: {ADDRESS_STREET}, {ADDRESS_CITY}.</figcaption>
-      </figure>
-      <nav class="sym-card loc-others" aria-label="Other areas we serve">
-        <h2>Areas we serve</h2>
-        <ul><li><a href="../index.html">Palm Beach Gardens</a></li>{others}</ul>
-      </nav>
+    <aside class="sym-panel visit-panel reveal" style="--d:120ms">
+      <h2>Visiting from {city}</h2>
+      <address>{ADDRESS_STREET}<br>{ADDRESS_CITY}, {ADDRESS_STATE} {ADDRESS_ZIP}</address>
+      <p class="loc-hours">{HOURS}</p>
+      <a class="btn btn-gold" href="../contact.html#book">Book a Consultation</a>
+      <p class="sym-call">Call <a href="tel:{PHONE_TEL}" data-call-location="location_sidebar">{PHONE_VANITY} · {PHONE_DISPLAY}</a></p>
+      <a class="loc-map-link" href="{MAP_URL}" rel="noopener" target="_blank">Get directions →</a>
     </aside>
+  </div>
+</section>
+<section class="section section-tint">
+  <div class="tx-wrap">
+    <div class="section-head reveal"><p class="eyebrow">Treatments</p><h2>What {city} patients come to us for</h2></div>
+    <div class="tx-grid tx-grid-3">{svc_cards}</div>
+    <p class="loc-more reveal">Also available: the <a href="../services/neuropathy-program.html">Neuropathy Restoration Program</a>, <a href="../services/medical-weight-loss.html">physician-supervised weight loss</a>, and the <a href="../iv-therapy.html">IV Recovery &amp; Wellness Lounge</a>.</p>
+  </div>
+</section>
+<section class="section">
+  <div class="tx-wrap">
+    <div class="section-head reveal"><p class="eyebrow">Your specialists</p><h2>Who you will see in <em>Palm Beach Gardens</em></h2></div>
+    <div class="doc-mini-grid">{doc_cards}</div>
+  </div>
+</section>
+<section class="section section-dark link-panels">
+  <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+  <div class="link-panels-inner">
+    <nav class="link-panel reveal" aria-label="Conditions we treat"><p class="eyebrow">Conditions we treat</p><ul class="link-chips">{cond_chips}</ul></nav>
+    <nav class="link-panel reveal" style="--d:100ms" aria-label="Other areas we serve"><p class="eyebrow">Other areas we serve</p><ul class="link-chips"><li><a href="../index.html">Palm Beach Gardens</a></li>{others}</ul></nav>
   </div>
 </section>
 {cta_band(d, heading=f"{city}, your specialists are <em>closer than you think</em>")}
@@ -3148,8 +3333,10 @@ def build_locations():
             f"Regenerative Medicine near {city}, FL | RegenOrtho",
             f"{city} residents: stem cell, PRP and regenerative care, vein treatment and IV therapy minutes away in Palm Beach Gardens. Same-week visits: 833-STEM561.",
             depth=d, canonical=f"locations/{loc['slug']}.html", extra_schema=schema, speakable=True,
+            og_image=f"assets/media/{interior}.jpg",
         ) + '<body class="page-location">\n' + body
         write(f"locations/{loc['slug']}.html", page)
+
 
 MATARAZZO_BIO = [
     "Marc F. Matarazzo, MD is a board-certified, fellowship-trained orthopedic surgeon whose practice centres on sports medicine and the injuries that come with it. His surgical work covers minimally invasive procedures, complex reconstruction, and shoulder and knee joint replacement, and he is certified in the MAKO robotic-assisted knee replacement system. Behind more than 23 years of clinical and surgical experience sits a particular conviction: that regenerative technology and conventional orthopedic care belong in the same plan rather than in competing ones.",
@@ -3166,7 +3353,7 @@ CEDENO_BIO = [
 
 
 def physician_schema(name, photo, title_str, url_path, same_as=None, schema_type="Physician",
-                     specialty=None):
+                     specialty=None, npi=None):
     obj = {
         "@context": "https://schema.org",
         "@type": schema_type,
@@ -3188,8 +3375,30 @@ def physician_schema(name, photo, title_str, url_path, same_as=None, schema_type
         obj["medicalSpecialty"] = specialty      # required for Physician rich results
     if same_as:
         obj["sameAs"] = same_as
+    if npi:
+        obj["identifier"] = {"@type": "PropertyValue", "propertyID": "NPI", "value": npi}
     return extra_ld(obj)
 
+
+# Third-party profiles and NPI numbers, for Physician sameAs/identifier: they tell
+# Google the profile page, the Healthgrades listing and the NPI record are one
+# person, which is how a doctor's name search consolidates onto this site. Each URL
+# was fetched and returned 200 on 2026-10-12; Dr. Cedeno's Doximity page returned
+# 410 Gone and US News would not respond, so neither is listed. Add a URL only after
+# checking it resolves and is the right person (there are several Mark Matarazzos).
+_PROVIDER_PROFILES = {
+    "dr-marc-matarazzo": {
+        "npi": "1083678452",
+        "same_as": ["https://www.healthgrades.com/physician/dr-marc-matarazzo-34my5",
+                    "https://www.doximity.com/pub/marc-matarazzo-md",
+                    "https://npiregistry.cms.hhs.gov/provider-view/1083678452"],
+    },
+    "dr-orlando-cedeno": {
+        "npi": "1700076437",
+        "same_as": ["https://www.healthgrades.com/physician/dr-orlando-cedeno-xq8jf",
+                    "https://npiregistry.cms.hhs.gov/provider-view/1700076437"],
+    },
+}
 
 _PROVIDER_SPECIALTY = {
     "dr-marc-matarazzo": ["Orthopedic surgery", "Sports medicine"],
@@ -3250,7 +3459,9 @@ def provider_page(slug, name, role, portrait, bio_paras, highlights, title, desc
 {footer(d)}"""
     schema = (
         physician_schema(name, portrait, role, f"providers/{slug}.html", schema_type=schema_type,
-                         specialty=_PROVIDER_SPECIALTY.get(slug))
+                         specialty=_PROVIDER_SPECIALTY.get(slug),
+                         same_as=_PROVIDER_PROFILES.get(slug, {}).get("same_as"),
+                         npi=_PROVIDER_PROFILES.get(slug, {}).get("npi"))
         + breadcrumb_schema([("", "Home"), ("about.html", "About"), (f"providers/{slug}.html", name)])
     )
     page = head(title, desc, depth=d, canonical=f"providers/{slug}.html",
@@ -3275,7 +3486,7 @@ def build_providers():
             "Medical Director &amp; Owner, RegenOrtho Palm Beach",
             "Owner, Elite Sports Medicine",
         ],
-        "Dr. Marc Matarazzo, MD | Orthopedic Surgeon | RegenOrtho",
+        "Dr. Marc Matarazzo, MD | Orthopedic Surgeon, Palm Beach Gardens",
         "Dr. Marc Matarazzo, MD — board-certified orthopedic surgeon in Palm Beach Gardens. Sports medicine, arthroscopy, shoulder & knee, MAKO robotic replacement.",
         [
             ("../services/regenerative-medicine-orthobiologics.html", "Regenerative Medicine"),
@@ -3523,6 +3734,126 @@ def build_iv():
                 og_image="assets/media/iv-hero.jpg",
                 extra_schema=schema) + '<body class="page-iv">\n' + body
     write("iv-therapy.html", page)
+
+
+def pricing_faqs():
+    """Price questions answered ONLY from figures the site already publishes
+    (SERVICE_ONE_TIME_PRICE, REGEN_PRICE, SERVICE_FROM_PRICE, IV_MENU), then the
+    published insurance FAQs. The visible list and the FAQPage schema both come
+    from this one list, as Google requires."""
+    regen = [s for s in SERVICES if s["slug"] in SERVICE_ONE_TIME_PRICE]
+    regen_from = min(SERVICE_ONE_TIME_PRICE.values())
+    iv_lo = min(IV_MENU, key=lambda m: m["price"])
+    iv_hi = max(IV_MENU, key=lambda m: m["price"])
+    nad = next((m for m in IV_MENU if m["name"].startswith("NAD")), None)
+    names = ", ".join(html.unescape(s["name"]) for s in regen[:-1]) + " and " + html.unescape(regen[-1]["name"])
+    out = [
+        ("How much does stem cell therapy cost in Palm Beach Gardens?",
+         f"Our regenerative therapies — {names} — start from ${regen_from:,}. Each begins with a "
+         f"${REGEN_PRICE['consult']} consultation and imaging review, which is credited toward treatment. "
+         "They are self-pay services and are not covered by insurance or Medicare."),
+        ("How much is IV therapy?",
+         f"Infusions on our menu run from ${iv_lo['price']} ({html.unescape(iv_lo['short'])}) to "
+         f"${iv_hi['price']} ({html.unescape(iv_hi['short'])}). Every visit starts with a medical pre-screen."),
+    ]
+    if nad:
+        out.append(("How much is an NAD⁺ IV?", f"The NAD⁺ 500 mg infusion is ${nad['price']}."))
+    out += [
+        ("How much does peptide therapy cost?",
+         f"Peptide programs start at ${SERVICE_FROM_PRICE['peptide-therapy']} per month; the protocol and cost "
+         "are set at consultation based on your goals."),
+    ]
+    seen = {q for q, _ in out}
+    out += [(q, a) for q, a in INSURANCE_FAQS if q not in seen]
+    return out
+
+
+def build_pricing():
+    """/pricing — the human-readable twin of /pricing.md. Every figure is pulled from
+    the same constants the service pages and pricing.md use, so the three cannot
+    disagree; services with no published price are listed as such, never estimated."""
+    d = 0
+    regen = [s for s in SERVICES if s["slug"] in SERVICE_ONE_TIME_PRICE]
+    monthly = [s for s in SERVICES if s["slug"] in SERVICE_FROM_PRICE]
+    unpriced = [s for s in SERVICES if s["slug"] not in SERVICE_FROM_PRICE and s["slug"] not in SERVICE_ONE_TIME_PRICE]
+    iv_lo = min(m["price"] for m in IV_MENU)
+
+    def row(name, price, href=None, note=""):
+        label = f'<a href="{href}">{name}</a>' if href else name
+        note_html = f'<span class="pr-note">{note}</span>' if note else ""
+        return f'<li><span class="pr-name">{label}{note_html}</span><span class="pr-dots" aria-hidden="true"></span><span class="pr-price">{price}</span></li>'
+
+    regen_rows = "".join(row(s["name"], f"from ${SERVICE_ONE_TIME_PRICE[s['slug']]:,}", svc_href(s["slug"])) for s in regen)
+    monthly_rows = "".join(row(s["name"], f"from ${SERVICE_FROM_PRICE[s['slug']]}/mo", svc_href(s["slug"])) for s in monthly)
+    iv_rows = "".join(row(m["short"], f"${m['price']}", "iv-therapy.html", m["ingredients"]) for m in IV_MENU)
+    unpriced_links = "".join(f'<li><a href="{svc_href(s["slug"])}">{s["name"]}</a></li>' for s in unpriced)
+    faqs = pricing_faqs()
+    faq_html = "".join(
+        f"""<details class="faq-item"><summary>{q}</summary><div class="faq-a"><p>{a}</p></div></details>"""
+        for q, a in faqs)
+    cards = [
+        ("Regenerative therapies", f"from ${min(SERVICE_ONE_TIME_PRICE.values()):,}", f"${REGEN_PRICE['consult']} consultation credited toward treatment", "#regenerative"),
+        ("Peptide programs", f"from ${SERVICE_FROM_PRICE['peptide-therapy']}/mo", "Protocol set at consultation", "#monthly"),
+        ("Medical weight loss", f"from ${SERVICE_FROM_PRICE['medical-weight-loss']}/mo", "GLP-1 plans with physician monitoring", "#monthly"),
+        ("IV infusions", f"from ${iv_lo}", "Twelve formulas, each with a pre-screen", "#iv"),
+    ]
+    card_html = "".join(
+        f'<a class="pr-card reveal" href="{h}" style="--d:{i * 80}ms"><span class="eyebrow">{t}</span><strong>{p}</strong><span>{n}</span></a>'
+        for i, (t, p, n, h) in enumerate(cards))
+    crumbs_html = crumbs([("", "Pricing & Insurance")], depth=d)
+    body = f"""{nav(d)}
+<main id="main">
+{page_hero("Pricing & Insurance", "What it costs, before you book", "Every price we publish, in one place — regenerative therapies, peptides, medical weight loss and the IV menu — plus how insurance and payment work for everything else.", crumbs_html, depth=d, h1_lead="Prices &amp; Insurance at RegenOrtho Palm Beach")}
+<section class="section">
+  <div class="pr-cards">{card_html}</div>
+</section>
+<section class="section section-tint">
+  <div class="pr-wrap pr-two">
+    <div class="pr-block reveal" id="regenerative">
+      <p class="eyebrow">One-time treatment</p>
+      <h2>Regenerative therapies</h2>
+      <ul class="pr-list">{regen_rows}</ul>
+      <p class="pr-fine">Each begins with a ${REGEN_PRICE['consult']} consultation and imaging review, credited toward treatment. {REGEN_PRICE['note'].split('. ', 1)[1] if '. ' in REGEN_PRICE['note'] else ''} None are FDA-approved to treat, cure or prevent any disease or condition.</p>
+    </div>
+    <div class="pr-block reveal" id="monthly" style="--d:120ms">
+      <p class="eyebrow">Monthly programs</p>
+      <h2>Peptides &amp; weight loss</h2>
+      <ul class="pr-list">{monthly_rows}</ul>
+      <p class="pr-fine">The four compound pages are the same peptide program, sold by protocol. Your plan and dosing are set by your physician.</p>
+    </div>
+  </div>
+</section>
+<section class="section" id="iv">
+  <div class="pr-wrap">
+    <div class="section-head reveal"><p class="eyebrow">Per infusion</p><h2>The IV <em>menu</em></h2></div>
+    <ul class="pr-list pr-list-2 reveal">{iv_rows}</ul>
+    <p class="section-foot reveal"><a class="btn btn-navy" href="iv-therapy.html">See the IV lounge</a></p>
+  </div>
+</section>
+<section class="section section-dark link-panels">
+  <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+  <div class="link-panels-inner">
+    <div class="link-panel reveal">
+      <p class="eyebrow">Quoted at consultation</p>
+      <h2 class="pr-dark-h">No published price — and we will not guess one</h2>
+      <p class="pr-dark-p">Cost for these depends on your plan, and most are billed through insurance where covered. We verify your benefits before treatment.</p>
+    </div>
+    <nav class="link-panel reveal" style="--d:100ms" aria-label="Services quoted at consultation"><ul class="link-chips">{unpriced_links}</ul></nav>
+  </div>
+</section>
+<section class="section">
+  <div class="section-head reveal"><p class="eyebrow">Insurance &amp; payment</p><h2>Cost <em>questions</em></h2><p class="section-sub">We accept cash, credit card, insurance and HSA/FSA.</p></div>
+  <div class="faq-list">{faq_html}</div>
+</section>
+{cta_band(d)}
+</main>
+{footer(d)}"""
+    schema = faq_schema(faqs) + breadcrumb_schema([("", "Home"), ("pricing.html", "Pricing & Insurance")])
+    page = head("Pricing: Stem Cell, IV & Peptide Costs | Palm Beach Gardens",
+                f"Published prices at RegenOrtho Palm Beach: regenerative therapies from ${min(SERVICE_ONE_TIME_PRICE.values()):,}, peptides from ${SERVICE_FROM_PRICE['peptide-therapy']}/mo, GLP-1 from ${SERVICE_FROM_PRICE['medical-weight-loss']}/mo, IV from ${iv_lo}. Insurance & payment.",
+                depth=d, canonical="pricing.html", webpage_type="MedicalWebPage", speakable=True,
+                extra_schema=schema) + '<body class="page-pricing">\n' + body
+    write("pricing.html", page)
 
 
 def build_faq():
@@ -4358,7 +4689,7 @@ def build_legal_and_404():
 def build_meta():
     from blog_content import BLOG_POSTS
     from forms_content import FORMS
-    pages = ["index.html", "about.html", "contact.html", "faq.html", "iv-therapy.html",
+    pages = ["index.html", "about.html", "contact.html", "faq.html", "iv-therapy.html", "pricing.html",
              "patient-resources.html", "privacy-policy.html", "terms.html",
              "forms/index.html",
              "services/index.html", "blog/index.html",
@@ -4621,6 +4952,7 @@ Palm Beach Gardens (clinic location) plus:
 {loc_lines}
 
 ## Published pricing
+Pricing page (every published price, insurance & payment): {BASE}/pricing.html
 Machine-readable pricing (all figures, plus what is deliberately unpriced): {BASE}/pricing.md
 Only the prices below are published; everything else is quoted at consultation.
 - Medical Weight Loss & GLP-1: plans start at $239/month.
@@ -4668,6 +5000,7 @@ def main():
     build_hubs()
     build_iv()
     build_faq()
+    build_pricing()
     build_contact()
     build_resources()
     build_forms()

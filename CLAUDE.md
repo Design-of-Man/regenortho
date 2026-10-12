@@ -49,6 +49,25 @@ Static site, 56 pages, generated — do not edit HTML files directly.
   pull quote appears verbatim in the post body, so it can never become new copy. A post
   without an entry (e.g. added by the content portal) still renders. Blog photos are
   generated illustrations — see tools/PROVENANCE.md before reusing them anywhere.
+- SPLIT HEADERS: service, condition and location pages open on `.bl-hero.split-hero` (copy
+  left, page photo bleeding right), not `page_hero()`. SpeakableSpecification lists both
+  `.page-hero` and `.split-hero` selectors — rename either class and update it. Every
+  service has its OWN photo now (svc-*.jpg, generated — tools/PROVENANCE.md); 14 of 19
+  used to share three pictures. Do not point a new service at an existing photo.
+- Condition pages show photo cards for their services plus a second row: the five
+  regenerative therapies where `CONDITION_REGEN_MATCH` maps the condition to a
+  REGEN_TREATS phrase (published), or vein care's three procedures. Small cards carry no
+  photo on purpose. Further reading comes from `CONDITION_READING`.
+- FLORIDA STEM-CELL NOTICE: `FL_STEM_CELL_NOTICE` (statute text, verbatim — §458.3245(5))
+  renders under the header on the six `FL_NOTICE_PAGES`. Its size is the single CSS token
+  `--fl-notice-size`; the statute says "no smaller than the largest type size used in
+  the advertisement", and whether that means the H1 is the practice's attorney's call.
+- /pricing (`build_pricing()`, served via vercel.json rewrite) is the human twin of
+  /pricing.md: same constants, so they cannot disagree. Its FAQs (`pricing_faqs()`)
+  restate only published figures; the visible list and FAQPage schema are one list.
+- Physician schema carries `sameAs` + NPI `identifier` from `_PROVIDER_PROFILES`. Every
+  URL there was fetched and verified as the right person; there are several Mark
+  Matarazzos online, so never add one from a search result unchecked.
 - `assets/js/forms.js` + `assets/css/forms.css` + `forms_content.py` — the two patient
   forms (`/forms/new-patient.html`, `/forms/peptide-glp-questionnaire.html`). Questions are
   declarative in `forms_content.py`; the renderer (`_field`/`_section`/`build_forms` in
