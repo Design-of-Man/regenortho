@@ -53,7 +53,15 @@ Static site, 56 pages, generated — do not edit HTML files directly.
 - 833-STEM561 = 833-783-6561 · emily@regenorthopb.com · Mon–Fri 8 AM–5 PM
 - Instagram: @regenortho_palmbeach (only real social profile — X/YouTube don't exist)
 - Dr. Marc Matarazzo, MD (ortho/sports medicine, MAKO-certified) · Dr. Orlando Cedeno, DPM
-  (podiatric surgery + vein) · Emily Bahnick, MSN, RN (IV infusion nurse)
+  (podiatric surgery + vein). Those two are the whole named roster.
+- Emily Bahnick, MSN, RN (IV nurse) LEFT the practice in October 2026 and was removed from
+  every page, the schema, llms.txt, the assistant and the share card (the old team-group
+  photo had her in it, so og-team.jpg was replaced by og-physicians-v1.jpg, composed from
+  the two portraits). /providers/emily-bahnick 301s to /about. Do not re-add her.
+  The address emily@regenorthopb.com is DELIBERATELY still the public email and the
+  FormSubmit lead inbox — the owner said keep it for now. Changing it is a two-file change
+  (build.py EMAIL/FORM_TARGET_EMAIL + assets/js/assist.js) and needs FormSubmit's one-time
+  activation click from the new inbox, or leads hold undelivered.
 - Palm Beach Gardens deliberately has NO location page — the homepage owns that keyword;
   8 nearby cities have /locations/ pages, linked in the header dropdown + footer.
 
@@ -257,9 +265,10 @@ CSS coastline scene stays underneath as the no-video fallback. asset_v() returns
   are in the file now. Any new rule with a `%XX` in it needs both.
 
 ### Share cards (og:image)
-- Default card is `assets/media/og-team.jpg` — the care-team photo cropped to 1200×630
-  from `assets/team/team-group.jpg`. Pages that pass their own `og_image=` keep theirs.
-  Re-crop with Pillow from the team photo if the roster photo is replaced.
+- Default card is `assets/media/og-physicians-v1.jpg` — the two physician portraits side by
+  side over a navy band with the logo, composed with Pillow from `assets/team/`. Pages that
+  pass their own `og_image=` keep theirs. If the roster changes, compose a NEW filename
+  (assets are immutable-cached) rather than overwriting it.
 - `og:image:width/height` come from `img_dims()`, a stdlib JPEG/PNG header reader — they
   used to be hardcoded 1200×630 while service/condition pages shipped 1400×933 photos,
   which makes scrapers lay the card out wrong. Never hardcode them again.

@@ -942,16 +942,17 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
 
 /* ------------------------------ doctors ---------------------------------- */
 
-/* Three providers, one row — cards stack photo over copy so they stay legible
-   at a third of the wrap. Below 1100px they revert to one wide horizontal card. */
-.doc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; position: relative; }
+/* Two physicians, one row — each card lays its portrait beside the copy, because a
+   4:5 photo at half the wrap would stand taller than the viewport. Below 1160px the
+   grid drops to one column (same horizontal card); below 720px the card stacks. */
+.doc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.4rem; position: relative; }
 .doc-card {
-  display: flex; flex-direction: column; gap: 1rem; text-decoration: none;
+  display: flex; flex-direction: row; gap: 1.4rem; text-decoration: none;
   background: rgba(255, 255, 255, .045); border: 1px solid rgba(253, 201, 41, .2); border-radius: var(--r-lg);
   padding: 1.2rem; transition: transform .35s var(--ease), border-color .35s, background .35s;
 }
 .doc-card:hover { transform: translateY(-5px); border-color: var(--gold); background: rgba(255, 255, 255, .075); }
-.doc-photo { position: relative; border-radius: var(--r-md); overflow: hidden; aspect-ratio: 4 / 5; box-shadow: inset 0 0 0 1px rgba(253,201,41,.25); }
+.doc-photo { flex: 0 0 clamp(190px, 40%, 250px); align-self: flex-start; position: relative; border-radius: var(--r-md); overflow: hidden; aspect-ratio: 4 / 5; box-shadow: inset 0 0 0 1px rgba(253,201,41,.25); }
 .doc-photo::after { content: ""; position: absolute; inset: 0; border: 1px solid rgba(253, 201, 41, .35); border-radius: var(--r-md); translate: 7px 7px; pointer-events: none; }
 .doc-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
 .doc-body { display: flex; flex-direction: column; gap: .5rem; flex: 1; }
@@ -1315,10 +1316,6 @@ address { font-style: normal; line-height: 1.5; }
 .section-dark .team-tile figcaption strong { color: var(--white); }
 .team-tile figcaption span { font-size: var(--t-2xs); color: var(--muted); }
 .section-dark .team-tile figcaption span { color: var(--on-navy-muted); }
-.team-hero { max-width: 860px; margin: 0 auto 2.6rem; }
-.team-hero img { width: 100%; height: auto; display: block; border-radius: var(--r-lg); box-shadow: var(--shadow-lg); }
-.team-hero figcaption { margin-top: 1rem; text-align: center; font-size: var(--t-sm); color: var(--muted); font-style: italic; }
-.section-dark .team-hero figcaption { color: var(--on-navy-muted); }
 .team-gallery { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
 .team-gallery .team-tile { width: 152px; }
 
@@ -1336,15 +1333,6 @@ address { font-style: normal; line-height: 1.5; }
 
 /* ---------------------------- infusion-nurse credit ---------------------- */
 
-.nurse-credit { display: grid; grid-template-columns: 280px 1fr; gap: 2.2rem; align-items: center; max-width: var(--wrap); margin: 0 auto; }
-.nurse-photo { border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-lg); position: relative; }
-.nurse-photo::after { content: ""; position: absolute; inset: 0; border: 1px solid rgba(9, 45, 92, .16); border-radius: var(--r-lg); translate: 9px 9px; pointer-events: none; }
-.nurse-photo img { width: 100%; height: 100%; object-fit: cover; }
-.nurse-copy h2 { margin: .7rem 0 .9rem; max-width: 22ch; }
-.nurse-copy h2 em { color: var(--navy-700); }
-.nurse-copy p { color: var(--muted); max-width: 56ch; }
-.nurse-copy .btn { margin-top: 1.3rem; }
-@media (max-width: 720px) { .nurse-credit { grid-template-columns: 1fr; } .nurse-photo { max-width: 260px; } }
 
 /* ------------------------------ resources -------------------------------- */
 
@@ -1527,7 +1515,7 @@ body.nav-locked .mobile-call { display: none !important; }
   .cond-side, .loc-side, .provider-photo { position: static; }
   .why-strip { grid-template-columns: 1fr; }
   .doc-card { flex-direction: column; }
-  .doc-photo { flex: none; max-width: 280px; }
+  .doc-photo { flex: none; max-width: 280px; align-self: auto; }
   /* three stats, two columns — the lone third one centres across the full width */
   .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem 1.2rem; }
   .hero-stats div { min-width: 0; }

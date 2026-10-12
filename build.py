@@ -79,11 +79,12 @@ SISTER_PRACTICES = [
      "&amp; ankle surgery. Offices in Jupiter and Palm Beach Gardens."),
 ]
 MAP_URL = "https://maps.google.com/maps?q=RegenOrtho%20Palm%20Beach%2011380%20Prosperity%20Farms%20Road%20Palm%20Beach%20Gardens"
-# Alt for the default share card. Deliberately does not name individuals — the
+# Alt for the default share card (the two physicians' portraits over the logo,
+# composed from assets/team/). Deliberately does not name individuals — the
 # roster is named on /about and /providers, and a share card should not be the
 # thing that gets a person's name wrong.
-OG_TEAM_ALT = ("The RegenOrtho Palm Beach care team — regenerative medicine, vein care, and "
-               "IV wellness specialists at the Palm Beach Gardens clinic")
+OG_TEAM_ALT = ("The RegenOrtho Palm Beach physicians — orthopedic, regenerative and vein "
+               "care at the Palm Beach Gardens clinic")
 GEO_LAT, GEO_LNG = 26.8449, -80.0693
 
 ORG_ID = f"{BASE}/#organization"
@@ -205,7 +206,6 @@ PHOTO_WIDTHS = (480, 900, 1400)
 
 FOCAL = {
     # staff portraits — faces in the top third, every one
-    "emily-bahnick":    "50% 15%",
     "marc-matarazzo":   "48% 20%",
     "orlando-cedeno":   "50% 16%",
     "member-1":         "50% 14%",
@@ -215,7 +215,6 @@ FOCAL = {
     "member-5":         "50% 13%",
     "member-6":         "55% 13%",
     "member-7":         "45% 16%",
-    "team-group":       "50% 45%",
     # real clinic interiors
     "clinic-interior":  "50% 62%",   # top half of this frame is ceiling
     "clinic-lounge":    "45% 55%",
@@ -342,7 +341,7 @@ GA_TAG = f"""<!-- Google tag (gtag.js) -->
 # Default share card: the care-team photo, cropped to 1200x630. A link preview
 # that shows the people beats one that shows the logo — and the logo is already
 # in the org schema, so nothing is lost.
-def head(title, desc, depth=0, canonical="", og_image="assets/media/og-team.jpg",
+def head(title, desc, depth=0, canonical="", og_image="assets/media/og-physicians-v1.jpg",
          page_type="website", extra_schema="", preload_hero=False, extra_css="",
          webpage_type="WebPage", speakable=False, assistant=True,
          analytics=True):
@@ -350,7 +349,7 @@ def head(title, desc, depth=0, canonical="", og_image="assets/media/og-team.jpg"
     canonical_url = f"{BASE}/{canonical}" if canonical else f"{BASE}/"
     og_url = f"{SHARE_BASE}/{og_image}?v={asset_v(og_image)}"
     og_w, og_h = img_dims(og_image)
-    og_alt = (OG_TEAM_ALT if og_image == "assets/media/og-team.jpg" else title)
+    og_alt = (OG_TEAM_ALT if og_image == "assets/media/og-physicians-v1.jpg" else title)
     og_type = "image/png" if og_image.lower().endswith(".png") else "image/jpeg"
     schema = org_schema()
     # MedicalWebPage on clinical pages (services, conditions): it tells
@@ -536,7 +535,6 @@ def nav(depth=0, current=""):
             <li><a href="{p}about.html">About the Practice</a></li>
             <li><a href="{p}providers/dr-marc-matarazzo.html">Dr. Marc Matarazzo, MD</a></li>
             <li><a href="{p}providers/dr-orlando-cedeno.html">Dr. Orlando Cedeno, DPM</a></li>
-            <li><a href="{p}providers/emily-bahnick.html">Emily Bahnick, MSN, RN</a></li>
             <li><a href="{p}patient-resources.html">Patient Resources</a></li>
           </ul>
         </li>
@@ -754,7 +752,7 @@ def org_schema():
                      "contentUrl": f"{BASE}/assets/media/logo-dark.png",
                      "caption": NAME},
             "image": {"@type": "ImageObject",
-                      "url": f"{BASE}/assets/media/og-team.jpg",
+                      "url": f"{BASE}/assets/media/og-physicians-v1.jpg",
                       "caption": OG_TEAM_ALT},
             "telephone": "+1-833-783-6561",
             "email": EMAIL,
@@ -909,7 +907,6 @@ def clean_url_map():
         "blog/index.html": "blog",
         "providers/dr-marc-matarazzo.html": "dr-marc-matarazzo-md",
         "providers/dr-orlando-cedeno.html": "dr-orlando-cedeno-dpm",
-        "providers/emily-bahnick.html": "providers/emily-bahnick",
         # Confirmed live: this is the slug actually ranking, not "services/vein-care".
         "services/vein-care.html": "our-services/vein-care-medical-cosmetic",
     }
@@ -974,14 +971,6 @@ TEAM = [
         "role": "DPM, FACFAS · Owner",
         "photo": "team/orlando-cedeno.jpg",
         "short": "Board certified in foot surgery by the American Board of Foot & Ankle Surgery, fellowship-trained in reconstructive and trauma surgery of the foot and ankle, with advanced expertise in vein care.",
-    },
-    {
-        "slug": "emily-bahnick",
-        "name": "Emily Bahnick, MSN, RN",
-        "role": "IV Infusion Nurse & Care Coordinator",
-        "photo": "team/emily-bahnick.jpg",
-        "short": "Registered nurse with MSN and BSN degrees and more than 10 years of experience — your IV infusion nurse and care coordinator, focused on longevity, reducing reliance on pharmaceuticals, and healing from within.",
-        "stats": ["10+ years experience", "MSN · BSN", "Registered Nurse"],
     },
 ]
 
@@ -2351,16 +2340,6 @@ def build_home():
         <em class="svc-more">Meet Dr. Cedeno <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em>
       </span>
     </a>
-    <a class="doc-card reveal" href="providers/emily-bahnick.html" style="--d:240ms">
-      <span class="doc-photo">{photo("emily-bahnick", "Emily Bahnick, MSN, RN — IV infusion nurse and care coordinator at RegenOrtho Palm Beach", 450, 560, sizes="(max-width:700px) 90vw, 450px")}</span>
-      <span class="doc-body">
-        <strong>Emily Bahnick, MSN, RN</strong>
-        <span class="doc-role">IV Infusion Nurse &amp; Care Coordinator</span>
-        <span class="doc-bio">Your IV infusion nurse and care coordinator — passionate about regenerative health, focused on longevity, reducing reliance on pharmaceuticals, and healing from deep within through modern, innovative medicine.</span>
-        <span class="doc-stats"><span>10+ years experience</span><span>MSN &middot; BSN</span><span>Registered Nurse</span></span>
-        <em class="svc-more">Meet Emily <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em>
-      </span>
-    </a>
   </div>
   <div class="sister-row reveal">
     <p class="eyebrow">Our sister practices</p>
@@ -3092,7 +3071,6 @@ def build_providers():
             "Tendinopathy &amp; post-surgical pain",
         ],
     )
-    build_emily()
     provider_page(
         "dr-orlando-cedeno", "Dr. Orlando Cedeno, DPM",
         "Board-Certified Podiatric Surgeon & Vein Specialist",
@@ -3135,35 +3113,6 @@ def build_providers():
             "Bunions, hammertoes &amp; deformity correction",
             "Varicose &amp; spider veins, venous insufficiency",
         ],
-    )
-
-
-def build_emily():
-    provider_page(
-        "emily-bahnick", "Emily Bahnick, MSN, RN",
-        "IV Infusion Nurse & Care Coordinator",
-        "team/emily-bahnick.jpg",
-        [
-            "Passionate about regenerative health for both people and animals, Emily tailors every care plan to the patient — focused on longevity, reducing reliance on pharmaceuticals, and healing from deep within through modern, innovative medicine.",
-            "As the practice's IV infusion nurse and care coordinator, Emily is the clinician most patients see the most. She reviews your pre-treatment medical screen, helps match the infusion formula to your goals, administers and monitors your drip in the lounge, and keeps the details of your care moving between visits.",
-            "Emily holds both MSN and BSN nursing degrees and brings more than ten years of nursing experience to RegenOrtho Palm Beach.",
-        ],
-        [
-            "MSN &amp; BSN — advanced nursing degrees",
-            "Registered Nurse (RN)",
-            "10+ years of nursing experience",
-            "IV infusion nurse &amp; care coordinator",
-            "Focused on longevity and regenerative health",
-        ],
-        "Emily Bahnick, MSN, RN | IV Infusion Nurse | RegenOrtho",
-        "Meet Emily Bahnick, MSN, RN — the IV infusion nurse and care coordinator at RegenOrtho Palm Beach in Palm Beach Gardens, with 10+ years of nursing experience.",
-        [
-            ("../iv-therapy.html", "IV Recovery & Wellness Lounge"),
-            ("../services/neuropathy-program.html", "Neuropathy Restoration Program"),
-            ("../services/medical-weight-loss.html", "Medical Weight Loss & GLP-1"),
-            ("../services/concierge-care.html", "Concierge & Direct-Pay Care"),
-        ],
-        schema_type="Person", eyebrow="Meet Your Care Team",
     )
 
 
@@ -3224,11 +3173,7 @@ def build_about():
   {f'<div class="team-strip">{support}</div>' if support else ''}
 </section>
 <section class="section">
-  <div class="section-head reveal"><p class="eyebrow">Our Team</p><h2>The people <em>behind your recovery</em></h2></div>
-  <figure class="team-hero reveal">
-    {photo("team-group", "The RegenOrtho Palm Beach care team at the Palm Beach Gardens clinic", 1300, 1304, sizes="(max-width:900px) 94vw, 620px")}
-    <figcaption>Orthopedic, podiatric, regenerative, and vein care — one team, one roof, in Palm Beach Gardens.</figcaption>
-  </figure>
+  <div class="section-head reveal"><p class="eyebrow">Our Team</p><h2>The people <em>behind your recovery</em></h2><p class="section-sub">Orthopedic, podiatric, regenerative, and vein care — one team, one roof, in Palm Beach Gardens.</p></div>
   <div class="team-gallery">{gallery}</div>
 </section>
 <section class="section section-tint">
@@ -3250,7 +3195,7 @@ def build_about():
     page = head("About Us | RegenOrtho Palm Beach — Palm Beach Gardens FL",
                 "RegenOrtho Palm Beach: a concierge practice blending orthopedic, podiatric, regenerative & vein care, led by board-certified surgeons in Palm Beach Gardens.",
                 depth=d, canonical="about.html",
-                og_image="assets/media/og-team.jpg",   # the 1200x630 crop, not the square original
+                og_image="assets/media/og-physicians-v1.jpg",   # the 1200x630 crop, not the square original
                 extra_schema=schema) + '<body class="page-about">\n' + body
     write("about.html", page)
 
@@ -3282,7 +3227,7 @@ def build_iv():
         "description": "Clinician-supervised IV vitamin and nutrient infusions in Palm Beach Gardens — hydration, immune support, NAD+, athletic recovery, and full-body wellness formulas.",
         "url": f"{BASE}/iv-therapy.html",
         "provider": {"@id": ORG_ID},
-        "image": f"{BASE}/assets/media/og-team.jpg",
+        "image": f"{BASE}/assets/media/og-physicians-v1.jpg",
         "areaServed": [{"@type": "City", "name": c} for c in
                        [ADDRESS_CITY] + [l["city"] for l in LOCATIONS]],
         # The menu and its prices are already published on the page; declaring them
@@ -3331,17 +3276,6 @@ def build_iv():
     <li class="step reveal" style="--d:220ms"><span class="step-num" aria-hidden="true">3</span><h3>Relax &amp; Receive Treatment</h3><p>Sit back in our comfortable lounge while our medical team administers your customized IV drip.</p></li>
     <li class="step reveal" style="--d:330ms"><span class="step-num" aria-hidden="true">4</span><h3>Feel Revitalized</h3><p>Experience improved hydration, energy, and overall wellness within minutes.</p></li>
   </ol>
-</section>
-<section class="section">
-  <div class="nurse-credit reveal">
-    <figure class="nurse-photo">{photo("emily-bahnick", "Emily Bahnick, MSN, RN — IV infusion nurse at RegenOrtho Palm Beach", 360, 450, sizes="(max-width:700px) 60vw, 360px")}</figure>
-    <div class="nurse-copy">
-      <p class="eyebrow">Your infusion nurse</p>
-      <h2>Every drip placed by <em>Emily Bahnick, MSN, RN</em></h2>
-      <p>Emily reviews your pre-treatment screen, helps match the formula to your goals, and monitors you through the infusion — with MSN and BSN nursing degrees and more than ten years of nursing experience behind every visit.</p>
-      <a class="btn btn-navy" href="providers/emily-bahnick.html">Meet Emily</a>
-    </div>
-  </div>
 </section>
 <section class="section section-tint">
   <div class="section-head reveal"><p class="eyebrow">Patient Guide &amp; Answers</p><h2>IV therapy <em>questions</em></h2></div>
@@ -3961,8 +3895,7 @@ def build_meta():
              "patient-resources.html", "privacy-policy.html", "terms.html",
              "forms/index.html",
              "services/index.html", "blog/index.html",
-             "providers/dr-marc-matarazzo.html", "providers/dr-orlando-cedeno.html",
-             "providers/emily-bahnick.html"]
+             "providers/dr-marc-matarazzo.html", "providers/dr-orlando-cedeno.html"]
     pages += [f"forms/{f['slug']}.html" for f in FORMS]
     pages += [f"services/{s['slug']}.html" for s in SERVICES]
     pages += [f"conditions/{c['slug']}.html" for c in CONDITIONS]
@@ -3991,7 +3924,7 @@ def build_meta():
     # The lead image per page, declared to Google Images. Only pages whose hero
     # photo is a real file get an entry — a 404 in an image sitemap is worse than
     # no entry at all.
-    page_images = {"index.html": ("assets/media/og-team.jpg", OG_TEAM_ALT)}
+    page_images = {"index.html": ("assets/media/og-physicians-v1.jpg", OG_TEAM_ALT)}
     for s in SERVICES:
         page_images[f"services/{s['slug']}.html"] = (f"assets/media/{s['img']}", s["img_alt"])
     for c in CONDITIONS:
@@ -4204,7 +4137,7 @@ the plan, and most are billed through insurance where covered.
 - Email: {EMAIL}
 - Hours: {HOURS}
 - Instagram: {INSTAGRAM}
-- Specialists: Dr. Marc Matarazzo, MD (board-certified sports medicine & orthopedic surgeon, 23+ years, MAKO-certified); Dr. Orlando Cedeno, DPM (board-certified podiatric surgeon & vein specialist); Emily Bahnick, MSN, RN (IV infusion nurse & care coordinator).
+- Specialists: Dr. Marc Matarazzo, MD (board-certified sports medicine & orthopedic surgeon, 23+ years, MAKO-certified); Dr. Orlando Cedeno, DPM (board-certified podiatric surgeon & vein specialist).
 - Patient forms: {BASE}/forms — new patient intake, peptide/GLP-1 questionnaire, and IV therapy informed consent, completed privately in the browser (nothing transmitted).
 - New patients accepted; no referral required; most major insurance accepted; concierge/direct-pay bundles available.
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-  <url><loc>https://regenorthopb.com/</loc><lastmod>2026-10-05</lastmod><changefreq>weekly</changefreq><priority>1.0</priority><image:image><image:loc>https://regenorthopb.com/assets/media/og-team.jpg</image:loc><image:title>The RegenOrtho Palm Beach care team — regenerative medicine, vein care, and IV wellness specialists at the Palm Beach Gardens clinic</image:title></image:image></url>
+  <url><loc>https://regenorthopb.com/</loc><lastmod>2026-10-05</lastmod><changefreq>weekly</changefreq><priority>1.0</priority><image:image><image:loc>https://regenorthopb.com/assets/media/og-physicians-v1.jpg</image:loc><image:title>The RegenOrtho Palm Beach physicians — orthopedic, regenerative and vein care at the Palm Beach Gardens clinic</image:title></image:image></url>
   <url><loc>https://regenorthopb.com/about</loc><lastmod>2026-10-05</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://regenorthopb.com/contact</loc><lastmod>2026-10-05</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://regenorthopb.com/faq</loc><lastmod>2026-10-05</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -14,7 +14,6 @@
   <url><loc>https://regenorthopb.com/blog</loc><lastmod>2026-10-05</lastmod><changefreq>yearly</changefreq><priority>0.6</priority></url>
   <url><loc>https://regenorthopb.com/dr-marc-matarazzo-md</loc><lastmod>2026-10-05</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://regenorthopb.com/dr-orlando-cedeno-dpm</loc><lastmod>2026-10-05</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://regenorthopb.com/providers/emily-bahnick</loc><lastmod>2026-10-05</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://regenorthopb.com/forms/new-patient</loc><lastmod>2026-10-05</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>
   <url><loc>https://regenorthopb.com/forms/peptide-glp-questionnaire</loc><lastmod>2026-10-05</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>
   <url><loc>https://regenorthopb.com/forms/iv-therapy-consent</loc><lastmod>2026-10-05</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>
