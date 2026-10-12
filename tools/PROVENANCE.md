@@ -82,3 +82,29 @@ as clean for exactly that reason.
 
 Tooling: `/tmp/rw/rocheck.py` at time of writing; the jobs file maps each old URL to its
 current equivalent, since most paths changed at the rebuild.
+
+## Blog photographs (added 2026-10-12)
+
+`assets/media/blog-*.jpg` (eleven files, one per post) are **AI-generated editorial
+illustrations**, made with Everygen (Nano Banana Pro, 16:9 at 2K) and downsized to
+2000px. They replaced stock photos that were reused across posts — one of them, on the
+IV hydration post, showed a waitress at a card machine. The prompts asked for scenes
+only (lounges, labs, a pier, a tennis court, gloved hands with an ultrasound probe),
+with no text, no logos and no identifiable patient as the subject.
+
+Rules that follow from that:
+- They illustrate a topic. They are **never** a patient, a result or a before/after, and
+  their alt text (BLOG_EXTRAS in build.py) describes the scene, not a case.
+- Never caption or alt-text one as the clinic. The clinic's real interiors are
+  clinic-lounge / clinic-interior.
+- A new post from the content portal can keep using an existing photo; give it its
+  own image and BLOG_EXTRAS entry when there is time.
+
+## Service photographs (added 2026-10-12)
+
+`assets/media/svc-{exosome,msc,muse-rpa,muse-cell,sclerotherapy,ablation,phlebectomy,
+peptides,ghk-cu,kpv,tesamorelin,mots-c}.jpg` are generated the same way (3:2 at 2K).
+Before them, seven service pages shared one cells macro and four shared one vein photo,
+so 14 of 19 service pages opened on one of three pictures. Every service now has its
+own. The same rules apply: scenes only, alt text describes the scene
+(SERVICES[...]["img_alt"]), never "at RegenOrtho" as if photographed there.

@@ -322,6 +322,65 @@
     });
   }
 
+  /* ----------------------------------------------------- blog filters */
+  // Topic chips on /blog. Filtering drops .is-all from the grid so the two
+  // wide "lead" cards only exist in the unfiltered view.
+  Array.prototype.forEach.call(document.querySelectorAll("[data-post-filter]"), function (group) {
+    var grid = document.querySelector(group.getAttribute("data-post-filter"));
+    if (!grid) return;
+    var chips = Array.prototype.slice.call(group.querySelectorAll("[data-cat]"));
+    var cards = Array.prototype.slice.call(grid.querySelectorAll("[data-cat]"));
+    chips.forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        var cat = chip.getAttribute("data-cat");
+        chips.forEach(function (c) {
+          var on = c === chip;
+          c.classList.toggle("is-active", on);
+          c.setAttribute("aria-pressed", on ? "true" : "false");
+        });
+        grid.classList.toggle("is-all", cat === "all");
+        cards.forEach(function (card) {
+          card.classList.toggle("is-out", cat !== "all" && card.getAttribute("data-cat") !== cat);
+        });
+      });
+    });
+  });
+
+  /* ------------------------------------------- blog progress + contents */
+  var blProgress = document.querySelector(".bl-progress span");
+  var blProse = document.querySelector(".bl-prose");
+  if (blProgress && blProse) {
+    var blTick = false;
+    var blUpdate = function () {
+      blTick = false;
+      var r = blProse.getBoundingClientRect();
+      var total = r.height - window.innerHeight * 0.6;
+      var done = Math.min(1, Math.max(0, -r.top / (total > 0 ? total : 1)));
+      blProgress.style.setProperty("--p", done.toFixed(3));
+    };
+    window.addEventListener("scroll", function () {
+      if (!blTick) { blTick = true; window.requestAnimationFrame(blUpdate); }
+    }, { passive: true });
+    blUpdate();
+  }
+  var blToc = Array.prototype.slice.call(document.querySelectorAll(".bl-toc a"));
+  if (blToc.length && "IntersectionObserver" in window) {
+    var blById = {};
+    blToc.forEach(function (a) { blById[a.getAttribute("href").slice(1)] = a; });
+    var blObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        blToc.forEach(function (a) { a.classList.remove("is-current"); });
+        var hit = blById[e.target.id];
+        if (hit) hit.classList.add("is-current");
+      });
+    }, { rootMargin: "-12% 0px -70% 0px" });
+    Object.keys(blById).forEach(function (id) {
+      var h = document.getElementById(id);
+      if (h) blObs.observe(h);
+    });
+  }
+
   /* --------------------------------------------------------- word cycle */
   var wordStage = document.querySelector("[data-word]");
   if (wordStage) {
