@@ -42,6 +42,13 @@ Static site, 56 pages, generated — do not edit HTML files directly.
   external API, no medical advice; route unknowns to 833-783-6561. Leads deliver via
   FormSubmit (formsubmit.co/ajax/emily@regenorthopb.com) with a localStorage retry queue.
   Never put secret keys in it.
+- BLOG (redesigned 2026-10): `build_blog()` renders a magazine index (feature + topic chips
+  + a grid whose `.bl-wide` cards are chosen so rows fill) and image-led posts (split
+  header, sticky "On this page" + related-care aside, reading progress, pull quote).
+  `BLOG_EXTRAS` holds per-post pull quote / related care / photo alt; the build ASSERTS a
+  pull quote appears verbatim in the post body, so it can never become new copy. A post
+  without an entry (e.g. added by the content portal) still renders. Blog photos are
+  generated illustrations — see tools/PROVENANCE.md before reusing them anywhere.
 - `assets/js/forms.js` + `assets/css/forms.css` + `forms_content.py` — the two patient
   forms (`/forms/new-patient.html`, `/forms/peptide-glp-questionnaire.html`). Questions are
   declarative in `forms_content.py`; the renderer (`_field`/`_section`/`build_forms` in

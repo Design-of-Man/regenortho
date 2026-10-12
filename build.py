@@ -218,6 +218,18 @@ FOCAL = {
     "member-5":         "50% 13%",
     "member-6":         "55% 13%",
     "member-7":         "45% 16%",
+    # blog photographs (generated editorial illustrations — tools/PROVENANCE.md)
+    "blog-iv-hydration":   "40% 45%",
+    "blog-joint-pain":     "50% 55%",
+    "blog-prp":            "60% 40%",
+    "blog-vs-replacement": "75% 45%",
+    "blog-concierge":      "45% 45%",
+    "blog-sports":         "40% 40%",
+    "blog-regen-future":   "60% 50%",
+    "blog-healing-ultrasound": "60% 45%",
+    "blog-foot-ankle":     "45% 55%",
+    "blog-vein":           "45% 55%",
+    "blog-iv-recovery":    "45% 50%",
     # real clinic interiors
     "clinic-interior":  "50% 62%",   # top half of this frame is ceiling
     "clinic-lounge":    "45% 55%",
@@ -3954,72 +3966,304 @@ def build_forms():
 _BLOG_SEO_TITLES = {'knee-shoulder-hip-pain-without-surgery': 'Joint Pain Without Surgery | RegenOrtho Palm Beach', 'prp-therapy-knee-osteoarthritis': 'PRP for Knee Osteoarthritis | RegenOrtho Palm Beach', 'regenerative-medicine-vs-joint-replacement': 'Regeneration vs Replacement | RegenOrtho Palm Beach', 'five-pillar-concierge-orthopedic-recovery': 'Concierge Orthopedic Recovery | RegenOrtho Palm Beach', 'orthopedic-sports-medicine-pain-free-living': 'Orthopedics & Sports Medicine | RegenOrtho Palm Beach', 'regenerative-medicine-future-of-healing': 'Regenerative Medicine Explained | RegenOrtho Palm Beach', 'healing-without-surgery': 'Healing Without Surgery | RegenOrtho Palm Beach Blog', 'minimally-invasive-foot-ankle-surgery': 'Minimally Invasive Foot Surgery | RegenOrtho Palm Beach', 'modern-vein-care-varicose-spider-veins': 'Modern Varicose Vein Care | RegenOrtho Palm Beach Blog', 'iv-therapy-recovery-wellness': 'IV Therapy for Recovery | RegenOrtho Palm Beach Blog'}
 
 
+# Per-post extras for the blog templates. Keyed by slug; a post the content portal
+# adds without an entry still renders (no pull quote, related care by category).
+#   pullquote — MUST be a sentence that already appears in that post's body. The
+#               build asserts it (_assert_verbatim), so this can never become new,
+#               unapproved copy.
+#   related   — the treatment page the post is really about: (href from site
+#               root, label, photo stem, blurb). Blurbs restate published copy.
+#   alt       — what the header photo shows. The blog photographs are generated
+#               editorial illustrations (tools/PROVENANCE.md), never patients, so
+#               the alt describes the scene and never implies a case.
+BLOG_EXTRAS = {
+    "iv-hydration-in-palm-beach-gardens-what-to-expect-and-how-to-choose-a-clinic": {
+        "pullquote": "This isn't paperwork theater — it's how we determine which formulation is appropriate and whether IV therapy is a good idea for you at all.",
+        "related": "iv",
+        "alt": "A woman reclining with a laptop in a bright IV lounge, an IV bag on a stand beside her and palm trees outside the window",
+    },
+    "knee-shoulder-hip-pain-without-surgery": {
+        "pullquote": "It does not regrow a knee with bone-on-bone arthritis and deformity, and it should not be used to delay surgery that is genuinely indicated.",
+        "related": "regenerative-medicine-orthobiologics",
+        "alt": "An older couple walking hand in hand along a wooden beach pier at sunrise",
+    },
+    "prp-therapy-knee-osteoarthritis": {
+        "pullquote": "When a patient tells us PRP was tried elsewhere and did nothing, the most common explanation is that it was placed blind and never reached the target.",
+        "related": "regenerative-medicine-orthobiologics",
+        "alt": "A gloved hand holding a blood sample tube beside a laboratory centrifuge",
+    },
+    "regenerative-medicine-vs-joint-replacement": {
+        "pullquote": "You will get an honest read — including when the honest read is that surgery is the better option.",
+        "related": "mesenchymal-stem-cell-therapy",
+        "alt": "An anatomical knee model on a desk, with a knee X-ray lit on a screen behind it",
+    },
+    "five-pillar-concierge-orthopedic-recovery": {
+        "pullquote": "Recovery here is treated as one connected system, not a queue of separate procedures.",
+        "related": "concierge-care",
+        "alt": "A clinician and a patient talking across a small table in a bright consultation suite",
+    },
+    "orthopedic-sports-medicine-pain-free-living": {
+        "pullquote": "A sprain that never rehabilitates properly becomes an ankle that gives way for the next decade.",
+        "related": "advanced-non-surgical-therapies",
+        "alt": "A man hitting a forehand on a clay tennis court at sunset, palm trees behind",
+    },
+    "regenerative-medicine-future-of-healing": {
+        "pullquote": "We will tell you what is well supported, what is promising, and what is not yet proven — and we would rather do that than oversell it.",
+        "related": "exosome-therapy",
+        "alt": "Gloved hands pipetting amber liquid into small glass vials in a laboratory",
+    },
+    "healing-without-surgery": {
+        "pullquote": "For most of the last century, a badly damaged joint or tendon left you with two options: live with it, or have it cut open.",
+        "related": "regenerative-medicine-orthobiologics",
+        "alt": "A clinician scanning a patient's shoulder with an ultrasound probe, the image on a monitor behind",
+    },
+    "minimally-invasive-foot-ankle-surgery": {
+        "pullquote": "Surgery is one option among several, and frequently not the first.",
+        "related": "cedeno",
+        "alt": "Bare feet running through shallow surf on the beach at sunrise",
+    },
+    "modern-vein-care-varicose-spider-veins": {
+        "pullquote": "Today most vein care is an office appointment and you drive yourself home.",
+        "related": "vein-care",
+        "alt": "A clinician mapping the veins of a patient's leg with an ultrasound probe",
+    },
+    "iv-therapy-recovery-wellness": {
+        "pullquote": "A small line goes into the arm, you sit back in the lounge, and most sessions run 30 to 60 minutes.",
+        "related": "iv",
+        "alt": "A woman in cycling clothes resting in a recliner in a sunlit wellness lounge, an IV stand beside her",
+    },
+}
+
+# Where a post with no BLOG_EXTRAS entry points its "related care" card.
+_BLOG_CATEGORY_CARE = {
+    "Regenerative Medicine": "regenerative-medicine-orthobiologics",
+    "IV Therapy": "iv",
+    "Vein Care": "vein-care",
+    "Concierge Care": "concierge-care",
+    "Orthopedics": "advanced-non-surgical-therapies",
+    "Podiatry": "cedeno",
+}
+
+
+def _blog_related_care(key):
+    """(href-from-root, label, photo stem, blurb) for a related-care key."""
+    if key == "iv":
+        return ("iv-therapy.html", "IV Recovery &amp; Wellness Lounge", "iv-hero",
+                "Twelve clinician-supervised drips — hydration, immunity, NAD⁺ and athletic "
+                "recovery — from $189, each starting with a medical pre-screen.")
+    if key == "cedeno":
+        t = next(x for x in TEAM if x["slug"] == "dr-orlando-cedeno")
+        return ("providers/dr-orlando-cedeno.html", t["name"], "orlando-cedeno", t["short"])
+    s = next((x for x in SERVICES if x["slug"] == key), None)
+    if s is None:
+        return None
+    return (f"services/{s['slug']}.html", s["name"], s["img"].rsplit(".", 1)[0], s["lede"])
+
+
+def _plain(html_str):
+    t = html.unescape(re.sub(r"<[^>]+>", " ", html_str))
+    t = re.sub(r"\s+", " ", t)
+    # compare on straight punctuation — smart_punctuation() curls the page later
+    return (t.replace("’", "'").replace("‘", "'").replace("“", '"').replace("”", '"')).strip()
+
+
+def _assert_verbatim(slug, quote, body):
+    q = _plain(quote)
+    if q not in _plain(body):
+        raise SystemExit(f"BLOG_EXTRAS[{slug!r}] pullquote is not in the post body — "
+                         "pull quotes must be verbatim from the post.")
+
+
+def _reading_minutes(body):
+    return max(1, round(len(_plain(body).split()) / 230))
+
+
+def _anchor(text):
+    return re.sub(r"[^a-z0-9]+", "-", _plain(text).lower()).strip("-")[:60]
+
+
+_BLOG_ARROW = ('<svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" '
+               'stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg>')
+
+
+def _date_long(iso):
+    import datetime
+    d = datetime.date.fromisoformat(iso)
+    return d.strftime("%B ") + str(d.day) + d.strftime(", %Y")
+
+
 def build_blog():
     from blog_content import BLOG_POSTS
     d = 1
-    # index
-    cards = ""
-    for i, p_ in enumerate(BLOG_POSTS):
-        date_h = "{}/{}/{}".format(p_["date"][5:7], p_["date"][8:10], p_["date"][:4])
-        cards += f"""<a class="post-card reveal" href="blog/{p_['slug']}.html" style="--d:{(i % 3) * 90}ms">
-      <span class="post-media">{photo(p_["image"].rsplit(".",1)[0], p_["title"], 640, 400, prefix="../", sizes="(max-width:700px) 92vw, 380px")}</span>
-      <span class="post-tag">{p_['category']}</span>
-      <strong>{p_['title']}</strong>
-      <span class="post-date">{date_h}</span>
-      <em class="svc-more">Read article <svg viewBox="0 0 16 12" width="14" height="10" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></em>
+    posts = sorted(BLOG_POSTS, key=lambda x: x["date"], reverse=True)
+    mins = {p_["slug"]: _reading_minutes(p_["body"]) for p_ in posts}
+
+    def alt_for(p_):
+        return BLOG_EXTRAS.get(p_["slug"], {}).get("alt", p_["title"])
+
+    # ---------------------------------------------------------------- index
+    # Magazine layout: the newest post as a full-width feature, topic chips that
+    # filter in place (main.js, [data-post-filter]), then a grid whose first two
+    # cards run wide. Every sibling link spells out "blog/<slug>.html": the index
+    # is served at bare /blog, so a bare sibling would resolve against the root.
+    feat = posts[0]
+    feature_html = f"""<a class="bl-feature reveal" href="blog/{feat['slug']}.html">
+    <span class="bl-feature-media">{photo(feat["image"].rsplit(".",1)[0], alt_for(feat), 1100, 640, prefix="../", sizes="(max-width:900px) 94vw, 720px", eager=True)}</span>
+    <span class="bl-feature-body">
+      <span class="bl-kicker">Latest · {feat['category']}</span>
+      <strong>{feat['title']}</strong>
+      <span class="bl-excerpt">{feat['desc']}</span>
+      <span class="bl-meta">{_date_long(feat['date'])} · {mins[feat['slug']]} min read</span>
+      <em class="svc-more">Read the article {_BLOG_ARROW}</em>
+    </span>
+  </a>"""
+    cats = []
+    for p_ in posts:
+        if p_["category"] not in cats:
+            cats.append(p_["category"])
+    def cat_key(c):
+        return re.sub(r"[^a-z0-9]+", "-", c.lower()).strip("-")
+    chips = '<button type="button" class="drip-chip bl-chip is-active" aria-pressed="true" data-cat="all">All articles</button>' + "".join(
+        f'<button type="button" class="drip-chip bl-chip" aria-pressed="false" data-cat="{cat_key(c)}">{c} '
+        f'<span class="bl-count">{sum(1 for x in posts if x["category"] == c)}</span></button>'
+        for c in cats)
+    # Wide cards span half a row, regular ones a third. Pick an even number of
+    # wide cards (at least two, at the top) so the regular ones fill whole rows of
+    # three; any extra wide pair goes at the bottom. With the ten current posts
+    # that is 2 + 6 + 2, and the grid never ends on a half-empty row.
+    grid_posts = posts[1:]
+    n = len(grid_posts)
+    wide_n = next((w for w in range(2, n + 1, 2) if (n - w) % 3 == 0), 0)
+    wide_idx = set(range(min(2, wide_n))) | set(range(n - (wide_n - min(2, wide_n)), n))
+    cards = "".join(
+        f"""<a class="bl-card reveal{' bl-wide' if i in wide_idx else ''}" href="blog/{p_['slug']}.html" data-cat="{cat_key(p_['category'])}" style="--d:{(i % 3) * 80}ms">
+      <span class="bl-card-media">{photo(p_["image"].rsplit(".",1)[0], alt_for(p_), 640, 400, prefix="../", sizes="(max-width:700px) 92vw, (max-width:1100px) 46vw, 560px")}</span>
+      <span class="bl-card-body">
+        <span class="bl-kicker">{p_['category']}</span>
+        <strong>{p_['title']}</strong>
+        <span class="bl-excerpt">{p_['desc']}</span>
+        <span class="bl-meta">{_date_long(p_['date'])} · {mins[p_['slug']]} min read</span>
+      </span>
     </a>"""
+        for i, p_ in enumerate(grid_posts))
     crumbs_html = crumbs([("", "Blog")], depth=d)
     body = f"""{nav(d)}
 <main id="main">
-{page_hero("Blog & Insights", "Healing, Explained", "Practical, physician-reviewed writing on orthopedics, regenerative medicine, podiatry, vein care, and wellness — no hype, no jargon.", crumbs_html, depth=d)}
-<section class="section"><div class="post-grid post-grid-3">{cards}</div></section>
+{page_hero("Blog & Insights", "Healing, explained", "Plain-English writing from a Palm Beach Gardens orthopedic and regenerative practice — what treatments actually do, who they suit, and what to expect. No hype, no jargon.", crumbs_html, cta=False, depth=d, h1_lead="The RegenOrtho Palm Beach Blog")}
+<section class="section bl-index">
+  {feature_html}
+  <div class="bl-toolbar reveal">
+    <p class="eyebrow">Browse by topic</p>
+    <div class="bl-chips" role="group" aria-label="Filter articles by topic" data-post-filter="#bl-grid">{chips}</div>
+  </div>
+  <div class="bl-grid is-all" id="bl-grid">{cards}</div>
+</section>
 {cta_band(d)}
 </main>
 {footer(d)}"""
-    schema = breadcrumb_schema([("", "Home"), ("blog/index.html", "Blog")])
-    page = head("Blog | RegenOrtho Palm Beach — Orthopedic Insights",
-                "Articles from RegenOrtho Palm Beach on PRP, regenerative medicine, foot & ankle care, vein treatment, IV therapy, and staying active in South Florida.",
+    schema = (
+        extra_ld({
+            "@context": "https://schema.org", "@type": "Blog",
+            "name": f"{NAME} Blog", "url": f"{BASE}/blog/index.html",
+            "publisher": {"@id": ORG_ID},
+            "blogPost": [{"@type": "BlogPosting", "headline": p_["title"],
+                          "url": f"{BASE}/blog/{p_['slug']}.html", "datePublished": p_["date"]}
+                         for p_ in posts],
+        })
+        + breadcrumb_schema([("", "Home"), ("blog/index.html", "Blog")])
+    )
+    page = head("Blog | Regenerative & Orthopedic Care, Palm Beach Gardens",
+                "Articles from RegenOrtho Palm Beach on PRP, stem cell and regenerative medicine, vein treatment, IV therapy, foot & ankle care and staying active in South Florida.",
                 depth=d, canonical="blog/index.html", extra_schema=schema) + '<body class="page-blog">\n' + body
     write("blog/index.html", page)
 
-    # posts
-    for p_ in BLOG_POSTS:
+    # ---------------------------------------------------------------- posts
+    for p_ in posts:
+        extras = BLOG_EXTRAS.get(p_["slug"], {})
         body_html = p_["body"]
         if "<h2" not in body_html:          # ported copy that starts at h3
             body_html = re.sub(r"<(/?)h4\b", r"<\1h3", body_html)
             body_html = re.sub(r"<(/?)h3\b", r"<\1h2", body_html)
-        date_h = "{}/{}/{}".format(p_["date"][5:7], p_["date"][8:10], p_["date"][:4])
-        crumbs_html = crumbs([("blog/index.html", "Blog"), ("", p_["title"])], depth=d)
-        related = [x for x in BLOG_POSTS if x["slug"] != p_["slug"] and x["category"] == p_["category"]][:2]
+        # anchor every h2 for the "On this page" list
+        toc = []
+        def _h2(m):
+            attrs, inner = m.group(1), m.group(2)
+            aid = _anchor(inner) or f"section-{len(toc) + 1}"
+            toc.append((aid, re.sub(r"<[^>]+>", "", inner)))
+            attrs = re.sub(r'\s*id="[^"]*"', "", attrs)
+            return f'<h2 id="{aid}"{attrs}>{inner}</h2>'
+        body_html = re.sub(r"<h2([^>]*)>(.*?)</h2>", _h2, body_html, flags=re.S)
+        # pull quote, verbatim, set before the third section (or the last one)
+        if extras.get("pullquote"):
+            _assert_verbatim(p_["slug"], extras["pullquote"], p_["body"])
+            quote = (f'<figure class="bl-pull" aria-hidden="true"><blockquote><p>{extras["pullquote"]}</p></blockquote></figure>')
+            starts = [m.start() for m in re.finditer(r"<h2\b", body_html)]
+            if len(starts) >= 3:
+                at = starts[2]
+            elif len(starts) == 2:
+                at = starts[1]
+            else:
+                at = len(body_html)
+            body_html = body_html[:at] + quote + body_html[at:]
+        toc_html = "".join(f'<li><a href="#{a}">{t}</a></li>' for a, t in toc)
+        care = _blog_related_care(extras.get("related") or _BLOG_CATEGORY_CARE.get(p_["category"], "regenerative-medicine-orthobiologics"))
+        care_html = ""
+        if care:
+            href, label, stem, blurb = care
+            blurb = blurb if len(blurb) <= 150 else blurb[:150].rsplit(" ", 1)[0] + "…"
+            care_html = f"""<a class="bl-care" href="../{href}">
+        <span class="bl-care-media">{photo(stem, label, 420, 260, prefix="../", sizes="300px")}</span>
+        <span class="bl-care-body"><span class="eyebrow">Related care</span><strong>{label}</strong><span>{blurb}</span><em class="svc-more">Learn more {_BLOG_ARROW}</em></span>
+      </a>"""
+        same = [x for x in posts if x["slug"] != p_["slug"] and x["category"] == p_["category"]]
+        rest = [x for x in posts if x["slug"] != p_["slug"] and x not in same]
+        related = (same + rest)[:3]
         rel_html = "".join(
-            f"""<a class="post-card" href="{r['slug']}"><span class="post-tag">{r['category']}</span><strong>{r['title']}</strong><em class="svc-more">Read article →</em></a>"""
-            for r in related
-        )
-        rel_sec = f"""<section class="section section-tint"><div class="section-head reveal"><p class="eyebrow">Keep Reading</p><h2>Related <em>articles</em></h2></div><div class="post-grid">{rel_html}</div></section>""" if related else ""
+            f"""<a class="bl-card reveal" href="../blog/{r['slug']}.html" style="--d:{i * 80}ms">
+        <span class="bl-card-media">{photo(r["image"].rsplit(".",1)[0], alt_for(r), 640, 400, prefix="../", sizes="(max-width:700px) 92vw, 380px")}</span>
+        <span class="bl-card-body"><span class="bl-kicker">{r['category']}</span><strong>{r['title']}</strong><span class="bl-meta">{mins[r['slug']]} min read</span></span>
+      </a>"""
+            for i, r in enumerate(related))
+        crumbs_html = crumbs([("blog/index.html", "Blog"), ("", p_["title"])], depth=d)
+        toc_block = f"""<nav class="bl-toc" aria-label="On this page"><p class="eyebrow">On this page</p><ol>{toc_html}</ol></nav>""" if len(toc) >= 2 else ""
         body = f"""{nav(d)}
+<div class="bl-progress" aria-hidden="true"><span></span></div>
 <main id="main">
-<article class="post">
-  <header class="page-hero post-hero">
-    <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
-    {_hero_orbit()}
-    <div class="page-hero-inner reveal">
+<article class="post bl-post">
+  <header class="bl-hero">
+    <div class="bl-hero-copy">
       {crumbs_html}
-      <p class="eyebrow">{p_['category']} · {date_h}</p>
+      <p class="bl-kicker bl-kicker-light"><a href="../blog/index.html">{p_['category']}</a></p>
       <h1>{p_['title']}</h1>
-      <p class="lede">By the RegenOrtho Palm Beach care team</p>
+      <p class="bl-hero-lede">{p_['desc']}</p>
+      <p class="bl-byline"><span>By the {NAME} care team</span><span>{_date_long(p_['date'])}</span><span>{mins[p_['slug']]} min read</span></p>
     </div>
+    <figure class="bl-hero-media">{photo(p_["image"].rsplit(".",1)[0], alt_for(p_), 1400, 900, prefix="../", sizes="(max-width:900px) 100vw, 50vw", eager=True)}</figure>
   </header>
-  <div class="post-body">
-    <figure class="post-figure reveal">{photo(p_["image"].rsplit(".",1)[0], p_["title"], 1100, 620, prefix="../", sizes="(max-width:900px) 94vw, 900px", eager=True)}</figure>
-    {body_html}
-    <div class="post-cta sym-card">
-      <h2>Talk to the team</h2>
-      <p>Questions about whether this applies to you? Book a consultation or call <a href="tel:{PHONE_TEL}" data-call-location="blog_cta">{PHONE_VANITY} · {PHONE_DISPLAY}</a>.</p>
-      <a class="btn btn-gold" href="../contact.html#book">Book a Consultation</a>
+  <div class="bl-layout">
+    <div class="bl-prose">
+      {f'<details class="bl-toc-mobile"><summary>On this page</summary><ol>{toc_html}</ol></details>' if len(toc) >= 2 else ''}
+      {body_html}
+      <aside class="bl-endcard">
+        <p class="eyebrow">Talk to the team</p>
+        <h2>Does this apply to <em>you</em>?</h2>
+        <p>The quickest way to find out is a consultation. Call <a href="tel:{PHONE_TEL}" data-call-location="blog_cta">{PHONE_VANITY} · {PHONE_DISPLAY}</a> or book online — same-week visits are usually available.</p>
+        <a class="btn btn-gold" href="../contact.html#book">Book a Consultation</a>
+      </aside>
     </div>
+    <aside class="bl-aside">
+      <div class="bl-aside-sticky">
+        {toc_block}
+        {care_html}
+      </div>
+    </aside>
   </div>
 </article>
-{rel_sec}
+<section class="section section-tint bl-related">
+  <div class="section-head reveal"><p class="eyebrow">Keep reading</p><h2>More from the <em>blog</em></h2></div>
+  <div class="bl-grid bl-grid-3">{rel_html}</div>
+  <p class="section-foot reveal"><a class="btn btn-navy" href="../blog/index.html">All articles</a></p>
+</section>
 {cta_band(d)}
 </main>
 {footer(d)}"""
@@ -4037,6 +4281,9 @@ def build_blog():
                 "url": f"{BASE}/blog/{p_['slug']}.html",
                 "inLanguage": "en-US",
                 "isAccessibleForFree": True,
+                "wordCount": len(_plain(p_["body"]).split()),
+                "timeRequired": f"PT{mins[p_['slug']]}M",
+                "articleSection": p_["category"],
                 "author": {"@type": "Organization", "name": NAME, "@id": ORG_ID},
                 "publisher": {"@id": ORG_ID},
                 "mainEntityOfPage": f"{BASE}/blog/{p_['slug']}.html",
