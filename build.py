@@ -4330,6 +4330,21 @@ def build_forms():
         write(f"forms/{f['slug']}.html", page)
 
 
+def _blog_seo_title(title):
+    """<title> for a post with no _BLOG_SEO_TITLES entry (i.e. one the content
+    portal added). A hard [:60] slice cut both portal posts mid-word ("...Who They
+    Hel", "...and How t"), and that is what showed in search results. Fit the
+    brand suffix if it fits, else keep the part before a subtitle colon, else
+    trim at a word boundary."""
+    for cand in (f"{title} | RegenOrtho Palm Beach", f"{title} | RegenOrtho", title):
+        if len(cand) <= 60:
+            return cand
+    main = title.split(": ")[0]
+    if main != title:
+        return _blog_seo_title(main)
+    return title[:61].rsplit(" ", 1)[0].rstrip(",;:–—-")
+
+
 _BLOG_SEO_TITLES = {'knee-shoulder-hip-pain-without-surgery': 'Joint Pain Without Surgery | RegenOrtho Palm Beach', 'prp-therapy-knee-osteoarthritis': 'PRP for Knee Osteoarthritis | RegenOrtho Palm Beach', 'regenerative-medicine-vs-joint-replacement': 'Regeneration vs Replacement | RegenOrtho Palm Beach', 'five-pillar-concierge-orthopedic-recovery': 'Concierge Orthopedic Recovery | RegenOrtho Palm Beach', 'orthopedic-sports-medicine-pain-free-living': 'Orthopedics & Sports Medicine | RegenOrtho Palm Beach', 'regenerative-medicine-future-of-healing': 'Regenerative Medicine Explained | RegenOrtho Palm Beach', 'healing-without-surgery': 'Healing Without Surgery | RegenOrtho Palm Beach Blog', 'minimally-invasive-foot-ankle-surgery': 'Minimally Invasive Foot Surgery | RegenOrtho Palm Beach', 'modern-vein-care-varicose-spider-veins': 'Modern Varicose Vein Care | RegenOrtho Palm Beach Blog', 'iv-therapy-recovery-wellness': 'IV Therapy for Recovery | RegenOrtho Palm Beach Blog'}
 
 
@@ -4657,7 +4672,7 @@ def build_blog():
             })
             + breadcrumb_schema([("", "Home"), ("blog/index.html", "Blog"), (f"blog/{p_['slug']}.html", p_["title"])])
         )
-        page = head(_BLOG_SEO_TITLES.get(p_["slug"], f"{p_['title']} | RegenOrtho Palm Beach"[:60]),
+        page = head(_BLOG_SEO_TITLES.get(p_["slug"]) or _blog_seo_title(p_["title"]),
                     p_["desc"], depth=d, canonical=f"blog/{p_['slug']}.html",
                     og_image=f"assets/media/{p_['image']}",
                     page_type="article", extra_schema=schema) + '<body class="page-post">\n' + body
