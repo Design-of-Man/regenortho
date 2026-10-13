@@ -982,6 +982,42 @@ def clean_url_map():
     return m
 
 
+def sync_vercel_clean_urls():
+    """Add the vercel.json rewrite + redirect pair for any clean URL that lacks one.
+
+    rewrite_links() points every internal link, canonical and sitemap <loc> at the
+    clean URL, but only vercel.json makes that URL resolve. The content portal adds
+    a post to blog_content.py and nothing else, so its clean URL 404'd (the HA knee
+    injection post, 2026-10-12, linked from 13 pages and the sitemap) until a pair
+    was hand-added. This only ever APPENDS a missing pair; it never edits, reorders
+    or removes an existing rule, so the www rules stay first and the hand-written
+    WordPress redirects are untouched. A rule whose source exists but points
+    somewhere else is reported, not overwritten.
+    """
+    path = os.path.join(ROOT, "vercel.json")
+    with open(path, encoding="utf-8") as f:
+        cfg = json.load(f)
+    rewrites = {r["source"]: r["destination"] for r in cfg.get("rewrites", [])}
+    redirects = {r["source"]: r["destination"] for r in cfg.get("redirects", [])}
+    added = []
+    for real, clean in clean_url_map().items():
+        src_clean, src_real = "/" + clean, "/" + real
+        if src_clean not in rewrites:
+            cfg["rewrites"].append({"source": src_clean, "destination": src_real})
+            added.append(f"rewrite  {src_clean} -> {src_real}")
+        elif rewrites[src_clean] != src_real:
+            print(f"  WARNING vercel.json rewrite {src_clean} -> {rewrites[src_clean]}, expected {src_real}")
+        if src_real not in redirects:
+            cfg["redirects"].append({"source": src_real, "destination": src_clean, "permanent": True})
+            added.append(f"redirect {src_real} -> {src_clean}")
+        elif redirects[src_real] != src_clean:
+            print(f"  WARNING vercel.json redirect {src_real} -> {redirects[src_real]}, expected {src_clean}")
+    if added:
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(json.dumps(cfg, indent=2, ensure_ascii=False) + "\n")
+        print("  vercel.json: added " + "; ".join(added))
+
+
 def rewrite_links(content):
     """Rewrite every rendered .html path to its clean canonical equivalent.
 
@@ -4294,6 +4330,21 @@ def build_forms():
         write(f"forms/{f['slug']}.html", page)
 
 
+def _blog_seo_title(title):
+    """<title> for a post with no _BLOG_SEO_TITLES entry (i.e. one the content
+    portal added). A hard [:60] slice cut both portal posts mid-word ("...Who They
+    Hel", "...and How t"), and that is what showed in search results. Fit the
+    brand suffix if it fits, else keep the part before a subtitle colon, else
+    trim at a word boundary."""
+    for cand in (f"{title} | RegenOrtho Palm Beach", f"{title} | RegenOrtho", title):
+        if len(cand) <= 60:
+            return cand
+    main = title.split(": ")[0]
+    if main != title:
+        return _blog_seo_title(main)
+    return title[:61].rsplit(" ", 1)[0].rstrip(",;:–—-")
+
+
 _BLOG_SEO_TITLES = {'knee-shoulder-hip-pain-without-surgery': 'Joint Pain Without Surgery | RegenOrtho Palm Beach', 'prp-therapy-knee-osteoarthritis': 'PRP for Knee Osteoarthritis | RegenOrtho Palm Beach', 'regenerative-medicine-vs-joint-replacement': 'Regeneration vs Replacement | RegenOrtho Palm Beach', 'five-pillar-concierge-orthopedic-recovery': 'Concierge Orthopedic Recovery | RegenOrtho Palm Beach', 'orthopedic-sports-medicine-pain-free-living': 'Orthopedics & Sports Medicine | RegenOrtho Palm Beach', 'regenerative-medicine-future-of-healing': 'Regenerative Medicine Explained | RegenOrtho Palm Beach', 'healing-without-surgery': 'Healing Without Surgery | RegenOrtho Palm Beach Blog', 'minimally-invasive-foot-ankle-surgery': 'Minimally Invasive Foot Surgery | RegenOrtho Palm Beach', 'modern-vein-care-varicose-spider-veins': 'Modern Varicose Vein Care | RegenOrtho Palm Beach Blog', 'iv-therapy-recovery-wellness': 'IV Therapy for Recovery | RegenOrtho Palm Beach Blog'}
 
 
@@ -4621,7 +4672,7 @@ def build_blog():
             })
             + breadcrumb_schema([("", "Home"), ("blog/index.html", "Blog"), (f"blog/{p_['slug']}.html", p_["title"])])
         )
-        page = head(_BLOG_SEO_TITLES.get(p_["slug"], f"{p_['title']} | RegenOrtho Palm Beach"[:60]),
+        page = head(_BLOG_SEO_TITLES.get(p_["slug"]) or _blog_seo_title(p_["title"]),
                     p_["desc"], depth=d, canonical=f"blog/{p_['slug']}.html",
                     og_image=f"assets/media/{p_['image']}",
                     page_type="article", extra_schema=schema) + '<body class="page-post">\n' + body
@@ -4680,6 +4731,15 @@ def build_legal_and_404():
                 "The page you're looking for could not be found. Explore RegenOrtho Palm Beach services, conditions, and booking.",
                 depth=0, canonical="404.html") + '<body class="page-404">\n' + body
     write("404.html", page)
+    # Vercel serves 404.html AT the missing URL, so a depth-0 relative path
+    # ("assets/css/styles.css", "about") resolves under whatever directory the
+    # bad URL was in — /blog/typo got an unstyled page whose every link pointed
+    # into /blog/. Root every relative href/src once links are already clean.
+    full = os.path.join(ROOT, "404.html")
+    with open(full) as f:
+        rooted = re.sub(r'\b(href|src)="(?![a-z][a-z0-9+.-]*:|/|#)', r'\1="/', f.read())
+    with open(full, "w") as f:
+        f.write(rooted)
 
 
 # ---------------------------------------------------------------------------
@@ -5007,6 +5067,7 @@ def main():
     build_blog()
     build_legal_and_404()
     build_meta()
+    sync_vercel_clean_urls()
     if SHARE_BASE != BASE:
         print(f"\nNOTE: share cards (og:image) point at {SHARE_BASE}, not {BASE}.")
         print("      Once regenorthopb.com resolves to Vercel, set SHARE_BASE = BASE and rebuild.")
