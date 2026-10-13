@@ -90,6 +90,13 @@ Static site, 56 pages, generated — do not edit HTML files directly.
   FormSubmit lead inbox — the owner said keep it for now. Changing it is a two-file change
   (build.py EMAIL/FORM_TARGET_EMAIL + assets/js/assist.js) and needs FormSubmit's one-time
   activation click from the new inbox, or leads hold undelivered.
+- Elite Sports Medicine (elitesportsmed.org, 561-202-8886, Dr. Matarazzo's own orthopedic
+  practice) operates INSIDE RegenOrtho's suite at 11380 Prosperity Farms Rd, and has its own
+  Google Business Profile at that address. That is legitimate co-location (Google allows a
+  separate profile per brand at one address), not a duplicate — never recommend removing or
+  merging it, and expect his directory profiles (Healthgrades etc.) to carry Elite's phone.
+  The two profiles compete in Maps when their categories overlap, so keep them distinct:
+  Elite owns "Orthopedic surgeon"; RegenOrtho should lead on what Elite does not offer.
 - Palm Beach Gardens deliberately has NO location page — the homepage owns that keyword;
   8 nearby cities have /locations/ pages, linked in the header dropdown + footer.
 
