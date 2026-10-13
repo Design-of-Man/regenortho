@@ -246,7 +246,12 @@
       { label: "IV Lounge menu", go: function () { location.href = root + "iv-therapy.html"; } },
       { label: "Call " + PHONE, go: function () {
           try {
-            if (window.va) {
+            /* RGLead (main.js) sends both the Vercel click_to_call and the GA4
+               call_click; the bare window.va call only reached Vercel, so calls
+               placed from the assistant never counted as a GA4 key event. */
+            if (window.RGLead) {
+              window.RGLead.track("click_to_call", "call_click", { path: location.pathname, location: "assistant" });
+            } else if (window.va) {
               window.va("event", { name: "click_to_call", data: { path: location.pathname, location: "assistant" } });
             }
           } catch (err) {}

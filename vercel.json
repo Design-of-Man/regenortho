@@ -687,6 +687,11 @@
       "source": "/services/microphlebectomy.html",
       "destination": "/services/microphlebectomy",
       "permanent": true
+    },
+    {
+      "source": "/blog/hyaluronic-acid-knee-injections-in-jupiter-fl-who-they-help-and-what-to-expect.html",
+      "destination": "/blog/hyaluronic-acid-knee-injections-in-jupiter-fl-who-they-help-and-what-to-expect",
+      "permanent": true
     }
   ],
   "headers": [
@@ -939,6 +944,10 @@
     {
       "source": "/services/microphlebectomy",
       "destination": "/services/microphlebectomy.html"
+    },
+    {
+      "source": "/blog/hyaluronic-acid-knee-injections-in-jupiter-fl-who-they-help-and-what-to-expect",
+      "destination": "/blog/hyaluronic-acid-knee-injections-in-jupiter-fl-who-they-help-and-what-to-expect.html"
     }
   ]
 }
