@@ -1,3 +1,13 @@
 # Kept out of the deploy: Vercel serves this repo root as the static site,
 # so anything here would be public at regenorthopb.com/<path>.
 tools/
+# Added 2026-10-14: these were being served publicly (checked: /CLAUDE.md, /build.py,
+# /blog_content.py, /forms_content.py and /.github/workflows/rebuild.yml all returned 200).
+# None holds a secret, but the audits in docs/ discuss NPPES records, Google profile
+# attributes and billing questions, and none of it is meant for the public web. The site
+# itself is the generated .html plus assets/, pricing.md, llms.txt, robots.txt, sitemap.xml,
+# site.webmanifest and the IndexNow key file, none of which is excluded here.
+docs/
+CLAUDE.md
+*.py
+.github/
