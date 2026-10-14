@@ -90,8 +90,8 @@ Not changed, deliberately: statute text, `/forms/*`, the lead inbox address, any
 1. **GA4: mark `generate_lead`, `call_click` and `appointment_cta` as key events** (Admin, Events).
    Optionally turn off Enhanced measurement, "Form interactions", so the automatic `form_submit`
    stops muddying the custom one.
-2. **Google Business Profile categories**: approve the proposal in `docs/COWORK-LOCAL-FIXES.md`
-   task 1, then run the Cowork task.
+2. **Google Business Profile categories**: proposal approved 2026-10-14. Run
+   `docs/COWORK-LOCAL-FIXES.md` task 1 to apply it.
 3. **Confirm Friday hours** (profile says 2 PM, site says 5 PM), IVIG (offered or not), the
    "Black-owned" and "Veteran-owned" attributes, and Suite "204" vs "204-208".
 4. **Ask for reviews** from every satisfied patient, using the profile link. No incentives.

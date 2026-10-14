@@ -45,13 +45,18 @@ TASKS
 1. Google Business Profile, categories. Open the RegenOrtho Palm Beach profile (business.google.com
    or "Edit profile" in Search). Write down the current primary and additional categories. Then,
    in the category picker, search "regenerative", "stem cell", "pain", "weight loss" and "vein" and
-   list every category that exists for each search. Do not change anything yet: show me the list
-   and this proposal, and wait for my yes:
+   list every category that exists for each search, and put both lists in your log. Nick APPROVED
+   the change below on 2026-10-14, so apply it without waiting for another yes:
    - remove "Orthopedic surgeon" and "Sports medicine clinic" (ELITE's categories) and
      "Podiatrist" (Abacoa's primary category);
    - primary: a regenerative or stem cell category if one exists, otherwise keep "Medical clinic";
    - keep "IV therapy service"; add "Weight loss service" if it exists;
-   - remove "Medical spa" and "Esthetics service" unless I tell you the practice offers aesthetics.
+   - remove "Medical spa" and "Esthetics service" (the site lists no aesthetic services);
+   - add no vein category (which brand owns vein searches in Maps is still an open question).
+   Stop and ask only if the current categories differ from the ones listed in
+   docs/LOCAL-AUTHORITY-AUDIT-2026-10.md section 4, or if more than one regenerative or stem cell
+   category exists and you would have to choose between them. After saving, log the final primary
+   and additional categories.
 
 2. Google Business Profile, services. Remove the service item "IVIG (Intravenous Immunoglobulin)".
    [needs answer first: Nick confirms IVIG is not offered]. Then compare the remaining services

@@ -76,7 +76,8 @@ same category. Today they do:
 RegenOrtho should lead on what ELITE and Abacoa do not offer: regenerative (cellular, exosome,
 PRP) care, IV therapy, peptides and medical weight loss.
 
-Recommended (owner approval needed; Cowork makes the change):
+Recommended. **Approved by Nick on 2026-10-14**, including removing Medical spa and Esthetics
+service; Cowork task 1 makes the change. Vein stays open (last bullet):
 - **Remove** Orthopedic surgeon and Sports medicine clinic (ELITE's) and Podiatrist (Abacoa's).
 - **Primary category:** search the GBP category picker for "regenerative", "stem cell" and "pain".
   If a regenerative or stem cell category exists, make it primary; otherwise keep Medical clinic.
