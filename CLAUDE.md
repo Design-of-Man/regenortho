@@ -62,9 +62,20 @@ Static site, 56 pages, generated — do not edit HTML files directly.
   renders under the header on the six `FL_NOTICE_PAGES`. Its size is the single CSS token
   `--fl-notice-size`; the statute says "no smaller than the largest type size used in
   the advertisement", and whether that means the H1 is the practice's attorney's call.
+- /glossary (`build_glossary()`, `GLOSSARY` in build.py): one list renders the visible <dl> and the
+  DefinedTermSet JSON-LD. Definitions restate the site's own copy only; it carries the Florida
+  notice and REGEN_DISCLAIMER verbatim. /iv-therapy's "which drip for which goal" table is
+  `IV_GOALS`, a re-sort of `IV_MENU` (the build asserts every named drip exists).
 - /pricing (`build_pricing()`, served via vercel.json rewrite) is the human twin of
   /pricing.md: same constants, so they cannot disagree. Its FAQs (`pricing_faqs()`)
   restate only published figures; the visible list and FAQPage schema are one list.
+- Physician nodes are `["Physician","Person"]` with `@id` `{url}#physician`, `givenName`/
+  `familyName`/`honorificSuffix`, `alternateName` (legal name forms from NPPES; never "Mark", which
+  other people share), `worksFor` = this org plus the doctor's sister-practice org node, and the NPI
+  (and, for Dr. Matarazzo, Florida license ME85839) both in `identifier` and printed on the page's
+  credentials card. Identities are split on purpose: elitesportsmed.org owns Dr. Matarazzo's
+  surgical identity and Abacoa (jupiterlaser.com) owns podiatry; the profile titles here lead with
+  regenerative care and vein care. Do not retitle them back to "Orthopedic Surgeon"/"Podiatrist".
 - Physician schema carries `sameAs` + NPI `identifier` from `_PROVIDER_PROFILES`. Every
   URL there was fetched and verified as the right person; there are several Mark
   Matarazzos online, so never add one from a search result unchecked.
@@ -191,6 +202,12 @@ CSS coastline scene stays underneath as the no-video fallback. asset_v() returns
 "pending" for missing files so builds work before renditions land.
 
 ## SEO — keep maximized
+- **START HERE for SEO and growth work: `docs/seo-kit/README.md`** indexes the October 2026
+  takeover audits (growth plan, Search Console deep dive, local authority audit, Cowork prompt,
+  competitor teardown) with the status of each. Re-read dates are in the deep dive.
+- Search Console brand regex: `matarazzo|cedeno|cedano|cedeño|regen ?ortho|bahnick|prosperity farms`.
+  "palmbeachregen" is NOT our brand: it is an unrelated West Palm Beach practice with a similar
+  name. Never name, contact or report it; never use "Palm Beach Regen" for this practice.
 - `BASE` (top of build.py) is `https://regenorthopb.com` — non-www, no trailing .html. This is
   the ONE canonical host+style for the whole site: rel=canonical, og:url, every schema @id/url,
   and the sitemap all derive from it. Non-www because the best-ranking pages (the two doctor
@@ -337,6 +354,13 @@ CSS coastline scene stays underneath as the no-video fallback. asset_v() returns
   Sharing Debugger / a fresh URL rather than assuming it did not work.
 
 ## Analytics
+- Confirmed leads fire `form_submit` to Vercel and BOTH `form_submit` and `generate_lead` to GA4
+  (main.js `leadEvent`). GA4's enhanced measurement emits its own automatic `form_submit` on every
+  submit attempt, so in GA4 only `generate_lead` means "delivered". Mark `generate_lead`,
+  `call_click` and `appointment_cta` as key events in GA4.
+- `contact#book` targets the form's own heading (`<h2 id="book">`), not the section: on phones the
+  contact details stack above the form. The mobile Call pill and the assistant launcher fade out
+  (`body.cta-yield`, main.js) while any `main form [type=submit]` is on screen; neither moves.
 - Vercel Web Analytics (cookieless, no consent banner) is emitted by `footer()` on every
   page EXCEPT `/forms/*` — those three pages pass `analytics=False` per the HIPAA rule
   below. Never widen the exclusion away or add any other tracker to form pages.

@@ -436,7 +436,17 @@
       if (window.va) window.va("event", { name: vercelName, data: data || {} });
     } catch (err) {}
     try {
-      if (typeof window.gtag === "function") window.gtag("event", gaName, data || {});
+      if (typeof window.gtag === "function") {
+        window.gtag("event", gaName, data || {});
+        /* A confirmed lead is ALSO sent as GA4's recommended generate_lead.
+           GA4's enhanced measurement fires its own automatic "form_submit" on
+           every submit attempt, failed sends included, under the very same
+           name, so the GA4 form_submit count mixes the two. generate_lead is
+           only ever sent from here, after FormSubmit confirms delivery: that
+           is the event to mark as a key event in GA4. Vercel keeps
+           form_submit alone (it has no automatic event to collide with). */
+        if (gaName === "form_submit") window.gtag("event", "generate_lead", data || {});
+      }
     } catch (err) {}
   }
 
@@ -479,6 +489,24 @@
   /* Exposed so contact-form.js can report the completed submit through the
      same guarded path instead of re-implementing the window.va/gtag dance. */
   window.RGLead = { track: leadEvent };
+
+  /* ------------------------------- sticky CTAs yield to a form's submit
+     The mobile Call pill (bottom-left) and the assistant launcher
+     (bottom-right) are fixed to the bottom corners. Measured at 393px on
+     /contact, both sat on top of the "Book Appointment" button whenever it
+     was scrolled to the bottom of the screen. While any on-page submit
+     button is in view they fade out; neither moves (see CLAUDE.md). */
+  var submits = document.querySelectorAll("main form [type=submit]");
+  if (submits.length && "IntersectionObserver" in window) {
+    var showing = new Set();
+    var yieldIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) showing.add(en.target); else showing.delete(en.target);
+      });
+      document.body.classList.toggle("cta-yield", showing.size > 0);
+    }, { rootMargin: "0px 0px 0px 0px", threshold: 0 });
+    submits.forEach(function (b) { yieldIO.observe(b); });
+  }
 
   /* ------------------------------------------- assistant deep-link hook */
   document.querySelectorAll("[data-open-assist]").forEach(function (btn) {

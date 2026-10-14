@@ -58,6 +58,9 @@ Palm Beach Gardens (clinic location) plus:
 ## Published pricing
 Pricing page (every published price, insurance & payment): https://regenorthopb.com/pricing
 Machine-readable pricing (all figures, plus what is deliberately unpriced): https://regenorthopb.com/pricing.md
+
+## Patient glossary
+Plain-language definitions of the treatment terms used on this site (PRP, exosomes, Wharton's jelly, MUSE cells, peptides, NAD+, GLP-1, vein procedures), each linked to its treatment page: https://regenorthopb.com/glossary
 Only the prices below are published; everything else is quoted at consultation.
 - Medical Weight Loss & GLP-1: plans start at $239/month.
 - Peptide Therapy: programs start at $249/month.
