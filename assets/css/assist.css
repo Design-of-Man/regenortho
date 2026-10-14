@@ -17,7 +17,7 @@
 }
 @keyframes rgaPing { 70% { box-shadow: 0 0 0 11px rgba(253, 201, 41, 0); } 100% { box-shadow: 0 0 0 0 rgba(253, 201, 41, 0); } }
 body.nav-locked .rga-launch { display: none; }
-/* fades (does not move) while a form's submit button is on screen — see main.js */
+/* fades (does not move) while a form's submit button is on screen; see main.js */
 body.cta-yield .rga-launch { opacity: 0; visibility: hidden; pointer-events: none; }
 
 .rga-panel {

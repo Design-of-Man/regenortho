@@ -1716,7 +1716,7 @@ address { font-style: normal; line-height: 1.5; }
   text-decoration: none; box-shadow: 0 12px 30px -8px rgba(4, 16, 31, .5);
 }
 body.nav-locked .mobile-call { display: none !important; }
-/* fades (does not move) while a form's submit button is on screen — see main.js */
+/* fades (does not move) while a form's submit button is on screen; see main.js */
 .mobile-call { transition: opacity .2s, visibility .2s; }
 body.cta-yield .mobile-call { opacity: 0; visibility: hidden; pointer-events: none; }
 
