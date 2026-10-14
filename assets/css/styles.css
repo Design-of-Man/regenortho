@@ -1716,6 +1716,9 @@ address { font-style: normal; line-height: 1.5; }
   text-decoration: none; box-shadow: 0 12px 30px -8px rgba(4, 16, 31, .5);
 }
 body.nav-locked .mobile-call { display: none !important; }
+/* fades (does not move) while a form's submit button is on screen — see main.js */
+.mobile-call { transition: opacity .2s, visibility .2s; }
+body.cta-yield .mobile-call { opacity: 0; visibility: hidden; pointer-events: none; }
 
 /* ------------------------------ responsive ------------------------------- */
 
@@ -1922,3 +1925,39 @@ body.nav-locked .mobile-call { display: none !important; }
   line-height: var(--lh-normal);
   color: var(--text-muted);
 }
+
+/* NPI / license line on a provider's credentials card (mirrors the Physician schema) */
+.provider-ids { margin: .9rem 0 0; font-size: var(--t-xs); letter-spacing: .02em; color: var(--muted); }
+
+/* "Which drip for which goal" table on /iv-therapy (rows generated from IV_MENU) */
+.goal-table-wrap { max-width: 960px; margin: 0 auto; overflow-x: auto; -webkit-overflow-scrolling: touch;
+  background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--r-md); }
+.goal-table { width: 100%; border-collapse: collapse; font-size: var(--t-sm); line-height: 1.5; color: var(--ink); }
+.goal-table th, .goal-table td { text-align: left; vertical-align: top; padding: .85rem 1rem; border-bottom: 1px solid var(--line); }
+.goal-table tbody tr:last-child th, .goal-table tbody tr:last-child td { border-bottom: 0; }
+.goal-table thead th { font-size: var(--t-xs); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.goal-table tbody th { font-weight: 700; }
+.goal-table a { color: var(--navy-800); font-weight: 700; text-underline-offset: 3px; }
+.goal-table .goal-price { color: var(--bronze-text); font-weight: 700; white-space: nowrap; }
+.goal-table td:last-child { color: var(--muted); }
+/* stays a real table on phones (block-display tables lose their semantics in
+   VoiceOver); tighter cells, and the wrapper scrolls if a row ever overflows */
+@media (max-width: 600px) {
+  .goal-table { font-size: var(--t-xs); }
+  .goal-table th, .goal-table td { padding: .7rem .6rem; }
+}
+
+/* ------------------------------ glossary --------------------------------- */
+.gloss-wrap { max-width: 860px; margin: 0 auto; }
+.gloss-jump ul { list-style: none; display: flex; flex-wrap: wrap; gap: .4rem; margin: 0 0 1.6rem; padding: 0; }
+.gloss-jump a { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px;
+  border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface-raised);
+  color: var(--navy-800); font-weight: 800; text-decoration: none; }
+.gloss-jump a:hover, .gloss-jump a:focus-visible { border-color: var(--navy-800); }
+.gloss-letter { font-size: var(--t-2xl); margin: 2rem 0 .4rem; color: var(--bronze-text); }
+.gloss-list { margin: 0; }
+.gloss-item { padding: 1rem 0; border-bottom: 1px solid var(--line); }
+.gloss-item dt { font-weight: 800; font-size: var(--t-lg); color: var(--ink); }
+.gloss-item dd { margin: .35rem 0 0; color: var(--ink); line-height: 1.6; }
+.gloss-more { white-space: nowrap; font-weight: 700; color: var(--navy-800); text-underline-offset: 3px; }
+.gloss-fine { margin-top: 2rem; font-size: var(--t-xs); color: var(--muted); line-height: 1.6; }

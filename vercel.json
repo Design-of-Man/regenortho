@@ -265,12 +265,12 @@
     },
     {
       "source": "/our-services/podiatric-medicine-foot-ankle-surgery",
-      "destination": "https://jupiterlaser.com/ankle/",
+      "destination": "https://jupiterlaser.com/services/foot-ankle-surgery/",
       "permanent": true
     },
     {
       "source": "/services/podiatric-medicine-foot-ankle-surgery.html",
-      "destination": "https://jupiterlaser.com/ankle/",
+      "destination": "https://jupiterlaser.com/services/foot-ankle-surgery/",
       "permanent": true
     },
     {
@@ -345,12 +345,12 @@
     },
     {
       "source": "/conditions/foot-ankle-pain.html",
-      "destination": "https://jupiterlaser.com/ankle/",
+      "destination": "https://jupiterlaser.com/services/foot-ankle-surgery/",
       "permanent": true
     },
     {
       "source": "/conditions/plantar-fasciitis.html",
-      "destination": "https://jupiterlaser.com/plantar-fasciitis/",
+      "destination": "https://jupiterlaser.com/conditions/plantar-fasciitis/",
       "permanent": true
     },
     {
@@ -692,6 +692,11 @@
       "source": "/blog/hyaluronic-acid-knee-injections-in-jupiter-fl-who-they-help-and-what-to-expect.html",
       "destination": "/blog/hyaluronic-acid-knee-injections-in-jupiter-fl-who-they-help-and-what-to-expect",
       "permanent": true
+    },
+    {
+      "source": "/glossary.html",
+      "destination": "/glossary",
+      "permanent": true
     }
   ],
   "headers": [
@@ -948,6 +953,10 @@
     {
       "source": "/blog/hyaluronic-acid-knee-injections-in-jupiter-fl-who-they-help-and-what-to-expect",
       "destination": "/blog/hyaluronic-acid-knee-injections-in-jupiter-fl-who-they-help-and-what-to-expect.html"
+    },
+    {
+      "source": "/glossary",
+      "destination": "/glossary.html"
     }
   ]
 }

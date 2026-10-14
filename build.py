@@ -957,6 +957,7 @@ def clean_url_map():
         "iv-therapy.html": "iv-therapy",
         "faq.html": "faq",
         "pricing.html": "pricing",
+        "glossary.html": "glossary",
         "contact.html": "contact",
         "patient-resources.html": "patient-resources",
         "privacy-policy.html": "privacy-policy",
@@ -1116,6 +1117,25 @@ IV_MENU = [
     {"name": 'Athletic Recovery & Performance (Myers + Amino-6)', "short": "Athletic Recovery", "cat": "recovery", "ingredients": "Myers’ cocktail · Amino-6", "price": 225, "bag": "bag-athletic.png", "desc": 'Rebuilds and refuels muscles with amino acids and electrolytes to enhance performance, reduce soreness, and accelerate recovery.'},
     {"name": 'Neuro Restore', "short": "Neuro Restore", "cat": "wellness", "ingredients": "Cognitive &amp; nerve support", "price": 231, "bag": "bag-nad.png", "desc": 'Antioxidant and nerve support with Alpha Lipoic Acid (ALA) and Vitamin B12 to help promote healthy nerve function and neurological wellness.'},
     {"name": 'All-Inclusive', "short": "All-Inclusive", "cat": "wellness", "ingredients": "Every add-in on the menu", "price": 399, "bag": "bag-all-inclusive.png", "desc": 'Comprehensive full-body infusion delivering vitamins, minerals, amino acids, antioxidants, and hydration for total wellness optimization.'},
+]
+
+# "Which drip for which goal" on /iv-therapy. Search Console (2026-07-14 to 10-11)
+# shows 115 IV queries and 1,475 impressions, nearly all goal-shaped ("iv therapy
+# for recovery", "hydration drip", "hangover iv", "iv therapy for energy") with 0
+# clicks; the page listed the drips but never answered "which one is for X". Every
+# row is a re-sort of IV_MENU: the drip names, ingredients and prices are read from
+# it, and each goal is the one that drip's own published description names. Do not
+# add a goal no drip description states.
+IV_GOALS = [
+    ("Recovery after training or surgery", ["Recovery", "Athletic Recovery"]),
+    ("Hydration", ["Hydration"]),
+    ("Hangover", ["Hangover"]),
+    ("Immune support", ["Immune Boost", "Myers’ PLUS"]),
+    ("Energy and focus", ["Performance", "NAD⁺ 500 mg"]),
+    ("Skin, hair and nails", ["Beauty &amp; Glow"]),
+    ("Detox", ["Cleanse"]),
+    ("Nerve support", ["Neuro Restore"]),
+    ("Everything at once", ["All-Inclusive"]),
 ]
 
 # Shared across the five regenerative modality pages. All of these are quoted
@@ -3389,15 +3409,21 @@ CEDENO_BIO = [
 
 
 def physician_schema(name, photo, title_str, url_path, same_as=None, schema_type="Physician",
-                     specialty=None, npi=None):
+                     specialty=None, npi=None, profile=None):
+    profile = profile or {}
+    # Physician alone is a MedicalOrganization subtype in schema.org (a doctor's
+    # office); adding Person is what makes givenName/familyName/honorificSuffix and
+    # alternateName valid on the node, so it describes the individual doctor.
     obj = {
         "@context": "https://schema.org",
-        "@type": schema_type,
+        "@type": [schema_type, "Person"] if schema_type == "Physician" else schema_type,
+        "@id": f"{BASE}/{url_path}#physician",
         "name": name,
-        "jobTitle": title_str,
+        # role strings carry HTML entities for the page; JSON-LD wants plain text
+        "jobTitle": html.unescape(title_str),
         "image": f"{BASE}/assets/{photo}",
         "url": f"{BASE}/{url_path}",
-        "worksFor": {"@id": ORG_ID},
+        "worksFor": [{"@id": ORG_ID}] + [{"@id": i} for i in profile.get("also_works_for", [])],
         "address": {
             "@type": "PostalAddress",
             "streetAddress": ADDRESS_STREET,
@@ -3407,12 +3433,21 @@ def physician_schema(name, photo, title_str, url_path, same_as=None, schema_type
         },
         "telephone": "+1-833-783-6561",
     }
+    for k in ("givenName", "familyName", "honorificSuffix", "alternateName"):
+        if profile.get(k):
+            obj[k] = profile[k]
     if specialty:
         obj["medicalSpecialty"] = specialty      # required for Physician rich results
     if same_as:
         obj["sameAs"] = same_as
+    ids = []
     if npi:
-        obj["identifier"] = {"@type": "PropertyValue", "propertyID": "NPI", "value": npi}
+        ids.append({"@type": "PropertyValue", "propertyID": "NPI", "value": npi})
+    if profile.get("license"):
+        ids.append({"@type": "PropertyValue", "propertyID": "Florida medical license",
+                    "value": profile["license"]})
+    if ids:
+        obj["identifier"] = ids[0] if len(ids) == 1 else ids
     return extra_ld(obj)
 
 
@@ -3420,18 +3455,43 @@ def physician_schema(name, photo, title_str, url_path, same_as=None, schema_type
 # Google the profile page, the Healthgrades listing and the NPI record are one
 # person, which is how a doctor's name search consolidates onto this site. Each URL
 # was fetched and returned 200 on 2026-10-12; Dr. Cedeno's Doximity page returned
-# 410 Gone and US News would not respond, so neither is listed. Add a URL only after
+# 410 Gone and US News would not respond, so neither is listed. Added 2026-10-14 after
+# fetching each and checking the name and practice: the two sister-practice physician
+# pages, Stryker's surgeon locator and Jupiter Medical Center's directory (which still
+# shows the closed Jupiter office; that is a citation fix for the owner, not a reason
+# to drop the link, since the page is unambiguously him). Add a URL only after
 # checking it resolves and is the right person (there are several Mark Matarazzos).
 _PROVIDER_PROFILES = {
     "dr-marc-matarazzo": {
         "npi": "1083678452",
-        "same_as": ["https://www.healthgrades.com/physician/dr-marc-matarazzo-34my5",
+        # Florida license as NPPES and elitesportsmed.org both record it. Shown on the
+        # page next to the NPI (provider_page renders both), so the schema matches.
+        "license": "ME85839",
+        "givenName": "Marc", "familyName": "Matarazzo", "honorificSuffix": "MD",
+        # His legal name as NPPES records it (MARC FRANCIS MATARAZZO) and the form his
+        # own practice site uses. NOT "Mark": that is a different spelling shared by
+        # other people, and naming it here would merge them into this entity.
+        "alternateName": ["Marc F. Matarazzo, MD", "Marc Francis Matarazzo"],
+        # Owner of ELITE Sports Medicine (stated on the page). elitesportsmed.org is
+        # his surgical home and carries the canonical #physician node; this page is
+        # his non-surgical, regenerative side. Linking the two nodes is how search
+        # engines learn they are one doctor rather than two competing ones.
+        "also_works_for": ["https://elitesportsmed.org/#organization"],
+        "same_as": ["https://elitesportsmed.org/marc-f-matarazzo/",
+                    "https://www.healthgrades.com/physician/dr-marc-matarazzo-34my5",
                     "https://www.doximity.com/pub/marc-matarazzo-md",
+                    "https://patients.stryker.com/surgeons/8274-knee-surgeon-palm-beach-gardens-fl-marc-f-matarazzo",
+                    "https://www.jupitermed.com/find-a-physician/marc-matarazzo-md/",
                     "https://npiregistry.cms.hhs.gov/provider-view/1083678452"],
     },
     "dr-orlando-cedeno": {
         "npi": "1700076437",
-        "same_as": ["https://www.healthgrades.com/physician/dr-orlando-cedeno-xq8jf",
+        "givenName": "Orlando", "familyName": "Cedeno", "honorificSuffix": "DPM",
+        # NPPES records ORLANDO A CEDENO, D.P.M.
+        "alternateName": ["Orlando A. Cedeno, DPM"],
+        "also_works_for": ["https://jupiterlaser.com/#clinic"],
+        "same_as": ["https://jupiterlaser.com/meet-dr-cedeno/",
+                    "https://www.healthgrades.com/physician/dr-orlando-cedeno-xq8jf",
                     "https://npiregistry.cms.hhs.gov/provider-view/1700076437"],
     },
 }
@@ -3466,6 +3526,13 @@ def provider_page(slug, name, role, portrait, bio_paras, highlights, title, desc
                      + "".join(f"<li>{x}</li>" for x in conditions) + "</ul></div>")
         lists_html = f'<div class="spec-grid">{cols}</div>'
     role_full = f"{role}<span class=\"provider-creds\">{creds_line}</span>" if creds_line else role
+    # The NPI (and license, where verified) are in this page's Physician schema, so
+    # they are shown here too: structured data should describe what the page shows.
+    prof = _PROVIDER_PROFILES.get(slug, {})
+    id_bits = [f"NPI {prof['npi']}"] if prof.get("npi") else []
+    if prof.get("license"):
+        id_bits.append(f"Florida license {prof['license']}")
+    ids_html = f'<p class="provider-ids">{" &middot; ".join(id_bits)}</p>' if id_bits else ""
     crumbs_html = crumbs([("about.html", "About"), ("", name)], depth=d)
     body = f"""{nav(d)}
 <main id="main">
@@ -3479,6 +3546,7 @@ def provider_page(slug, name, role, portrait, bio_paras, highlights, title, desc
       <div class="sym-card provider-card">
         <h2>Credentials at a glance</h2>
         <ul class="check-list">{hl}</ul>
+        {ids_html}
         <a class="btn btn-gold" href="../contact.html#book">Book with {name.split(',')[0]}</a>
       </div>
       {tagline_html}{quote_html}
@@ -3497,7 +3565,8 @@ def provider_page(slug, name, role, portrait, bio_paras, highlights, title, desc
         physician_schema(name, portrait, role, f"providers/{slug}.html", schema_type=schema_type,
                          specialty=_PROVIDER_SPECIALTY.get(slug),
                          same_as=_PROVIDER_PROFILES.get(slug, {}).get("same_as"),
-                         npi=_PROVIDER_PROFILES.get(slug, {}).get("npi"))
+                         npi=_PROVIDER_PROFILES.get(slug, {}).get("npi"),
+                         profile=_PROVIDER_PROFILES.get(slug))
         + breadcrumb_schema([("", "Home"), ("about.html", "About"), (f"providers/{slug}.html", name)])
     )
     page = head(title, desc, depth=d, canonical=f"providers/{slug}.html",
@@ -3520,10 +3589,13 @@ def build_providers():
             "Fellow, American Academy of Orthopedic Surgeons",
             "Member, American Orthopedic Society for Sports Medicine",
             "Medical Director &amp; Owner, RegenOrtho Palm Beach",
-            "Owner, Elite Sports Medicine",
+            'Owner, <a href="https://elitesportsmed.org/marc-f-matarazzo/">ELITE Sports Medicine</a>, his orthopedic surgery practice',
         ],
-        "Dr. Marc Matarazzo, MD | Orthopedic Surgeon, Palm Beach Gardens",
-        "Dr. Marc Matarazzo, MD — board-certified orthopedic surgeon in Palm Beach Gardens. Sports medicine, arthroscopy, shoulder & knee, MAKO robotic replacement.",
+        # Retitled 2026-10-14. His surgical identity (arthroscopy, MAKO, joint
+        # replacement) belongs to elitesportsmed.org; this page is the non-surgical,
+        # regenerative side, so the two stop competing for the same searches.
+        "Dr. Marc Matarazzo, MD | Regenerative Care, Palm Beach Gardens",
+        "Dr. Marc Matarazzo, MD, board-certified orthopedic surgeon, leads non-surgical regenerative care at RegenOrtho Palm Beach in Palm Beach Gardens. Book a visit.",
         [
             ("../services/regenerative-medicine-orthobiologics.html", "Regenerative Medicine"),
             ("../services/advanced-non-surgical-therapies.html", "Advanced Non-Surgical Therapies"),
@@ -3561,11 +3633,14 @@ def build_providers():
             "Diplomate, American Board of Podiatric Surgery",
             "Member, American Podiatric Medical Association",
             "Associate, American Podiatric Sports Medicine Association",
-            "Owner, RegenOrtho Palm Beach &amp; Abacoa Podiatry &amp; Leg Vein Center",
+            'Owner, RegenOrtho Palm Beach &amp; <a href="https://jupiterlaser.com/meet-dr-cedeno/">Abacoa Podiatry &amp; Leg Vein Center</a>',
             "Author, <em>The Regenerative Foot &amp; Ankle Guide</em>",
         ],
-        "Dr. Orlando Cedeno DPM | Podiatrist Palm Beach Gardens",
-        "Dr. Orlando Cedeno, DPM — board-certified podiatric surgeon and vein specialist in Palm Beach Gardens. Foot & ankle surgery, heel pain, and custom orthotics.",
+        # Retitled 2026-10-14. Foot and ankle care is Abacoa Podiatry's territory
+        # (see REGEN_TREATS), so the old "Podiatrist" title and "foot & ankle surgery,
+        # heel pain, orthotics" description competed with his own podiatry practice.
+        "Dr. Orlando Cedeno, DPM | Vein Care, Palm Beach Gardens",
+        "Dr. Orlando Cedeno, DPM, board-certified in foot surgery, leads vein care and regenerative treatment at RegenOrtho Palm Beach in Palm Beach Gardens.",
         [
             ("../services/vein-care.html", "Vein Care — Medical & Cosmetic"),
             ("../services/neuropathy-program.html", "Neuropathy Restoration Program"),
@@ -3662,7 +3737,7 @@ def build_about():
 <section class="section">
   <div class="section-head reveal"><p class="eyebrow">Patient Guide &amp; Answers</p><h2>Good to <em>know</em></h2></div>
   <div class="faq-list">{faqs}</div>
-  <p class="section-foot"><a href="faq.html">Browse the full FAQ →</a></p>
+  <p class="section-foot"><a href="faq.html">Browse the full FAQ →</a> &nbsp;·&nbsp; <a href="glossary.html">Glossary of treatment terms →</a></p>
 </section>
 {cta_band(d)}
 </main>
@@ -3698,6 +3773,16 @@ def build_iv():
         f"""<details class="faq-item"><summary>{q}</summary><div class="faq-a"><p>{a}</p></div></details>"""
         for q, a in IV_FAQS
     )
+    by_short = {m["short"]: (i, m) for i, m in enumerate(IV_MENU)}
+    goal_rows = ""
+    for goal, shorts in IV_GOALS:
+        missing = [x for x in shorts if x not in by_short]
+        assert not missing, f"IV_GOALS names a drip not on IV_MENU: {missing}"
+        drips = "<br>".join(
+            f'<a href="#drip-{by_short[x][0] + 1}">{x}</a> <span class="goal-price">${by_short[x][1]["price"]}</span>'
+            for x in shorts)
+        ings = "<br>".join(by_short[x][1]["ingredients"] for x in shorts)
+        goal_rows += f"<tr><th scope=\"row\">{goal}</th><td>{drips}</td><td>{ings}</td></tr>"
     offers = extra_ld({
         "@context": "https://schema.org",
         "@type": "MedicalTherapy",
@@ -3745,6 +3830,18 @@ def build_iv():
   </div>
 
   <ul class="drip-shelf reveal" data-drips>{cards}</ul>
+</section>
+<section class="section section-tint" id="by-goal">
+  <div class="section-head reveal"><p class="eyebrow">Choosing a drip</p><h2>Which IV drip is right <em>for my goal?</em></h2>
+  <p class="section-sub">Most people book IV therapy in Palm Beach Gardens for one of a handful of reasons: recovery, hydration, immune support, energy or a hangover. Here is the drip on our menu built for each, what is in it and what it costs. Your clinician confirms the choice at the pre-screen, and will tell you if an infusion is not what you need.</p></div>
+  <div class="goal-table-wrap reveal">
+    <table class="goal-table">
+      <caption class="sr-only">IV drips by goal, with price and ingredients</caption>
+      <thead><tr><th scope="col">Your goal</th><th scope="col">Drip and price</th><th scope="col">What is in it</th></tr></thead>
+      <tbody>{goal_rows}</tbody>
+    </table>
+  </div>
+  <p class="section-foot reveal"><a href="pricing.html#iv">Every published price, in one place</a></p>
 </section>
 <section class="section section-dark section-iv-how">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
@@ -3892,6 +3989,152 @@ def build_pricing():
     write("pricing.html", page)
 
 
+# ---------------------------------------------------------------------------
+# Patient glossary (/glossary). One list renders the visible <dl> AND the
+# DefinedTermSet JSON-LD, so the schema can never describe a term the page does
+# not show. Every definition restates the practice's OWN published copy (the
+# service ledes, the PRP blog post, the GLP-1 page, REGEN_DISCLAIMER); the only
+# additions are standard expansions of an abbreviation (PRP, NAD+, HCT/P, EPAT).
+# Do not add a clinical claim here that is not already on the linked page.
+# (term, anchor id, definition HTML, link target or "", other names)
+# ---------------------------------------------------------------------------
+GLOSSARY = [
+    ("Cold laser", "cold-laser",
+     "Low-level laser light used, alongside shockwave and rehabilitation, to calm inflammation in tissue that has stopped healing on its own.",
+     "services/advanced-non-surgical-therapies.html", ["Low-level laser therapy"]),
+    ("Endovenous ablation", "endovenous-ablation",
+     "Laser or radiofrequency heat delivered inside a diseased saphenous vein under ultrasound guidance. It seals the vein so blood reroutes to healthy vessels, treating the root cause of varicose veins.",
+     "services/endovenous-ablation.html", ["Endovenous laser ablation", "Radiofrequency ablation"]),
+    ("EPAT shockwave", "epat-shockwave",
+     "Extracorporeal pulse activation technology: pressure waves applied through the skin to stimulate blood flow and collagen remodeling. Some soreness after a session is possible; most people return to normal activity right away.",
+     "services/advanced-non-surgical-therapies.html", ["Shockwave therapy"]),
+    ("Exosomes", "exosomes",
+     "Naturally occurring extracellular vesicles rich in growth factors and signaling molecules. Exosome therapy is cell-free: it uses these vesicles, not living cells, to support the body&rsquo;s healing response.",
+     "services/exosome-therapy.html", ["Exosome therapy"]),
+    ("GHK-Cu", "ghk-cu",
+     "A copper-binding peptide the body makes on its own. The research on it centres on collagen and the extracellular matrix, which is why it is used when connective tissue is holding recovery back.",
+     "services/ghk-cu.html", ["Copper peptide"]),
+    ("GLP-1 receptor agonist", "glp-1",
+     "A medication that mimics a naturally occurring hormone that regulates blood sugar, appetite and digestion. Semaglutide (Ozempic&reg;, Wegovy&reg;) and tirzepatide (Zepbound&reg;) are the ones named on our weight loss page, prescribed only when appropriate for you.",
+     "services/medical-weight-loss.html", ["GLP-1", "Semaglutide", "Tirzepatide"]),
+    ("Glutathione", "glutathione",
+     "An antioxidant. On our IV menu it is part of the Beauty &amp; Glow, Immune Boost and Cleanse drips.",
+     "iv-therapy.html", []),
+    ("HCT/P", "hct-p",
+     "Human cells, tissues, and cellular and tissue-based products: the FDA&rsquo;s category (21 C.F.R. Part 1271) for products such as umbilical cord-derived cells. The cellular products used here are HCT/Ps from accredited U.S. suppliers; cell factors such as RPA are not classified as HCT/Ps.",
+     "", ["Human cells, tissues, and cellular and tissue-based products"]),
+    ("KPV", "kpv",
+     "A three-amino-acid fragment of a hormone the body already produces, studied for inflammatory regulation and immune balance in joint and soft-tissue recovery.",
+     "services/kpv.html", []),
+    ("Mesenchymal stem cells", "mesenchymal-stem-cells",
+     "In the therapy offered here, cells derived from umbilical cord tissue and delivered by ultrasound-guided injection to support the body&rsquo;s natural healing response in joints and soft tissue.",
+     "services/mesenchymal-stem-cell-therapy.html", ["MSCs", "Stem cell therapy"]),
+    ("Microphlebectomy", "microphlebectomy",
+     "Removal of superficial varicose veins through micro-incisions, done in the office, with a quick return to activity.",
+     "services/microphlebectomy.html", ["Ambulatory phlebectomy"]),
+    ("MOTS-c", "mots-c",
+     "A peptide that comes from the mitochondria, studied for cellular energy, metabolic efficiency and endurance.",
+     "services/mots-c.html", []),
+    ("MUSE cells", "muse-cells",
+     "Multilineage-Differentiating Stress-Enduring cells: a rare population of mesenchymal stem cells. Traditional MUSE cell therapy is a live-cell treatment, given by IV push or targeted injection.",
+     "services/traditional-muse-cell-therapy.html", ["MUSE cell therapy"]),
+    ("Myers&rsquo; cocktail", "myers-cocktail",
+     "A classic IV blend of vitamins and minerals. It is the base of several drips on our menu; Myers&rsquo; PLUS is a reinforced version.",
+     "iv-therapy.html", ["Myers cocktail"]),
+    ("NAD+", "nad",
+     "Nicotinamide adenine dinucleotide, a coenzyme the body uses in cellular energy. Our NAD&#8314; 500 mg infusion is a high-dose IV of it.",
+     "iv-therapy.html", ["NAD", "Nicotinamide adenine dinucleotide"]),
+    ("Orthobiologics", "orthobiologics",
+     "Biologic injections used in orthopedic care, such as PRP and cell-based products, placed under ultrasound to support the body&rsquo;s own repair of joints, tendons and ligaments.",
+     "services/regenerative-medicine-orthobiologics.html", ["Orthobiologic therapy"]),
+    ("Peptide therapy", "peptide-therapy",
+     "Physician-supervised protocols using peptides, short chains of amino acids, matched to what you are trying to fix: repair, recovery, longevity or aesthetics.",
+     "services/peptide-therapy.html", ["Peptides"]),
+    ("PRP (platelet-rich plasma)", "prp",
+     "Growth factors concentrated from your own blood and placed at the injury, under ultrasound guidance.",
+     "services/regenerative-medicine-orthobiologics.html", ["PRP", "Platelet-rich plasma"]),
+    ("Regenerative medicine", "regenerative-medicine",
+     "Treatments that aim at the tissue itself rather than the symptom. They supply the signals the body already uses to repair tissue (growth factors, peptides, cellular material), concentrated and placed where the damage is.",
+     "services/regenerative-medicine-orthobiologics.html", ["Regenerative orthopedics"]),
+    ("RPA (Regenerative Protein Array)", "rpa",
+     "An acellular protein array. The MUSE-infused version is enhanced with proteins extracted from MUSE cells and given by IV push or injection.",
+     "services/muse-infused-rpa-therapy.html", ["Regenerative Protein Array"]),
+    ("Sclerotherapy", "sclerotherapy",
+     "Targeted injections that close small surface veins, such as spider and reticular veins. Quick, in the office, with minimal recovery.",
+     "services/sclerotherapy.html", []),
+    ("Tesamorelin", "tesamorelin",
+     "A GHRH analog. Rather than giving you growth hormone, it prompts your own pituitary to release more of it; studied for lean-mass maintenance, visceral fat and recovery.",
+     "services/tesamorelin.html", []),
+    ("Ultrasound guidance", "ultrasound-guidance",
+     "Live ultrasound imaging used to place an injection precisely, matched to what the imaging shows.",
+     "services/regenerative-medicine-orthobiologics.html", ["Ultrasound-guided injection"]),
+    ("Wharton&rsquo;s jelly", "whartons-jelly",
+     "Umbilical cord tissue rich in naturally occurring growth factors, cytokines and extracellular matrix proteins, delivered by ultrasound-guided injection.",
+     "services/whartons-jelly-therapy.html", ["Wharton's jelly therapy"]),
+]
+
+
+def _plain(x):
+    return html.unescape(re.sub(r"<[^>]+>", "", x))
+
+
+def build_glossary():
+    d = 0
+    ids = [g[1] for g in GLOSSARY]
+    assert len(ids) == len(set(ids)), "duplicate glossary anchor"
+    terms = sorted(GLOSSARY, key=lambda g: _plain(g[0]).lower())
+    letters = sorted({_plain(t[0])[0].upper() for t in terms})
+    jump = "".join(f'<li><a href="#letter-{L.lower()}">{L}</a></li>' for L in letters)
+    items, cur = "", None
+    for term, gid, definition, href, _alt in terms:
+        L = _plain(term)[0].upper()
+        if L != cur:
+            if cur is not None:
+                items += "</dl>"
+            items += f'<h2 class="gloss-letter" id="letter-{L.lower()}">{L}</h2><dl class="gloss-list">'
+            cur = L
+        more = f' <a class="gloss-more" href="{href}">Learn more<span class="sr-only"> about {term}</span></a>' if href else ""
+        items += f'<div class="gloss-item" id="{gid}"><dt>{term}</dt><dd>{definition}{more}</dd></div>'
+    items += "</dl>"
+    set_id = f"{BASE}/glossary.html#terms"
+    schema = extra_ld({
+        "@context": "https://schema.org",
+        "@type": "DefinedTermSet",
+        "@id": set_id,
+        "name": "RegenOrtho Palm Beach patient glossary",
+        "description": "Plain-language definitions of the regenerative, peptide, IV and vein care terms used across this site.",
+        "url": f"{BASE}/glossary.html",
+        "hasDefinedTerm": [
+            {"@type": "DefinedTerm", "@id": f"{BASE}/glossary.html#{gid}",
+             "name": _plain(term), "description": _plain(definition),
+             "url": f"{BASE}/glossary.html#{gid}", "inDefinedTermSet": {"@id": set_id},
+             **({"alternateName": alt} if alt else {})}
+            for term, gid, definition, _h, alt in terms
+        ],
+    }) + breadcrumb_schema([("", "Home"), ("patient-resources.html", "Patient Resources"),
+                            ("glossary.html", "Glossary")])
+    crumbs_html = crumbs([("patient-resources.html", "Patient Resources"), ("", "Glossary")], depth=d)
+    body = f"""{nav(d)}
+<main id="main">
+{page_hero("Patient Glossary", "PRP, exosomes, peptides, NAD+ and the rest, in plain words", "The terms you will meet on our treatment pages and at your consultation, each with a short definition and a link to the page that explains the treatment in full.", crumbs_html, depth=d, h1_lead="Regenerative Medicine Glossary")}
+<aside class="fl-notice" role="note" aria-label="Florida stem cell therapy notice"><p>{FL_STEM_CELL_NOTICE}</p></aside>
+<section class="section">
+  <div class="gloss-wrap">
+    <nav class="gloss-jump" aria-label="Jump to a letter"><ul>{jump}</ul></nav>
+    {items}
+    <p class="gloss-fine">{REGEN_DISCLAIMER}</p>
+  </div>
+</section>
+{cta_band(d, heading="Not sure which of these <em>fits you?</em>", sub="That is what the consultation is for. We will tell you which treatment, if any, suits what the imaging shows, and what it costs.")}
+</main>
+{footer(d)}"""
+    page = head("Regenerative Medicine Glossary | PRP, Exosomes, Peptides",
+                "Plain-language definitions of PRP, exosomes, Wharton's jelly, peptides, NAD+, GLP-1 and vein treatments, from RegenOrtho Palm Beach in Palm Beach Gardens.",
+                depth=d, canonical="glossary.html", webpage_type="MedicalWebPage", speakable=True,
+                extra_schema=schema) + '<body class="page-glossary">\n' + body
+    write("glossary.html", page)
+
+
 def build_faq():
     d = 0
     cats = all_faq_categories()
@@ -3944,7 +4187,11 @@ def build_contact():
     body = f"""{nav(d)}
 <main id="main">
 {page_hero("Contact Us", "Let's Work Out What's Actually Wrong", "Call the office or send a message and we will get you booked in — and tell you what to bring, so the first appointment is not spent gathering records.", crumbs_html, cta=False, depth=d)}
-<section class="section" id="book">
+<section class="section" id="contact-details">
+  <!-- #book sits on the form's own heading, not the section: on phones the contact
+       details stack ABOVE the form, so every "Book" link on the site (contact#book)
+       used to land ~1,600px short of the form. On desktop the two columns share a
+       row, so the landing spot is unchanged there. -->
   <div class="contact-grid">
     <div class="contact-info reveal">
       <h2>Get in touch to book your <em>first appointment</em></h2>
@@ -3966,7 +4213,7 @@ def build_contact():
       </div>
     </div>
     <form class="contact-form reveal" id="contact-form" style="--d:120ms" action="https://formsubmit.co/{FORM_TARGET_EMAIL}" method="POST">
-      <h2 class="form-title">Request an appointment</h2>
+      <h2 class="form-title" id="book">Request an appointment</h2>
       <input type="hidden" name="_subject" value="[Contact Form] New Appointment Request — regenorthopb.com">
       <input type="hidden" name="_captcha" value="false">
       <input type="hidden" name="_cc" value="{FORM_CC_EMAILS}">
@@ -4750,6 +4997,7 @@ def build_meta():
     from blog_content import BLOG_POSTS
     from forms_content import FORMS
     pages = ["index.html", "about.html", "contact.html", "faq.html", "iv-therapy.html", "pricing.html",
+             "glossary.html",
              "patient-resources.html", "privacy-policy.html", "terms.html",
              "forms/index.html",
              "services/index.html", "blog/index.html",
@@ -5014,6 +5262,9 @@ Palm Beach Gardens (clinic location) plus:
 ## Published pricing
 Pricing page (every published price, insurance & payment): {BASE}/pricing.html
 Machine-readable pricing (all figures, plus what is deliberately unpriced): {BASE}/pricing.md
+
+## Patient glossary
+Plain-language definitions of the treatment terms used on this site (PRP, exosomes, Wharton's jelly, MUSE cells, peptides, NAD+, GLP-1, vein procedures), each linked to its treatment page: {BASE}/glossary.html
 Only the prices below are published; everything else is quoted at consultation.
 - Medical Weight Loss & GLP-1: plans start at $239/month.
 - Peptide Therapy: programs start at $249/month.
@@ -5061,6 +5312,7 @@ def main():
     build_iv()
     build_faq()
     build_pricing()
+    build_glossary()
     build_contact()
     build_resources()
     build_forms()
