@@ -1198,11 +1198,11 @@ SERVICES = [
         "slug": "regenerative-medicine-orthobiologics",
         "name": "Regenerative Medicine & Orthobiologic Therapies",
         "nav": "Regenerative Medicine & Orthobiologics",
-        "title": "PRP & Regenerative Medicine Palm Beach Gardens | RegenOrtho",
-        "desc": "PRP injections, cellular and exosome therapies, peptides, and ultrasound-guided orthobiologics in Palm Beach Gardens — natural healing without surgery.",
+        "title": "PRP & Orthobiologics Palm Beach Gardens | RegenOrtho",
+        "desc": "PRP injections and orthobiologic therapies in Palm Beach Gardens — cellular and exosome treatments and peptides, placed under ultrasound, without surgery.",
         "eyebrow": "Regenerative Medicine & Orthobiologics",
         "h1": "Advanced Regenerative Therapies for Lasting Healing",
-        "lede": "Treatments that aim at the tissue itself rather than the symptom — placed under ultrasound, matched to what the imaging actually shows, and paired with the rehabilitation that makes them hold.",
+        "lede": "PRP and orthobiologic treatments in Palm Beach Gardens that aim at the tissue itself rather than the symptom — placed under ultrasound, matched to what the imaging actually shows, and paired with the rehabilitation that makes them hold.",
         "img": "svc-regen.jpg",
         "img_alt": "Regenerative medicine specialist preparing an orthobiologic treatment at RegenOrtho Palm Beach",
         "why": [
@@ -1244,11 +1244,11 @@ SERVICES = [
         "name": "Exosome Therapy",
         "nav": "Exosome Therapy",
         "parent": "regenerative-medicine-orthobiologics",
-        "title": "Exosome Therapy Palm Beach Gardens | RegenOrtho",
+        "title": "Exosome Therapy & Injections Palm Beach Gardens | RegenOrtho",
         "desc": "Cell-free exosome therapy in Palm Beach Gardens — ultrasound-guided delivery of growth-factor-rich vesicles for joint, tendon, and soft-tissue repair.",
         "eyebrow": "Regenerative Medicine & Orthobiologics",
         "h1": "Advanced Cell-Free Regenerative Therapy for Pain Relief & Tissue Recovery",
-        "lede": "A cell-free treatment using naturally occurring extracellular vesicles rich in growth factors and signaling molecules to support your body's healing response, reduce inflammation, and improve mobility.",
+        "lede": "Exosome therapy in Palm Beach Gardens: a cell-free treatment using naturally occurring extracellular vesicles rich in growth factors and signaling molecules to support your body's healing response, reduce inflammation, and improve mobility.",
         "img": "svc-exosome.jpg",
         "img_alt": "Illustration of tiny extracellular vesicles budding from a cell membrane",
         "why": [
@@ -1291,11 +1291,11 @@ SERVICES = [
         "name": "Mesenchymal Stem Cell Therapy",
         "nav": "Mesenchymal Stem Cell Therapy",
         "parent": "regenerative-medicine-orthobiologics",
-        "title": "Mesenchymal Stem Cell Therapy | RegenOrtho Palm Beach",
+        "title": "Mesenchymal Stem Cell Therapy Palm Beach Gardens | RegenOrtho",
         "desc": "Mesenchymal stem cell therapy in Palm Beach Gardens — umbilical cord-derived cells delivered via ultrasound-guided injection for joint and tissue healing.",
         "eyebrow": "Regenerative Medicine & Orthobiologics",
         "h1": "Advanced Regenerative Medicine for Joint Pain & Tissue Healing",
-        "lede": "A non-surgical approach using umbilical cord-derived mesenchymal stem cells to support the body's natural healing response, reduce pain, and improve mobility.",
+        "lede": "Mesenchymal stem cell therapy in Palm Beach Gardens: a non-surgical approach using umbilical cord-derived mesenchymal stem cells to support the body's natural healing response, reduce pain, and improve mobility.",
         "img": "svc-msc.jpg",
         "img_alt": "Gloved hands lifting a cryovial from a liquid nitrogen storage vessel in a laboratory",
         "why": [
@@ -1519,11 +1519,11 @@ SERVICES = [
         "slug": "vein-care",
         "name": "Vein Care — Medical & Cosmetic",
         "nav": "Vein Care — Medical & Cosmetic",
-        "title": "Vein Treatment Palm Beach Gardens | Varicose & Spider Veins",
-        "desc": "Ultrasound-guided vein care in Palm Beach Gardens — sclerotherapy, endovenous laser & RF ablation, phlebectomy, and cosmetic vein treatment with quick recovery.",
+        "title": "Varicose & Spider Vein Treatment Palm Beach Gardens, FL",
+        "desc": "Varicose and spider vein treatment in Palm Beach Gardens — ultrasound mapping, then sclerotherapy, laser & RF ablation or microphlebectomy, done in-office.",
         "eyebrow": "Vein Care — Medical & Cosmetic",
         "h1": "Comprehensive Vein Care — Medical & Cosmetic",
-        "lede": "We image the legs before we treat them, then close the failing veins through a needle rather than an incision. Most patients drive themselves home and are back to normal within a day or two.",
+        "lede": "Varicose and spider vein treatment in Palm Beach Gardens starts with imaging: we map the legs before we treat them, then close the failing veins through a needle rather than an incision. Most patients drive themselves home and are back to normal within a day or two.",
         "img": "vein-treatment.jpg",
         "img_alt": "Vein specialist performing an ultrasound-guided leg vein evaluation in Palm Beach Gardens",
         "why": [
@@ -1534,11 +1534,11 @@ SERVICES = [
         ],
         "expertise": [
             ("Comprehensive Ultrasound-Guided Vein Evaluation", "Duplex ultrasound shows which valves have failed and where the reflux actually starts — which is frequently not the vein you can see. Treating the visible one instead is the usual reason veins return."),
-            ("Sclerotherapy for Spider & Reticular Veins", "A solution injected into spider and reticular veins collapses them, and the body clears them over the following weeks. Minutes in the chair, no downtime."),
-            ("Endovenous Laser & Radiofrequency (RF) Ablation", "Heat delivered inside the failed saphenous vein seals it shut, and circulation reroutes through healthy vessels. This addresses the cause rather than the bulging vein you can see."),
+            ("Sclerotherapy for Spider & Reticular Veins", "A solution injected into spider and reticular veins collapses them, and the body clears them over the following weeks. Minutes in the chair, no downtime. More on <a href=\"../services/sclerotherapy.html\">sclerotherapy in Palm Beach Gardens</a>."),
+            ("Endovenous Laser & Radiofrequency (RF) Ablation", "Heat delivered inside the failed saphenous vein seals it shut, and circulation reroutes through healthy vessels. This addresses the cause rather than the bulging vein you can see. More on <a href=\"../services/endovenous-ablation.html\">endovenous ablation in Palm Beach Gardens</a>."),
             ("Cosmetic Vein Procedures for Legs, Feet & Ankles", "Surface sclerotherapy and micro-laser for patients whose concern is how the legs look. The aim is an even result rather than an obviously treated one."),
             ("Advanced Wound Care for Venous Insufficiency", "Where poor venous return has caused skin changes or an ulcer, wound management and compression run alongside treating the underlying reflux — an ulcer will not stay healed while the pressure behind it remains."),
-            ("Ambulatory Phlebectomy & In-Office Vein Removal", "Surface varicosities lifted out through punctures small enough not to need stitches. The improvement is visible the same day."),
+            ("Ambulatory Phlebectomy & In-Office Vein Removal", "Surface varicosities lifted out through punctures small enough not to need stitches. The improvement is visible the same day. More on <a href=\"../services/microphlebectomy.html\">microphlebectomy in Palm Beach Gardens</a>."),
         ],
         "steps": [
             ("Evaluation & Mapping", "Ultrasound first — what has failed, and where."),
@@ -1579,7 +1579,7 @@ SERVICES = [
         "desc": "Sclerotherapy for spider and reticular veins in Palm Beach Gardens — targeted in-office injections, ultrasound-guided planning, minimal recovery.",
         "eyebrow": "Sclerotherapy",
         "h1": "Sclerotherapy for Spider &amp; Reticular Veins",
-        "lede": "Targeted injections close small surface veins to improve leg appearance and reduce localized symptoms — quick, in-office, with minimal recovery.",
+        "lede": "Sclerotherapy in Palm Beach Gardens: targeted injections close small surface veins to improve leg appearance and reduce localized symptoms — quick, in-office, with minimal recovery.",
         "img": "svc-sclerotherapy.jpg",
         "img_alt": "A clinician preparing to treat fine spider veins on the back of a patient’s leg",
         "why": [
@@ -1618,7 +1618,7 @@ SERVICES = [
         "desc": "Endovenous laser and radiofrequency ablation in Palm Beach Gardens — ultrasound-guided treatment of diseased saphenous veins with a quick return to activity.",
         "eyebrow": "Endovenous Laser &amp; RF Ablation",
         "h1": "Endovenous Laser &amp; Radiofrequency Ablation",
-        "lede": "Thermal ablation seals diseased saphenous veins under ultrasound guidance, rerouting blood to healthy vessels and relieving the root cause of varicose veins.",
+        "lede": "Endovenous ablation in Palm Beach Gardens: thermal ablation seals diseased saphenous veins under ultrasound guidance, rerouting blood to healthy vessels and relieving the root cause of varicose veins.",
         "img": "svc-ablation.jpg",
         "img_alt": "A vein procedure room with an ultrasound monitor and a sterile tray holding a thin catheter fiber",
         "why": [
@@ -1657,7 +1657,7 @@ SERVICES = [
         "desc": "Ambulatory microphlebectomy in Palm Beach Gardens — micro-incision removal of superficial varicose veins in-office, with immediate contour improvement.",
         "eyebrow": "Ambulatory Phlebectomy",
         "h1": "Ambulatory Microphlebectomy &amp; In-Office Vein Removal",
-        "lede": "Micro-incision phlebectomy removes superficial varicose veins in-office for immediate contour improvement and symptom relief, with a quick return to activity.",
+        "lede": "Microphlebectomy in Palm Beach Gardens: micro-incision phlebectomy removes superficial varicose veins in-office for immediate contour improvement and symptom relief, with a quick return to activity.",
         "img": "svc-phlebectomy.jpg",
         "img_alt": "A leg wrapped in a compression bandage resting on a treatment chair after an in-office vein procedure",
         "why": [
@@ -2136,13 +2136,13 @@ CONDITIONS = [
      "faqs": [("What causes peripheral neuropathy?", "Causes range from metabolic conditions to nerve compression — which is exactly why the program starts with diagnostics that identify your driver before treatment begins."),
               ("Is the program surgical?", "No — it's a non-surgical program. Only a persistent focal nerve issue would prompt evaluation for a targeted nerve release procedure.")]},
     {"slug": "varicose-spider-veins", "name": "Varicose & Spider Veins",
-     "title": "Varicose & Spider Vein Treatment Palm Beach Gardens",
-     "desc": "Varicose and spider vein treatment in Palm Beach Gardens — duplex ultrasound mapping, laser & RF ablation, sclerotherapy, and cosmetic vein care.",
+     "title": "Varicose Veins & Venous Insufficiency | Palm Beach Gardens",
+     "desc": "Aching, heavy or swollen legs and visible veins in Palm Beach Gardens — what causes varicose veins and venous insufficiency, and how duplex mapping guides care.",
      "h1": "Healthier, Better-Looking Legs",
      "lede": "Aching, heaviness, swelling, and visible veins usually trace back to one thing: valves that no longer close. We map them, then fix them.",
      "img": "vein-treatment.jpg",
      "symptoms": ["Bulging, rope-like varicose veins", "Visible spider or reticular veins", "Leg heaviness, aching, or swelling by day's end", "Night cramps or restless legs", "Skin changes or slow-healing spots near the ankle"],
-     "body": "Vein disease is progressive and underdiagnosed — and treating the visible veins without finding the underlying reflux is why so many treatments elsewhere don't last. Every vein plan here starts with duplex ultrasound mapping to locate the failing valves. Treatment is minimally invasive and office-based: endovenous laser or radiofrequency ablation for diseased saphenous veins, sclerotherapy for spider and reticular veins, micro-incision phlebectomy for surface varicosities, and specialized wound care when venous insufficiency has affected the skin.",
+     "body": "Vein disease is progressive and underdiagnosed — and treating the visible veins without finding the underlying reflux is why so many treatments elsewhere don't last. Every vein plan here starts with duplex ultrasound mapping to locate the failing valves. Treatment is minimally invasive and office-based: <a href=\"../services/endovenous-ablation.html\">endovenous laser or radiofrequency ablation</a> for diseased saphenous veins, <a href=\"../services/sclerotherapy.html\">sclerotherapy</a> for spider and reticular veins, <a href=\"../services/microphlebectomy.html\">micro-incision phlebectomy</a> for surface varicosities, and specialized wound care when venous insufficiency has affected the skin.",
      "services": ["vein-care"],
      "faqs": [("Is vein treatment covered by insurance?", "Medical vein care — treating symptoms and circulation problems — is often covered; cosmetic treatment is usually elective. We verify your benefits before treatment."),
               ("Do varicose veins come back after treatment?", "Treated veins are closed permanently, but new veins can develop over time — structured follow-up and prevention strategies minimize recurrence.")]},
@@ -2589,7 +2589,7 @@ def build_home():
 # The plain-language phrase that opens each service page's h1 (see page_hero). The
 # name a patient types, then the city — never a claim. Kept in step with the <title>.
 SERVICE_H1_LEAD = {
-    "regenerative-medicine-orthobiologics": "PRP &amp; Regenerative Medicine in Palm Beach Gardens",
+    "regenerative-medicine-orthobiologics": "PRP &amp; Orthobiologics in Palm Beach Gardens",
     "exosome-therapy": "Exosome Therapy in Palm Beach Gardens",
     "mesenchymal-stem-cell-therapy": "Mesenchymal Stem Cell Therapy in Palm Beach Gardens",
     "whartons-jelly-therapy": "Wharton&rsquo;s Jelly Therapy in Palm Beach Gardens",
@@ -2913,7 +2913,7 @@ def build_services():
 </main>
 {footer(d)}"""
     schema = breadcrumb_schema([("", "Home"), ("services/index.html", "Our Services")])
-    page = head("Regenerative Medicine Services Palm Beach Gardens | RegenOrtho",
+    page = head("Regenerative Orthopedics & Medicine Palm Beach Gardens",
                 "Stem cell, exosome and PRP therapy, shockwave, vein care, IV therapy, peptides, neuropathy care and medical weight loss — all at one Palm Beach Gardens clinic.",
                 depth=d, canonical="services/index.html", extra_schema=schema, speakable=True) + '<body class="page-services">\n' + body
     write("services/index.html", page)
@@ -2931,7 +2931,7 @@ CONDITION_H1_LEAD = {
     "sports-injuries": "Sports Injury Treatment",
     "tendon-ligament-injuries": "Tendon &amp; Ligament Injury Treatment",
     "peripheral-neuropathy": "Peripheral Neuropathy Treatment",
-    "varicose-spider-veins": "Varicose &amp; Spider Vein Treatment",
+    "varicose-spider-veins": "Varicose Vein &amp; Venous Insufficiency Treatment",
 }
 
 
@@ -3273,6 +3273,28 @@ LOCATION_SERVICES = {
                       "medical-weight-loss"],
 }
 
+# Per-city <title>/description overrides, for the cities whose Search Console
+# queries differ from the template (Sept 12 - Oct 9 2026, four weekly snapshots):
+# Jupiter's page draws vein queries ("jupiter cosmetic vein care" 23.9,
+# "jupiter sclerotherapy", "jupiter spider vein treatment") alongside
+# "regenerative medicine (specialist) jupiter" (20-24); West Palm Beach's demand is
+# regenerative + neuropathy + vein (LOCATION_SERVICES order); North Palm Beach is
+# where the clinic actually sits. Every phrase restates the city's own blurb or
+# its LOCATION_SERVICES list — no new claims. Cities without an entry keep the
+# template in build_locations().
+LOCATION_SEO = {
+    "jupiter": {
+        "title": "Regenerative Medicine & Vein Care near Jupiter, FL",
+        "desc": "Jupiter residents: stem cell and regenerative medicine, varicose and spider vein treatment and sclerotherapy, minutes south in Palm Beach Gardens. 833-STEM561.",
+    },
+    "west-palm-beach": {
+        "desc": "West Palm Beach residents: stem cell and regenerative medicine, neuropathy care and vein treatment, a straight shot up I-95 in Palm Beach Gardens. 833-STEM561.",
+    },
+    "north-palm-beach": {
+        "desc": "North Palm Beach residents: regenerative medicine, PRP and stem cell therapy, peptides and medical weight loss at our Prosperity Farms Road clinic. 833-STEM561.",
+    },
+}
+
 LOCATION_INTERIORS = [
     ("clinic-lounge", "The recovery lounge at the RegenOrtho Palm Beach clinic on Prosperity Farms Road"),
     ("clinic-interior", "Inside the RegenOrtho Palm Beach clinic in Palm Beach Gardens"),
@@ -3365,9 +3387,10 @@ def build_locations():
             })
             + breadcrumb_schema([("", "Home"), ("locations/index.html", "Areas We Serve"), (f"locations/{loc['slug']}.html", city)])
         )
+        seo = LOCATION_SEO.get(loc["slug"], {})
         page = head(
-            f"Regenerative Medicine near {city}, FL | RegenOrtho",
-            f"{city} residents: stem cell, PRP and regenerative care, vein treatment and IV therapy minutes away in Palm Beach Gardens. Same-week visits: 833-STEM561.",
+            seo.get("title", f"Regenerative Medicine near {city}, FL | RegenOrtho"),
+            seo.get("desc", f"{city} residents: stem cell, PRP and regenerative care, vein treatment and IV therapy minutes away in Palm Beach Gardens. Same-week visits: 833-STEM561."),
             depth=d, canonical=f"locations/{loc['slug']}.html", extra_schema=schema, speakable=True,
             og_image=f"assets/media/{interior}.jpg",
         ) + '<body class="page-location">\n' + body
@@ -3730,7 +3753,7 @@ def build_iv():
     crumbs_html = crumbs([("", "IV Therapy Lounge")], depth=d)
     body = f"""{nav(d)}
 <main id="main">
-{page_hero("The IV Lounge", "Repair. Rehydrate. Renew.", "Revitalize your body and restore essential nutrients with IV treatments performed by our medical team — in a lounge designed for comfort, not a hospital corridor.", crumbs_html, depth=d, h1_lead="IV Therapy in Palm Beach Gardens")}
+{page_hero("The IV Lounge", "Repair. Rehydrate. Renew.", "IV therapy in Palm Beach Gardens to revitalize your body and restore essential nutrients — IV drips performed by our medical team in a lounge designed for comfort, not a hospital corridor.", crumbs_html, depth=d, h1_lead="IV Therapy in Palm Beach Gardens")}
 <section class="section section-dark section-drips" id="menu">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="section-head reveal"><p class="eyebrow">The Menu</p><h2>Twelve formulas, <em>one goal: you at 100%</em></h2>
@@ -3759,12 +3782,13 @@ def build_iv():
 <section class="section section-tint">
   <div class="section-head reveal"><p class="eyebrow">Patient Guide &amp; Answers</p><h2>IV therapy <em>questions</em></h2></div>
   <div class="faq-list">{faqs}</div>
+  <p class="section-foot">Further reading: <a href="blog/iv-therapy-recovery-wellness.html">IV therapy for recovery</a> · <a href="blog/iv-hydration-in-palm-beach-gardens-what-to-expect-and-how-to-choose-a-clinic.html">IV hydration in Palm Beach Gardens: what to expect</a></p>
 </section>
 {cta_band(d, heading="Feel better <em>today</em>", sub="Come and sit in the lounge for an hour. Every formula is chosen with a clinician, and if an infusion is not what you need we will say so.")}
 </main>
 {footer(d)}"""
     schema = offers + faq_schema(IV_FAQS) + breadcrumb_schema([("", "Home"), ("iv-therapy.html", "IV Therapy")])
-    page = head("IV Therapy Palm Beach Gardens | Drip Lounge | RegenOrtho",
+    page = head("IV Therapy & IV Drips Palm Beach Gardens | RegenOrtho",
                 "IV therapy in Palm Beach Gardens: hydration, immune boost, NAD+ 500mg, athletic recovery & more — clinician-supervised drips from $189 in a private lounge.",
                 depth=d, canonical="iv-therapy.html", webpage_type="MedicalWebPage", speakable=True,
                 og_image="assets/media/iv-hero.jpg",
@@ -4345,7 +4369,7 @@ def _blog_seo_title(title):
     return title[:61].rsplit(" ", 1)[0].rstrip(",;:–—-")
 
 
-_BLOG_SEO_TITLES = {'knee-shoulder-hip-pain-without-surgery': 'Joint Pain Without Surgery | RegenOrtho Palm Beach', 'prp-therapy-knee-osteoarthritis': 'PRP for Knee Osteoarthritis | RegenOrtho Palm Beach', 'regenerative-medicine-vs-joint-replacement': 'Regeneration vs Replacement | RegenOrtho Palm Beach', 'five-pillar-concierge-orthopedic-recovery': 'Concierge Orthopedic Recovery | RegenOrtho Palm Beach', 'orthopedic-sports-medicine-pain-free-living': 'Orthopedics & Sports Medicine | RegenOrtho Palm Beach', 'regenerative-medicine-future-of-healing': 'Regenerative Medicine Explained | RegenOrtho Palm Beach', 'healing-without-surgery': 'Healing Without Surgery | RegenOrtho Palm Beach Blog', 'minimally-invasive-foot-ankle-surgery': 'Minimally Invasive Foot Surgery | RegenOrtho Palm Beach', 'modern-vein-care-varicose-spider-veins': 'Modern Varicose Vein Care | RegenOrtho Palm Beach Blog', 'iv-therapy-recovery-wellness': 'IV Therapy for Recovery | RegenOrtho Palm Beach Blog'}
+_BLOG_SEO_TITLES = {'knee-shoulder-hip-pain-without-surgery': 'Joint Pain Without Surgery | RegenOrtho Palm Beach', 'prp-therapy-knee-osteoarthritis': 'PRP for Knee Osteoarthritis | RegenOrtho Palm Beach', 'regenerative-medicine-vs-joint-replacement': 'Regeneration vs Replacement | RegenOrtho Palm Beach', 'five-pillar-concierge-orthopedic-recovery': 'Concierge Orthopedic Recovery | RegenOrtho Palm Beach', 'orthopedic-sports-medicine-pain-free-living': 'Orthopedics & Sports Medicine | RegenOrtho Palm Beach', 'regenerative-medicine-future-of-healing': 'Regenerative Medicine Explained | RegenOrtho Palm Beach', 'healing-without-surgery': 'Healing Without Surgery | RegenOrtho Palm Beach Blog', 'minimally-invasive-foot-ankle-surgery': 'Minimally Invasive Foot Surgery | RegenOrtho Palm Beach', 'modern-vein-care-varicose-spider-veins': 'Modern Varicose Vein Care | RegenOrtho Palm Beach Blog', 'iv-therapy-recovery-wellness': 'IV Therapy for Recovery | Recovery Drips, Palm Beach Gardens'}
 
 
 # Per-post extras for the blog templates. Keyed by slug; a post the content portal
