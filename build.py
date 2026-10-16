@@ -820,14 +820,28 @@ def org_schema():
             # Spanish was previously listed here with no published claim anywhere on the
             # site to back it up — a fabricated capability claim (facts discipline). Add
             # it back only once the practice confirms Spanish-speaking staff/service.
-            "availableLanguage": [{"@type": "Language", "name": "English"}],
+            # availableLanguage is not an Organization property (schema.org puts it
+            # on ContactPoint), so it rides on the contact point for the same phone
+            # and inbox listed above.
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "contactType": "customer service",
+                "telephone": "+1-833-783-6561",
+                "email": EMAIL,
+                "availableLanguage": [{"@type": "Language", "name": "English"}],
+            },
             "knowsAbout": [
-                "Regenerative medicine", "Platelet-rich plasma therapy", "Orthobiologics",
-                "Peptide therapy", "Varicose vein treatment", "Peripheral neuropathy",
-                "GLP-1 medical weight loss", "IV infusion therapy",
+                "Regenerative medicine", "Phlebology", "Platelet-rich plasma therapy",
+                "Orthobiologics", "Peptide therapy", "Varicose vein treatment",
+                "Peripheral neuropathy", "GLP-1 medical weight loss", "IV infusion therapy",
             ],
             "isAcceptingNewPatients": True,
-            "medicalSpecialty": ["Regenerative medicine", "Phlebology"],
+            # medicalSpecialty only accepts schema.org MedicalSpecialty members, so the
+            # free-text "Regenerative medicine" / "Phlebology" were invalid here. They
+            # live on in knowsAbout; these are the enumeration members that cover them
+            # (orthopedic/musculoskeletal care, and vein = vascular care).
+            "medicalSpecialty": ["https://schema.org/Musculoskeletal",
+                                 "https://schema.org/Cardiovascular"],
             "address": {
                 "@type": "PostalAddress",
                 "streetAddress": ADDRESS_STREET,
@@ -2639,7 +2653,9 @@ SERVICE_ONE_TIME_PRICE = {
 def therapy_schema(svc):
     node = {
         "@context": "https://schema.org",
-        "@type": "MedicalTherapy",
+        # Also a Service: provider, areaServed and offers are Service properties
+        # and are not defined on MedicalTherapy.
+        "@type": ["MedicalTherapy", "Service"],
         "@id": f"{BASE}/services/{svc['slug']}.html#service",
         "name": svc["name"],
         "description": svc["desc"],
@@ -3413,9 +3429,12 @@ CEDENO_BIO = [
 
 def physician_schema(name, photo, title_str, url_path, same_as=None, schema_type="Physician",
                      specialty=None, npi=None):
+    # schema.org's Physician is an Organization subtype, so jobTitle and worksFor
+    # (Person-only properties) were invalid on it alone. Typing the node as the
+    # Person too makes both legal without dropping either fact.
     obj = {
         "@context": "https://schema.org",
-        "@type": schema_type,
+        "@type": [schema_type, "Person"] if schema_type != "Person" else "Person",
         "name": name,
         "jobTitle": title_str,
         "image": f"{BASE}/assets/{photo}",
@@ -3431,7 +3450,10 @@ def physician_schema(name, photo, title_str, url_path, same_as=None, schema_type
         "telephone": "+1-833-783-6561",
     }
     if specialty:
-        obj["medicalSpecialty"] = specialty      # required for Physician rich results
+        # medicalSpecialty takes MedicalSpecialty enumeration members only; the
+        # practice's own wording for each specialty is kept in knowsAbout.
+        obj["medicalSpecialty"] = [f"https://schema.org/{m}" for m in specialty["members"]]
+        obj["knowsAbout"] = specialty["labels"]
     if same_as:
         obj["sameAs"] = same_as
     if npi:
@@ -3460,8 +3482,10 @@ _PROVIDER_PROFILES = {
 }
 
 _PROVIDER_SPECIALTY = {
-    "dr-marc-matarazzo": ["Orthopedic surgery", "Sports medicine"],
-    "dr-orlando-cedeno": ["Podiatric medicine", "Foot and ankle surgery", "Phlebology"],
+    "dr-marc-matarazzo": {"labels": ["Orthopedic surgery", "Sports medicine"],
+                          "members": ["Musculoskeletal", "Surgical"]},
+    "dr-orlando-cedeno": {"labels": ["Podiatric medicine", "Foot and ankle surgery", "Phlebology"],
+                          "members": ["Podiatric", "Surgical", "Cardiovascular"]},
 }
 
 
@@ -3723,7 +3747,7 @@ def build_iv():
     )
     offers = extra_ld({
         "@context": "https://schema.org",
-        "@type": "MedicalTherapy",
+        "@type": ["MedicalTherapy", "Service"],
         "@id": f"{BASE}/iv-therapy.html#service",
         "name": "IV Recovery & Wellness Therapy",
         "description": "Clinician-supervised IV vitamin and nutrient infusions in Palm Beach Gardens — hydration, immune support, NAD+, athletic recovery, and full-body wellness formulas.",
@@ -3735,7 +3759,8 @@ def build_iv():
         # The menu and its prices are already published on the page; declaring them
         # is what lets Google and the AI assistants answer "how much is a NAD+ drip
         # in Palm Beach Gardens" with our number instead of a competitor's.
-        "offers": {
+        # An OfferCatalog belongs in hasOfferCatalog; `offers` only takes Offer.
+        "hasOfferCatalog": {
             "@type": "OfferCatalog",
             "name": "IV Recovery & Wellness Lounge menu",
             "itemListElement": [
@@ -4573,7 +4598,9 @@ def build_blog():
             "name": f"{NAME} Blog", "url": f"{BASE}/blog/index.html",
             "publisher": {"@id": ORG_ID},
             "blogPost": [{"@type": "BlogPosting", "headline": p_["title"],
-                          "url": f"{BASE}/blog/{p_['slug']}.html", "datePublished": p_["date"]}
+                          "url": f"{BASE}/blog/{p_['slug']}.html", "datePublished": p_["date"],
+                          "image": f"{BASE}/assets/media/{p_['image']}",
+                          "author": {"@type": "Organization", "name": NAME, "@id": ORG_ID}}
                          for p_ in posts],
         })
         + breadcrumb_schema([("", "Home"), ("blog/index.html", "Blog")])
