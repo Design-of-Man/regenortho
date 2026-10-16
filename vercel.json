@@ -24,6 +24,11 @@
       "permanent": true
     },
     {
+      "source": "/review",
+      "destination": "https://search.google.com/local/writereview?placeid=ChIJ48L6Yg8r34gR3UxzOZ36YFU",
+      "statusCode": 302
+    },
+    {
       "source": "/pricing.html",
       "destination": "/pricing",
       "permanent": true
