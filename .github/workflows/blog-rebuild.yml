@@ -1,0 +1,47 @@
+name: Rebuild on blog content change
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "blog_content.py"
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history, not a shallow clone. build.py's page_lastmod() runs
+          # `git log --pretty=format:%cs --name-only` over the whole repo to
+          # derive each page's dateModified from its last real commit. A
+          # shallow checkout has no parent to diff against, so git attributes
+          # every file in the tree to the shallow boundary commit and every
+          # page would get the same wrong date.
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build
+        run: python3 build.py
+
+      - name: Commit and push regenerated output
+        run: |
+          if git diff --quiet; then
+            echo "Nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Rebuild after blog_content.py change
+
+Automated rebuild triggered by a push to blog_content.py.
+
+Co-authored-by: Claude <noreply@anthropic.com>"
+          git push
