@@ -51,7 +51,8 @@ FORM_TARGET_EMAIL = "emily@regenorthopb.com"  # FormSubmit delivery address (con
 FORM_CC_EMAILS = (
     "nicholasbkashuba@gmail.com,"
     "matarazzomd@gmail.com,"      # Dr. Marc Matarazzo
-    "doctor.cedeno@gmail.com"     # Dr. Orlando Cedeno
+    "doctor.cedeno@gmail.com,"    # Dr. Orlando Cedeno
+    "angela.d@jupiterlaser.com"   # Angela
 )
 ADDRESS_STREET = "11380 Prosperity Farms Road, Suite 204–208"
 ADDRESS_CITY = "Palm Beach Gardens"
