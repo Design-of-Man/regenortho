@@ -385,8 +385,11 @@ GA_TAG = f"""<!-- Google tag (gtag.js), loaded after onload -->
 def head(title, desc, depth=0, canonical="", og_image="assets/media/og-physicians-v1.jpg",
          page_type="website", extra_schema="", preload_hero=False, extra_css="",
          webpage_type="WebPage", speakable=False, assistant=True,
-         analytics=True):
+         analytics=True, noindex=False):
     p = "../" * depth
+    # Patient forms are tools for existing patients, not search landing pages:
+    # they render "noindex, follow" and build_meta() leaves them out of the sitemap.
+    robots = "noindex, follow" if noindex else "index, follow"
     canonical_url = f"{BASE}/{canonical}" if canonical else f"{BASE}/"
     og_url = f"{SHARE_BASE}/{og_image}?v={asset_v(og_image)}"
     og_w, og_h = img_dims(og_image)
@@ -488,9 +491,9 @@ def head(title, desc, depth=0, canonical="", og_image="assets/media/og-physician
 <meta name="format-detection" content="telephone=no">
 <!-- Let Google/Bing use full-length snippets and large image previews. Without
      this they cap snippet length, which is what feeds AI Overviews and chat answers. -->
-<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="robots" content="{robots}, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="{robots}, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="{robots}, max-snippet:-1, max-image-preview:large">
 <meta name="geo.region" content="US-FL">
 <meta name="geo.placename" content="Palm Beach Gardens">
 <meta name="geo.position" content="{GEO_LAT};{GEO_LNG}">
@@ -4375,7 +4378,7 @@ def build_forms():
                     extra_css="assets/css/forms.css",
                     extra_schema=breadcrumb_schema([("", "Home"), ("forms/index.html", "Patient Forms"),
                                                     (f"forms/{f['slug']}.html", f["plain_name"])]),
-                    assistant=False, analytics=False,
+                    assistant=False, analytics=False, noindex=True,
                     ) + '<body class="page-form">\n' + body
         write(f"forms/{f['slug']}.html", page)
 
@@ -4807,7 +4810,6 @@ def build_meta():
              "services/index.html", "blog/index.html",
              "conditions/index.html", "locations/index.html",
              "providers/dr-marc-matarazzo.html", "providers/dr-orlando-cedeno.html"]
-    pages += [f"forms/{f['slug']}.html" for f in FORMS]
     pages += [f"services/{s['slug']}.html" for s in SERVICES]
     pages += [f"conditions/{c['slug']}.html" for c in CONDITIONS]
     pages += [f"locations/{l['slug']}.html" for l in LOCATIONS]

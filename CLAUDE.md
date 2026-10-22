@@ -72,6 +72,9 @@ Static site, 56 pages, generated — do not edit HTML files directly.
   forms (`/forms/new-patient.html`, `/forms/peptide-glp-questionnaire.html`). Questions are
   declarative in `forms_content.py`; the renderer (`_field`/`_section`/`build_forms` in
   build.py) generates markup, validation, the step rail, the summary and the print sheet.
+  The individual form pages are `noindex, follow` (`head(noindex=True)`) and are left out of
+  sitemap.xml: they are tools for booked patients, and the IV consent form was indexed in
+  Google until 2026-10. The /forms hub stays indexable.
 
 ## Business facts (canonical)
 - RegenOrtho Palm Beach · "The Regeneration of Orthopedics"
