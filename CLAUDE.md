@@ -72,6 +72,9 @@ Static site, 56 pages, generated — do not edit HTML files directly.
   forms (`/forms/new-patient.html`, `/forms/peptide-glp-questionnaire.html`). Questions are
   declarative in `forms_content.py`; the renderer (`_field`/`_section`/`build_forms` in
   build.py) generates markup, validation, the step rail, the summary and the print sheet.
+  The individual form pages are `noindex, follow` (`head(noindex=True)`) and are left out of
+  sitemap.xml: they are tools for booked patients, and the IV consent form was indexed in
+  Google until 2026-10. The /forms hub stays indexable.
 
 ## Business facts (canonical)
 - RegenOrtho Palm Beach · "The Regeneration of Orthopedics"
@@ -212,6 +215,11 @@ CSS coastline scene stays underneath as the no-video fallback. asset_v() returns
   absorbed 5,185 impressions (45% of all) at avg position 38.8 and a 0.06% CTR, against non-www's
   6,372 impressions at position 11.8 and 0.67%. If www ever returns 200 again, this is why.
   Check with `curl -s -o /dev/null -w '%{http_code}' https://www.regenorthopb.com/` — expect 308.
+- TRAILING SLASHES: `"trailingSlash": false` in vercel.json makes Vercel 308 every `/x/` to `/x`
+  BEFORE the redirect table is read, so a `/x/` source rule would never match — don't add one.
+  Verified on production 2026-10-23 (`/dr-marc-matarazzo-md/`, `/iv-therapy/`, `/about/`,
+  `/services/kpv/` all 308 to the slashless canonical). Search Console still listing a `/x/`
+  form (an old WordPress URL) is Google not having recrawled it yet, not a missing rule.
 - Org node: MedicalClinic+MedicalBusiness @id {BASE}/#organization.
   Per page: Physician (providers), MedicalTherapy (services), MedicalCondition (conditions),
   FAQPage (faq + service/condition pages), Service-per-city (locations), BlogPosting (posts),

@@ -51,7 +51,8 @@ FORM_TARGET_EMAIL = "emily@regenorthopb.com"  # FormSubmit delivery address (con
 FORM_CC_EMAILS = (
     "nicholasbkashuba@gmail.com,"
     "matarazzomd@gmail.com,"      # Dr. Marc Matarazzo
-    "doctor.cedeno@gmail.com"     # Dr. Orlando Cedeno
+    "doctor.cedeno@gmail.com,"    # Dr. Orlando Cedeno
+    "angela.d@jupiterlaser.com"   # Angela
 )
 ADDRESS_STREET = "11380 Prosperity Farms Road, Suite 204–208"
 ADDRESS_CITY = "Palm Beach Gardens"
@@ -387,8 +388,11 @@ GA_TAG = f"""<!-- Google tag (gtag.js), loaded after onload -->
 def head(title, desc, depth=0, canonical="", og_image="assets/media/og-physicians-v1.jpg",
          page_type="website", extra_schema="", preload_hero=False, extra_css="",
          webpage_type="WebPage", speakable=False, assistant=True,
-         analytics=True):
+         analytics=True, noindex=False):
     p = "../" * depth
+    # Patient forms are tools for existing patients, not search landing pages:
+    # they render "noindex, follow" and build_meta() leaves them out of the sitemap.
+    robots = "noindex, follow" if noindex else "index, follow"
     canonical_url = f"{BASE}/{canonical}" if canonical else f"{BASE}/"
     og_url = f"{SHARE_BASE}/{og_image}?v={asset_v(og_image)}"
     og_w, og_h = img_dims(og_image)
@@ -490,9 +494,9 @@ def head(title, desc, depth=0, canonical="", og_image="assets/media/og-physician
 <meta name="format-detection" content="telephone=no">
 <!-- Let Google/Bing use full-length snippets and large image previews. Without
      this they cap snippet length, which is what feeds AI Overviews and chat answers. -->
-<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="robots" content="{robots}, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="{robots}, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="bingbot" content="{robots}, max-snippet:-1, max-image-preview:large">
 <meta name="geo.region" content="US-FL">
 <meta name="geo.placename" content="Palm Beach Gardens">
 <meta name="geo.position" content="{GEO_LAT};{GEO_LNG}">
@@ -823,14 +827,28 @@ def org_schema():
             # Spanish was previously listed here with no published claim anywhere on the
             # site to back it up — a fabricated capability claim (facts discipline). Add
             # it back only once the practice confirms Spanish-speaking staff/service.
-            "availableLanguage": [{"@type": "Language", "name": "English"}],
+            # availableLanguage is not an Organization property (schema.org puts it
+            # on ContactPoint), so it rides on the contact point for the same phone
+            # and inbox listed above.
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "contactType": "customer service",
+                "telephone": "+1-833-783-6561",
+                "email": EMAIL,
+                "availableLanguage": [{"@type": "Language", "name": "English"}],
+            },
             "knowsAbout": [
-                "Regenerative medicine", "Platelet-rich plasma therapy", "Orthobiologics",
-                "Peptide therapy", "Varicose vein treatment", "Peripheral neuropathy",
-                "GLP-1 medical weight loss", "IV infusion therapy",
+                "Regenerative medicine", "Phlebology", "Platelet-rich plasma therapy",
+                "Orthobiologics", "Peptide therapy", "Varicose vein treatment",
+                "Peripheral neuropathy", "GLP-1 medical weight loss", "IV infusion therapy",
             ],
             "isAcceptingNewPatients": True,
-            "medicalSpecialty": ["Regenerative medicine", "Phlebology"],
+            # medicalSpecialty only accepts schema.org MedicalSpecialty members, so the
+            # free-text "Regenerative medicine" / "Phlebology" were invalid here. They
+            # live on in knowsAbout; these are the enumeration members that cover them
+            # (orthopedic/musculoskeletal care, and vein = vascular care).
+            "medicalSpecialty": ["https://schema.org/Musculoskeletal",
+                                 "https://schema.org/Cardiovascular"],
             "address": {
                 "@type": "PostalAddress",
                 "streetAddress": ADDRESS_STREET,
@@ -1201,11 +1219,11 @@ SERVICES = [
         "slug": "regenerative-medicine-orthobiologics",
         "name": "Regenerative Medicine & Orthobiologic Therapies",
         "nav": "Regenerative Medicine & Orthobiologics",
-        "title": "PRP & Regenerative Medicine Palm Beach Gardens | RegenOrtho",
-        "desc": "PRP injections, cellular and exosome therapies, peptides, and ultrasound-guided orthobiologics in Palm Beach Gardens — natural healing without surgery.",
+        "title": "PRP & Orthobiologics Palm Beach Gardens | RegenOrtho",
+        "desc": "PRP injections and orthobiologic therapies in Palm Beach Gardens — cellular and exosome treatments and peptides, placed under ultrasound, without surgery.",
         "eyebrow": "Regenerative Medicine & Orthobiologics",
         "h1": "Advanced Regenerative Therapies for Lasting Healing",
-        "lede": "Treatments that aim at the tissue itself rather than the symptom — placed under ultrasound, matched to what the imaging actually shows, and paired with the rehabilitation that makes them hold.",
+        "lede": "PRP and orthobiologic treatments in Palm Beach Gardens that aim at the tissue itself rather than the symptom — placed under ultrasound, matched to what the imaging actually shows, and paired with the rehabilitation that makes them hold.",
         "img": "svc-regen.jpg",
         "img_alt": "Regenerative medicine specialist preparing an orthobiologic treatment at RegenOrtho Palm Beach",
         "why": [
@@ -1247,11 +1265,11 @@ SERVICES = [
         "name": "Exosome Therapy",
         "nav": "Exosome Therapy",
         "parent": "regenerative-medicine-orthobiologics",
-        "title": "Exosome Therapy Palm Beach Gardens | RegenOrtho",
+        "title": "Exosome Therapy & Injections Palm Beach Gardens | RegenOrtho",
         "desc": "Cell-free exosome therapy in Palm Beach Gardens — ultrasound-guided delivery of growth-factor-rich vesicles for joint, tendon, and soft-tissue repair.",
         "eyebrow": "Regenerative Medicine & Orthobiologics",
         "h1": "Advanced Cell-Free Regenerative Therapy for Pain Relief & Tissue Recovery",
-        "lede": "A cell-free treatment using naturally occurring extracellular vesicles rich in growth factors and signaling molecules to support your body's healing response, reduce inflammation, and improve mobility.",
+        "lede": "Exosome therapy in Palm Beach Gardens: a cell-free treatment using naturally occurring extracellular vesicles rich in growth factors and signaling molecules to support your body's healing response, reduce inflammation, and improve mobility.",
         "img": "svc-exosome.jpg",
         "img_alt": "Illustration of tiny extracellular vesicles budding from a cell membrane",
         "why": [
@@ -1294,11 +1312,11 @@ SERVICES = [
         "name": "Mesenchymal Stem Cell Therapy",
         "nav": "Mesenchymal Stem Cell Therapy",
         "parent": "regenerative-medicine-orthobiologics",
-        "title": "Stem Cell Therapy Palm Beach Gardens | Mesenchymal (MSC)",
+        "title": "Mesenchymal Stem Cell Therapy Palm Beach Gardens | RegenOrtho",
         "desc": "Mesenchymal stem cell therapy in Palm Beach Gardens — umbilical cord-derived cells delivered via ultrasound-guided injection for joint and tissue healing.",
         "eyebrow": "Regenerative Medicine & Orthobiologics",
         "h1": "Advanced Regenerative Medicine for Joint Pain & Tissue Healing",
-        "lede": "A non-surgical approach using umbilical cord-derived mesenchymal stem cells to support the body's natural healing response, reduce pain, and improve mobility.",
+        "lede": "Mesenchymal stem cell therapy in Palm Beach Gardens: a non-surgical approach using umbilical cord-derived mesenchymal stem cells to support the body's natural healing response, reduce pain, and improve mobility.",
         "img": "svc-msc.jpg",
         "img_alt": "Gloved hands lifting a cryovial from a liquid nitrogen storage vessel in a laboratory",
         "why": [
@@ -1522,11 +1540,11 @@ SERVICES = [
         "slug": "vein-care",
         "name": "Vein Care — Medical & Cosmetic",
         "nav": "Vein Care — Medical & Cosmetic",
-        "title": "Vein Treatment Palm Beach Gardens | Varicose & Spider Veins",
-        "desc": "Ultrasound-guided vein care in Palm Beach Gardens — sclerotherapy, endovenous laser & RF ablation, phlebectomy, and cosmetic vein treatment with quick recovery.",
+        "title": "Varicose & Spider Vein Treatment Palm Beach Gardens, FL",
+        "desc": "Varicose and spider vein treatment in Palm Beach Gardens — ultrasound mapping, then sclerotherapy, laser & RF ablation or microphlebectomy, done in-office.",
         "eyebrow": "Vein Care — Medical & Cosmetic",
         "h1": "Comprehensive Vein Care — Medical & Cosmetic",
-        "lede": "We image the legs before we treat them, then close the failing veins through a needle rather than an incision. Most patients drive themselves home and are back to normal within a day or two.",
+        "lede": "Varicose and spider vein treatment in Palm Beach Gardens starts with imaging: we map the legs before we treat them, then close the failing veins through a needle rather than an incision. Most patients drive themselves home and are back to normal within a day or two.",
         "img": "vein-treatment.jpg",
         "img_alt": "Vein specialist performing an ultrasound-guided leg vein evaluation in Palm Beach Gardens",
         "why": [
@@ -1537,11 +1555,11 @@ SERVICES = [
         ],
         "expertise": [
             ("Comprehensive Ultrasound-Guided Vein Evaluation", "Duplex ultrasound shows which valves have failed and where the reflux actually starts — which is frequently not the vein you can see. Treating the visible one instead is the usual reason veins return."),
-            ("Sclerotherapy for Spider & Reticular Veins", "A solution injected into spider and reticular veins collapses them, and the body clears them over the following weeks. Minutes in the chair, no downtime."),
-            ("Endovenous Laser & Radiofrequency (RF) Ablation", "Heat delivered inside the failed saphenous vein seals it shut, and circulation reroutes through healthy vessels. This addresses the cause rather than the bulging vein you can see."),
+            ("Sclerotherapy for Spider & Reticular Veins", "A solution injected into spider and reticular veins collapses them, and the body clears them over the following weeks. Minutes in the chair, no downtime. More on <a href=\"../services/sclerotherapy.html\">sclerotherapy in Palm Beach Gardens</a>."),
+            ("Endovenous Laser & Radiofrequency (RF) Ablation", "Heat delivered inside the failed saphenous vein seals it shut, and circulation reroutes through healthy vessels. This addresses the cause rather than the bulging vein you can see. More on <a href=\"../services/endovenous-ablation.html\">endovenous ablation in Palm Beach Gardens</a>."),
             ("Cosmetic Vein Procedures for Legs, Feet & Ankles", "Surface sclerotherapy and micro-laser for patients whose concern is how the legs look. The aim is an even result rather than an obviously treated one."),
             ("Advanced Wound Care for Venous Insufficiency", "Where poor venous return has caused skin changes or an ulcer, wound management and compression run alongside treating the underlying reflux — an ulcer will not stay healed while the pressure behind it remains."),
-            ("Ambulatory Phlebectomy & In-Office Vein Removal", "Surface varicosities lifted out through punctures small enough not to need stitches. The improvement is visible the same day."),
+            ("Ambulatory Phlebectomy & In-Office Vein Removal", "Surface varicosities lifted out through punctures small enough not to need stitches. The improvement is visible the same day. More on <a href=\"../services/microphlebectomy.html\">microphlebectomy in Palm Beach Gardens</a>."),
         ],
         "steps": [
             ("Evaluation & Mapping", "Ultrasound first — what has failed, and where."),
@@ -1582,7 +1600,7 @@ SERVICES = [
         "desc": "Sclerotherapy for spider and reticular veins in Palm Beach Gardens — targeted in-office injections, ultrasound-guided planning, minimal recovery.",
         "eyebrow": "Sclerotherapy",
         "h1": "Sclerotherapy for Spider &amp; Reticular Veins",
-        "lede": "Targeted injections close small surface veins to improve leg appearance and reduce localized symptoms — quick, in-office, with minimal recovery.",
+        "lede": "Sclerotherapy in Palm Beach Gardens: targeted injections close small surface veins to improve leg appearance and reduce localized symptoms — quick, in-office, with minimal recovery.",
         "img": "svc-sclerotherapy.jpg",
         "img_alt": "A clinician preparing to treat fine spider veins on the back of a patient’s leg",
         "why": [
@@ -1621,7 +1639,7 @@ SERVICES = [
         "desc": "Endovenous laser and radiofrequency ablation in Palm Beach Gardens — ultrasound-guided treatment of diseased saphenous veins with a quick return to activity.",
         "eyebrow": "Endovenous Laser &amp; RF Ablation",
         "h1": "Endovenous Laser &amp; Radiofrequency Ablation",
-        "lede": "Thermal ablation seals diseased saphenous veins under ultrasound guidance, rerouting blood to healthy vessels and relieving the root cause of varicose veins.",
+        "lede": "Endovenous ablation in Palm Beach Gardens: thermal ablation seals diseased saphenous veins under ultrasound guidance, rerouting blood to healthy vessels and relieving the root cause of varicose veins.",
         "img": "svc-ablation.jpg",
         "img_alt": "A vein procedure room with an ultrasound monitor and a sterile tray holding a thin catheter fiber",
         "why": [
@@ -1660,7 +1678,7 @@ SERVICES = [
         "desc": "Ambulatory microphlebectomy in Palm Beach Gardens — micro-incision removal of superficial varicose veins in-office, with immediate contour improvement.",
         "eyebrow": "Ambulatory Phlebectomy",
         "h1": "Ambulatory Microphlebectomy &amp; In-Office Vein Removal",
-        "lede": "Micro-incision phlebectomy removes superficial varicose veins in-office for immediate contour improvement and symptom relief, with a quick return to activity.",
+        "lede": "Microphlebectomy in Palm Beach Gardens: micro-incision phlebectomy removes superficial varicose veins in-office for immediate contour improvement and symptom relief, with a quick return to activity.",
         "img": "svc-phlebectomy.jpg",
         "img_alt": "A leg wrapped in a compression bandage resting on a treatment chair after an in-office vein procedure",
         "why": [
@@ -1734,8 +1752,8 @@ SERVICES = [
         "slug": "medical-weight-loss",
         "name": "Medical Weight Loss & GLP-1 Program",
         "nav": "Medical Weight Loss & GLP-1",
-        "title": "Medical Weight Loss Palm Beach Gardens | Semaglutide & GLP-1",
-        "desc": "Physician-supervised medical weight loss in Palm Beach Gardens — semaglutide and tirzepatide GLP-1 therapy, personalized dosing and monitoring. From $239/month.",
+        "title": "Semaglutide & Medical Weight Loss in Palm Beach Gardens",
+        "desc": "Semaglutide (Ozempic®, Wegovy®) and tirzepatide (Zepbound®) weight loss in Palm Beach Gardens, with physician-supervised dosing and monitoring. From $239/month.",
         "eyebrow": "Physician-Supervised Weight Loss",
         "h1": "Physician-Supervised Medical Weight Loss",
         "lede": "Achieve sustainable weight loss with personalized, medically guided treatment designed to support your overall health, mobility, and long-term wellness — plans starting at $239/month.",
@@ -1759,7 +1777,7 @@ SERVICES = [
             ("Monitoring & Support", "Regular check-ins track progress, manage side effects, and adjust your plan for sustainable results."),
         ],
         "faqs": [
-            ("What medications are available?", "Our physician-supervised solutions include compounded therapies and FDA-approved GLP-1 medications such as Ozempic® and Wegovy® (both semaglutide) and Zepbound® (tirzepatide) — prescribed only when appropriate for you."),
+            ("Do you offer semaglutide, and what other medications are available?", "Yes. Our physician-supervised solutions include compounded therapies and FDA-approved GLP-1 medications such as Ozempic® and Wegovy® (both semaglutide) and Zepbound® (tirzepatide) — prescribed only when appropriate for you."),
             ("How much does the program cost?", "Plans start at $239 per month; your exact program depends on the medication and monitoring plan your physician recommends."),
             ("Is GLP-1 therapy safe?", "GLP-1 therapy should always be prescribed and monitored by a qualified medical professional. Outcomes and treatment response differ from person to person — our physicians screen carefully and monitor you throughout."),
             ("When will I see results?", "Many patients notice appetite changes within the first two weeks and early weight loss over the first month; individual results vary."),
@@ -2139,13 +2157,13 @@ CONDITIONS = [
      "faqs": [("What causes peripheral neuropathy?", "Causes range from metabolic conditions to nerve compression — which is exactly why the program starts with diagnostics that identify your driver before treatment begins."),
               ("Is the program surgical?", "No — it's a non-surgical program. Only a persistent focal nerve issue would prompt evaluation for a targeted nerve release procedure.")]},
     {"slug": "varicose-spider-veins", "name": "Varicose & Spider Veins",
-     "title": "Varicose & Spider Vein Treatment Palm Beach Gardens",
-     "desc": "Varicose and spider vein treatment in Palm Beach Gardens — duplex ultrasound mapping, laser & RF ablation, sclerotherapy, and cosmetic vein care.",
+     "title": "Varicose Veins & Venous Insufficiency | Palm Beach Gardens",
+     "desc": "Aching, heavy or swollen legs and visible veins in Palm Beach Gardens — what causes varicose veins and venous insufficiency, and how duplex mapping guides care.",
      "h1": "Healthier, Better-Looking Legs",
      "lede": "Aching, heaviness, swelling, and visible veins usually trace back to one thing: valves that no longer close. We map them, then fix them.",
      "img": "vein-treatment.jpg",
      "symptoms": ["Bulging, rope-like varicose veins", "Visible spider or reticular veins", "Leg heaviness, aching, or swelling by day's end", "Night cramps or restless legs", "Skin changes or slow-healing spots near the ankle"],
-     "body": "Vein disease is progressive and underdiagnosed — and treating the visible veins without finding the underlying reflux is why so many treatments elsewhere don't last. Every vein plan here starts with duplex ultrasound mapping to locate the failing valves. Treatment is minimally invasive and office-based: endovenous laser or radiofrequency ablation for diseased saphenous veins, sclerotherapy for spider and reticular veins, micro-incision phlebectomy for surface varicosities, and specialized wound care when venous insufficiency has affected the skin.",
+     "body": "Vein disease is progressive and underdiagnosed — and treating the visible veins without finding the underlying reflux is why so many treatments elsewhere don't last. Every vein plan here starts with duplex ultrasound mapping to locate the failing valves. Treatment is minimally invasive and office-based: <a href=\"../services/endovenous-ablation.html\">endovenous laser or radiofrequency ablation</a> for diseased saphenous veins, <a href=\"../services/sclerotherapy.html\">sclerotherapy</a> for spider and reticular veins, <a href=\"../services/microphlebectomy.html\">micro-incision phlebectomy</a> for surface varicosities, and specialized wound care when venous insufficiency has affected the skin.",
      "services": ["vein-care"],
      "faqs": [("Is vein treatment covered by insurance?", "Medical vein care — treating symptoms and circulation problems — is often covered; cosmetic treatment is usually elective. We verify your benefits before treatment."),
               ("Do varicose veins come back after treatment?", "Treated veins are closed permanently, but new veins can develop over time — structured follow-up and prevention strategies minimize recurrence.")]},
@@ -2155,7 +2173,7 @@ PATHWAYS = [
     ("Biologic Therapies", "Stem cells, exosomes &amp; Wharton&rsquo;s jelly for joints &amp; soft tissue.", "from $2,500", "services/regenerative-medicine-orthobiologics.html"),
     ("Peptide Therapy", "Repair, recovery, longevity &amp; aesthetics — physician-supervised.", "from $249/mo", "services/peptide-therapy.html"),
     ("Shockwave &amp; Cold Laser", "Drug-free, non-invasive pain relief — no needles, no downtime.", "from $900", "services/advanced-non-surgical-therapies.html"),
-    ("GLP Therapy", "Medically supervised weight loss with GLP-1 &amp; dual-agonists.", "from $239/mo", "services/medical-weight-loss.html"),
+    ("GLP Therapy", "Medically supervised semaglutide &amp; tirzepatide (GLP-1 and dual-agonist) weight loss.", "from $239/mo", "services/medical-weight-loss.html"),
     ("IV Therapy &amp; Wellness", "Infusions, IM shots &amp; concierge wellness memberships.", "from $149/mo", "iv-therapy.html"),
 ]
 
@@ -2439,7 +2457,7 @@ def build_home():
   <div class="section-head reveal">
     <p class="eyebrow">One Roof. Every Answer.</p>
     <h2>Specialized care, <em>four ways</em></h2>
-    <p class="section-sub">Regenerative medicine, non-surgical therapies, vein care, and concierge access under one roof — so your plan is built around healing, not a single specialty's toolkit.</p>
+    <p class="section-sub">Regenerative medicine, non-surgical therapies, vein care, and concierge access under one roof — so your plan is built around healing, not a single specialty's toolkit. That includes <a href="services/mesenchymal-stem-cell-therapy.html">stem cell therapy in Palm Beach Gardens</a>, a straight shot north on I-95 for patients in <a href="locations/west-palm-beach.html">West Palm Beach</a>.</p>
   </div>
   <div class="svc-grid">
     {svc_cards_html}
@@ -2515,8 +2533,8 @@ def build_home():
     <nav class="path-col reveal" style="--d:90ms" aria-label="Care and wellness programs">
       <h3>Care &amp; wellness</h3>
       <ul class="path-links">
-        <li><a href="iv-therapy.html">IV Lounge — full menu &amp; pricing</a></li>
-        <li><a href="services/medical-weight-loss.html">Medical Weight Loss &amp; GLP-1</a></li>
+        <li><a href="iv-therapy.html">IV therapy &amp; IV hydration — menu &amp; pricing</a></li>
+        <li><a href="services/medical-weight-loss.html">Semaglutide &amp; GLP-1 weight loss</a></li>
         <li><a href="services/neuropathy-program.html">Neuropathy Restoration Program</a></li>
         <li><a href="services/concierge-care.html">Concierge &amp; Direct-Pay Care</a></li>
       </ul>
@@ -2592,7 +2610,7 @@ def build_home():
 # The plain-language phrase that opens each service page's h1 (see page_hero). The
 # name a patient types, then the city — never a claim. Kept in step with the <title>.
 SERVICE_H1_LEAD = {
-    "regenerative-medicine-orthobiologics": "PRP &amp; Regenerative Medicine in Palm Beach Gardens",
+    "regenerative-medicine-orthobiologics": "PRP &amp; Orthobiologics in Palm Beach Gardens",
     "exosome-therapy": "Exosome Therapy in Palm Beach Gardens",
     "mesenchymal-stem-cell-therapy": "Mesenchymal Stem Cell Therapy in Palm Beach Gardens",
     "whartons-jelly-therapy": "Wharton&rsquo;s Jelly Therapy in Palm Beach Gardens",
@@ -2604,7 +2622,7 @@ SERVICE_H1_LEAD = {
     "endovenous-ablation": "Endovenous Ablation in Palm Beach Gardens",
     "microphlebectomy": "Microphlebectomy in Palm Beach Gardens",
     "neuropathy-program": "Neuropathy Treatment in Palm Beach Gardens",
-    "medical-weight-loss": "Medical Weight Loss &amp; GLP-1 in Palm Beach Gardens",
+    "medical-weight-loss": "Semaglutide &amp; Medical Weight Loss in Palm Beach Gardens",
     "peptide-therapy": "Peptide Therapy in Palm Beach Gardens",
     "ghk-cu": "GHK-Cu Peptide Therapy in Palm Beach Gardens",
     "kpv": "KPV Peptide Therapy in Palm Beach Gardens",
@@ -2642,7 +2660,9 @@ SERVICE_ONE_TIME_PRICE = {
 def therapy_schema(svc):
     node = {
         "@context": "https://schema.org",
-        "@type": "MedicalTherapy",
+        # Also a Service: provider, areaServed and offers are Service properties
+        # and are not defined on MedicalTherapy.
+        "@type": ["MedicalTherapy", "Service"],
         "@id": f"{BASE}/services/{svc['slug']}.html#service",
         "name": svc["name"],
         "description": svc["desc"],
@@ -2916,7 +2936,7 @@ def build_services():
 </main>
 {footer(d)}"""
     schema = breadcrumb_schema([("", "Home"), ("services/index.html", "Our Services")])
-    page = head("Regenerative Medicine Services Palm Beach Gardens | RegenOrtho",
+    page = head("Regenerative Orthopedics & Medicine Palm Beach Gardens",
                 "Stem cell, exosome and PRP therapy, shockwave, vein care, IV therapy, peptides, neuropathy care and medical weight loss — all at one Palm Beach Gardens clinic.",
                 depth=d, canonical="services/index.html", extra_schema=schema, speakable=True) + '<body class="page-services">\n' + body
     write("services/index.html", page)
@@ -2934,7 +2954,7 @@ CONDITION_H1_LEAD = {
     "sports-injuries": "Sports Injury Treatment",
     "tendon-ligament-injuries": "Tendon &amp; Ligament Injury Treatment",
     "peripheral-neuropathy": "Peripheral Neuropathy Treatment",
-    "varicose-spider-veins": "Varicose &amp; Spider Vein Treatment",
+    "varicose-spider-veins": "Varicose Vein &amp; Venous Insufficiency Treatment",
 }
 
 
@@ -3276,6 +3296,28 @@ LOCATION_SERVICES = {
                       "medical-weight-loss"],
 }
 
+# Per-city <title>/description overrides, for the cities whose Search Console
+# queries differ from the template (Sept 12 - Oct 9 2026, four weekly snapshots):
+# Jupiter's page draws vein queries ("jupiter cosmetic vein care" 23.9,
+# "jupiter sclerotherapy", "jupiter spider vein treatment") alongside
+# "regenerative medicine (specialist) jupiter" (20-24); West Palm Beach's demand is
+# regenerative + neuropathy + vein (LOCATION_SERVICES order); North Palm Beach is
+# where the clinic actually sits. Every phrase restates the city's own blurb or
+# its LOCATION_SERVICES list — no new claims. Cities without an entry keep the
+# template in build_locations().
+LOCATION_SEO = {
+    "jupiter": {
+        "title": "Regenerative Medicine & Vein Care near Jupiter, FL",
+        "desc": "Jupiter residents: stem cell and regenerative medicine, varicose and spider vein treatment and sclerotherapy, minutes south in Palm Beach Gardens. 833-STEM561.",
+    },
+    "west-palm-beach": {
+        "desc": "West Palm Beach residents: stem cell and regenerative medicine, neuropathy care and vein treatment, a straight shot up I-95 in Palm Beach Gardens. 833-STEM561.",
+    },
+    "north-palm-beach": {
+        "desc": "North Palm Beach residents: regenerative medicine, PRP and stem cell therapy, peptides and medical weight loss at our Prosperity Farms Road clinic. 833-STEM561.",
+    },
+}
+
 LOCATION_INTERIORS = [
     ("clinic-lounge", "The recovery lounge at the RegenOrtho Palm Beach clinic on Prosperity Farms Road"),
     ("clinic-interior", "Inside the RegenOrtho Palm Beach clinic in Palm Beach Gardens"),
@@ -3368,9 +3410,10 @@ def build_locations():
             })
             + breadcrumb_schema([("", "Home"), ("locations/index.html", "Areas We Serve"), (f"locations/{loc['slug']}.html", city)])
         )
+        seo = LOCATION_SEO.get(loc["slug"], {})
         page = head(
-            f"Regenerative Medicine near {city}, FL | RegenOrtho",
-            f"{city} residents: stem cell, PRP and regenerative care, vein treatment and IV therapy minutes away in Palm Beach Gardens. Same-week visits: 833-STEM561.",
+            seo.get("title", f"Regenerative Medicine near {city}, FL | RegenOrtho"),
+            seo.get("desc", f"{city} residents: stem cell, PRP and regenerative care, vein treatment and IV therapy minutes away in Palm Beach Gardens. Same-week visits: 833-STEM561."),
             depth=d, canonical=f"locations/{loc['slug']}.html", extra_schema=schema, speakable=True,
             og_image=f"assets/media/{interior}.jpg",
         ) + '<body class="page-location">\n' + body
@@ -3393,9 +3436,12 @@ CEDENO_BIO = [
 
 def physician_schema(name, photo, title_str, url_path, same_as=None, schema_type="Physician",
                      specialty=None, npi=None):
+    # schema.org's Physician is an Organization subtype, so jobTitle and worksFor
+    # (Person-only properties) were invalid on it alone. Typing the node as the
+    # Person too makes both legal without dropping either fact.
     obj = {
         "@context": "https://schema.org",
-        "@type": schema_type,
+        "@type": [schema_type, "Person"] if schema_type != "Person" else "Person",
         "name": name,
         "jobTitle": title_str,
         "image": f"{BASE}/assets/{photo}",
@@ -3411,7 +3457,10 @@ def physician_schema(name, photo, title_str, url_path, same_as=None, schema_type
         "telephone": "+1-833-783-6561",
     }
     if specialty:
-        obj["medicalSpecialty"] = specialty      # required for Physician rich results
+        # medicalSpecialty takes MedicalSpecialty enumeration members only; the
+        # practice's own wording for each specialty is kept in knowsAbout.
+        obj["medicalSpecialty"] = [f"https://schema.org/{m}" for m in specialty["members"]]
+        obj["knowsAbout"] = specialty["labels"]
     if same_as:
         obj["sameAs"] = same_as
     if npi:
@@ -3440,8 +3489,10 @@ _PROVIDER_PROFILES = {
 }
 
 _PROVIDER_SPECIALTY = {
-    "dr-marc-matarazzo": ["Orthopedic surgery", "Sports medicine"],
-    "dr-orlando-cedeno": ["Podiatric medicine", "Foot and ankle surgery", "Phlebology"],
+    "dr-marc-matarazzo": {"labels": ["Orthopedic surgery", "Sports medicine"],
+                          "members": ["Musculoskeletal", "Surgical"]},
+    "dr-orlando-cedeno": {"labels": ["Podiatric medicine", "Foot and ankle surgery", "Phlebology"],
+                          "members": ["Podiatric", "Surgical", "Cardiovascular"]},
 }
 
 
@@ -3703,10 +3754,10 @@ def build_iv():
     )
     offers = extra_ld({
         "@context": "https://schema.org",
-        "@type": "MedicalTherapy",
+        "@type": ["MedicalTherapy", "Service"],
         "@id": f"{BASE}/iv-therapy.html#service",
         "name": "IV Recovery & Wellness Therapy",
-        "description": "Clinician-supervised IV vitamin and nutrient infusions in Palm Beach Gardens — hydration, immune support, NAD+, athletic recovery, and full-body wellness formulas.",
+        "description": "Clinician-supervised IV therapy, IV hydration and IV vitamin drips in Palm Beach Gardens — hydration, immune support, NAD+, athletic recovery, and full-body wellness formulas.",
         "url": f"{BASE}/iv-therapy.html",
         "provider": {"@id": ORG_ID},
         "image": f"{BASE}/assets/media/og-physicians-v1.jpg",
@@ -3715,7 +3766,8 @@ def build_iv():
         # The menu and its prices are already published on the page; declaring them
         # is what lets Google and the AI assistants answer "how much is a NAD+ drip
         # in Palm Beach Gardens" with our number instead of a competitor's.
-        "offers": {
+        # An OfferCatalog belongs in hasOfferCatalog; `offers` only takes Offer.
+        "hasOfferCatalog": {
             "@type": "OfferCatalog",
             "name": "IV Recovery & Wellness Lounge menu",
             "itemListElement": [
@@ -3731,9 +3783,38 @@ def build_iv():
         },
     })
     crumbs_html = crumbs([("", "IV Therapy Lounge")], depth=d)
+    # "Near you" block (2026-10-23 analytics report: /iv-therapy sat at #18-19 for
+    # "iv therapy / iv hydration / iv drip near me"). Every figure is computed from
+    # IV_MENU, IV_FAQS' published 30-60 minutes, and the NAP constants, so this
+    # block can never quote a price or a city the rest of the site does not.
+    iv_lo = min(IV_MENU, key=lambda m: m["price"])
+    iv_hi = max(m["price"] for m in IV_MENU)
+    hydration = next(m for m in IV_MENU if m["short"] == "Hydration")
+    _cl = [f'<a href="locations/{l["slug"]}.html">{l["city"]}</a>' for l in LOCATIONS]
+    city_links = ", ".join(_cl[:-1]) + " and " + _cl[-1]
+    price_rows = "".join(
+        f'<li><span class="pr-name">{m["short"]}<span class="pr-note">{m["ingredients"]}</span></span>'
+        f'<span class="pr-dots" aria-hidden="true"></span><span class="pr-price">${m["price"]}</span></li>'
+        for m in sorted(IV_MENU, key=lambda m: (m["price"], m["short"])))
+    near_you = f"""<section class="section" id="near-you">
+  <div class="pr-wrap pr-two">
+    <div class="pr-block reveal">
+      <p class="eyebrow">IV Therapy Near You</p>
+      <h2>IV hydration &amp; IV drips <em>in Palm Beach Gardens</em></h2>
+      <p>The IV lounge is inside our clinic at {ADDRESS_STREET}, {ADDRESS_CITY}, {ADDRESS_STATE} {ADDRESS_ZIP}, and patients come to it from {city_links}.</p>
+      <p>Basic IV hydration ({hydration['ingredients'].lower().replace(' · ', ' and ')}) is ${hydration['price']}. The full menu runs to {len(IV_MENU)} IV drips, from ${iv_lo['price']} to ${iv_hi} per infusion, and each one starts with a short medical pre-screen. Most infusions take 30 to 60 minutes.</p>
+      <p>Open {HOURS.replace(': ', ', ')}. Call <a href="tel:{PHONE_TEL}" data-call-location="iv_near_you">{PHONE_DISPLAY}</a> to book, or <a href="{MAP_URL}" rel="noopener" target="_blank">get directions</a>.</p>
+    </div>
+    <div class="pr-block reveal" style="--d:120ms">
+      <p class="eyebrow">Price per infusion</p>
+      <h2>IV therapy prices</h2>
+      <ul class="pr-list">{price_rows}</ul>
+    </div>
+  </div>
+</section>"""
     body = f"""{nav(d)}
 <main id="main">
-{page_hero("The IV Lounge", "Repair. Rehydrate. Renew.", "Revitalize your body and restore essential nutrients with IV treatments performed by our medical team — in a lounge designed for comfort, not a hospital corridor.", crumbs_html, depth=d, h1_lead="IV Therapy in Palm Beach Gardens")}
+{page_hero("The IV Lounge", "Repair. Rehydrate. Renew.", f"IV therapy and IV hydration in Palm Beach Gardens to revitalize your body and restore essential nutrients — clinician-supervised IV drips from ${iv_lo['price']}, in a lounge designed for comfort, not a hospital corridor.", crumbs_html, depth=d, h1_lead="IV Therapy in Palm Beach Gardens")}
 <section class="section section-dark section-drips" id="menu">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="section-head reveal"><p class="eyebrow">The Menu</p><h2>Twelve formulas, <em>one goal: you at 100%</em></h2>
@@ -3749,6 +3830,7 @@ def build_iv():
 
   <ul class="drip-shelf reveal" data-drips>{cards}</ul>
 </section>
+{near_you}
 <section class="section section-dark section-iv-how">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="section-head reveal"><p class="eyebrow">How It Works</p><h2>Concierge from <em>booking to boost</em></h2></div>
@@ -3762,13 +3844,14 @@ def build_iv():
 <section class="section section-tint">
   <div class="section-head reveal"><p class="eyebrow">Patient Guide &amp; Answers</p><h2>IV therapy <em>questions</em></h2></div>
   <div class="faq-list">{faqs}</div>
+  <p class="section-foot">Further reading: <a href="blog/iv-therapy-recovery-wellness.html">IV therapy for recovery</a> · <a href="blog/iv-hydration-in-palm-beach-gardens-what-to-expect-and-how-to-choose-a-clinic.html">IV hydration in Palm Beach Gardens: what to expect</a></p>
 </section>
 {cta_band(d, heading="Feel better <em>today</em>", sub="Come and sit in the lounge for an hour. Every formula is chosen with a clinician, and if an infusion is not what you need we will say so.")}
 </main>
 {footer(d)}"""
     schema = offers + faq_schema(IV_FAQS) + breadcrumb_schema([("", "Home"), ("iv-therapy.html", "IV Therapy")])
-    page = head("IV Therapy Palm Beach Gardens | Drip Lounge | RegenOrtho",
-                "IV therapy in Palm Beach Gardens: hydration, immune boost, NAD+ 500mg, athletic recovery & more — clinician-supervised drips from $189 in a private lounge.",
+    page = head("IV Therapy & IV Hydration Drips in Palm Beach Gardens, FL",
+                f"IV therapy, IV hydration and IV drips in Palm Beach Gardens, near Jupiter and North Palm Beach. Hydration from ${hydration['price']}; {len(IV_MENU)} clinician-supervised formulas to ${iv_hi}.",
                 depth=d, canonical="iv-therapy.html", webpage_type="MedicalWebPage", speakable=True,
                 og_image="assets/media/iv-hero.jpg",
                 extra_schema=schema) + '<body class="page-iv">\n' + body
@@ -4328,7 +4411,7 @@ def build_forms():
                     extra_css="assets/css/forms.css",
                     extra_schema=breadcrumb_schema([("", "Home"), ("forms/index.html", "Patient Forms"),
                                                     (f"forms/{f['slug']}.html", f["plain_name"])]),
-                    assistant=False, analytics=False,
+                    assistant=False, analytics=False, noindex=True,
                     ) + '<body class="page-form">\n' + body
         write(f"forms/{f['slug']}.html", page)
 
@@ -4348,7 +4431,7 @@ def _blog_seo_title(title):
     return title[:61].rsplit(" ", 1)[0].rstrip(",;:–—-")
 
 
-_BLOG_SEO_TITLES = {'knee-shoulder-hip-pain-without-surgery': 'Joint Pain Without Surgery | RegenOrtho Palm Beach', 'prp-therapy-knee-osteoarthritis': 'PRP for Knee Osteoarthritis | RegenOrtho Palm Beach', 'regenerative-medicine-vs-joint-replacement': 'Regeneration vs Replacement | RegenOrtho Palm Beach', 'five-pillar-concierge-orthopedic-recovery': 'Concierge Orthopedic Recovery | RegenOrtho Palm Beach', 'orthopedic-sports-medicine-pain-free-living': 'Orthopedics & Sports Medicine | RegenOrtho Palm Beach', 'regenerative-medicine-future-of-healing': 'Regenerative Medicine Explained | RegenOrtho Palm Beach', 'healing-without-surgery': 'Healing Without Surgery | RegenOrtho Palm Beach Blog', 'minimally-invasive-foot-ankle-surgery': 'Minimally Invasive Foot Surgery | RegenOrtho Palm Beach', 'modern-vein-care-varicose-spider-veins': 'Modern Varicose Vein Care | RegenOrtho Palm Beach Blog', 'iv-therapy-recovery-wellness': 'IV Therapy for Recovery | RegenOrtho Palm Beach Blog'}
+_BLOG_SEO_TITLES = {'knee-shoulder-hip-pain-without-surgery': 'Joint Pain Without Surgery | RegenOrtho Palm Beach', 'prp-therapy-knee-osteoarthritis': 'PRP for Knee Osteoarthritis | RegenOrtho Palm Beach', 'regenerative-medicine-vs-joint-replacement': 'Regeneration vs Replacement | RegenOrtho Palm Beach', 'five-pillar-concierge-orthopedic-recovery': 'Concierge Orthopedic Recovery | RegenOrtho Palm Beach', 'orthopedic-sports-medicine-pain-free-living': 'Orthopedics & Sports Medicine | RegenOrtho Palm Beach', 'regenerative-medicine-future-of-healing': 'Regenerative Medicine Explained | RegenOrtho Palm Beach', 'healing-without-surgery': 'Healing Without Surgery | RegenOrtho Palm Beach Blog', 'minimally-invasive-foot-ankle-surgery': 'Minimally Invasive Foot Surgery | RegenOrtho Palm Beach', 'modern-vein-care-varicose-spider-veins': 'Modern Varicose Vein Care | RegenOrtho Palm Beach Blog', 'iv-therapy-recovery-wellness': 'IV Therapy for Recovery | Recovery Drips, Palm Beach Gardens'}
 
 
 # Per-post extras for the blog templates. Keyed by slug; a post the content portal
@@ -4552,7 +4635,9 @@ def build_blog():
             "name": f"{NAME} Blog", "url": f"{BASE}/blog/index.html",
             "publisher": {"@id": ORG_ID},
             "blogPost": [{"@type": "BlogPosting", "headline": p_["title"],
-                          "url": f"{BASE}/blog/{p_['slug']}.html", "datePublished": p_["date"]}
+                          "url": f"{BASE}/blog/{p_['slug']}.html", "datePublished": p_["date"],
+                          "image": f"{BASE}/assets/media/{p_['image']}",
+                          "author": {"@type": "Organization", "name": NAME, "@id": ORG_ID}}
                          for p_ in posts],
         })
         + breadcrumb_schema([("", "Home"), ("blog/index.html", "Blog")])
@@ -4758,7 +4843,6 @@ def build_meta():
              "services/index.html", "blog/index.html",
              "conditions/index.html", "locations/index.html",
              "providers/dr-marc-matarazzo.html", "providers/dr-orlando-cedeno.html"]
-    pages += [f"forms/{f['slug']}.html" for f in FORMS]
     pages += [f"services/{s['slug']}.html" for s in SERVICES]
     pages += [f"conditions/{c['slug']}.html" for c in CONDITIONS]
     pages += [f"locations/{l['slug']}.html" for l in LOCATIONS]

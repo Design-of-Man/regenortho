@@ -14,7 +14,7 @@
   var ENDPOINT = "https://formsubmit.co/ajax/" + FORM_TARGET_EMAIL;
   /* Mirrors FORM_CC_EMAILS in build.py. build.py does not generate this file, so
      the two lists only stay in step if both are edited together. */
-  var FORM_CC = "nicholasbkashuba@gmail.com,matarazzomd@gmail.com,doctor.cedeno@gmail.com";
+  var FORM_CC = "nicholasbkashuba@gmail.com,matarazzomd@gmail.com,doctor.cedeno@gmail.com,angela.d@jupiterlaser.com";
   var LS_DRAFT = "rga-draft-v1";
   var LS_QUEUE = "rga-queue-v1";
 
