@@ -82,7 +82,10 @@ SISTER_PRACTICES = [
      "DPM — MLS laser, shockwave, bunion correction and minimally invasive foot "
      "&amp; ankle surgery. Offices in Jupiter and Palm Beach Gardens."),
 ]
-MAP_URL = "https://maps.google.com/maps?q=RegenOrtho%20Palm%20Beach%2011380%20Prosperity%20Farms%20Road%20Palm%20Beach%20Gardens"
+# The Google Business Profile itself (CID read from the GBP API, 2026-10-13), not a
+# Maps text search: directions links open the listing with its reviews, and the same
+# URL in hasMap + sameAs ties the org schema to the GBP entity.
+MAP_URL = "https://maps.google.com/maps?cid=6152192644168764637"
 # Alt for the default share card (the two physicians' portraits over the logo,
 # composed from assets/team/). Deliberately does not name individuals — the
 # roster is named on /about and /providers, and a share card should not be the
@@ -869,7 +872,7 @@ def org_schema():
                     "Lake Park", "Riviera Beach",
                 ]
             ],
-            "sameAs": [INSTAGRAM, LINKEDIN],
+            "sameAs": [INSTAGRAM, LINKEDIN, MAP_URL],
             "availableService": [
                 {"@type": "MedicalTherapy", "@id": f"{BASE}/services/regenerative-medicine-orthobiologics.html#service"},
                 {"@type": "MedicalTherapy", "@id": f"{BASE}/services/vein-care.html#service"},
@@ -1450,7 +1453,7 @@ SERVICES = [
         "name": "Traditional MUSE® Cell Therapy",
         "nav": "Traditional MUSE Cell Therapy",
         "parent": "regenerative-medicine-orthobiologics",
-        "title": "Traditional MUSE Cell Therapy | RegenOrtho Palm Beach",
+        "title": "Traditional MUSE Cell Therapy Palm Beach Gardens",
         "desc": "Traditional MUSE cell therapy in Palm Beach Gardens — a live-cell regenerative treatment using MUSE cells, delivered by IV push or targeted injection.",
         "eyebrow": "Regenerative Medicine & Orthobiologics",
         "h1": "Advanced Live-Cell Regenerative Therapy for Orthopedic & Joint Health",
