@@ -1,3 +1,9 @@
 # Kept out of the deploy: Vercel serves this repo root as the static site,
 # so anything here would be public at regenorthopb.com/<path>.
 tools/
+# Internal source and notes. These returned 200 on production until 2026-10-23.
+# pricing.md, llms.txt, robots.txt and the IndexNow key stay deployed on purpose.
+CLAUDE.md
+README.md
+*.py
+.github/
