@@ -1749,8 +1749,8 @@ SERVICES = [
         "slug": "medical-weight-loss",
         "name": "Medical Weight Loss & GLP-1 Program",
         "nav": "Medical Weight Loss & GLP-1",
-        "title": "Medical Weight Loss Palm Beach Gardens | Semaglutide & GLP-1",
-        "desc": "Physician-supervised medical weight loss in Palm Beach Gardens — semaglutide and tirzepatide GLP-1 therapy, personalized dosing and monitoring. From $239/month.",
+        "title": "Semaglutide & Medical Weight Loss in Palm Beach Gardens",
+        "desc": "Semaglutide (Ozempic®, Wegovy®) and tirzepatide (Zepbound®) weight loss in Palm Beach Gardens, with physician-supervised dosing and monitoring. From $239/month.",
         "eyebrow": "Physician-Supervised Weight Loss",
         "h1": "Physician-Supervised Medical Weight Loss",
         "lede": "Achieve sustainable weight loss with personalized, medically guided treatment designed to support your overall health, mobility, and long-term wellness — plans starting at $239/month.",
@@ -1774,7 +1774,7 @@ SERVICES = [
             ("Monitoring & Support", "Regular check-ins track progress, manage side effects, and adjust your plan for sustainable results."),
         ],
         "faqs": [
-            ("What medications are available?", "Our physician-supervised solutions include compounded therapies and FDA-approved GLP-1 medications such as Ozempic® and Wegovy® (both semaglutide) and Zepbound® (tirzepatide) — prescribed only when appropriate for you."),
+            ("Do you offer semaglutide, and what other medications are available?", "Yes. Our physician-supervised solutions include compounded therapies and FDA-approved GLP-1 medications such as Ozempic® and Wegovy® (both semaglutide) and Zepbound® (tirzepatide) — prescribed only when appropriate for you."),
             ("How much does the program cost?", "Plans start at $239 per month; your exact program depends on the medication and monitoring plan your physician recommends."),
             ("Is GLP-1 therapy safe?", "GLP-1 therapy should always be prescribed and monitored by a qualified medical professional. Outcomes and treatment response differ from person to person — our physicians screen carefully and monitor you throughout."),
             ("When will I see results?", "Many patients notice appetite changes within the first two weeks and early weight loss over the first month; individual results vary."),
@@ -2170,7 +2170,7 @@ PATHWAYS = [
     ("Biologic Therapies", "Stem cells, exosomes &amp; Wharton&rsquo;s jelly for joints &amp; soft tissue.", "from $2,500", "services/regenerative-medicine-orthobiologics.html"),
     ("Peptide Therapy", "Repair, recovery, longevity &amp; aesthetics — physician-supervised.", "from $249/mo", "services/peptide-therapy.html"),
     ("Shockwave &amp; Cold Laser", "Drug-free, non-invasive pain relief — no needles, no downtime.", "from $900", "services/advanced-non-surgical-therapies.html"),
-    ("GLP Therapy", "Medically supervised weight loss with GLP-1 &amp; dual-agonists.", "from $239/mo", "services/medical-weight-loss.html"),
+    ("GLP Therapy", "Medically supervised semaglutide &amp; tirzepatide (GLP-1 and dual-agonist) weight loss.", "from $239/mo", "services/medical-weight-loss.html"),
     ("IV Therapy &amp; Wellness", "Infusions, IM shots &amp; concierge wellness memberships.", "from $149/mo", "iv-therapy.html"),
 ]
 
@@ -2454,7 +2454,7 @@ def build_home():
   <div class="section-head reveal">
     <p class="eyebrow">One Roof. Every Answer.</p>
     <h2>Specialized care, <em>four ways</em></h2>
-    <p class="section-sub">Regenerative medicine, non-surgical therapies, vein care, and concierge access under one roof — so your plan is built around healing, not a single specialty's toolkit.</p>
+    <p class="section-sub">Regenerative medicine, non-surgical therapies, vein care, and concierge access under one roof — so your plan is built around healing, not a single specialty's toolkit. That includes <a href="services/mesenchymal-stem-cell-therapy.html">stem cell therapy in Palm Beach Gardens</a>, a straight shot north on I-95 for patients in <a href="locations/west-palm-beach.html">West Palm Beach</a>.</p>
   </div>
   <div class="svc-grid">
     {svc_cards_html}
@@ -2530,8 +2530,8 @@ def build_home():
     <nav class="path-col reveal" style="--d:90ms" aria-label="Care and wellness programs">
       <h3>Care &amp; wellness</h3>
       <ul class="path-links">
-        <li><a href="iv-therapy.html">IV Lounge — full menu &amp; pricing</a></li>
-        <li><a href="services/medical-weight-loss.html">Medical Weight Loss &amp; GLP-1</a></li>
+        <li><a href="iv-therapy.html">IV therapy &amp; IV hydration — menu &amp; pricing</a></li>
+        <li><a href="services/medical-weight-loss.html">Semaglutide &amp; GLP-1 weight loss</a></li>
         <li><a href="services/neuropathy-program.html">Neuropathy Restoration Program</a></li>
         <li><a href="services/concierge-care.html">Concierge &amp; Direct-Pay Care</a></li>
       </ul>
@@ -2619,7 +2619,7 @@ SERVICE_H1_LEAD = {
     "endovenous-ablation": "Endovenous Ablation in Palm Beach Gardens",
     "microphlebectomy": "Microphlebectomy in Palm Beach Gardens",
     "neuropathy-program": "Neuropathy Treatment in Palm Beach Gardens",
-    "medical-weight-loss": "Medical Weight Loss &amp; GLP-1 in Palm Beach Gardens",
+    "medical-weight-loss": "Semaglutide &amp; Medical Weight Loss in Palm Beach Gardens",
     "peptide-therapy": "Peptide Therapy in Palm Beach Gardens",
     "ghk-cu": "GHK-Cu Peptide Therapy in Palm Beach Gardens",
     "kpv": "KPV Peptide Therapy in Palm Beach Gardens",
@@ -3754,7 +3754,7 @@ def build_iv():
         "@type": ["MedicalTherapy", "Service"],
         "@id": f"{BASE}/iv-therapy.html#service",
         "name": "IV Recovery & Wellness Therapy",
-        "description": "Clinician-supervised IV vitamin and nutrient infusions in Palm Beach Gardens — hydration, immune support, NAD+, athletic recovery, and full-body wellness formulas.",
+        "description": "Clinician-supervised IV therapy, IV hydration and IV vitamin drips in Palm Beach Gardens — hydration, immune support, NAD+, athletic recovery, and full-body wellness formulas.",
         "url": f"{BASE}/iv-therapy.html",
         "provider": {"@id": ORG_ID},
         "image": f"{BASE}/assets/media/og-physicians-v1.jpg",
@@ -3780,9 +3780,38 @@ def build_iv():
         },
     })
     crumbs_html = crumbs([("", "IV Therapy Lounge")], depth=d)
+    # "Near you" block (2026-10-23 analytics report: /iv-therapy sat at #18-19 for
+    # "iv therapy / iv hydration / iv drip near me"). Every figure is computed from
+    # IV_MENU, IV_FAQS' published 30-60 minutes, and the NAP constants, so this
+    # block can never quote a price or a city the rest of the site does not.
+    iv_lo = min(IV_MENU, key=lambda m: m["price"])
+    iv_hi = max(m["price"] for m in IV_MENU)
+    hydration = next(m for m in IV_MENU if m["short"] == "Hydration")
+    _cl = [f'<a href="locations/{l["slug"]}.html">{l["city"]}</a>' for l in LOCATIONS]
+    city_links = ", ".join(_cl[:-1]) + " and " + _cl[-1]
+    price_rows = "".join(
+        f'<li><span class="pr-name">{m["short"]}<span class="pr-note">{m["ingredients"]}</span></span>'
+        f'<span class="pr-dots" aria-hidden="true"></span><span class="pr-price">${m["price"]}</span></li>'
+        for m in sorted(IV_MENU, key=lambda m: (m["price"], m["short"])))
+    near_you = f"""<section class="section" id="near-you">
+  <div class="pr-wrap pr-two">
+    <div class="pr-block reveal">
+      <p class="eyebrow">IV Therapy Near You</p>
+      <h2>IV hydration &amp; IV drips <em>in Palm Beach Gardens</em></h2>
+      <p>The IV lounge is inside our clinic at {ADDRESS_STREET}, {ADDRESS_CITY}, {ADDRESS_STATE} {ADDRESS_ZIP}, and patients come to it from {city_links}.</p>
+      <p>Basic IV hydration ({hydration['ingredients'].lower().replace(' · ', ' and ')}) is ${hydration['price']}. The full menu runs to {len(IV_MENU)} IV drips, from ${iv_lo['price']} to ${iv_hi} per infusion, and each one starts with a short medical pre-screen. Most infusions take 30 to 60 minutes.</p>
+      <p>Open {HOURS.replace(': ', ', ')}. Call <a href="tel:{PHONE_TEL}" data-call-location="iv_near_you">{PHONE_DISPLAY}</a> to book, or <a href="{MAP_URL}" rel="noopener" target="_blank">get directions</a>.</p>
+    </div>
+    <div class="pr-block reveal" style="--d:120ms">
+      <p class="eyebrow">Price per infusion</p>
+      <h2>IV therapy prices</h2>
+      <ul class="pr-list">{price_rows}</ul>
+    </div>
+  </div>
+</section>"""
     body = f"""{nav(d)}
 <main id="main">
-{page_hero("The IV Lounge", "Repair. Rehydrate. Renew.", "IV therapy in Palm Beach Gardens to revitalize your body and restore essential nutrients — IV drips performed by our medical team in a lounge designed for comfort, not a hospital corridor.", crumbs_html, depth=d, h1_lead="IV Therapy in Palm Beach Gardens")}
+{page_hero("The IV Lounge", "Repair. Rehydrate. Renew.", f"IV therapy and IV hydration in Palm Beach Gardens to revitalize your body and restore essential nutrients — clinician-supervised IV drips from ${iv_lo['price']}, in a lounge designed for comfort, not a hospital corridor.", crumbs_html, depth=d, h1_lead="IV Therapy in Palm Beach Gardens")}
 <section class="section section-dark section-drips" id="menu">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="section-head reveal"><p class="eyebrow">The Menu</p><h2>Twelve formulas, <em>one goal: you at 100%</em></h2>
@@ -3798,6 +3827,7 @@ def build_iv():
 
   <ul class="drip-shelf reveal" data-drips>{cards}</ul>
 </section>
+{near_you}
 <section class="section section-dark section-iv-how">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="section-head reveal"><p class="eyebrow">How It Works</p><h2>Concierge from <em>booking to boost</em></h2></div>
@@ -3817,8 +3847,8 @@ def build_iv():
 </main>
 {footer(d)}"""
     schema = offers + faq_schema(IV_FAQS) + breadcrumb_schema([("", "Home"), ("iv-therapy.html", "IV Therapy")])
-    page = head("IV Therapy & IV Drips Palm Beach Gardens | RegenOrtho",
-                "IV therapy in Palm Beach Gardens: hydration, immune boost, NAD+ 500mg, athletic recovery & more — clinician-supervised drips from $189 in a private lounge.",
+    page = head("IV Therapy & IV Hydration Drips in Palm Beach Gardens, FL",
+                f"IV therapy, IV hydration and IV drips in Palm Beach Gardens, near Jupiter and North Palm Beach. Hydration from ${hydration['price']}; {len(IV_MENU)} clinician-supervised formulas to ${iv_hi}.",
                 depth=d, canonical="iv-therapy.html", webpage_type="MedicalWebPage", speakable=True,
                 og_image="assets/media/iv-hero.jpg",
                 extra_schema=schema) + '<body class="page-iv">\n' + body

@@ -215,6 +215,11 @@ CSS coastline scene stays underneath as the no-video fallback. asset_v() returns
   absorbed 5,185 impressions (45% of all) at avg position 38.8 and a 0.06% CTR, against non-www's
   6,372 impressions at position 11.8 and 0.67%. If www ever returns 200 again, this is why.
   Check with `curl -s -o /dev/null -w '%{http_code}' https://www.regenorthopb.com/` — expect 308.
+- TRAILING SLASHES: `"trailingSlash": false` in vercel.json makes Vercel 308 every `/x/` to `/x`
+  BEFORE the redirect table is read, so a `/x/` source rule would never match — don't add one.
+  Verified on production 2026-10-23 (`/dr-marc-matarazzo-md/`, `/iv-therapy/`, `/about/`,
+  `/services/kpv/` all 308 to the slashless canonical). Search Console still listing a `/x/`
+  form (an old WordPress URL) is Google not having recrawled it yet, not a missing rule.
 - Org node: MedicalClinic+MedicalBusiness @id {BASE}/#organization.
   Per page: Physician (providers), MedicalTherapy (services), MedicalCondition (conditions),
   FAQPage (faq + service/condition pages), Service-per-city (locations), BlogPosting (posts),
