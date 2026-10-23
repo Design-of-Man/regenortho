@@ -873,10 +873,16 @@ def org_schema():
                 ]
             ],
             "sameAs": [INSTAGRAM, LINKEDIN, MAP_URL],
+            # Plain @id references, NOT typed stubs. A {"@type": "MedicalTherapy", "@id": ...}
+            # stub with no name was a separate, nameless typed item on all 66 pages, and on
+            # the three pages that also carry the full node it declared the same @id with a
+            # different @type. Semrush Site Audit (crawl of 2026-10-19) filed an item on every
+            # page as a "Product" snippet. The full MedicalTherapy+Service node lives on each
+            # service page; the org only needs to point at it.
             "availableService": [
-                {"@type": "MedicalTherapy", "@id": f"{BASE}/services/regenerative-medicine-orthobiologics.html#service"},
-                {"@type": "MedicalTherapy", "@id": f"{BASE}/services/vein-care.html#service"},
-                {"@type": "MedicalTherapy", "@id": f"{BASE}/iv-therapy.html#service"},
+                {"@id": f"{BASE}/services/regenerative-medicine-orthobiologics.html#service"},
+                {"@id": f"{BASE}/services/vein-care.html#service"},
+                {"@id": f"{BASE}/iv-therapy.html#service"},
             ],
         }
         _org_cache = json.dumps(org, separators=(",", ":"))
@@ -3814,7 +3820,7 @@ def build_iv():
 </section>"""
     body = f"""{nav(d)}
 <main id="main">
-{page_hero("The IV Lounge", "Repair. Rehydrate. Renew.", f"IV therapy and IV hydration in Palm Beach Gardens to revitalize your body and restore essential nutrients — clinician-supervised IV drips from ${iv_lo['price']}, in a lounge designed for comfort, not a hospital corridor.", crumbs_html, depth=d, h1_lead="IV Therapy in Palm Beach Gardens")}
+{page_hero("The IV Lounge", "Repair. Rehydrate. Renew.", f"IV therapy and IV hydration in Palm Beach Gardens to revitalize your body and restore essential nutrients — clinician-supervised IV drips from ${iv_lo['price']}, in a lounge designed for comfort, not a hospital corridor.", crumbs_html, depth=d, h1_lead="IV Therapy, IV Drips &amp; IV Hydration in Palm Beach Gardens")}
 <section class="section section-dark section-drips" id="menu">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="section-head reveal"><p class="eyebrow">The Menu</p><h2>Twelve formulas, <em>one goal: you at 100%</em></h2>
@@ -3850,8 +3856,8 @@ def build_iv():
 </main>
 {footer(d)}"""
     schema = offers + faq_schema(IV_FAQS) + breadcrumb_schema([("", "Home"), ("iv-therapy.html", "IV Therapy")])
-    page = head("IV Therapy & IV Hydration Drips in Palm Beach Gardens, FL",
-                f"IV therapy, IV hydration and IV drips in Palm Beach Gardens, near Jupiter and North Palm Beach. Hydration from ${hydration['price']}; {len(IV_MENU)} clinician-supervised formulas to ${iv_hi}.",
+    page = head("IV Therapy Palm Beach Gardens | IV Hydration & IV Drips",
+                f"IV therapy in Palm Beach Gardens: IV hydration from ${hydration['price']} and {len(IV_MENU)} clinician-supervised IV drips up to ${iv_hi}, close to Jupiter and North Palm Beach.",
                 depth=d, canonical="iv-therapy.html", webpage_type="MedicalWebPage", speakable=True,
                 og_image="assets/media/iv-hero.jpg",
                 extra_schema=schema) + '<body class="page-iv">\n' + body
