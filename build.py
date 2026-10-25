@@ -3440,7 +3440,7 @@ def build_locations():
 MATARAZZO_BIO = [
     "Marc F. Matarazzo, MD is a board-certified, fellowship-trained orthopedic surgeon whose practice centres on sports medicine and the injuries that come with it. His surgical work covers minimally invasive procedures, complex reconstruction, and shoulder and knee joint replacement, and he is certified in the MAKO robotic-assisted knee replacement system. Behind more than 23 years of clinical and surgical experience sits a particular conviction: that regenerative technology and conventional orthopedic care belong in the same plan rather than in competing ones.",
     "He earned his medical degree at The Lewis Katz School of Medicine at Temple University, then completed a general surgery internship and orthopedic surgery residency at the Medical College of Pennsylvania and Hahnemann University — now Drexel University — in Philadelphia. His sports medicine and arthroscopy fellowship was at Lenox Hill Hospital in New York City, where he served as an Assistant Team Physician to the New York Jets, the New York Islanders, and the athletic departments of Hofstra University and Hunter College.",
-    "Dr. Matarazzo founded Elite Sports Medicine, which serves Palm Beach, Martin and St Lucie counties, and he has practised in South Florida since 2002. He held an academic appointment as Medical Director of the Athletic Training Program at Palm Beach Atlantic University and was their head team physician for over 10 years. From 2007 to 2020 he was head team physician for Palm Beach State College and a number of Palm Beach County high schools. In 2020 he was asked to build the Sports Medicine Department at Christus Trinity Clinic in Longview, Texas from the ground up, leading a team of certified Athletic Trainers and covering East Texas Baptist University, LeTourneau University and more than 10 local high schools — Friday night football, Saturday morning injury clinics, and weekly training room rounds.",
+    "Dr. Matarazzo founded <a href=\"https://elitesportsmed.org/marc-f-matarazzo/\">Elite Sports Medicine</a>, his orthopedic surgery practice, which serves Palm Beach, Martin and St Lucie counties, and he has practised in South Florida since 2002. He held an academic appointment as Medical Director of the Athletic Training Program at Palm Beach Atlantic University and was their head team physician for over 10 years. From 2007 to 2020 he was head team physician for Palm Beach State College and a number of Palm Beach County high schools. In 2020 he was asked to build the Sports Medicine Department at Christus Trinity Clinic in Longview, Texas from the ground up, leading a team of certified Athletic Trainers and covering East Texas Baptist University, LeTourneau University and more than 10 local high schools — Friday night football, Saturday morning injury clinics, and weekly training room rounds.",
     "He is a Fellow of the American Academy of Orthopedic Surgeons and an active member of the American Orthopedic Society for Sports Medicine, and has presented nationally and internationally on sports medicine topics since 1999.",
 ]
 
@@ -3496,7 +3496,9 @@ _PROVIDER_PROFILES = {
         "npi": "1083678452",
         "same_as": ["https://www.healthgrades.com/physician/dr-marc-matarazzo-34my5",
                     "https://www.doximity.com/pub/marc-matarazzo-md",
-                    "https://npiregistry.cms.hhs.gov/provider-view/1083678452"],
+                    "https://npiregistry.cms.hhs.gov/provider-view/1083678452",
+                    # His own practice's profile of him (ours; same person, same NPI).
+                    "https://elitesportsmed.org/marc-f-matarazzo/"],
     },
     "dr-orlando-cedeno": {
         "npi": "1700076437",
