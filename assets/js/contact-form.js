@@ -1,4 +1,7 @@
-/* RegenOrtho Palm Beach — contact page appointment form.
+/* RegenOrtho Palm Beach — the site's FormSubmit forms: the contact page
+   appointment form (#contact-form) and the grand-opening sign-up
+   (#event-form). Each form's success panel, name slot and error line share
+   its prefix (contact-success, contact-success-name, contact-error).
    Progressive enhancement: the form works as a plain POST to FormSubmit
    without this script (visitors land on FormSubmit's own "Thanks!" page).
    With JS, we intercept the submit and post to FormSubmit's AJAX endpoint
@@ -7,12 +10,13 @@
 (function () {
   "use strict";
 
-  var form = document.getElementById("contact-form");
+  ["contact", "event"].forEach(function (prefix) {
+  var form = document.getElementById(prefix + "-form");
   if (!form) return;
 
-  var success = document.getElementById("contact-success");
-  var successName = document.getElementById("contact-success-name");
-  var errorBox = document.getElementById("contact-error");
+  var success = document.getElementById(prefix + "-success");
+  var successName = document.getElementById(prefix + "-success-name");
+  var errorBox = document.getElementById(prefix + "-error");
   var submitBtn = form.querySelector('button[type="submit"]');
   var submitLabel = submitBtn ? submitBtn.textContent : "";
 
@@ -74,10 +78,11 @@
          place. Deliberately NO field values in the payload: the visitor has
          just typed their name, phone and reason for calling, and none of that
          belongs in an analytics event. */
-      if (window.RGLead) window.RGLead.track("form_submit", "form_submit", { form: "contact" });
+      if (window.RGLead) window.RGLead.track("form_submit", "form_submit", { form: prefix });
     }).catch(function () {
       if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = submitLabel; }
       if (errorBox) errorBox.hidden = false;
     });
+  });
   });
 })();

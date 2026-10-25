@@ -4054,7 +4054,7 @@ def event_strip():
   <script>(function(s){{if(Date.now()>=Date.parse(s.parentNode.getAttribute("data-until")+"T00:00:00-05:00"))s.parentNode.remove();}})(document.currentScript);</script>
   <div class="event-strip-inner">
     <p><span class="eyebrow">You&rsquo;re invited</span> <strong>Grand Opening &amp; Wellness Innovation Showcase</strong> <span class="event-strip-when">{EVENT['date_long']} · {EVENT['time']}</span></p>
-    <a class="btn btn-gold" href="grand-opening.html">{'RSVP' if EVENT_INVITE_LIVE else 'Save the date'}</a>
+    <a class="btn btn-gold" href="grand-opening.html#signup">{'RSVP' if EVENT_INVITE_LIVE else 'Save your spot'}</a>
   </div>
 </aside>
 """
@@ -4154,8 +4154,8 @@ def build_event():
       <p class="ev-hours ev-in" style="--i:5">{e['time'].replace(' – ', ' &ndash; ')}</p>
       <p class="ev-where ev-in" style="--i:6">{e['street']}<br>{ADDRESS_CITY}, {ADDRESS_STATE}</p>
       <div class="ev-actions ev-in" style="--i:7">
-        {rsvp_btn}
-        <a class="btn {'btn-ghost-light' if EVENT_INVITE_LIVE else 'btn-gold'}" href="grand-opening.ics" download>Add to calendar</a>
+        <a class="btn btn-gold" href="#signup">{'RSVP' if EVENT_INVITE_LIVE else 'Save your spot'}</a>
+        <a class="btn btn-ghost-light" href="grand-opening.ics" download>Add to calendar</a>
         <a class="btn btn-ghost-light" href="{MAP_URL}" rel="noopener">Directions</a>
       </div>
       <p class="ev-count ev-in" style="--i:8" data-ev-start="{e['start']}" hidden></p>
@@ -4169,6 +4169,65 @@ def build_event():
     <p class="ev-lede reveal">Meet the physicians, tour the new space and enjoy beverages &amp; bites, live demos, an on-site IV lounge and local vendors.</p>
     <ul class="ev-tiles">{tiles}</ul>
     {plan}
+  </div>
+</section>
+<section class="ev-section ev-signup" id="signup">
+  <div class="ev-signup-grid">
+    <div class="ev-signup-copy reveal">
+      <p class="ev-kicker">{'RSVP' if EVENT_INVITE_LIVE else 'Sign up'}</p>
+      <h2 class="ev-h2">Save your spot</h2>
+      <p class="ev-lede">Tell us you&rsquo;re coming and we&rsquo;ll make sure you get the formal invitation and every update before the night.</p>
+      <ul class="ev-signup-points">
+        <li><strong>Guests &amp; patients</strong> &mdash; bring a friend; let us know how many.</li>
+        <li><strong>Local businesses &amp; vendors</strong> &mdash; ask about a table at the showcase.</li>
+        <li><strong>Referring physicians &amp; offices</strong> &mdash; come meet the team.</li>
+      </ul>
+    </div>
+    <div class="ev-form-col reveal" style="--d:120ms">
+    <form class="contact-form ev-form" id="event-form" action="https://formsubmit.co/{FORM_TARGET_EMAIL}" method="POST">
+      <h3 class="form-title">Grand Opening sign-up</h3>
+      <input type="hidden" name="_subject" value="[Grand Opening] New sign-up — regenorthopb.com">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_cc" value="{FORM_CC_EMAILS}">
+      <input type="hidden" name="source" value="regenorthopb.com grand opening page">
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="form-row">
+        <label>Name<input type="text" name="name" required autocomplete="name"></label>
+        <label>Phone<input type="tel" name="phone" autocomplete="tel"></label>
+      </div>
+      <label>Email<input type="email" name="email" required autocomplete="email"></label>
+      <div class="form-row">
+        <label>I&rsquo;m coming as
+          <select name="attending_as" required>
+            <option value="">Choose one</option>
+            <option>Guest</option>
+            <option>Patient</option>
+            <option>Local business</option>
+            <option>Vendor &mdash; interested in a table</option>
+            <option>Referring physician or office</option>
+            <option>Media</option>
+          </select>
+        </label>
+        <label>Party size
+          <select name="party_size">
+            <option>1</option><option selected>2</option><option>3</option><option>4</option><option>5+</option>
+          </select>
+        </label>
+      </div>
+      <label><span>Business or practice <span class="ev-opt">(optional)</span></span><input type="text" name="business" autocomplete="organization"></label>
+      <label><span>Anything we should know? <span class="ev-opt">(optional)</span></span><textarea name="message" rows="3" placeholder="Vendors: what you&rsquo;d like to showcase."></textarea></label>
+      <button class="btn btn-gold btn-block" type="submit">Save my spot</button>
+      <p class="form-fine">We&rsquo;ll only use this to follow up about the grand opening. Questions? Call {PHONE_DISPLAY}.</p>
+      <p class="form-error" id="event-error" hidden>Something went wrong sending that &mdash; please call <a href="tel:{PHONE_TEL}" data-call-location="event_error">{PHONE_DISPLAY}</a> and we&rsquo;ll add you to the list.</p>
+    </form>
+    <div class="contact-form contact-success ev-form" id="event-success" hidden tabindex="-1">
+      <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#FDC929"/><path fill="none" stroke="#092D5C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M6.5 12.5 10 16l7.5-8"/></svg>
+      <h3 class="form-title">You&rsquo;re on the list, <span id="event-success-name">there</span>!</h3>
+      <p>We&rsquo;ll be in touch before December 3 with your invitation and details. See you there.</p>
+      <p><a href="grand-opening.ics" download>Add it to your calendar</a></p>
+    </div>
+    </div>
   </div>
 </section>
 <section class="ev-section ev-featuring">
@@ -4204,7 +4263,7 @@ def build_event():
     el.hidden = false;
   }})(document.querySelector("[data-ev-start]"));
 </script>
-{footer(d)}"""
+{footer(d, extra_js="assets/js/contact-form.js")}"""
     page_url = f"{BASE}/grand-opening"
     event_ld = {
         "@context": "https://schema.org", "@type": "Event",

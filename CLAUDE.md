@@ -86,6 +86,8 @@ Static site, 56 pages, generated — do not edit HTML files directly.
   picture of it. Logos and the two photo balloons are lifted from the card PDFs (ev-*.webp).
   Those balloons are trimmed by the print bleed (A: left+top, B: right+top), so they must sit
   flush in those corners and only ever animate upward; the mid balloons are drawn in SVG.
+  Sign-up form (#signup, `event-form`) posts to FormSubmit like the contact form and is
+  driven by the same contact-form.js (prefix-based). Contact details only — no PHI.
 
 ## Business facts (canonical)
 - RegenOrtho Palm Beach · "The Regeneration of Orthopedics"
