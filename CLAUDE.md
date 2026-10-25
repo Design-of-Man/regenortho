@@ -76,6 +76,13 @@ Static site, 56 pages, generated — do not edit HTML files directly.
   sitemap.xml: they are tools for booked patients, and the IV consent form was indexed in
   Google until 2026-10. The /forms hub stays indexable.
 
+- GRAND OPENING (Dec 3, 2026): `build_event()` renders /grand-opening (Event schema, an
+  .ics download, og-grand-opening-v1.jpg) and `event_strip()` puts a strip under the homepage
+  hero that removes itself after `EVENT["until"]`. Facts come ONLY from the practice's two
+  printed cards (suite reads "204" because the cards say so). `EVENT_INVITE_LIVE = False`
+  holds back the RSVP link + run of show until the invitations go out — flip it and rebuild.
+  After the event, drop the strip and turn the page into a recap rather than deleting it.
+
 ## Business facts (canonical)
 - RegenOrtho Palm Beach · "The Regeneration of Orthopedics"
 - 11380 Prosperity Farms Road, Suite 204–208, Palm Beach Gardens, FL 33410

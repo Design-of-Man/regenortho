@@ -984,6 +984,7 @@ def clean_url_map():
         "iv-therapy.html": "iv-therapy",
         "faq.html": "faq",
         "pricing.html": "pricing",
+        "grand-opening.html": "grand-opening",
         "contact.html": "contact",
         "patient-resources.html": "patient-resources",
         "privacy-policy.html": "privacy-policy",
@@ -2437,7 +2438,7 @@ def build_home():
     </div>
   </div>
 </section>
-
+{event_strip()}
 <section class="section section-dark section-word" id="regenerate">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="word-inner">
@@ -3984,6 +3985,177 @@ def build_pricing():
     write("pricing.html", page)
 
 
+# ---------------------------------------------------------------------------
+# Grand opening event (December 3, 2026)
+# ---------------------------------------------------------------------------
+# Every fact here is from the two printed cards the practice made
+# (STD_Balloons_PRINT_5x7.pdf, Invite_Balloons_PRINT_5x7.pdf, Oct 2026) — the
+# page restates them and adds nothing. The suite reads "Suite 204" because that
+# is what the cards print, not ADDRESS_STREET's "204–208".
+# EVENT_INVITE_LIVE stays False until the practice sends the invitations: the
+# save-the-date says "Invitation to follow", so the RSVP link and the run of
+# show are held back until then. Flip it and rebuild — nothing else changes.
+EVENT_INVITE_LIVE = False
+EVENT = {
+    "name": "Grand Opening & Wellness Innovation Showcase",
+    "date_long": "Thursday, December 3, 2026",
+    "time": "5:30 – 7:30 PM",
+    "start": "2026-12-03T17:30:00-05:00",
+    "end": "2026-12-03T19:30:00-05:00",
+    "ics_start": "20261203T173000", "ics_end": "20261203T193000",
+    "street": "11380 Prosperity Farms Road, Suite 204",
+    "rsvp_url": "https://forms.gle/ToJydMMQpow6dzXE8",
+    "rsvp_by": "November 25",
+    # The homepage strip disappears the day after (build time AND client side).
+    "until": "2026-12-04",
+    "highlights": ["Ribbon cutting", "Meet the physicians", "Tour the new space",
+                   "Beverages &amp; bites", "On-site IV lounge", "Live demos",
+                   "Local vendors", "Giveaways &amp; grand opening offers"],
+    "agenda": [("5:30", "Welcome reception"),
+               ("6:00", "Ribbon cutting &amp; physician welcome"),
+               ("6:15", "Practice &amp; service showcase"),
+               ("6:30", "Live demos, IV lounge, vendors &amp; tours"),
+               ("7:15", "Giveaways &amp; closing remarks")],
+    # The four practices on the card. Pharmakon has no verified URL on file —
+    # leave it unlinked rather than guess one.
+    "practices": [
+        ("RegenOrtho Palm Beach", "about.html", "Regenerative, orthopedic, IV &amp; vein care"),
+        ("ELITE Sports Medicine", "https://elitesportsmed.org/", "Dr. Matarazzo&rsquo;s orthopedic &amp; sports medicine practice"),
+        ("Abacoa Podiatry &amp; Leg Vein Center", "https://jupiterlaser.com/", "Dr. Cedeno&rsquo;s foot, ankle &amp; vein practice"),
+        ("Pharmakon Medical Research", "", "Clinical research"),
+    ],
+}
+
+
+def event_is_upcoming():
+    return datetime.date.today().isoformat() < EVENT["until"]
+
+
+def event_strip():
+    """Homepage announcement under the hero. Rendered only while the event is
+    upcoming at build time; the inline script also removes it once the date has
+    passed, so a page that is not rebuilt still stops advertising a past event."""
+    if not event_is_upcoming():
+        return ""
+    return f"""<aside class="event-strip" aria-label="Upcoming event" data-until="{EVENT['until']}">
+  <script>(function(s){{if(Date.now()>=Date.parse(s.parentNode.getAttribute("data-until")+"T00:00:00-05:00"))s.parentNode.remove();}})(document.currentScript);</script>
+  <div class="event-strip-inner">
+    <p><span class="eyebrow">You&rsquo;re invited</span> <strong>Grand Opening &amp; Wellness Innovation Showcase</strong> <span class="event-strip-when">{EVENT['date_long']} · {EVENT['time']}</span></p>
+    <a class="btn btn-gold" href="grand-opening.html">{'RSVP' if EVENT_INVITE_LIVE else 'Save the date'}</a>
+  </div>
+</aside>
+"""
+
+
+def build_event():
+    d = 0
+    e = EVENT
+    card = "grand-opening-invite-v1.jpg" if EVENT_INVITE_LIVE else "grand-opening-save-the-date-v1.jpg"
+    card_alt = (f"{'Invitation' if EVENT_INVITE_LIVE else 'Save-the-date card'} for the RegenOrtho Palm Beach "
+                f"Grand Opening &amp; Wellness Innovation Showcase, {e['date_long']}, {e['time']}")
+    cw, ch = img_dims(f"assets/media/{card}")
+    highlights = "".join(f"<li>{h}</li>" for h in e["highlights"])
+    practices = "".join(
+        f'<li><strong>{f"<a href={chr(34)}{u}{chr(34)}" + (" rel=" + chr(34) + "noopener" + chr(34) if u.startswith("http") else "") + f">{n}</a>" if u else n}</strong><span>{note}</span></li>'
+        for n, u, note in e["practices"])
+    if EVENT_INVITE_LIVE:
+        rsvp_btn = f'<a class="btn btn-gold" href="{e["rsvp_url"]}" rel="noopener">RSVP by {e["rsvp_by"]}</a>'
+        agenda = "".join(f'<li><span class="ev-time">{t}</span><span>{what}</span></li>' for t, what in e["agenda"])
+        plan_html = f"""<section class="section section-tint">
+  <div class="ev-wrap reveal">
+    <div class="section-head"><p class="eyebrow">Run of show</p><h2>The <em>evening</em></h2></div>
+    <ol class="ev-agenda">{agenda}</ol>
+    <p class="ev-rsvp">{rsvp_btn}</p>
+  </div>
+</section>"""
+        status = f"Invitations are out — please RSVP by {e['rsvp_by']}."
+    else:
+        rsvp_btn = ""
+        plan_html = ""
+        status = "Formal invitations — with the evening&rsquo;s schedule and RSVP — are on their way."
+    crumbs_html = crumbs([("", "Grand Opening")], depth=d)
+    body = f"""{nav(d)}
+<main id="main">
+{page_hero("Grand Opening", "Four practices, one new home &mdash; <em>come celebrate</em>",
+           f"Join us {e['date_long']}, {e['time']}, for a ribbon cutting, tours of the new space, an on-site IV lounge, live demos, local vendors and giveaways. {status}",
+           crumbs_html, cta=False, depth=d, h1_lead="Grand Opening in Palm Beach Gardens")}
+<section class="section">
+  <div class="ev-grid">
+    <figure class="ev-card reveal"><img src="assets/media/{card}?v={asset_v('assets/media/' + card)}" alt="{card_alt}" width="{cw}" height="{ch}" loading="eager" fetchpriority="high" decoding="async"></figure>
+    <div class="ev-details reveal" style="--d:120ms">
+      <p class="eyebrow">{'You&rsquo;re invited' if EVENT_INVITE_LIVE else 'Save the date'}</p>
+      <h2>{e['name']}</h2>
+      <dl class="ev-facts">
+        <div><dt>When</dt><dd>{e['date_long']}<br>{e['time']}</dd></div>
+        <div><dt>Where</dt><dd>{e['street']}<br>{ADDRESS_CITY}, {ADDRESS_STATE} {ADDRESS_ZIP}</dd></div>
+      </dl>
+      <div class="ev-actions">
+        {rsvp_btn}
+        <a class="btn btn-navy" href="grand-opening.ics" download>Add to calendar</a>
+        <a class="btn btn-line" href="{MAP_URL}" rel="noopener">Directions</a>
+      </div>
+      <h3>An evening of</h3>
+      <ul class="ev-highlights">{highlights}</ul>
+    </div>
+  </div>
+</section>
+{plan_html}
+<section class="section{'' if EVENT_INVITE_LIVE else ' section-tint'}">
+  <div class="ev-wrap reveal">
+    <div class="section-head"><p class="eyebrow">Featuring</p><h2>Four practices <em>under one roof</em></h2></div>
+    <ul class="ev-practices">{practices}</ul>
+    <p class="ev-note">Questions about the evening? Call <a href="tel:{PHONE_TEL}" data-call-location="event">{PHONE_DISPLAY}</a> or email <a href="mailto:{EMAIL}">{EMAIL}</a>.</p>
+  </div>
+</section>
+{cta_band(d)}
+</main>
+{footer(d)}"""
+    page_url = f"{BASE}/grand-opening"
+    event_ld = {
+        "@context": "https://schema.org", "@type": "Event",
+        "@id": f"{page_url}#event", "url": page_url,
+        "name": f"{NAME} {e['name']}",
+        "description": ("Grand opening of RegenOrtho Palm Beach's new Palm Beach Gardens office, shared with "
+                        "ELITE Sports Medicine, Abacoa Podiatry & Leg Vein Center and Pharmakon Medical Research: "
+                        "ribbon cutting, physician welcome, tours, an on-site IV lounge, live demos, local vendors and giveaways."),
+        "startDate": e["start"], "endDate": e["end"],
+        "eventStatus": "https://schema.org/EventScheduled",
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        "location": {"@type": "Place", "name": NAME,
+                     "address": {"@type": "PostalAddress", "streetAddress": e["street"],
+                                 "addressLocality": ADDRESS_CITY, "addressRegion": ADDRESS_STATE,
+                                 "postalCode": ADDRESS_ZIP, "addressCountry": "US"},
+                     "geo": {"@type": "GeoCoordinates", "latitude": GEO_LAT, "longitude": GEO_LNG}},
+        "image": [f"{SHARE_BASE}/assets/media/og-grand-opening-v1.jpg",
+                  f"{SHARE_BASE}/assets/media/{card}"],
+        "organizer": {"@id": ORG_ID},
+    }
+    schema = extra_ld(event_ld) + breadcrumb_schema([("", "Home"), ("grand-opening.html", "Grand Opening")])
+    page = head("Grand Opening, Dec 3 | RegenOrtho Palm Beach Gardens",
+                f"Join RegenOrtho Palm Beach {e['date_long']}, {e['time']}: ribbon cutting, meet the physicians, "
+                f"new-office tours, IV lounge, live demos, vendors & giveaways in Palm Beach Gardens.",
+                depth=d, canonical="grand-opening.html", og_image="assets/media/og-grand-opening-v1.jpg",
+                extra_schema=schema) + '<body class="page-event">\n' + body
+    write("grand-opening.html", page)
+
+    # Add-to-calendar file. Floating local time with an explicit TZID; CRLF line
+    # endings per RFC 5545.
+    loc = f"{e['street']}\\, {ADDRESS_CITY}\\, {ADDRESS_STATE} {ADDRESS_ZIP}"
+    ics = "\r\n".join([
+        "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//RegenOrtho Palm Beach//Grand Opening//EN",
+        "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
+        "BEGIN:VEVENT", "UID:grand-opening-2026@regenorthopb.com", "DTSTAMP:20261025T120000Z",
+        f"DTSTART;TZID=America/New_York:{e['ics_start']}", f"DTEND;TZID=America/New_York:{e['ics_end']}",
+        "SUMMARY:RegenOrtho Palm Beach Grand Opening",
+        f"LOCATION:{loc}",
+        f"DESCRIPTION:Grand Opening & Wellness Innovation Showcase. Details: {page_url}",
+        f"URL:{page_url}",
+        "END:VEVENT", "END:VCALENDAR", ""])
+    with open(os.path.join(ROOT, "grand-opening.ics"), "w", newline="") as f:
+        f.write(ics)
+    print("wrote grand-opening.ics")
+
+
 def build_faq():
     d = 0
     cats = all_faq_categories()
@@ -4844,7 +5016,7 @@ def build_meta():
     from blog_content import BLOG_POSTS
     from forms_content import FORMS
     pages = ["index.html", "about.html", "contact.html", "faq.html", "iv-therapy.html", "pricing.html",
-             "patient-resources.html", "privacy-policy.html", "terms.html",
+             "grand-opening.html", "patient-resources.html", "privacy-policy.html", "terms.html",
              "forms/index.html",
              "services/index.html", "blog/index.html",
              "conditions/index.html", "locations/index.html",
@@ -4867,6 +5039,8 @@ def build_meta():
             return "0.8", "monthly"
         if u.startswith("providers/") or u in ("about.html", "contact.html", "faq.html"):
             return "0.8", "monthly"
+        if u == "grand-opening.html":
+            return "0.7", "weekly"
         if u.startswith("blog/"):
             return "0.6", "yearly"
         if u.startswith("forms/"):
@@ -5154,6 +5328,7 @@ def main():
     build_iv()
     build_faq()
     build_pricing()
+    build_event()
     build_contact()
     build_resources()
     build_forms()

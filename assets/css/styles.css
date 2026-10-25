@@ -1923,3 +1923,48 @@ body.nav-locked .mobile-call { display: none !important; }
   line-height: var(--lh-normal);
   color: var(--text-muted);
 }
+
+/* ---------------------------------------------------------------------------
+   Grand opening (build_event / event_strip). The card art is dark charcoal
+   with gold balloons, so the page frames it on navy rather than restyling it.
+   --------------------------------------------------------------------------- */
+.btn-line { border-color: var(--navy-800); color: var(--navy-800); background: transparent; }
+.btn-line:hover { background: var(--navy-800); color: var(--white); }
+.event-strip { background: var(--navy-950); border-block: 1px solid var(--line-dark); padding: 1rem 1.2rem; }
+.event-strip-inner { max-width: var(--wrap); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 1rem 2rem; flex-wrap: wrap; }
+.event-strip p { margin: 0; color: var(--on-navy-strong); display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem 1rem; }
+.event-strip .eyebrow { margin: 0; color: var(--gold); }
+.event-strip strong { font: 600 var(--t-xl)/1.2 var(--serif); color: var(--white); }
+.event-strip-when { color: var(--on-navy-muted); font-size: var(--t-sm); }
+.event-strip .btn { padding: .65rem 1.4rem; font-size: var(--t-sm); }
+.ev-grid { max-width: var(--wrap); margin: 0 auto; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(2rem, 5vw, 4.5rem); align-items: start; }
+.ev-card { margin: 0; border-radius: var(--r-md); overflow: hidden; box-shadow: var(--shadow-lg); background: #171311; }
+.ev-card img { display: block; width: 100%; height: auto; }
+.ev-details h2 { font-size: var(--t-3xl); margin: var(--s-2) 0 var(--s-4); }
+.ev-details h3 { font: 700 var(--t-2xs)/1 var(--sans); letter-spacing: .22em; text-transform: uppercase; color: var(--bronze-text); margin: var(--s-6) 0 var(--s-3); }
+.ev-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin: 0; padding: 1.2rem 0; border-block: 1px solid var(--line); }
+.ev-facts dt { font: 700 var(--t-2xs)/1 var(--sans); letter-spacing: .2em; text-transform: uppercase; color: var(--bronze-text); margin-bottom: .5rem; }
+.ev-facts dd { margin: 0; color: var(--ink); font-weight: 600; line-height: 1.5; }
+.ev-actions { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: var(--s-5); }
+.ev-highlights { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: .55rem 1.2rem; }
+.ev-highlights li { position: relative; padding-left: 1.2rem; color: var(--muted); }
+.ev-highlights li::before { content: ""; position: absolute; left: 0; top: .6em; width: .45rem; height: .45rem; background: var(--gold); transform: rotate(45deg); }
+.ev-wrap { max-width: 880px; margin: 0 auto; }
+.ev-agenda { list-style: none; padding: 0; margin: var(--s-5) 0 0; border-top: 1px solid var(--line); }
+.ev-agenda li { display: grid; grid-template-columns: 5rem 1fr; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--line); color: var(--ink); }
+.ev-time { font: 600 var(--t-xl)/1.2 var(--serif); color: var(--navy-800); font-variant-numeric: tabular-nums; }
+.ev-rsvp { margin-top: var(--s-5); }
+.ev-practices { list-style: none; padding: 0; margin: var(--s-5) 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.ev-practices li { display: flex; flex-direction: column; gap: .3rem; padding: 1.2rem 1.3rem; background: var(--white); border: 1px solid var(--line); border-top: 3px solid var(--gold); border-radius: var(--r-md); }
+.ev-practices strong { font: 600 var(--t-xl)/1.25 var(--serif); color: var(--navy-800); }
+.ev-practices a { color: inherit; }
+.ev-practices span { color: var(--muted); font-size: var(--t-sm); }
+.ev-note { margin-top: var(--s-5); color: var(--muted); }
+@media (max-width: 860px) {
+  .ev-grid { grid-template-columns: 1fr; }
+  .ev-card { max-width: 440px; margin: 0 auto; }
+}
+@media (max-width: 600px) {
+  .ev-facts, .ev-highlights, .ev-practices { grid-template-columns: 1fr; }
+  .event-strip-inner { justify-content: flex-start; }
+}

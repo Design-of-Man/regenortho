@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//RegenOrtho Palm Beach//Grand Opening//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:grand-opening-2026@regenorthopb.com
+DTSTAMP:20261025T120000Z
+DTSTART;TZID=America/New_York:20261203T173000
+DTEND;TZID=America/New_York:20261203T193000
+SUMMARY:RegenOrtho Palm Beach Grand Opening
+LOCATION:11380 Prosperity Farms Road, Suite 204\, Palm Beach Gardens\, FL 33410
+DESCRIPTION:Grand Opening & Wellness Innovation Showcase. Details: https://regenorthopb.com/grand-opening
+URL:https://regenorthopb.com/grand-opening
+END:VEVENT
+END:VCALENDAR
