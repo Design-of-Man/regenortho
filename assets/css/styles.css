@@ -2023,7 +2023,8 @@ body.nav-locked .mobile-call { display: none !important; }
 .ev-form { background: #FBF7EF; border: 1px solid rgba(253, 201, 41, .5); outline: 1px solid rgba(253, 201, 41, .22); outline-offset: 6px; border-radius: 4px; box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .7); }
 .ev-form .form-title { font: 600 var(--t-2xl)/1.15 var(--serif); color: var(--navy-900); margin: 0; }
 
-.ev-opt { font-weight: 500; letter-spacing: 0; color: var(--muted); }
+.ev-rsvp-card p { margin: 0; color: var(--muted); line-height: 1.6; }
+.ev-rsvp-card .form-fine a { color: var(--navy-800); font-weight: 700; }
 .ev-form.contact-success { color: var(--navy-900); }
 .ev-form.contact-success a { color: var(--navy-800); font-weight: 700; }
 .ev-featuring { background: var(--ev-ink); }
