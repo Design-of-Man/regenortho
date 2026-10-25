@@ -32,6 +32,8 @@
   var FAQ = [
     { k: ["hour", "open", "close", "time", "when"],
       a: "We're open Monday through Friday, 8:00 AM to 5:00 PM.\nCall " + PHONE + " (833-STEM561) to schedule." },
+    { k: ["grand opening", "ribbon cutting", "ribbon", "showcase", "rsvp", "event", "celebration", "party", "december 3"],
+      a: "You're invited! Our Grand Opening & Wellness Innovation Showcase is Thursday, December 3, 2026, 5:30–7:30 PM at 11380 Prosperity Farms Road, Suite 204, Palm Beach Gardens — ribbon cutting, meet the physicians, tours, an on-site IV lounge, live demos, local vendors and giveaways.\nDetails: regenorthopb.com/grand-opening · Questions: " + PHONE },
     { k: ["where", "location", "address", "directions", "find you", "located"],
       a: "We're at 11380 Prosperity Farms Road, Suite 204–208, Palm Beach Gardens, FL 33410 — serving Jupiter, North Palm Beach, Juno Beach, Tequesta, and the greater Palm Beach area." },
     { k: ["phone", "call", "number", "contact"],

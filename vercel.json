@@ -697,6 +697,11 @@
       "source": "/blog/hyaluronic-acid-knee-injections-in-jupiter-fl-who-they-help-and-what-to-expect.html",
       "destination": "/blog/hyaluronic-acid-knee-injections-in-jupiter-fl-who-they-help-and-what-to-expect",
       "permanent": true
+    },
+    {
+      "source": "/grand-opening.html",
+      "destination": "/grand-opening",
+      "permanent": true
     }
   ],
   "headers": [
@@ -953,6 +958,10 @@
     {
       "source": "/blog/hyaluronic-acid-knee-injections-in-jupiter-fl-who-they-help-and-what-to-expect",
       "destination": "/blog/hyaluronic-acid-knee-injections-in-jupiter-fl-who-they-help-and-what-to-expect.html"
+    },
+    {
+      "source": "/grand-opening",
+      "destination": "/grand-opening.html"
     }
   ]
 }
