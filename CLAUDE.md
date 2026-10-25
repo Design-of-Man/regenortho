@@ -82,6 +82,10 @@ Static site, 56 pages, generated — do not edit HTML files directly.
   printed cards (suite reads "204" because the cards say so). `EVENT_INVITE_LIVE = False`
   holds back the RSVP link + run of show until the invitations go out — flip it and rebuild.
   After the event, drop the strip and turn the page into a recap rather than deleting it.
+  The page is designed AS the card (charcoal #171311 + gold, double gold frame), not a
+  picture of it. Logos and the two photo balloons are lifted from the card PDFs (ev-*.webp).
+  Those balloons are trimmed by the print bleed (A: left+top, B: right+top), so they must sit
+  flush in those corners and only ever animate upward; the mid balloons are drawn in SVG.
 
 ## Business facts (canonical)
 - RegenOrtho Palm Beach · "The Regeneration of Orthopedics"

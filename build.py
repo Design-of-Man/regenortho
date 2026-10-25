@@ -157,7 +157,7 @@ _dim_cache = {}
 
 
 def img_dims(path, fallback=(1200, 630)):
-    """Real pixel size of a JPEG/PNG, stdlib-only (no Pillow needed to build).
+    """Real pixel size of a JPEG/PNG/WebP, stdlib-only (no Pillow needed to build).
 
     og:image:width/height used to be hardcoded 1200x630 while service, condition
     and provider pages passed their own differently-shaped photos; scrapers that
@@ -169,7 +169,17 @@ def img_dims(path, fallback=(1200, 630)):
     try:
         with open(os.path.join(ROOT, path), "rb") as f:
             data = f.read()
-        if data[:8] == b"\x89PNG\r\n\x1a\n":
+        if data[:4] == b"RIFF" and data[8:12] == b"WEBP":
+            kind = data[12:16]
+            if kind == b"VP8X":
+                dims = (1 + int.from_bytes(data[24:27], "little"), 1 + int.from_bytes(data[27:30], "little"))
+            elif kind == b"VP8L":
+                bits = int.from_bytes(data[21:25], "little")
+                dims = ((bits & 0x3FFF) + 1, ((bits >> 14) & 0x3FFF) + 1)
+            elif kind == b"VP8 ":
+                dims = (int.from_bytes(data[26:28], "little") & 0x3FFF,
+                        int.from_bytes(data[28:30], "little") & 0x3FFF)
+        elif data[:8] == b"\x89PNG\r\n\x1a\n":
             dims = (int.from_bytes(data[16:20], "big"), int.from_bytes(data[20:24], "big"))
         elif data[:2] == b"\xff\xd8":
             i = 2
@@ -4016,13 +4026,16 @@ EVENT = {
                ("6:15", "Practice &amp; service showcase"),
                ("6:30", "Live demos, IV lounge, vendors &amp; tours"),
                ("7:15", "Giveaways &amp; closing remarks")],
-    # The four practices on the card. Pharmakon has no verified URL on file —
-    # leave it unlinked rather than guess one.
+    # The three practices the cards list under "Featuring" (RegenOrtho hosts).
+    # Logos are lifted from the card files themselves (embedded art, alpha intact).
+    # Pharmakon has no verified URL on file — leave it unlinked rather than guess one.
+    # (name, url, note, logo file, logo width, logo height)
     "practices": [
-        ("RegenOrtho Palm Beach", "about.html", "Regenerative, orthopedic, IV &amp; vein care"),
-        ("ELITE Sports Medicine", "https://elitesportsmed.org/", "Dr. Matarazzo&rsquo;s orthopedic &amp; sports medicine practice"),
-        ("Abacoa Podiatry &amp; Leg Vein Center", "https://jupiterlaser.com/", "Dr. Cedeno&rsquo;s foot, ankle &amp; vein practice"),
-        ("Pharmakon Medical Research", "", "Clinical research"),
+        ("ELITE Sports Medicine", "https://elitesportsmed.org/",
+         "Dr. Matarazzo&rsquo;s orthopedic &amp; sports medicine practice", "ev-logo-elite-v1.webp"),
+        ("Abacoa Podiatry &amp; Leg Vein Center", "https://jupiterlaser.com/",
+         "Dr. Cedeno&rsquo;s foot, ankle &amp; vein practice", "ev-logo-abacoa-v1.webp"),
+        ("Pharmakon Medical Research", "", "Clinical research", "ev-logo-pharmakon-v1.webp"),
     ],
 }
 
@@ -4047,68 +4060,150 @@ def event_strip():
 """
 
 
+_EV_ICONS = {
+    # 24px line icons, stroke = currentColor. One per "An evening of" item, same order.
+    "Ribbon cutting": '<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.1 8.1 20 20M8.1 15.9 20 4"/>',
+    "Meet the physicians": '<path d="M5 3v6a5 5 0 0 0 10 0V3"/><path d="M10 14v2a5 5 0 0 0 10 0v-3"/><circle cx="20" cy="11" r="2"/>',
+    "Tour the new space": '<path d="M3 21h18M5 21V5l9-2v18M14 7h5v14"/><circle cx="11" cy="12" r=".6"/>',
+    "Beverages &amp; bites": '<path d="M7 3h10l-1 7a4 4 0 0 1-8 0L7 3Z"/><path d="M12 14v7M8 21h8"/>',
+    "On-site IV lounge": '<path d="M12 3s6 6.6 6 11a6 6 0 0 1-12 0c0-4.4 6-11 6-11Z"/>',
+    "Live demos": '<path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="2.5"/>',
+    "Local vendors": '<path d="M4 9 5.5 4h13L20 9M4 9v11h16V9M4 9a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0"/><path d="M10 20v-5h4v5"/>',
+    "Giveaways &amp; grand opening offers": '<rect x="3" y="8" width="18" height="5" rx="1"/><path d="M5 13v8h14v-8M12 8v13M12 8S10.5 3 8 4s.5 4 4 4Zm0 0s1.5-5 4-4-.5 4-4 4Z"/>',
+}
+
+
 def build_event():
+    """/grand-opening, designed as the card itself rather than a picture of it:
+    the cards' charcoal + gold palette, their balloons and partner logos (lifted
+    from the card PDFs), the double gold frame and the same type hierarchy."""
     d = 0
     e = EVENT
-    card = "grand-opening-invite-v1.jpg" if EVENT_INVITE_LIVE else "grand-opening-save-the-date-v1.jpg"
-    card_alt = (f"{'Invitation' if EVENT_INVITE_LIVE else 'Save-the-date card'} for the RegenOrtho Palm Beach "
-                f"Grand Opening &amp; Wellness Innovation Showcase, {e['date_long']}, {e['time']}")
-    cw, ch = img_dims(f"assets/media/{card}")
-    highlights = "".join(f"<li>{h}</li>" for h in e["highlights"])
-    practices = "".join(
-        f'<li><strong>{f"<a href={chr(34)}{u}{chr(34)}" + (" rel=" + chr(34) + "noopener" + chr(34) if u.startswith("http") else "") + f">{n}</a>" if u else n}</strong><span>{note}</span></li>'
-        for n, u, note in e["practices"])
+    v = lambda f: f"assets/media/{f}?v={asset_v('assets/media/' + f)}"
+
+    def logo(f, alt, cls=""):
+        w, h = img_dims(f"assets/media/{f}")
+        return f'<img class="{cls}" src="{v(f)}" alt="{alt}" width="{w}" height="{h}" loading="lazy" decoding="async">'
+
+    tiles = "".join(
+        f'<li class="ev-tile reveal" style="--d:{i * 60}ms"><svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">{_EV_ICONS[h]}</svg><span>{h}</span></li>'
+        for i, h in enumerate(e["highlights"]))
+    partners = []
+    for n, u, note, f in e["practices"]:
+        img = logo(f, n)
+        inner = f'{img}<span class="ev-partner-note">{note}</span>'
+        partners.append(
+            f'<li class="reveal"><a class="ev-partner" href="{u}" rel="noopener">{inner}</a></li>' if u
+            else f'<li class="reveal"><div class="ev-partner">{inner}</div></li>')
+    partners = "".join(partners)
+    rsvp_btn = (f'<a class="btn btn-gold" href="{e["rsvp_url"]}" rel="noopener">RSVP by {e["rsvp_by"]}</a>'
+                if EVENT_INVITE_LIVE else "")
     if EVENT_INVITE_LIVE:
-        rsvp_btn = f'<a class="btn btn-gold" href="{e["rsvp_url"]}" rel="noopener">RSVP by {e["rsvp_by"]}</a>'
-        agenda = "".join(f'<li><span class="ev-time">{t}</span><span>{what}</span></li>' for t, what in e["agenda"])
-        plan_html = f"""<section class="section section-tint">
-  <div class="ev-wrap reveal">
-    <div class="section-head"><p class="eyebrow">Run of show</p><h2>The <em>evening</em></h2></div>
-    <ol class="ev-agenda">{agenda}</ol>
-    <p class="ev-rsvp">{rsvp_btn}</p>
-  </div>
-</section>"""
-        status = f"Invitations are out — please RSVP by {e['rsvp_by']}."
+        agenda = "".join(f'<li><span class="ev-time">{t}</span><span class="ev-what">{what}</span></li>'
+                         for t, what in e["agenda"])
+        plan = f"""<div class="ev-plan reveal">
+      <p class="ev-kicker">The evening</p>
+      <ol class="ev-agenda">{agenda}</ol>
+      <p class="ev-plan-cta">{rsvp_btn}</p>
+    </div>"""
+        invite_col = f"""<h3>RSVP</h3>
+        <p>Please let us know you&rsquo;re coming by {e['rsvp_by']}.</p>
+        <p><a href="{e['rsvp_url']}" rel="noopener">RSVP online</a></p>"""
     else:
-        rsvp_btn = ""
-        plan_html = ""
-        status = "Formal invitations — with the evening&rsquo;s schedule and RSVP — are on their way."
+        plan = ""
+        invite_col = """<h3>Invitation to follow</h3>
+        <p>Formal invitations, with the evening&rsquo;s schedule and RSVP, are on their way. Add the date to your calendar so you don&rsquo;t miss it.</p>
+        <p><a href="grand-opening.ics" download>Add to calendar</a></p>"""
     crumbs_html = crumbs([("", "Grand Opening")], depth=d)
+    # The card's two balloons were trimmed by the print bleed: A is cut flat on its
+    # left and top, B on its right and top. They can only sit flush in the matching
+    # top corner, and their animation only ever lifts them (never reveals the cut).
+    # The two mid-height balloons are drawn whole in SVG in the same gold.
+    svg_balloon = ('<svg class="ev-bl {cls}" viewBox="0 0 120 210" aria-hidden="true">'
+                   '<path d="M60 150c2 18-10 26-4 44" fill="none" stroke="#C9A04A" stroke-width="1.4" opacity=".7"/>'
+                   '<path d="M54 151h12l-6-9z" fill="#B88710"/>'
+                   '<ellipse cx="60" cy="74" rx="52" ry="70" fill="url(#evBal)"/>'
+                   '<ellipse cx="40" cy="44" rx="13" ry="22" fill="#FFF6D0" opacity=".55" transform="rotate(-24 40 44)"/></svg>')
+    balloons = ('<div class="ev-balloons" aria-hidden="true">'
+                '<svg width="0" height="0" style="position:absolute"><defs><radialGradient id="evBal" cx="38%" cy="32%" r="75%">'
+                '<stop offset="0" stop-color="#FFE98F"/><stop offset=".45" stop-color="#F4BE1E"/>'
+                '<stop offset="1" stop-color="#8E6206"/></radialGradient></defs></svg>'
+                f'<img class="ev-bl ev-bl-1" src="{v("ev-balloon-a-v1.webp")}" alt="" width="381" height="508">'
+                f'<img class="ev-bl ev-bl-3" src="{v("ev-balloon-b-v1.webp")}" alt="" width="369" height="513">'
+                + svg_balloon.format(cls="ev-bl-2") + svg_balloon.format(cls="ev-bl-4") +
+                '</div>')
+    sparkles = "".join(f'<i class="ev-spark" style="--x:{x}%;--y:{y}%;--d:{dl}s"></i>'
+                       for x, y, dl in [(8, 30, 0), (93, 22, 1.2), (5, 72, 2.1), (95, 64, .6), (50, 14, 1.7), (22, 94, 2.6), (78, 92, .9)])
+    rw, rh = img_dims("assets/media/ev-logo-regenortho-v1.webp")
     body = f"""{nav(d)}
-<main id="main">
-{page_hero("Grand Opening", "Four practices, one new home &mdash; <em>come celebrate</em>",
-           f"Join us {e['date_long']}, {e['time']}, for a ribbon cutting, tours of the new space, an on-site IV lounge, live demos, local vendors and giveaways. {status}",
-           crumbs_html, cta=False, depth=d, h1_lead="Grand Opening in Palm Beach Gardens")}
-<section class="section">
-  <div class="ev-grid">
-    <figure class="ev-card reveal"><img src="assets/media/{card}?v={asset_v('assets/media/' + card)}" alt="{card_alt}" width="{cw}" height="{ch}" loading="eager" fetchpriority="high" decoding="async"></figure>
-    <div class="ev-details reveal" style="--d:120ms">
-      <p class="eyebrow">{'You&rsquo;re invited' if EVENT_INVITE_LIVE else 'Save the date'}</p>
-      <h2>{e['name']}</h2>
-      <dl class="ev-facts">
-        <div><dt>When</dt><dd>{e['date_long']}<br>{e['time']}</dd></div>
-        <div><dt>Where</dt><dd>{e['street']}<br>{ADDRESS_CITY}, {ADDRESS_STATE} {ADDRESS_ZIP}</dd></div>
-      </dl>
-      <div class="ev-actions">
+<main id="main" class="ev">
+<section class="ev-hero">
+  <div class="ev-glow" aria-hidden="true"></div>
+  {balloons}
+  <div class="ev-sparks" aria-hidden="true">{sparkles}</div>
+  <div class="ev-hero-inner">
+    {crumbs_html}
+    <div class="ev-frame">
+      <span class="ev-corner ev-c1" aria-hidden="true"></span><span class="ev-corner ev-c2" aria-hidden="true"></span>
+      <span class="ev-corner ev-c3" aria-hidden="true"></span><span class="ev-corner ev-c4" aria-hidden="true"></span>
+      <p class="ev-kicker ev-in" style="--i:0">{'You&rsquo;re invited' if EVENT_INVITE_LIVE else 'Save the date'}</p>
+      <img class="ev-host ev-in" style="--i:1" src="{v('ev-logo-regenortho-v1.webp')}" alt="RegenOrtho Palm Beach — The Regeneration of Orthopedics" width="{rw}" height="{rh}" fetchpriority="high">
+      <h1 class="ev-in" style="--i:2"><span class="ev-h1">Grand Opening</span><span class="ev-h1-sub">&amp; Wellness Innovation Showcase <span class="ev-h1-city">in Palm Beach Gardens</span></span></h1>
+      <p class="ev-day ev-in" style="--i:3">Thursday</p>
+      <p class="ev-date ev-in" style="--i:4"><time datetime="{e['start']}">December 3, 2026</time></p>
+      <p class="ev-hours ev-in" style="--i:5">{e['time'].replace(' – ', ' &ndash; ')}</p>
+      <p class="ev-where ev-in" style="--i:6">{e['street']}<br>{ADDRESS_CITY}, {ADDRESS_STATE}</p>
+      <div class="ev-actions ev-in" style="--i:7">
         {rsvp_btn}
-        <a class="btn btn-navy" href="grand-opening.ics" download>Add to calendar</a>
-        <a class="btn btn-line" href="{MAP_URL}" rel="noopener">Directions</a>
+        <a class="btn {'btn-ghost-light' if EVENT_INVITE_LIVE else 'btn-gold'}" href="grand-opening.ics" download>Add to calendar</a>
+        <a class="btn btn-ghost-light" href="{MAP_URL}" rel="noopener">Directions</a>
       </div>
-      <h3>An evening of</h3>
-      <ul class="ev-highlights">{highlights}</ul>
+      <p class="ev-count ev-in" style="--i:8" data-ev-start="{e['start']}" hidden></p>
     </div>
   </div>
 </section>
-{plan_html}
-<section class="section{'' if EVENT_INVITE_LIVE else ' section-tint'}">
-  <div class="ev-wrap reveal">
-    <div class="section-head"><p class="eyebrow">Featuring</p><h2>Four practices <em>under one roof</em></h2></div>
-    <ul class="ev-practices">{practices}</ul>
-    <p class="ev-note">Questions about the evening? Call <a href="tel:{PHONE_TEL}" data-call-location="event">{PHONE_DISPLAY}</a> or email <a href="mailto:{EMAIL}">{EMAIL}</a>.</p>
+<section class="ev-section ev-evening">
+  <div class="ev-wrap">
+    <p class="ev-kicker reveal">An evening of</p>
+    <h2 class="ev-h2 reveal">Celebrate four practices <em>under one roof</em></h2>
+    <p class="ev-lede reveal">Meet the physicians, tour the new space and enjoy beverages &amp; bites, live demos, an on-site IV lounge and local vendors.</p>
+    <ul class="ev-tiles">{tiles}</ul>
+    {plan}
   </div>
 </section>
-{cta_band(d)}
+<section class="ev-section ev-featuring">
+  <div class="ev-wrap">
+    <p class="ev-kicker reveal">Featuring</p>
+    <ul class="ev-partners">{partners}</ul>
+  </div>
+</section>
+<section class="section ev-info">
+  <div class="ev-info-grid">
+    <div class="ev-info-col reveal">
+      <h3>Getting here</h3>
+      <p>{e['street']}<br>{ADDRESS_CITY}, {ADDRESS_STATE} {ADDRESS_ZIP}</p>
+      <p><a href="{MAP_URL}" rel="noopener">Open in Google Maps</a></p>
+    </div>
+    <div class="ev-info-col reveal" style="--d:100ms">
+      {invite_col}
+    </div>
+    <div class="ev-info-col reveal" style="--d:200ms">
+      <h3>Questions?</h3>
+      <p>Call <a href="tel:{PHONE_TEL}" data-call-location="event">{PHONE_DISPLAY}</a> or email <a href="mailto:{EMAIL}">{EMAIL}</a>, Monday to Friday, 8 AM to 5 PM.</p>
+    </div>
+  </div>
+</section>
 </main>
+<script>
+  /* Countdown under the date. Hidden (and left hidden) once the evening starts. */
+  (function (el) {{
+    var start = Date.parse(el.getAttribute("data-ev-start"));
+    var days = Math.ceil((start - Date.now()) / 864e5);
+    if (!(days > 0)) return;
+    el.textContent = days === 1 ? "Tomorrow evening" : days + " days to go";
+    el.hidden = false;
+  }})(document.querySelector("[data-ev-start]"));
+</script>
 {footer(d)}"""
     page_url = f"{BASE}/grand-opening"
     event_ld = {
@@ -4127,7 +4222,7 @@ def build_event():
                                  "postalCode": ADDRESS_ZIP, "addressCountry": "US"},
                      "geo": {"@type": "GeoCoordinates", "latitude": GEO_LAT, "longitude": GEO_LNG}},
         "image": [f"{SHARE_BASE}/assets/media/og-grand-opening-v1.jpg",
-                  f"{SHARE_BASE}/assets/media/{card}"],
+                  f"{SHARE_BASE}/assets/media/grand-opening-save-the-date-v1.jpg"],
         "organizer": {"@id": ORG_ID},
     }
     schema = extra_ld(event_ld) + breadcrumb_schema([("", "Home"), ("grand-opening.html", "Grand Opening")])
