@@ -1378,6 +1378,9 @@ address { font-style: normal; line-height: 1.5; }
    rather than below the submit button where it arrives too late to matter. */
 .form-fine-inline { margin-top: -.4rem; }
 .form-error { color: var(--danger); font: 700 var(--t-xs)/1.4 var(--sans); }
+/* .contact-form sets display:flex, which beats the UA's [hidden] rule — without
+   this the thank-you panel showed before submitting and the form never hid. */
+.contact-form[hidden] { display: none; }
 .contact-success { align-items: flex-start; text-align: left; }
 .contact-success p { color: var(--muted); }
 .map-wrap { border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-sm); max-width: var(--wrap); margin: 0 auto; }
@@ -2009,6 +2012,20 @@ body.nav-locked .mobile-call { display: none !important; }
 .ev-time { font: 600 var(--t-xl)/1 var(--serif); color: var(--gold); font-variant-numeric: tabular-nums; }
 .ev-what { color: var(--ev-cream); }
 .ev-plan-cta { margin-top: 1.8rem; }
+.ev-signup { background: radial-gradient(90% 80% at 15% 20%, #2A2219 0%, var(--ev-ink) 60%); text-align: left; border-bottom: 1px solid rgba(253, 201, 41, .14); scroll-margin-top: var(--header-h); }
+.ev-signup-grid { max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+.ev-signup .ev-h2 { margin-left: 0; }
+.ev-signup .ev-lede { margin-left: 0; }
+.ev-signup-points { list-style: none; padding: 0; margin: 1.8rem 0 0; display: grid; gap: .9rem; }
+.ev-signup-points li { position: relative; padding-left: 1.5rem; color: rgba(244, 237, 224, .75); line-height: 1.5; }
+.ev-signup-points li::before { content: ""; position: absolute; left: 0; top: .5em; width: .55rem; height: .55rem; background: var(--gold); transform: rotate(45deg); }
+.ev-signup-points strong { color: var(--ev-cream); }
+.ev-form { background: #FBF7EF; border: 1px solid rgba(253, 201, 41, .5); outline: 1px solid rgba(253, 201, 41, .22); outline-offset: 6px; border-radius: 4px; box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .7); }
+.ev-form .form-title { font: 600 var(--t-2xl)/1.15 var(--serif); color: var(--navy-900); margin: 0; }
+
+.ev-opt { font-weight: 500; letter-spacing: 0; color: var(--muted); }
+.ev-form.contact-success { color: var(--navy-900); }
+.ev-form.contact-success a { color: var(--navy-800); font-weight: 700; }
 .ev-featuring { background: var(--ev-ink); }
 .ev-partners { list-style: none; padding: 0; margin: 2rem 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(1rem, 3vw, 2rem); align-items: stretch; }
 .ev-partners li { display: flex; }
@@ -2025,7 +2042,7 @@ a.ev-partner:hover { border-color: var(--ev-gold-line); transform: translateY(-3
 .ev-info-col a { color: var(--navy-800); font-weight: 600; }
 @media (max-width: 900px) {
   .ev-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .ev-partners, .ev-info-grid { grid-template-columns: 1fr; }
+  .ev-partners, .ev-info-grid, .ev-signup-grid { grid-template-columns: 1fr; }
   .ev-partner { padding: 1.6rem 1.2rem; }
 }
 @media (max-width: 600px) {
@@ -2035,4 +2052,5 @@ a.ev-partner:hover { border-color: var(--ev-gold-line); transform: translateY(-3
   .ev-bl-1, .ev-bl-3 { width: 92px; }
   .ev-bl-2, .ev-bl-4 { display: none; }
   .ev-actions .btn { flex: 1 1 100%; }
+  .ev-form .form-row { grid-template-columns: 1fr; }
 }
