@@ -279,6 +279,24 @@ a, button, input, select, textarea, summary, [tabindex] { scroll-margin-top: cal
 .btn-sm { padding: .55rem 1.1rem; font-size: var(--t-xs); }
 .btn-block { width: 100%; }
 
+/* Analytics consent bar (assets/js/consent.js). Shown once, until the visitor
+   picks Allow or No thanks. Sits above the assistant launcher (z 85/95) and the
+   mobile Call pill (z 80) while it is up; one tap removes it. Desktop: a
+   bottom-left card that leaves the assistant launcher (bottom-right) clear. */
+.consent-bar {
+  position: fixed; left: 1rem; bottom: 1rem; z-index: 120;
+  max-width: 26rem; padding: 1rem 1.25rem;
+  background: var(--navy-950); color: var(--white);
+  border-radius: var(--r-md); box-shadow: var(--shadow-lg);
+  font: 500 var(--t-sm)/1.5 var(--sans);
+}
+.consent-bar p { margin: 0 0 .85rem; }
+.consent-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+.consent-bar .btn { min-height: 44px; }
+@media (max-width: 767px) {
+  .consent-bar { left: .5rem; right: .5rem; bottom: .5rem; max-width: none; }
+}
+
 /* ------------------------------ header ---------------------------------- */
 
 .site-header {
