@@ -454,6 +454,21 @@
       "permanent": true
     },
     {
+      "source": "/guide",
+      "destination": "/patient-resources",
+      "statusCode": 301
+    },
+    {
+      "source": "/glossary",
+      "destination": "/faq",
+      "statusCode": 302
+    },
+    {
+      "source": "/shop/index.html",
+      "destination": "/pricing",
+      "statusCode": 302
+    },
+    {
       "source": "/krystexxa-infusion-therapy",
       "destination": "/contact",
       "permanent": true

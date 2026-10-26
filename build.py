@@ -367,29 +367,17 @@ def photo(stem, alt, width, height, cls="", prefix="", sizes="100vw", eager=Fals
 # what the on-page notice and the privacy policy promise.
 GA_MEASUREMENT_ID = "G-2Z542HBXHS"
 
-# gtag.js is 176KB and ~390ms of main-thread time on a mid-range phone (Lighthouse,
-# 2026-10), all of it competing with the hero for first paint. The queue stub below
-# stays inline and immediate, so every gtag() call — the config, the lead events in
-# main.js — lands in dataLayer from the first moment; the library itself is fetched
-# once the page has loaded and the main thread is idle, and replays the queue then.
-# The only visits GA4 loses are ones that leave before onload.
-GA_TAG = f"""<!-- Google tag (gtag.js), loaded after onload -->
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){{dataLayer.push(arguments);}}
-  gtag('js', new Date());
-  gtag('config', '{GA_MEASUREMENT_ID}');
-  (function () {{
-    function load() {{
-      var s = document.createElement('script'); s.async = true;
-      s.src = 'https://www.googletagmanager.com/gtag/js?id={GA_MEASUREMENT_ID}';
-      document.head.appendChild(s);
-    }}
-    function idle() {{ (window.requestIdleCallback || function (f) {{ setTimeout(f, 1); }})(load, {{ timeout: 2500 }}); }}
-    if (document.readyState === 'complete') idle(); else window.addEventListener('load', idle);
-  }})();
-</script>
-"""
+# Consent-gated since 2026-10-26: assets/js/consent.js defines the gtag() queue,
+# sets Consent Mode to denied, shows a one-time Allow / No thanks bar and loads
+# gtag.js only after Allow (at idle after onload for returning visitors who
+# already allowed, which keeps the old performance behaviour: gtag.js is 176KB and
+# ~390ms of main-thread time on a mid-range phone). GA used to start on page load
+# on the contact page and every page with the assistant, where visitors type their
+# name, phone and reason for calling. Same pattern as First Rehab and Legacy Medical.
+def ga_tag(p):
+    return (f'<!-- Google Analytics 4, consent-gated (assets/js/consent.js) -->\n'
+            f'<script defer src="{p}assets/js/consent.js?v={asset_v("assets/js/consent.js")}" '
+            f'data-ga="{GA_MEASUREMENT_ID}"></script>\n')
 
 
 # Default share card: the care-team photo, cropped to 1200x630. A link preview
@@ -472,11 +460,11 @@ def head(title, desc, depth=0, canonical="", og_image="assets/media/og-physician
     extra_css_tag = ""
     if extra_css:
         extra_css_tag = f'<link rel="stylesheet" href="{p}{extra_css}?v={asset_v(extra_css)}">\n'
-    ga_tag = GA_TAG if analytics else ""
+    ga = ga_tag(p) if analytics else ""
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
-{ga_tag}<meta charset="UTF-8">
+{ga}<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(desc)}">
@@ -4351,7 +4339,6 @@ def build_contact():
     <form class="contact-form reveal" id="contact-form" style="--d:120ms" action="https://formsubmit.co/{FORM_TARGET_EMAIL}" method="POST">
       <h2 class="form-title">Request an appointment</h2>
       <input type="hidden" name="_subject" value="[Contact Form] New Appointment Request — regenorthopb.com">
-      <input type="hidden" name="_captcha" value="false">
       <input type="hidden" name="_cc" value="{FORM_CC_EMAILS}">
       <input type="hidden" name="source" value="regenorthopb.com contact page form">
       <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
