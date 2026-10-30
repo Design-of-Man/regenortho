@@ -2,19 +2,20 @@
    Set answers only (no AI, no external API): every reply below is served from
    the FAQ array. Keep answers factually accurate, give no medical advice, and
    route anything unknown to the front desk at 833-783-6561.
-   Appointment requests are delivered via FormSubmit to the practice inbox;
-   failures queue in localStorage and retry on the next page load. */
+   Appointment requests post to /api/lead (api/lead.js, same site), which
+   stores them through the portal's contact-lead Supabase function and emails
+   the office via Resend (recipients: Vercel env LEAD_TO / LEAD_CC). FormSubmit
+   did this until its 2026-10-28 outage. Failures queue in localStorage and
+   retry on the next page load. */
 (function () {
   "use strict";
 
   var PHONE = "833-783-6561";
   var PHONE_TEL = "+18337836561";
   var EMAIL = "emily@regenorthopb.com";
-  var FORM_TARGET_EMAIL = "emily@regenorthopb.com";
-  var ENDPOINT = "https://formsubmit.co/ajax/" + FORM_TARGET_EMAIL;
-  /* Mirrors FORM_CC_EMAILS in build.py. build.py does not generate this file, so
-     the two lists only stay in step if both are edited together. */
-  var FORM_CC = "nicholasbkashuba@gmail.com,matarazzomd@gmail.com,doctor.cedeno@gmail.com,angela.d@jupiterlaser.com";
+  /* Absolute path: this script runs on pages at every depth. Recipients live
+     server side now, not in the page source. */
+  var ENDPOINT = "/api/lead";
   var LS_DRAFT = "rga-draft-v1";
   var LS_QUEUE = "rga-queue-v1";
 
@@ -362,10 +363,10 @@
   function payload() {
     return {
       _subject: "[Site Assistant] New Appointment Request — " + draft.name,
-      _cc: FORM_CC,
       name: draft.name, phone: draft.phone, email: draft.email,
       service: draft.service, preferred_time: draft.timing, message: draft.message || "",
-      source: "regenorthopb.com concierge assistant, " + location.pathname,
+      page: location.pathname,
+      source: "assistant",
     };
   }
 
@@ -380,9 +381,10 @@
         if (!r.ok) throw new Error("http " + r.status);
         return r.json();
       }).then(function (data) {
-        /* FormSubmit answers 200 with {"success":"false"} for a recipient
-           address that was never activated -- it accepts the submission and
-           drops it. Trusting the status code alone would clear the draft and
+        /* /api/lead answers {"success":"true"} only when the lead was stored
+           or emailed. (FormSubmit, before it, answered 200 with
+           {"success":"false"} for a lead it dropped.) Trusting the status
+           code alone would clear the draft and
            tell the patient we have their request when nothing was sent, which
            is exactly how jupiterlaser.com lost leads silently. Believe the
            body, and let the catch below queue it for retry. */
