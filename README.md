@@ -26,7 +26,7 @@ Gardens, FL 33410 · 833-STEM561 (833-783-6561) · emily@regenorthopb.com
 - `assets/js/assist.js` + `assets/css/assist.css` — the concierge assistant (chat popup on
   every page). "Ask a question" serves **set answers** from the FAQ array in `assist.js` —
   no AI, no external API. Keep those answers factually accurate: no medical advice, route
-  unknowns to 833-783-6561. Appointment requests are emailed via FormSubmit (below).
+  unknowns to 833-783-6561. Appointment requests post to `/api/lead` (below).
 
 ## Editing cheat-sheet
 
@@ -49,10 +49,13 @@ After ANY edit: `python3 build.py`, then commit. Preview locally with
 
 ## Leads (appointment requests)
 
-Both the contact form and the assistant deliver to **formsubmit.co → emily@regenorthopb.com**.
-⚠️ FormSubmit requires one-time activation: the first submission triggers a confirmation
-email to that inbox — click it (check spam) or leads will not arrive. If delivery fails,
-the assistant queues the lead in the visitor's browser and retries automatically.
+Both the contact form and the assistant post to **`/api/lead`** (`api/lead.js`, a Vercel
+function on this site). It stores every lead through the portal's `contact-lead` Supabase
+function, then emails it via Resend to the Vercel env `LEAD_TO` (cc `LEAD_CC`, from
+`LEAD_FROM`; `CONFIRM_FROM` optionally sends the patient a short confirmation). Without
+`RESEND_API_KEY` leads are stored but not emailed. If delivery fails, the assistant queues
+the lead in the visitor's browser and retries automatically. FormSubmit did this job until
+it went down on 2026-10-28; it was removed 2026-10-30.
 
 ## Patient forms & HIPAA — read before changing anything here
 
@@ -84,7 +87,7 @@ That is a real change in risk, not a config tweak. Before wiring up any destinat
    Workspace offers it for Gmail (a consumer `@gmail.com` address does **not** qualify).
 2. **Do not** point these forms at FormSubmit, Formspree, Zapier, a Google Form, a plain
    mailbox, or any automation tool without a BAA. The lead/appointment forms elsewhere on
-   this site use FormSubmit — that is acceptable only because they collect contact details
+   this site post to `/api/lead` — that is acceptable only because they collect contact details
    and a reason for calling, not clinical history. The patient forms are a different thing.
 3. You also need the rest of the Security Rule around it: encryption in transit and at
    rest, access controls so only authorised staff can read submissions, audit logging, a
@@ -120,7 +123,8 @@ To deploy:
    already on every page except `/forms/*`; it 404s silently until the toggle is flipped.
 6. Submit `sitemap.xml` in Google Search Console and update the Google Business Profile
    website link.
-7. Click the FormSubmit activation email on the first lead.
+7. Set `RESEND_API_KEY`, `LEAD_TO`, `LEAD_CC`, `LEAD_FROM` (and optionally `CONFIRM_FROM`)
+   on the Vercel project so `/api/lead` emails leads as well as storing them.
 
 To hand the whole thing to the practice, transfer this repo to their GitHub account and
 re-import it under their own Vercel account — nothing in the code needs to change.

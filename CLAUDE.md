@@ -39,9 +39,18 @@ Static site, 56 pages, generated — do not edit HTML files directly.
   scrollTo() into an animation that lands elsewhere. Panel z-index is 95 — it
   must outrank the fixed site header (90) now that the sheet starts at top:0.
 - `assets/js/assist.js` — concierge assistant. SET ANSWERS only (FAQ array) — no AI, no
-  external API, no medical advice; route unknowns to 833-783-6561. Leads deliver via
-  FormSubmit (formsubmit.co/ajax/emily@regenorthopb.com) with a localStorage retry queue.
-  Never put secret keys in it.
+  external API, no medical advice; route unknowns to 833-783-6561. Leads post to
+  `/api/lead` with a localStorage retry queue. Never put secret keys in it.
+- LEADS (`api/lead.js`, since 2026-10-30): the contact form and the assistant both post to
+  `/api/lead`, a same-site Vercel function. It stores every lead through the portal's
+  `contact-lead` Supabase function (no secret needed here) and emails it via Resend. Env on
+  Vercel: RESEND_API_KEY, LEAD_TO (office recipients, still including emily@regenorthopb.com),
+  LEAD_CC, LEAD_FROM, CONFIRM_FROM (optional patient confirmation, first name only). It
+  answers `{"success":"true"}` only when the lead was stored OR emailed; both browser scripts
+  trust that body, not the status code. A no-JS form post gets a 303 to its `_next`
+  (`/contact?sent=1`). FormSubmit was removed after its outage (Cloudflare 521 from
+  2026-10-28, every form on the site losing leads); do not point anything back at it.
+  Recipients now live only in the Vercel env, not in the page source.
 - BLOG (redesigned 2026-10): `build_blog()` renders a magazine index (feature + topic chips
   + a grid whose `.bl-wide` cards are chosen so rows fill) and image-led posts (split
   header, sticky "On this page" + related-care aside, reading progress, pull quote).
@@ -103,10 +112,10 @@ Static site, 56 pages, generated — do not edit HTML files directly.
   every page, the schema, llms.txt, the assistant and the share card (the old team-group
   photo had her in it, so og-team.jpg was replaced by og-physicians-v1.jpg, composed from
   the two portraits). /providers/emily-bahnick 301s to /about. Do not re-add her.
-  The address emily@regenorthopb.com is DELIBERATELY still the public email and the
-  FormSubmit lead inbox — the owner said keep it for now. Changing it is a two-file change
-  (build.py EMAIL/FORM_TARGET_EMAIL + assets/js/assist.js) and needs FormSubmit's one-time
-  activation click from the new inbox, or leads hold undelivered.
+  The address emily@regenorthopb.com is DELIBERATELY still the public email and one of the
+  lead recipients — the owner said keep it for now. The public address is build.py EMAIL +
+  assets/js/assist.js EMAIL; the lead recipients are the Vercel env LEAD_TO (plus LEAD_CC),
+  so changing who receives leads is an env change, not a code change.
 - Elite Sports Medicine (elitesportsmed.org, 561-202-8886, Dr. Matarazzo's own orthopedic
   practice) operates INSIDE RegenOrtho's suite at 11380 Prosperity Farms Rd, and has its own
   Google Business Profile at that address. That is legitimate co-location (Google allows a
@@ -373,10 +382,11 @@ CSS coastline scene stays underneath as the no-video fallback. asset_v() returns
   RGLead's events queue in dataLayer and send nothing without consent. GA4 now counts only
   visitors who allow; Vercel Web Analytics is the full-traffic count. Same pattern as
   firstrehabnpb.com and legacymedicalpalmbeach.com. Never put the plain gtag snippet back.
-- **FormSubmit spam (2026-10-26):** the contact form no longer sends `_captcha=false`, so a
-  submission posted straight to formsubmit.co (scraped markup, no JS; 2 of 6 spams did this)
-  meets FormSubmit's captcha. The AJAX path (contact-form.js, assist.js) never shows a
-  captcha either way; it relies on the `_honey` field, which FormSubmit drops if filled.
+- **Spam:** `/api/lead` silently accepts and discards any submission with the `_honey` field
+  filled. There is no captcha: FormSubmit's (turned back on 2026-10-26 for scraped,
+  no-JS posts; 2 of 6 spams then did that) went away with FormSubmit on 2026-10-30.
+  contact-form.js still stamps `verified: "yes"` and " (from website)" on the subject, so a
+  scripted post is distinguishable in the inbox from a person on the page.
 - Vercel Web Analytics (cookieless, no consent banner) is emitted by `footer()` on every
   page EXCEPT `/forms/*` — those three pages pass `analytics=False` per the HIPAA rule
   below. Never widen the exclusion away or add any other tracker to form pages.
@@ -396,8 +406,9 @@ Form, or a plain mailbox: electronic delivery needs a HIPAA-eligible destination
 signed BAA plus encryption, access controls, audit logging and a retention schedule — and
 the on-page notice and privacy policy both promise nothing is transmitted, so they must be
 rewritten in the same change. Full checklist in README.md → "Patient forms & HIPAA".
-The site's other forms (contact, assistant) may keep using FormSubmit — they collect
-contact details and a reason for calling, not clinical history.
+The site's other forms (contact, assistant) post to `/api/lead` (Supabase + Resend, no
+BAA) — acceptable only because they collect contact details and a reason for calling, not
+clinical history.
 
 ## Facts discipline
 All claims/credentials/prices/reviews are from the practice's own published content. Never

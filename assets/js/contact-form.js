@@ -1,12 +1,15 @@
-/* RegenOrtho Palm Beach — the site's FormSubmit forms: the contact page
+/* RegenOrtho Palm Beach — the site's lead forms: the contact page
    appointment form (#contact-form) and the grand-opening sign-up
    (#event-form). Each form's success panel, name slot and error line share
    its prefix (contact-success, contact-success-name, contact-error).
-   Progressive enhancement: the form works as a plain POST to FormSubmit
-   without this script (visitors land on FormSubmit's own "Thanks!" page).
-   With JS, we intercept the submit and post to FormSubmit's AJAX endpoint
-   instead, so the visitor never leaves the page and gets an immediate,
-   personalized confirmation — no redirect, nothing that can 404. */
+   Both post to /api/lead (api/lead.js, same site), which stores the lead
+   through the portal's contact-lead Supabase function and emails it via
+   Resend. FormSubmit, which these used until 2026-10-30, went down
+   2026-10-28 (Cloudflare 521) and took every lead with it.
+   Progressive enhancement: the form works as a plain POST without this
+   script (the endpoint 303s back to the form's _next, /contact?sent=1).
+   With JS, we intercept the submit and post JSON instead, so the visitor
+   never leaves the page and gets an immediate, personalized confirmation. */
 (function () {
   "use strict";
 
@@ -20,10 +23,17 @@
   var submitBtn = form.querySelector('button[type="submit"]');
   var submitLabel = submitBtn ? submitBtn.textContent : "";
 
-  // The form's action already points at formsubmit.co/{email} for the
-  // no-JS fallback — insert "ajax/" to get the JSON endpoint rather than
-  // duplicating the destination address here.
-  var endpoint = form.action.replace("formsubmit.co/", "formsubmit.co/ajax/");
+  // The form's action is /api/lead for the no-JS fallback too; the same
+  // endpoint answers JSON when asked for it, so there is one destination.
+  var endpoint = form.getAttribute("action") || "/api/lead";
+
+  // Back from the no-JS fallback (the endpoint 303'd to _next with ?sent=1):
+  // show the thank-you panel. No analytics here -- this path has no way to
+  // tell a fresh delivery from a reload of the same URL.
+  if (prefix === "contact" && /[?&]sent=1(&|$)/.test(location.search) && success) {
+    form.hidden = true;
+    success.hidden = false;
+  }
 
   form.addEventListener("submit", function (e) {
     if (!form.reportValidity()) return;
@@ -37,11 +47,11 @@
 
     /* Mark the submission as having come through this page.
        Every hidden field in the form -- _subject included -- arrives at
-       FormSubmit identically whether a person filled the form in or
+       the endpoint identically whether a person filled the form in or
        something scraped the markup and replayed it, so the inbox cannot
        tell the two apart and neither can anything reading it afterwards.
        Only a value set HERE, by script, at submit time, can: anything
-       posting straight to formsubmit.co never runs this line and keeps the
+       posting straight to /api/lead never runs this line and keeps the
        bare subject built into the markup.
        The prefix is left alone so existing inbox filters on
        "[Contact Form]" keep matching; the suffix is additive.
@@ -61,11 +71,11 @@
       if (!r.ok) throw new Error("http " + r.status);
       return r.json();
     }).then(function (data) {
-      /* FormSubmit answers 200 with {"success":"false"} when the recipient
-         address has never been activated: the submission is accepted and
-         dropped. Reading only the status code would hide the form, show the
-         thank-you panel and fire the form_submit conversion for a lead that
-         never arrived. Believe the body instead. */
+      /* /api/lead answers {"success":"true"} only when the lead was stored
+         or emailed (the shape FormSubmit used, which once answered 200 with
+         {"success":"false"} for a lead it dropped). Reading only the status
+         code would show the thank-you panel and fire the form_submit
+         conversion for a lead that never arrived. Believe the body. */
       if (!data || String(data.success).toLowerCase() !== "true") {
         throw new Error("not delivered");
       }

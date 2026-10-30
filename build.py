@@ -43,17 +43,10 @@ PHONE_DISPLAY = "833-783-6561"
 PHONE_VANITY = "833-STEM561"
 PHONE_TEL = "+18337836561"
 EMAIL = "emily@regenorthopb.com"
-FORM_TARGET_EMAIL = "emily@regenorthopb.com"  # FormSubmit delivery address (contact form + assistant)
-# Copied on every enquiry, from the contact form and the assistant alike. FormSubmit
-# reads _cc as one comma-separated string. This list is mirrored by hand in
-# assets/js/assist.js, which build.py does not generate — changing it here is only
-# half the change. Note these addresses ship in the page source of a public site.
-FORM_CC_EMAILS = (
-    "nicholasbkashuba@gmail.com,"
-    "matarazzomd@gmail.com,"      # Dr. Marc Matarazzo
-    "doctor.cedeno@gmail.com,"    # Dr. Orlando Cedeno
-    "angela.d@jupiterlaser.com"   # Angela
-)
+# Lead recipients are NOT in this file any more. Since 2026-10-30 the contact form and the
+# assistant post to /api/lead (api/lead.js), which stores every lead through the portal's
+# `contact-lead` Supabase function and emails it via Resend to the Vercel env LEAD_TO
+# (cc LEAD_CC). FormSubmit, which these forms used before, went down 2026-10-28.
 ADDRESS_STREET = "11380 Prosperity Farms Road, Suite 204–208"
 ADDRESS_CITY = "Palm Beach Gardens"
 ADDRESS_STATE = "FL"
@@ -642,8 +635,8 @@ def footer(depth=0, extra_js="", analytics=True, assistant=True):
     analytics_tag = ""
     if analytics:
         analytics_tag = '<script defer src="/_vercel/insights/script.js"></script>\n'
-    # The concierge assistant calls fetch() to formsubmit.co for its own booking
-    # flow — a live third-party network surface that has no business sitting on
+    # The concierge assistant calls fetch() to /api/lead for its own booking
+    # flow (which forwards to Supabase and Resend) — a live network surface that has no business sitting on
     # a page collecting PHI. Excluded on /forms/* alongside analytics, so the
     # "nothing is transmitted" promise on those pages is actually true of
     # everything loaded there, not just forms.js itself.
@@ -4336,11 +4329,11 @@ def build_contact():
         <button class="btn btn-navy" data-open-assist>Open the assistant</button>
       </div>
     </div>
-    <form class="contact-form reveal" id="contact-form" style="--d:120ms" action="https://formsubmit.co/{FORM_TARGET_EMAIL}" method="POST">
+    <form class="contact-form reveal" id="contact-form" style="--d:120ms" action="/api/lead" method="POST">
       <h2 class="form-title">Request an appointment</h2>
       <input type="hidden" name="_subject" value="[Contact Form] New Appointment Request — regenorthopb.com">
-      <input type="hidden" name="_cc" value="{FORM_CC_EMAILS}">
-      <input type="hidden" name="source" value="regenorthopb.com contact page form">
+      <input type="hidden" name="_next" value="/contact?sent=1">
+      <input type="hidden" name="source" value="contact-form">
       <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
       <div class="form-row">
         <label>Name<input type="text" name="name" required autocomplete="name"></label>
@@ -4360,7 +4353,7 @@ def build_contact():
         </select>
       </label>
       <!-- The placeholder deliberately does NOT ask what's wrong. This form posts to
-           FormSubmit, which carries no BAA, so it must stay contact-and-scheduling only.
+           /api/lead, which emails it through Resend and carries no BAA, so it must stay contact-and-scheduling only.
            The warning sits with the field, not under the button, so it is read first. -->
       <label>Message<textarea name="message" rows="4" placeholder="Which service you're interested in, and when you'd like to come in."></textarea></label>
       <p class="form-fine form-fine-inline">Please don't include medical history or symptoms here — we'll take that securely at your visit.</p>
