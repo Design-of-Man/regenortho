@@ -411,17 +411,17 @@
   }
 
   /* ---------------------------------------------------- lead tracking */
-  /* Three events describe this practice's entire lead funnel: a call started,
-     an appointment CTA followed, a form sent. They go to BOTH Vercel Web
-     Analytics and GA4 — GA4 because that is what Google Ads can import as a
-     conversion, and Ads currently optimises blind.
+  /* These events describe this practice's lead funnel: a call started, an
+     email or directions link followed, the assistant opened, an appointment
+     CTA followed, a form sent. They go to BOTH Vercel Web Analytics and GA4 —
+     GA4 because that is what Google Ads can import as a conversion, and Ads
+     currently optimises blind.
 
-     Two naming rules that look inconsistent and are not:
-       - Vercel keeps "click_to_call". Renaming it would orphan the history
-         already recorded under that name.
-       - GA4 gets "call_click", matching jupiterlaser.com. Both properties
-         then expose the SAME three event names, so marking key events is one
-         decision applied twice rather than two bespoke ones.
+     One name per event on both properties, and the same names as
+     jupiterlaser.com, elitesportsmed.org and the other client sites, so
+     marking key events is one decision applied everywhere. The phone tap was
+     "click_to_call" on Vercel until 2026-10-30 and is "call_click" there now
+     too; a Vercel chart spanning that date needs both names.
 
      Payload is placement and path only. Never a condition, a service name or
      a field value: attaching "knee pain" to an individual visitor's action is
@@ -430,8 +430,10 @@
      Fire-and-forget. A blocked or missing window.va / window.gtag must never
      throw or delay a tel: dial. Both are absent on /forms/* (no analytics
      script loads there, per the HIPAA rule), so every call below silently
-     no-ops on exactly the pages that must not be tracked. */
+     no-ops on exactly the pages that must not be tracked; the path test in
+     leadEvent() is a second, independent guard on top of that. */
   function leadEvent(vercelName, gaName, data) {
+    if (/^\/forms(\/|\.html|$)/.test(window.location.pathname)) return;
     try {
       if (window.va) window.va("event", { name: vercelName, data: data || {} });
     } catch (err) {}
@@ -450,16 +452,29 @@
     return "body";
   }
 
+  /* Map links: Google Maps (every form of its URL), Apple Maps and Waze. */
+  var MAP_HREF = /google\.[a-z.]+\/maps|maps\.google\.|goo\.gl\/maps|maps\.app\.goo\.gl|maps\.apple\.com|waze\.com/i;
+
+  /* One delegated listener, in the CAPTURE phase: it records a tel: or map
+     tap that navigates away immediately, before any handler further down
+     could stop it, and covers links added later (the assistant's answers)
+     without each one opting in. */
   document.addEventListener("click", function (e) {
     var link = e.target.closest && e.target.closest("a[href]");
     if (!link) return;
     var href = link.getAttribute("href") || "";
+    var where = { path: window.location.pathname, location: placementOf(link) };
 
     if (href.indexOf("tel:") === 0) {
-      leadEvent("click_to_call", "call_click", {
-        path: window.location.pathname,
-        location: placementOf(link)
-      });
+      leadEvent("call_click", "call_click", where);
+      return;
+    }
+    if (href.indexOf("mailto:") === 0) {
+      leadEvent("email_click", "email_click", where);
+      return;
+    }
+    if (MAP_HREF.test(href)) {
+      leadEvent("directions_click", "directions_click", where);
       return;
     }
 
@@ -469,21 +484,22 @@
     if (link.host && link.host !== window.location.host) return;
     var path = (link.pathname || "").replace(/\/+$/, "");
     if (path === "/contact" || path === "/contact.html") {
-      leadEvent("appointment_cta", "appointment_cta", {
-        path: window.location.pathname,
-        location: placementOf(link)
-      });
+      leadEvent("appointment_cta", "appointment_cta", where);
     }
-  });
+  }, true);
 
-  /* Exposed so contact-form.js can report the completed submit through the
-     same guarded path instead of re-implementing the window.va/gtag dance. */
-  window.RGLead = { track: leadEvent };
+  /* Exposed so contact-form.js and assist.js report through the same guarded
+     path instead of re-implementing the window.va/gtag dance. placementOf is
+     shared so a chat_open from an in-page button names where that button is. */
+  window.RGLead = { track: leadEvent, placementOf: placementOf };
 
   /* ------------------------------------------- assistant deep-link hook */
   document.querySelectorAll("[data-open-assist]").forEach(function (btn) {
     btn.addEventListener("click", function () {
-      if (window.RGAssist && window.RGAssist.open) window.RGAssist.open();
+      /* placementOf() files anything inside [data-open-assist] as "assistant";
+         for the button itself the useful answer is where on the page it sits. */
+      var where = placementOf(btn);
+      if (window.RGAssist && window.RGAssist.open) window.RGAssist.open(where === "assistant" ? "body" : where);
     });
   });
 })();
