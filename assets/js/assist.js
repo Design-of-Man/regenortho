@@ -135,7 +135,7 @@
     input = inputWrap.querySelector("input");
     sendBtn = inputWrap.querySelector(".rga-send");
 
-    launcher.addEventListener("click", open);
+    launcher.addEventListener("click", function () { open("launcher"); });
     panel.querySelector(".rga-close").addEventListener("click", close);
     sendBtn.addEventListener("click", submitInput);
     input.addEventListener("keydown", function (e) { if (e.key === "Enter") submitInput(); });
@@ -190,7 +190,22 @@
     html.style.scrollBehavior = prev;
   }
 
-  function open() {
+  /* chat_open: the visitor opened the panel, from the launcher (a <button>, so
+     Enter and Space count too) or an in-page [data-open-assist] button, whose
+     placement main.js passes in. At most once per page view, and never from
+     code: this assistant has no auto-invite, and must not report one if it
+     ever gains one. Placement and path only, like every other lead event. */
+  var chatOpenSent = false;
+  function open(where) {
+    if (!chatOpenSent && !panel.classList.contains("is-open")) {
+      chatOpenSent = true;
+      try {
+        if (window.RGLead) window.RGLead.track("chat_open", "chat_open", {
+          path: location.pathname,
+          location: typeof where === "string" ? where : "launcher"
+        });
+      } catch (err) {}
+    }
     panel.classList.add("is-open");
     launcher.style.display = "none";
     if (!log.childElementCount) greet();
@@ -249,13 +264,14 @@
       { label: "IV Lounge menu", go: function () { location.href = root + "iv-therapy.html"; } },
       { label: "Call " + PHONE, go: function () {
           try {
-            /* RGLead (main.js) sends both the Vercel click_to_call and the GA4
-               call_click; the bare window.va call only reached Vercel, so calls
-               placed from the assistant never counted as a GA4 key event. */
+            /* RGLead (main.js) sends call_click to both Vercel and GA4 (Vercel
+               called it click_to_call until 2026-10-30); the bare window.va
+               call only reached Vercel, so calls placed from the assistant
+               never counted as a GA4 key event. */
             if (window.RGLead) {
-              window.RGLead.track("click_to_call", "call_click", { path: location.pathname, location: "assistant" });
+              window.RGLead.track("call_click", "call_click", { path: location.pathname, location: "assistant" });
             } else if (window.va) {
-              window.va("event", { name: "click_to_call", data: { path: location.pathname, location: "assistant" } });
+              window.va("event", { name: "call_click", data: { path: location.pathname, location: "assistant" } });
             }
           } catch (err) {}
           location.href = "tel:" + PHONE_TEL;

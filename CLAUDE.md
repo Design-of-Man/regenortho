@@ -382,13 +382,30 @@ CSS coastline scene stays underneath as the no-video fallback. asset_v() returns
   RGLead's events queue in dataLayer and send nothing without consent. GA4 now counts only
   visitors who allow; Vercel Web Analytics is the full-traffic count. Same pattern as
   firstrehabnpb.com and legacymedicalpalmbeach.com. Never put the plain gtag snippet back.
+- **Lead events** (`main.js` "lead tracking"; one name on Vercel and GA4, the same names as
+  the other client sites). All go through `RGLead.track()`, which also hard-bails on
+  `/forms/*`, and carry `path` + `location` (placement: `header`, `footer`, `sticky`,
+  `assistant`, `body`, `launcher`, or a link's `data-call-location`) and nothing else:
+  | Event | Fires when |
+  |---|---|
+  | `call_click` | any `tel:` link, or the assistant's Call chip |
+  | `email_click` | any `mailto:` link |
+  | `directions_click` | any Google / Apple Maps or Waze link (the footer and contact map links) |
+  | `appointment_cta` | a link to `/contact` |
+  | `chat_open` | the visitor opens the assistant (launcher, or a `[data-open-assist]` button); once per page view |
+  | `form_submit` | `{form: "contact"}` or `{form: "event"}` (contact-form.js) or `{form: "assistant"}`, on confirmed delivery; carries `form`, not `location` |
+  The first five are caught by ONE delegated click listener in the capture phase, so a
+  tap that navigates away immediately still records, and links the assistant adds later
+  are covered. **Renamed 2026-10-30:** the phone tap was `click_to_call` on Vercel (GA4
+  already had `call_click`); it is `call_click` on both now. A Vercel chart spanning that
+  date needs both names. The agency portal reads only `form_submit`, which is unchanged.
 - **Spam:** `/api/lead` silently accepts and discards any submission with the `_honey` field
   filled. There is no captcha: FormSubmit's (turned back on 2026-10-26 for scraped,
   no-JS posts; 2 of 6 spams then did that) went away with FormSubmit on 2026-10-30.
   contact-form.js still stamps `verified: "yes"` and " (from website)" on the subject, so a
   scripted post is distinguishable in the inbox from a person on the page.
 - Vercel Web Analytics (cookieless, no consent banner) is emitted by `footer()` on every
-  page EXCEPT `/forms/*` — those three pages pass `analytics=False` per the HIPAA rule
+  page EXCEPT `/forms/*` — the hub and its three forms pass `analytics=False` per the HIPAA rule
   below. Never widen the exclusion away or add any other tracker to form pages.
 - The tag 404s harmlessly until Web Analytics is switched on in the Vercel dashboard
   (regenortho project → Analytics → Enable) — that toggle is the one manual step.
