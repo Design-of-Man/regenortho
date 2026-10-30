@@ -30,9 +30,12 @@
 
 "use strict";
 
+const { officeEmail, confirmEmail } = require("./_email.js");
+
 const SITE = "regenorthopb.com";
 const PHONE = "833-783-6561";
 const PRACTICE = "RegenOrtho Palm Beach";
+const BRAND = { name: PRACTICE, color: "#092D5C", accent: "#FDC929", accentInk: "#092D5C", kicker: "#FDC929" };
 
 const TIMEOUT_MS = 8000;
 const FN_URL = "https://iiabylugbnmcdzqjenus.supabase.co/functions/v1/contact-lead";
@@ -148,6 +151,12 @@ module.exports = async function handler(req, res) {
       from: process.env.LEAD_FROM,
       to,
       subject,
+      html: officeEmail({
+        brand: BRAND,
+        title: titleFor(body, source),
+        fields: Object.entries(body).filter(([k]) => !k.startsWith("_")),
+        meta: { site: SITE, source: source.replace(/-/g, " "), flags: clean(body.flags, 200) },
+      }),
       text: fields.map(([k, v]) => `${k}: ${v}`).join("\n") +
         `\n\n-- Sent from ${SITE} (${source}). Saved: ${stored ? "yes" : "NO, keep this email"}.`,
     };
@@ -172,6 +181,11 @@ module.exports = async function handler(req, res) {
         to: [email],
         reply_to: to[0],
         subject: `We received your request: ${PRACTICE}`,
+        html: confirmEmail({
+          brand: BRAND, first, phone: PHONE, site: SITE,
+          ref: /^[A-Z]{2}-[A-Z0-9]{5}$/.test(String(body.ref || "")) ? String(body.ref) : "",
+          promise: "Your request came through and our team will contact you within one business day.",
+        }),
         text: [
           `Hi ${first},`,
           "",
@@ -193,4 +207,11 @@ module.exports = async function handler(req, res) {
 
 function subjectHasName(subject, name) {
   return typeof subject === "string" && name && subject.includes(name);
+}
+
+// The heading on the office's email: what kind of request this is.
+function titleFor(body, source) {
+  if (String(body.intent || "") === "question") return "New website question";
+  if (source === "rsvp") return "New RSVP";
+  return "New appointment request";
 }
