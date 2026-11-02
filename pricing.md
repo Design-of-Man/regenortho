@@ -57,6 +57,7 @@ No price is published for these; do not infer or estimate one. Cost depends on
 the plan, and most are billed through insurance where covered.
 
 - Regenerative Medicine & Orthobiologic Therapies: https://regenorthopb.com/services/regenerative-medicine-orthobiologics
+- PRP Injections: https://regenorthopb.com/services/prp-injections
 - Advanced Non-Surgical Therapies: https://regenorthopb.com/services/advanced-non-surgical-therapies
 - Vein Care — Medical & Cosmetic: https://regenorthopb.com/our-services/vein-care-medical-cosmetic
 - Sclerotherapy: https://regenorthopb.com/services/sclerotherapy
