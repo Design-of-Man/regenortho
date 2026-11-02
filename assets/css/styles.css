@@ -1391,7 +1391,7 @@ address { font-style: normal; line-height: 1.5; }
 
 /* ------------------------------ contact ---------------------------------- */
 
-.contact-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 2.6rem; max-width: var(--wrap); margin: 0 auto; align-items: start; }
+.contact-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 2.6rem; max-width: var(--wrap); margin: 0 auto; align-items: start; }
 .contact-info h2 { margin-bottom: .8rem; }
 .contact-info h2 em { color: var(--navy-700); }
 .contact-list { list-style: none; margin-top: 1.6rem; display: flex; flex-direction: column; gap: 1.1rem; }

@@ -35,6 +35,16 @@
     success.hidden = false;
   }
 
+  // Service-page CTAs link here with ?service=<key>. Only a key that matches an
+  // option does anything, and the visitor can still change it.
+  var serviceSelect = form.querySelector('select[name="service"]');
+  var wanted = new URLSearchParams(location.search).get("service");
+  if (serviceSelect && wanted) {
+    Array.prototype.forEach.call(serviceSelect.options, function (o) {
+      if (o.dataset.service === wanted) o.selected = true;
+    });
+  }
+
   form.addEventListener("submit", function (e) {
     if (!form.reportValidity()) return;
     e.preventDefault();

@@ -734,7 +734,7 @@ def _hero_orbit():
             f'<span class="ph-ring ph-ring-1"></span><span class="ph-ring ph-ring-2"></span>{dots}</div>')
 
 
-def page_hero(eyebrow, title, lede, crumbs_html="", cta=True, depth=0, h1_lead=""):
+def page_hero(eyebrow, title, lede, crumbs_html="", cta=True, depth=0, h1_lead="", book_query=""):
     """h1_lead: the plain-language "<treatment> in <city>" phrase, rendered INSIDE the
     h1 in the eyebrow's place (it replaces the eyebrow). Brand-voice titles such as
     "Advanced Cell-Free Regenerative Therapy…" never named the treatment, so the one
@@ -744,7 +744,7 @@ def page_hero(eyebrow, title, lede, crumbs_html="", cta=True, depth=0, h1_lead="
     cta_html = ""
     if cta:
         cta_html = f"""<div class="hero-cta-row">
-      <a class="btn btn-gold" href="{p}contact.html#book">Book a Consultation</a>
+      <a class="btn btn-gold" href="{p}contact.html{book_query}#book">Book a Consultation</a>
       <a class="btn btn-ghost-light" href="tel:{PHONE_TEL}" data-call-location="page_hero">Call {PHONE_VANITY}</a>
     </div>"""
     return f"""<section class="page-hero">
@@ -772,7 +772,8 @@ def crumbs(items, depth=0):
 
 
 def cta_band(depth=0, heading="Ready to feel like <em>yourself</em> again?",
-             sub="Book a consultation with our board-certified specialists and get a personalized plan — often with same-week availability."):
+             sub="Book a consultation with our board-certified specialists and get a personalized plan — often with same-week availability.",
+             book_query=""):
     p = "../" * depth
     return f"""<section class="cta-band">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
@@ -781,7 +782,7 @@ def cta_band(depth=0, heading="Ready to feel like <em>yourself</em> again?",
     <h2>{heading}</h2>
     <p>{sub}</p>
     <div class="cta-row">
-      <a class="btn btn-gold" href="{p}contact.html#book">Book a Consultation</a>
+      <a class="btn btn-gold" href="{p}contact.html{book_query}#book">Book a Consultation</a>
       <a class="btn btn-ghost-light" href="tel:{PHONE_TEL}" data-call-location="cta_band">{PHONE_VANITY} · {PHONE_DISPLAY}</a>
     </div>
   </div>
@@ -2783,6 +2784,7 @@ def build_services():
             f"""<details class="faq-item"><summary>{q}</summary><div class="faq-a"><p>{a}</p></div></details>"""
             for q, a in svc["faqs"]
         )
+        book_query = f"?service={contact_service_key(svc['slug'])}"
         conds = "".join(
             f'<li><a href="../conditions/{c}.html">{(lambda x: x.get("service_label", x["name"]))(next(x for x in CONDITIONS if x["slug"] == c))}</a></li>'
             for c in svc.get("conditions", []) if any(x["slug"] == c for x in CONDITIONS)
@@ -2832,7 +2834,7 @@ def build_services():
         <div><dt>Treatment starting from</dt><dd>${price['from']:,}</dd></div>
       </dl>
       <p class="price-note">{price['note']}</p>
-      <a class="btn btn-gold" href="../contact.html#book">Book a Consultation</a>
+      <a class="btn btn-gold" href="../contact.html{book_query}#book">Book a Consultation</a>
     </div>"""
             inc_block = f"""<div class="reveal">
       <p class="eyebrow">Treatment Includes</p>
@@ -2868,7 +2870,7 @@ def build_services():
     <h1><span class="eyebrow h1-lead">{SERVICE_H1_LEAD.get(svc['slug']) or svc['eyebrow']}</span> {svc['h1']}</h1>
     <p class="bl-hero-lede">{svc['lede']}</p>
     <div class="hero-cta-row">
-      <a class="btn btn-gold" href="../contact.html#book">Book a Consultation</a>
+      <a class="btn btn-gold" href="../contact.html{book_query}#book">Book a Consultation</a>
       <a class="btn btn-ghost-light" href="tel:{PHONE_TEL}" data-call-location="page_hero">Call {PHONE_VANITY}</a>
     </div>
   </div>
@@ -2880,7 +2882,7 @@ def build_services():
     <div class="why-head reveal">
       <p class="eyebrow">Why patients choose us</p>
       <h2>Care built around <em>you</em></h2>
-      <a class="btn btn-navy" href="../contact.html#book">Book a Consultation</a>
+      <a class="btn btn-navy" href="../contact.html{book_query}#book">Book a Consultation</a>
     </div>
     <ul class="check-list why-panel reveal" style="--d:120ms">{why}</ul>
   </div>
@@ -2902,7 +2904,7 @@ def build_services():
   <div class="faq-list">{faqs}</div>
   <p class="section-foot"><a href="../faq.html">Browse the full FAQ →</a></p>
 </section>
-{cta_band(d, heading=svc['cta'], sub=svc['cta_sub'])}
+{cta_band(d, heading=svc['cta'], sub=svc['cta_sub'], book_query=book_query)}
 {disclaimer_html}
 </main>
 {footer(d)}"""
@@ -3796,7 +3798,7 @@ def build_iv():
     cards = ""
     for i, item in enumerate(IV_MENU):
         cards += f"""<li class="drip-card" data-cat="{item['cat']}" id="drip-{i + 1}" style="--dd:{i * 70}ms; --df:{6.5 + (i % 5) * 1.4}s; --dp:{(i % 7) * 0.8}s">
-      <a href="contact.html#book">
+      <a href="contact.html?service=iv-therapy#book">
         <span class="drip-bag"><img src="assets/media/{item['bag']}?v={asset_v('assets/media/' + item['bag'])}" alt="{item['short']} IV drip bag" width="150" height="230" loading="lazy"></span>
         <span class="drip-body">
           <h3 class="drip-name">{item['short']}</h3>
@@ -3904,7 +3906,7 @@ def build_iv():
   <div class="faq-list">{faqs}</div>
   <p class="section-foot">Further reading: <a href="blog/iv-therapy-recovery-wellness.html">IV therapy for recovery</a> · <a href="blog/iv-hydration-in-palm-beach-gardens-what-to-expect-and-how-to-choose-a-clinic.html">IV hydration in Palm Beach Gardens: what to expect</a></p>
 </section>
-{cta_band(d, heading="Feel better <em>today</em>", sub="Come and sit in the lounge for an hour. Every formula is chosen with a clinician, and if an infusion is not what you need we will say so.")}
+{cta_band(d, heading="Feel better <em>today</em>", sub="Come and sit in the lounge for an hour. Every formula is chosen with a clinician, and if an infusion is not what you need we will say so.", book_query="?service=iv-therapy")}
 </main>
 {footer(d)}"""
     schema = offers + faq_schema(IV_FAQS) + breadcrumb_schema([("", "Home"), ("iv-therapy.html", "IV Therapy")])
@@ -4360,6 +4362,36 @@ def build_faq():
     write("faq.html", page)
 
 
+# The /contact dropdown: (label, ?service= key). The key is the service's own slug, or
+# its parent's when it has no option of its own; contact-form.js selects by key. A new
+# service with neither fails the build rather than quietly not preselecting.
+CONTACT_SERVICE_OPTIONS = [
+    ("Regenerative Medicine &amp; Orthobiologic Therapies", "regenerative-medicine-orthobiologics"),
+    ("PRP Injections", "prp-injections"),
+    ("Peptide Therapy", "peptide-therapy"),
+    ("IV Recovery &amp; Wellness Therapy", "iv-therapy"),
+    ("Advanced Non-Surgical Therapies", "advanced-non-surgical-therapies"),
+    ("Vein Care", "vein-care"),
+    ("Neuropathy Restoration Program", "neuropathy-program"),
+    ("Medical Weight Loss / GLP-1", "medical-weight-loss"),
+    ("Concierge &amp; Cash-Pay Services", "concierge-care"),
+]
+
+
+def contact_service_options():
+    return "\n          ".join(
+        f'<option data-service="{key}">{label}</option>' for label, key in CONTACT_SERVICE_OPTIONS)
+
+
+def contact_service_key(slug):
+    keys = {key for _, key in CONTACT_SERVICE_OPTIONS}
+    if slug in keys:
+        return slug
+    parent = next(s.get("parent") for s in SERVICES if s["slug"] == slug)
+    assert parent in keys, f"no contact dropdown option for service {slug}"
+    return parent
+
+
 def build_contact():
     d = 0
     crumbs_html = crumbs([("", "Contact Us")], depth=d)
@@ -4368,7 +4400,40 @@ def build_contact():
 {page_hero("Contact Us", "Let's Work Out What's Actually Wrong", "Call the office or send a message and we will get you booked in — and tell you what to bring, so the first appointment is not spent gathering records.", crumbs_html, cta=False, depth=d)}
 <section class="section" id="book">
   <div class="contact-grid">
-    <div class="contact-info reveal">
+    <form class="contact-form reveal" id="contact-form" action="/api/lead" method="POST">
+      <h2 class="form-title">Request an appointment</h2>
+      <input type="hidden" name="_subject" value="[Contact Form] New Appointment Request — regenorthopb.com">
+      <input type="hidden" name="_next" value="/contact?sent=1">
+      <input type="hidden" name="source" value="contact-form">
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="form-row">
+        <label>Name<input type="text" name="name" required autocomplete="name"></label>
+        <label>Phone Number<input type="tel" name="phone" required autocomplete="tel"></label>
+      </div>
+      <label>Email (optional)<input type="email" name="email" autocomplete="email"></label>
+      <label>Select Your Service
+        <select name="service">
+          <option value="" selected>Select a service</option>
+          {contact_service_options()}
+          <option>Not sure — help me choose</option>
+        </select>
+      </label>
+      <!-- The placeholder deliberately does NOT ask what's wrong. This form posts to
+           /api/lead, which emails it through Resend and carries no BAA, so it must stay contact-and-scheduling only.
+           The warning sits with the field, not under the button, so it is read first. -->
+      <label>Message<textarea name="message" rows="4" placeholder="Which service you're interested in, and when you'd like to come in."></textarea></label>
+      <p class="form-fine form-fine-inline">Please don't include medical history or symptoms here — we'll take that securely at your visit.</p>
+      <button class="btn btn-gold btn-block" type="submit">Book Appointment</button>
+      <p class="form-fine">Submitting sends your request straight to our front desk. For anything urgent, call {PHONE_DISPLAY}.</p>
+      <p class="form-error" id="contact-error" hidden>Something went wrong sending that — please call <a href="tel:{PHONE_TEL}" data-call-location="contact_error">{PHONE_VANITY}</a> and we'll get you booked directly.</p>
+    </form>
+    <div class="contact-form contact-success reveal" id="contact-success" hidden tabindex="-1">
+      <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#FDC929"/><path fill="none" stroke="#092D5C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M6.5 12.5 10 16l7.5-8"/></svg>
+      <h2 class="form-title">Thanks, <span id="contact-success-name">there</span>!</h2>
+      <p>We've received your request and our front desk will reach out to confirm your appointment — usually within one business day.</p>
+      <p class="form-fine">Need us sooner? Call <a href="tel:{PHONE_TEL}" data-call-location="contact_success">{PHONE_VANITY} · {PHONE_DISPLAY}</a>.</p>
+    </div>
+    <div class="contact-info reveal" style="--d:120ms">
       <h2>Get in touch to book your <em>first appointment</em></h2>
       <p>Book your first appointment today and experience personalized care, advanced treatments, and expert support tailored to your health needs.</p>
       <ul class="contact-list">
@@ -4386,44 +4451,6 @@ def build_contact():
         <p>Use the <strong>concierge assistant</strong> in the corner of your screen — it can answer common questions instantly and take your appointment request 24/7.</p>
         <button class="btn btn-navy" data-open-assist>Open the assistant</button>
       </div>
-    </div>
-    <form class="contact-form reveal" id="contact-form" style="--d:120ms" action="/api/lead" method="POST">
-      <h2 class="form-title">Request an appointment</h2>
-      <input type="hidden" name="_subject" value="[Contact Form] New Appointment Request — regenorthopb.com">
-      <input type="hidden" name="_next" value="/contact?sent=1">
-      <input type="hidden" name="source" value="contact-form">
-      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <div class="form-row">
-        <label>Name<input type="text" name="name" required autocomplete="name"></label>
-        <label>Phone Number<input type="tel" name="phone" required autocomplete="tel"></label>
-      </div>
-      <label>Email<input type="email" name="email" required autocomplete="email"></label>
-      <label>Select Your Service
-        <select name="service">
-          <option>Regenerative Medicine &amp; Orthobiologic Therapies</option>
-          <option>IV Recovery &amp; Wellness Therapy</option>
-          <option>Advanced Non-Surgical Therapies</option>
-          <option>Vein Care</option>
-          <option>Neuropathy Restoration Program</option>
-          <option>Medical Weight Loss / GLP-1</option>
-          <option>Concierge &amp; Cash-Pay Services</option>
-          <option>Not sure — help me choose</option>
-        </select>
-      </label>
-      <!-- The placeholder deliberately does NOT ask what's wrong. This form posts to
-           /api/lead, which emails it through Resend and carries no BAA, so it must stay contact-and-scheduling only.
-           The warning sits with the field, not under the button, so it is read first. -->
-      <label>Message<textarea name="message" rows="4" placeholder="Which service you're interested in, and when you'd like to come in."></textarea></label>
-      <p class="form-fine form-fine-inline">Please don't include medical history or symptoms here — we'll take that securely at your visit.</p>
-      <button class="btn btn-gold btn-block" type="submit">Book Appointment</button>
-      <p class="form-fine">Submitting sends your request straight to our front desk. For anything urgent, call {PHONE_DISPLAY}.</p>
-      <p class="form-error" id="contact-error" hidden>Something went wrong sending that — please call <a href="tel:{PHONE_TEL}" data-call-location="contact_error">{PHONE_VANITY}</a> and we'll get you booked directly.</p>
-    </form>
-    <div class="contact-form contact-success reveal" id="contact-success" style="--d:120ms" hidden tabindex="-1">
-      <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#FDC929"/><path fill="none" stroke="#092D5C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M6.5 12.5 10 16l7.5-8"/></svg>
-      <h2 class="form-title">Thanks, <span id="contact-success-name">there</span>!</h2>
-      <p>We've received your request and our front desk will reach out to confirm your appointment — usually within one business day.</p>
-      <p class="form-fine">Need us sooner? Call <a href="tel:{PHONE_TEL}" data-call-location="contact_success">{PHONE_VANITY} · {PHONE_DISPLAY}</a>.</p>
     </div>
   </div>
 </section>
