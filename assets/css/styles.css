@@ -294,11 +294,13 @@ a, button, input, select, textarea, summary, [tabindex] { scroll-margin-top: cal
 .consent-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
 .consent-bar .btn { min-height: 44px; }
 @media (max-width: 767px) {
-  /* One slim row ABOVE the Call pill and the assistant launcher, so both stay
-     tappable. It used to be a 154-176px card over them and the page's Book and Call
-     buttons. The longer sentences are desktop only: there is no room for them here. */
+  /* One slim row directly under the fixed header. At the bottom it was a 154-176px
+     card over the Call pill, the assistant launcher and the hero Book and Call
+     buttons; even slimmed to one row above the pill it still landed on those hero
+     buttons on 16 of 42 pages at 375px. Up here it can only overlap a breadcrumb.
+     The longer sentences are desktop only: there is no room for them here. */
   .consent-bar {
-    left: .5rem; right: .5rem; bottom: 4.5rem; max-width: none;
+    left: .5rem; right: .5rem; bottom: auto; top: calc(var(--header-h) + .25rem); max-width: none;
     display: flex; align-items: center; gap: .6rem;
     padding: .35rem .4rem .35rem .8rem; font-size: .8rem; line-height: 1.3;
   }
@@ -306,6 +308,8 @@ a, button, input, select, textarea, summary, [tabindex] { scroll-margin-top: cal
   .consent-more { display: none; }
   .consent-actions { flex: none; flex-wrap: nowrap; gap: .35rem; }
   .consent-bar .btn { padding-inline: .75rem; white-space: nowrap; }
+  /* z 120 outranks the mobile menu and the assistant sheet; the choice can wait. */
+  body.nav-locked .consent-bar, body.rga-locked .consent-bar { display: none; }
 }
 
 /* ------------------------------ header ---------------------------------- */
