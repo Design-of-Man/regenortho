@@ -400,7 +400,9 @@ CSS coastline scene stays underneath as the no-video fallback. asset_v() returns
   already had `call_click`); it is `call_click` on both now. A Vercel chart spanning that
   date needs both names. The agency portal reads only `form_submit`, which is unchanged.
 - **Spam:** `/api/lead` silently accepts and discards any submission with the `_honey` field
-  filled. There is no captcha: FormSubmit's (turned back on 2026-10-26 for scraped,
+  filled. Since 2026-11-02 it also discards the form bot that hit firstrehabnpb.com and
+  jupiterlaser.com: a user agent wrapped in literal quote marks, or a name AND a message that
+  are each one random mixed-case word (`looksRandom()`). Nothing is kept, emailed or confirmed. There is no captcha: FormSubmit's (turned back on 2026-10-26 for scraped,
   no-JS posts; 2 of 6 spams then did that) went away with FormSubmit on 2026-10-30.
   contact-form.js still stamps `verified: "yes"` and " (from website)" on the subject, so a
   scripted post is distinguishable in the inbox from a person on the page.
