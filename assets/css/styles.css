@@ -948,6 +948,14 @@ body.nav-locked .site-header { -webkit-backdrop-filter: none; backdrop-filter: n
   transition: background .35s, color .35s, transform .35s var(--ease);
 }
 .svc-tile:hover .svc-ico { background: linear-gradient(150deg, var(--gold), var(--gold-deep-alt)); color: var(--navy-900); transform: scale(1.06) rotate(-3deg); }
+/* The whole tile stays clickable: the title link's ::after covers it, and the list
+   links sit above that layer. */
+.svc-tile-link { color: inherit; text-decoration: none; }
+.svc-tile-link::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+.svc-tile-link:focus-visible { outline: none; }
+.svc-tile-link:focus-visible::after { outline: 2px solid var(--gold); outline-offset: -2px; }
+.svc-tile-list a { position: relative; z-index: 2; color: inherit; text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: .18em; }
+.svc-tile-list a:hover { color: var(--navy-700); }
 .svc-tile strong { font-family: var(--serif); font-weight: 600; font-size: var(--t-lg); line-height: 1.28; color: var(--navy-900); }
 .svc-tile-sub { font-size: var(--t-xs); color: var(--muted); }
 .svc-tile-list { list-style: none; margin: .5rem 0 0; display: flex; flex-direction: column; gap: .42rem; border-top: 1px solid var(--line); padding-top: .85rem; }

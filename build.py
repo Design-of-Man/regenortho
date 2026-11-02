@@ -1218,7 +1218,7 @@ SERVICES = [
         "name": "Regenerative Medicine & Orthobiologic Therapies",
         "nav": "Regenerative Medicine & Orthobiologics",
         "title": "Regenerative Medicine & Orthobiologics Palm Beach Gardens | RegenOrtho",
-        "desc": "PRP injections and orthobiologic therapies in Palm Beach Gardens — cellular and exosome treatments and peptides, placed under ultrasound, without surgery.",
+        "desc": "Regenerative medicine and orthobiologics in Palm Beach Gardens — PRP, cellular and exosome treatments and peptides, placed under ultrasound, without surgery.",
         "eyebrow": "Regenerative Medicine & Orthobiologics",
         "h1": "Advanced Regenerative Therapies for Lasting Healing",
         "lede": "PRP and orthobiologic treatments in Palm Beach Gardens that aim at the tissue itself rather than the symptom — placed under ultrasound, matched to what the imaging actually shows, and paired with the rehabilitation that makes them hold.",
@@ -2327,7 +2327,7 @@ def build_home():
     svc_cards = []
     HOME_SVCS = [
         ("regenerative-medicine-orthobiologics", "Biologic therapies that help the body repair itself — without surgery.",
-         ["PRP & orthobiologic injections", "Cellular & exosome therapies", "Ultrasound-guided precision"]),
+         ['<a href="services/prp-injections.html">PRP & orthobiologic injections</a>', "Cellular & exosome therapies", "Ultrasound-guided precision"]),
         ("advanced-non-surgical-therapies", "Energy-based and biologic treatments that switch tissue back into repair mode.",
          ["EPAT shockwave therapy", "Cold laser therapy", "Peptide & exosome protocols"]),
         ("vein-care", "Medical & cosmetic vein care with quick, in-office recovery.",
@@ -2339,13 +2339,15 @@ def build_home():
         name = svc_name(slug)
         feat_html = "".join(f"<li>{f}</li>" for f in feats)
         icon = SVC_ICONS[slug]
-        svc_cards.append(f"""<a class="svc-tile reveal" href="services/{slug}.html" style="--d:{(i % 4) * 90}ms" aria-label="{name} — explore this service">
+        # A <div> with a stretched title link, not one big <a>: a tile's feature list
+        # can carry its own link (PRP -> /services/prp-injections) and links cannot nest.
+        svc_cards.append(f"""<div class="svc-tile reveal" style="--d:{(i % 4) * 90}ms">
         <span class="svc-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">{icon}</svg></span>
-        <strong>{name}</strong>
+        <a class="svc-tile-link" href="services/{slug}.html" aria-label="{name} — explore this service"><strong>{name}</strong></a>
         <span class="svc-tile-sub">{blurb}</span>
         <ul class="svc-tile-list">{feat_html}</ul>
         <span class="svc-tile-go" aria-hidden="true"><svg viewBox="0 0 16 12" width="15" height="11"><path fill="none" stroke="currentColor" stroke-width="2" d="M1 6h13M9 1l5 5-5 5"/></svg></span>
-      </a>""")
+      </div>""")
     svc_cards_html = "\n".join(svc_cards)
     sister_cards = "\n      ".join(
         f'''<a class="sister-card" href="{url}">
@@ -4782,7 +4784,7 @@ BLOG_EXTRAS = {
     },
     "prp-therapy-knee-osteoarthritis": {
         "pullquote": "When a patient tells us PRP was tried elsewhere and did nothing, the most common explanation is that it was placed blind and never reached the target.",
-        "related": "regenerative-medicine-orthobiologics",
+        "related": "prp-injections",
         "alt": "A gloved hand holding a blood sample tube beside a laboratory centrifuge",
     },
     "regenerative-medicine-vs-joint-replacement": {
