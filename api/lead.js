@@ -109,6 +109,16 @@ module.exports = async function handler(req, res) {
   const phone = clean(body.phone, 50);
   const email = clean(body.email, 200);
   const source = clean(body.source, 60) || "website";
+
+  // The form bot that hit firstrehabnpb.com and jupiterlaser.com (see looksRandom
+  // below). Same cheerful success as the honeypot: nothing kept, nothing emailed,
+  // and no confirmation sent to the scraped address it typed in.
+  if (/^["']/.test(String(req.headers["user-agent"] || "")) ||
+      (looksRandom(name) && looksRandom(body.message))) {
+    console.warn("lead: dropped bot submission");
+    return finish(req, res, body, true);
+  }
+
   if (!name || (!phone && !emailOk(email))) return finish(req, res, body, false);
 
   // Every visible field goes in the email, in the order it arrived. Fields
@@ -204,6 +214,16 @@ module.exports = async function handler(req, res) {
 
   return finish(req, res, body, stored || emailed);
 };
+
+// One letters-only word of 10+ letters with two or more capitals after the
+// first: "ApMfNhuUrKlnrLqvUNPD". "Christopher" and "McDonald" pass. A submission
+// is dropped only when BOTH the name and the message look like this. Same rule
+// as firstrehabnpb's api/lead.js and abacoapodiatry's api/contact.js.
+function looksRandom(s) {
+  s = String(s || "").trim();
+  if (!/^[A-Za-z]{10,}$/.test(s)) return false;
+  return (s.slice(1).match(/[A-Z]/g) || []).length >= 2;
+}
 
 function subjectHasName(subject, name) {
   return typeof subject === "string" && name && subject.includes(name);
