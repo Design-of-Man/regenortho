@@ -3322,16 +3322,16 @@ LOCATION_SERVICES_DEFAULT = ["regenerative-medicine-orthobiologics", "mesenchyma
                              "peptide-therapy"]
 LOCATION_SERVICES = {
     "jupiter": ["mesenchymal-stem-cell-therapy", "vein-care", "regenerative-medicine-orthobiologics",
-                "sclerotherapy", "exosome-therapy", "advanced-non-surgical-therapies"],
+                "prp-injections", "sclerotherapy", "advanced-non-surgical-therapies"],
     "north-palm-beach": ["regenerative-medicine-orthobiologics", "mesenchymal-stem-cell-therapy",
                          "advanced-non-surgical-therapies", "peptide-therapy", "medical-weight-loss",
                          "concierge-care"],
     "palm-beach": ["regenerative-medicine-orthobiologics", "mesenchymal-stem-cell-therapy",
                    "advanced-non-surgical-therapies", "medical-weight-loss", "peptide-therapy",
                    "concierge-care"],
-    "west-palm-beach": ["regenerative-medicine-orthobiologics", "mesenchymal-stem-cell-therapy",
-                        "neuropathy-program", "vein-care", "advanced-non-surgical-therapies",
-                        "peptide-therapy"],
+    "west-palm-beach": ["prp-injections", "regenerative-medicine-orthobiologics",
+                        "mesenchymal-stem-cell-therapy", "neuropathy-program", "vein-care",
+                        "advanced-non-surgical-therapies"],
     "lake-park": ["peptide-therapy", "medical-weight-loss", "regenerative-medicine-orthobiologics",
                   "mesenchymal-stem-cell-therapy", "vein-care", "neuropathy-program"],
     "tequesta": ["regenerative-medicine-orthobiologics", "mesenchymal-stem-cell-therapy",
@@ -3356,7 +3356,8 @@ LOCATION_SEO = {
         "desc": "Jupiter residents: stem cell and regenerative medicine, varicose and spider vein treatment and sclerotherapy, minutes south in Palm Beach Gardens. 833-STEM561.",
     },
     "west-palm-beach": {
-        "desc": "West Palm Beach residents: stem cell and regenerative medicine, neuropathy care and vein treatment, a straight shot up I-95 in Palm Beach Gardens. 833-STEM561.",
+        "title": "PRP & Regenerative Medicine near West Palm Beach, FL",
+        "desc": "West Palm Beach residents: PRP injections, stem cell and regenerative medicine, neuropathy care and vein treatment, straight up I-95 in Palm Beach Gardens.",
     },
     "north-palm-beach": {
         "desc": "North Palm Beach residents: regenerative medicine, PRP and stem cell therapy, peptides and medical weight loss at our Prosperity Farms Road clinic. 833-STEM561.",
