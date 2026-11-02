@@ -13,7 +13,7 @@
 - New patients accepted; no referral required; most major insurance accepted; concierge/direct-pay bundles available.
 
 ## Services
-- Regenerative Medicine & Orthobiologic Therapies: https://regenorthopb.com/services/regenerative-medicine-orthobiologics — PRP injections and orthobiologic therapies in Palm Beach Gardens — cellular and exosome treatments and peptides, placed under ultrasound, without surgery.
+- Regenerative Medicine & Orthobiologic Therapies: https://regenorthopb.com/services/regenerative-medicine-orthobiologics — Regenerative medicine and orthobiologics in Palm Beach Gardens — PRP, cellular and exosome treatments and peptides, placed under ultrasound, without surgery.
 - PRP Injections: https://regenorthopb.com/services/prp-injections — PRP injections in Palm Beach Gardens — platelet-rich plasma from your own blood, placed under ultrasound for tendon, ligament and joint problems. No surgery.
 - Exosome Therapy: https://regenorthopb.com/services/exosome-therapy — Cell-free exosome therapy in Palm Beach Gardens — ultrasound-guided delivery of growth-factor-rich vesicles for joint, tendon, and soft-tissue repair.
 - Mesenchymal Stem Cell Therapy: https://regenorthopb.com/services/mesenchymal-stem-cell-therapy — Mesenchymal stem cell therapy in Palm Beach Gardens — umbilical cord-derived cells delivered via ultrasound-guided injection for joint and tissue healing.
@@ -43,7 +43,7 @@
 - Sports Injuries: https://regenorthopb.com/conditions/sports-injuries.html
 - Tendon & Ligament Injuries: https://regenorthopb.com/conditions/tendon-ligament-injuries.html
 - Peripheral Neuropathy: https://regenorthopb.com/conditions/peripheral-neuropathy.html
-- Varicose & Spider Veins: https://regenorthopb.com/conditions/varicose-spider-veins.html
+- Venous Insufficiency: https://regenorthopb.com/conditions/varicose-spider-veins.html
 
 ## Service areas
 Palm Beach Gardens (clinic location) plus:

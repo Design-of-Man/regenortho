@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <!-- Google Analytics 4, consent-gated (assets/js/consent.js) -->
-<script defer src="assets/js/consent.js?v=b5c53136" data-ga="G-2Z542HBXHS"></script>
+<script defer src="assets/js/consent.js?v=ff16f0c6" data-ga="G-2Z542HBXHS"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Contact RegenOrtho Palm Beach | Book a Consultation</title>
@@ -44,7 +44,7 @@
 <link rel="manifest" href="site.webmanifest">
 <link rel="preload" href="assets/fonts/newsreader-v1.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/styles.css?v=003584ae">
+<link rel="stylesheet" href="assets/css/styles.css?v=8a4d8360">
 <link rel="stylesheet" href="assets/css/assist.css?v=4fb52b5a">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":["MedicalClinic","MedicalBusiness"],"@id":"https://regenorthopb.com/#organization","name":"RegenOrtho Palm Beach","alternateName":["Regen Ortho","RegenOrtho","Regen Ortho PB"],"slogan":"The Regeneration of Orthopedics","description":"Concierge regenerative orthopedic and vein care in Palm Beach Gardens, FL \u2014 board-certified specialists offering orthobiologic therapies, peptide therapy, IV wellness, and minimally invasive vein treatment.","url":"https://regenorthopb.com/","logo":{"@type":"ImageObject","@id":"https://regenorthopb.com/#logo","url":"https://regenorthopb.com/assets/media/logo-dark.png","contentUrl":"https://regenorthopb.com/assets/media/logo-dark.png","caption":"RegenOrtho Palm Beach"},"image":{"@type":"ImageObject","url":"https://regenorthopb.com/assets/media/og-physicians-v1.jpg","caption":"The RegenOrtho Palm Beach physicians \u2014 orthopedic, regenerative and vein care at the Palm Beach Gardens clinic"},"telephone":"+1-833-783-6561","email":"emily@regenorthopb.com","priceRange":"$$","currenciesAccepted":"USD","paymentAccepted":"Cash, Credit Card, Insurance, HSA/FSA","contactPoint":{"@type":"ContactPoint","contactType":"customer service","telephone":"+1-833-783-6561","email":"emily@regenorthopb.com","availableLanguage":[{"@type":"Language","name":"English"}]},"knowsAbout":["Regenerative medicine","Phlebology","Platelet-rich plasma therapy","Orthobiologics","Peptide therapy","Varicose vein treatment","Peripheral neuropathy","GLP-1 medical weight loss","IV infusion therapy"],"isAcceptingNewPatients":true,"medicalSpecialty":["https://schema.org/Musculoskeletal","https://schema.org/Cardiovascular"],"address":{"@type":"PostalAddress","streetAddress":"11380 Prosperity Farms Road, Suite 204\u2013208","addressLocality":"Palm Beach Gardens","addressRegion":"FL","postalCode":"33410","addressCountry":"US"},"geo":{"@type":"GeoCoordinates","latitude":26.8449,"longitude":-80.0693},"hasMap":"https://maps.google.com/maps?cid=6152192644168764637","openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"08:00","closes":"17:00"}],"areaServed":[{"@type":"City","name":"Palm Beach Gardens"},{"@type":"City","name":"Jupiter"},{"@type":"City","name":"North Palm Beach"},{"@type":"City","name":"Juno Beach"},{"@type":"City","name":"Tequesta"},{"@type":"City","name":"Palm Beach"},{"@type":"City","name":"West Palm Beach"},{"@type":"City","name":"Singer Island"},{"@type":"City","name":"Lake Park"},{"@type":"City","name":"Riviera Beach"}],"sameAs":["https://www.instagram.com/regenortho_palmbeach/","https://www.linkedin.com/company/regenorthopb","https://maps.google.com/maps?cid=6152192644168764637"],"availableService":[{"@id":"https://regenorthopb.com/services/regenerative-medicine-orthobiologics#service"},{"@id":"https://regenorthopb.com/our-services/vein-care-medical-cosmetic#service"},{"@id":"https://regenorthopb.com/iv-therapy#service"}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://regenorthopb.com/#website","url":"https://regenorthopb.com/","name":"RegenOrtho Palm Beach","inLanguage":"en-US","publisher":{"@id":"https://regenorthopb.com/#organization"}},{"@type":"WebPage","@id":"https://regenorthopb.com/contact#webpage","url":"https://regenorthopb.com/contact","name":"Contact RegenOrtho Palm Beach | Book a Consultation","description":"Book a consultation at RegenOrtho Palm Beach \u2014 11380 Prosperity Farms Road, Palm Beach Gardens. Call 833-STEM561 (833-783-6561) or book online.","inLanguage":"en-US","isPartOf":{"@id":"https://regenorthopb.com/#website"},"about":{"@id":"https://regenorthopb.com/#organization"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://regenorthopb.com/assets/media/og-physicians-v1.jpg?v=5de3f6c0"},"datePublished":"2026-07-30","dateModified":"2026-11-02"}]}</script>
@@ -102,7 +102,9 @@
 <li><a href="conditions/sports-injuries.html">Sports Injuries</a></li>
 <li><a href="conditions/tendon-ligament-injuries.html">Tendon & Ligament Injuries</a></li>
 <li><a href="conditions/peripheral-neuropathy.html">Peripheral Neuropathy</a></li>
-<li><a href="conditions/varicose-spider-veins.html">Varicose & Spider Veins</a></li>
+<li><a href="our-services/vein-care-medical-cosmetic">Varicose Veins</a></li>
+<li><a href="services/sclerotherapy">Spider Veins</a></li>
+<li><a href="conditions/varicose-spider-veins.html">Venous Insufficiency</a></li>
           </ul>
         </li>
         <li><a class="nav-link" href="iv-therapy">IV Lounge</a></li>
@@ -139,7 +141,48 @@
 
 <section class="section" id="book">
   <div class="contact-grid">
-    <div class="contact-info reveal">
+    <form class="contact-form reveal" id="contact-form" action="/api/lead" method="POST">
+      <h2 class="form-title">Request an appointment</h2>
+      <input type="hidden" name="_subject" value="[Contact Form] New Appointment Request — regenorthopb.com">
+      <input type="hidden" name="_next" value="/contact?sent=1">
+      <input type="hidden" name="source" value="contact-form">
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="form-row">
+        <label>Name<input type="text" name="name" required autocomplete="name"></label>
+        <label>Phone Number<input type="tel" name="phone" required autocomplete="tel"></label>
+      </div>
+      <label>Email (optional)<input type="email" name="email" autocomplete="email"></label>
+      <label>Select Your Service
+        <select name="service">
+          <option value="" selected>Select a service</option>
+          <option data-service="regenerative-medicine-orthobiologics">Regenerative Medicine &amp; Orthobiologic Therapies</option>
+          <option data-service="prp-injections">PRP Injections</option>
+          <option data-service="peptide-therapy">Peptide Therapy</option>
+          <option data-service="iv-therapy">IV Recovery &amp; Wellness Therapy</option>
+          <option data-service="advanced-non-surgical-therapies">Advanced Non-Surgical Therapies</option>
+          <option data-service="vein-care">Vein Care</option>
+          <option data-service="neuropathy-program">Neuropathy Restoration Program</option>
+          <option data-service="medical-weight-loss">Medical Weight Loss / GLP-1</option>
+          <option data-service="concierge-care">Concierge &amp; Cash-Pay Services</option>
+          <option>Not sure — help me choose</option>
+        </select>
+      </label>
+      <!-- The placeholder deliberately does NOT ask what's wrong. This form posts to
+           /api/lead, which emails it through Resend and carries no BAA, so it must stay contact-and-scheduling only.
+           The warning sits with the field, not under the button, so it is read first. -->
+      <label>Message<textarea name="message" rows="4" placeholder="Which service you're interested in, and when you'd like to come in."></textarea></label>
+      <p class="form-fine form-fine-inline">Please don’t include medical history or symptoms here — we’ll take that securely at your visit.</p>
+      <button class="btn btn-gold btn-block" type="submit">Book Appointment</button>
+      <p class="form-fine">Submitting sends your request straight to our front desk. For anything urgent, call 833-783-6561.</p>
+      <p class="form-error" id="contact-error" hidden>Something went wrong sending that — please call <a href="tel:+18337836561" data-call-location="contact_error">833-STEM561</a> and we’ll get you booked directly.</p>
+    </form>
+    <div class="contact-form contact-success reveal" id="contact-success" hidden tabindex="-1">
+      <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#FDC929"/><path fill="none" stroke="#092D5C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M6.5 12.5 10 16l7.5-8"/></svg>
+      <h2 class="form-title">Thanks, <span id="contact-success-name">there</span>!</h2>
+      <p>We’ve received your request and our front desk will reach out to confirm your appointment — usually within one business day.</p>
+      <p class="form-fine">Need us sooner? Call <a href="tel:+18337836561" data-call-location="contact_success">833-STEM561 · 833-783-6561</a>.</p>
+    </div>
+    <div class="contact-info reveal" style="--d:120ms">
       <h2>Get in touch to book your <em>first appointment</em></h2>
       <p>Book your first appointment today and experience personalized care, advanced treatments, and expert support tailored to your health needs.</p>
       <ul class="contact-list">
@@ -157,44 +200,6 @@
         <p>Use the <strong>concierge assistant</strong> in the corner of your screen — it can answer common questions instantly and take your appointment request 24/7.</p>
         <button class="btn btn-navy" data-open-assist>Open the assistant</button>
       </div>
-    </div>
-    <form class="contact-form reveal" id="contact-form" style="--d:120ms" action="/api/lead" method="POST">
-      <h2 class="form-title">Request an appointment</h2>
-      <input type="hidden" name="_subject" value="[Contact Form] New Appointment Request — regenorthopb.com">
-      <input type="hidden" name="_next" value="/contact?sent=1">
-      <input type="hidden" name="source" value="contact-form">
-      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <div class="form-row">
-        <label>Name<input type="text" name="name" required autocomplete="name"></label>
-        <label>Phone Number<input type="tel" name="phone" required autocomplete="tel"></label>
-      </div>
-      <label>Email<input type="email" name="email" required autocomplete="email"></label>
-      <label>Select Your Service
-        <select name="service">
-          <option>Regenerative Medicine &amp; Orthobiologic Therapies</option>
-          <option>IV Recovery &amp; Wellness Therapy</option>
-          <option>Advanced Non-Surgical Therapies</option>
-          <option>Vein Care</option>
-          <option>Neuropathy Restoration Program</option>
-          <option>Medical Weight Loss / GLP-1</option>
-          <option>Concierge &amp; Cash-Pay Services</option>
-          <option>Not sure — help me choose</option>
-        </select>
-      </label>
-      <!-- The placeholder deliberately does NOT ask what's wrong. This form posts to
-           /api/lead, which emails it through Resend and carries no BAA, so it must stay contact-and-scheduling only.
-           The warning sits with the field, not under the button, so it is read first. -->
-      <label>Message<textarea name="message" rows="4" placeholder="Which service you're interested in, and when you'd like to come in."></textarea></label>
-      <p class="form-fine form-fine-inline">Please don’t include medical history or symptoms here — we’ll take that securely at your visit.</p>
-      <button class="btn btn-gold btn-block" type="submit">Book Appointment</button>
-      <p class="form-fine">Submitting sends your request straight to our front desk. For anything urgent, call 833-783-6561.</p>
-      <p class="form-error" id="contact-error" hidden>Something went wrong sending that — please call <a href="tel:+18337836561" data-call-location="contact_error">833-STEM561</a> and we’ll get you booked directly.</p>
-    </form>
-    <div class="contact-form contact-success reveal" id="contact-success" style="--d:120ms" hidden tabindex="-1">
-      <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#FDC929"/><path fill="none" stroke="#092D5C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M6.5 12.5 10 16l7.5-8"/></svg>
-      <h2 class="form-title">Thanks, <span id="contact-success-name">there</span>!</h2>
-      <p>We’ve received your request and our front desk will reach out to confirm your appointment — usually within one business day.</p>
-      <p class="form-fine">Need us sooner? Call <a href="tel:+18337836561" data-call-location="contact_success">833-STEM561 · 833-783-6561</a>.</p>
     </div>
   </div>
 </section>
@@ -278,6 +283,6 @@
 <script src="assets/js/main.js?v=36f976bf"></script>
 <script src="assets/js/assist.js?v=680e1825" defer></script>
 <script defer src="/_vercel/insights/script.js"></script>
-<script src="assets/js/contact-form.js?v=cbda333d" defer></script>
+<script src="assets/js/contact-form.js?v=0964c31e" defer></script>
 </body>
 </html>
