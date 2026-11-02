@@ -52,7 +52,7 @@
   bar.className = "consent-bar";
   bar.setAttribute("role", "region");
   bar.setAttribute("aria-label", "Cookie choice");
-  bar.innerHTML = "<p>May we count visits with Google Analytics? It helps us see which pages help people. Nothing you type into a form or the assistant is shared.</p>" +
+  bar.innerHTML = "<p>May we count visits with Google Analytics? <span class=\"consent-more\">It helps us see which pages help people. Nothing you type into a form or the assistant is shared.</span></p>" +
     '<div class="consent-actions"><button type="button" class="btn btn-gold btn-sm" data-c="granted">Allow</button>' +
     '<button type="button" class="btn btn-ghost-light btn-sm" data-c="denied">No thanks</button></div>';
   bar.addEventListener("click", function (e) {
