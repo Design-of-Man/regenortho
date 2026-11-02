@@ -3874,7 +3874,7 @@ def build_iv():
 </section>"""
     body = f"""{nav(d)}
 <main id="main">
-{page_hero("The IV Lounge", "Repair. Rehydrate. Renew.", f"IV therapy and IV hydration in Palm Beach Gardens to revitalize your body and restore essential nutrients — clinician-supervised IV drips from ${iv_lo['price']}, in a lounge designed for comfort, not a hospital corridor.", crumbs_html, depth=d, h1_lead="IV Therapy, IV Drips &amp; IV Hydration in Palm Beach Gardens")}
+{page_hero("The IV Lounge", "Repair. Rehydrate. Renew.", f"IV therapy and IV hydration in Palm Beach Gardens to revitalize your body and restore essential nutrients — clinician-supervised IV drips from ${iv_lo['price']}, in a lounge designed for comfort, not a hospital corridor.", crumbs_html, depth=d, h1_lead="IV Therapy, IV Drips &amp; IV Hydration in Palm Beach Gardens", book_query="?service=iv-therapy")}
 <section class="section section-dark section-drips" id="menu">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="section-head reveal"><p class="eyebrow">The Menu</p><h2>Twelve formulas, <em>one goal: you at 100%</em></h2>

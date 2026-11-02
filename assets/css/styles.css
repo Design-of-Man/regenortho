@@ -1395,7 +1395,11 @@ address { font-style: normal; line-height: 1.5; }
 
 /* ------------------------------ contact ---------------------------------- */
 
-.contact-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 2.6rem; max-width: var(--wrap); margin: 0 auto; align-items: start; }
+/* The form comes first in the DOM so phones reach it before the address block; on
+   desktop it stays in the right column, clear of the bottom-left consent card. */
+.contact-grid > .contact-info { grid-column: 1; grid-row: 1; }
+.contact-grid > .contact-form { grid-column: 2; grid-row: 1; }
+.contact-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 2.6rem; max-width: var(--wrap); margin: 0 auto; align-items: start; }
 .contact-info h2 { margin-bottom: .8rem; }
 .contact-info h2 em { color: var(--navy-700); }
 .contact-list { list-style: none; margin-top: 1.6rem; display: flex; flex-direction: column; gap: 1.1rem; }
@@ -1832,6 +1836,7 @@ body.nav-locked .mobile-call { display: none !important; }
 @media (max-width: 720px) {
   .svc-grid, .svc-grid-3, .svc-grid-2, .exp-grid, .iv-grid, .post-grid, .post-grid-3, .quote-grid, .res-grid, .treat-grid, .steps, .steps.steps-light, .drip-rail, .form-row { grid-template-columns: 1fr; }
   .cond-grid, .loc-grid, .contact-grid, .svc-intro-grid, .provider-grid { grid-template-columns: 1fr; }
+  .contact-grid > .contact-info, .contact-grid > .contact-form { grid-column: auto; grid-row: auto; }
   .cond-side, .loc-side, .provider-photo { position: static; }
   .why-strip { grid-template-columns: 1fr; }
   .doc-card { flex-direction: column; }
