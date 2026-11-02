@@ -1217,7 +1217,7 @@ SERVICES = [
         "slug": "regenerative-medicine-orthobiologics",
         "name": "Regenerative Medicine & Orthobiologic Therapies",
         "nav": "Regenerative Medicine & Orthobiologics",
-        "title": "PRP & Orthobiologics Palm Beach Gardens | RegenOrtho",
+        "title": "Regenerative Medicine & Orthobiologics Palm Beach Gardens | RegenOrtho",
         "desc": "PRP injections and orthobiologic therapies in Palm Beach Gardens — cellular and exosome treatments and peptides, placed under ultrasound, without surgery.",
         "eyebrow": "Regenerative Medicine & Orthobiologics",
         "h1": "Advanced Regenerative Therapies for Lasting Healing",
@@ -1255,8 +1255,54 @@ SERVICES = [
         "cta": "Heal Naturally. <em>Recover Stronger.</em>",
         "cta_sub": "Come in, let us image it properly, and you will get a straight answer about whether there is enough tissue left for this to work.",
         "conditions": ["knee-pain", "shoulder-pain", "arthritis-joint-pain", "tendon-ligament-injuries", "sports-injuries"],
-        "subservices": ["exosome-therapy", "mesenchymal-stem-cell-therapy", "whartons-jelly-therapy",
+        "subservices": ["prp-injections", "exosome-therapy", "mesenchymal-stem-cell-therapy", "whartons-jelly-therapy",
                          "muse-infused-rpa-therapy", "traditional-muse-cell-therapy"],
+        "subservices_heading": "Six ways we <em>regenerate tissue</em>",
+    },
+    {
+        "slug": "prp-injections",
+        "name": "PRP Injections",
+        "nav": "PRP Injections",
+        "parent": "regenerative-medicine-orthobiologics",
+        "title": "PRP Injections & PRP Therapy Palm Beach Gardens | RegenOrtho",
+        "desc": "PRP injections in Palm Beach Gardens — platelet-rich plasma from your own blood, placed under ultrasound for tendon, ligament and joint problems. No surgery.",
+        "eyebrow": "Regenerative Medicine & Orthobiologics",
+        "h1": "Platelet-Rich Plasma Placed Where the Problem Actually Is",
+        "lede": "PRP therapy in Palm Beach Gardens: platelets concentrated from your own blood, carrying the growth factors the body uses to direct repair, delivered under live ultrasound to the tendon, ligament or joint that is failing.",
+        "img": "blog-prp.jpg",
+        "img_alt": "Platelet-rich plasma being prepared for an ultrasound-guided PRP injection at RegenOrtho Palm Beach",
+        "why": [
+            "Made from your own blood",
+            "Every injection placed under live ultrasound",
+            "Physician-performed, and an appointment rather than an operation",
+            "A plan built from your imaging, not a standard protocol",
+            "A straight answer on whether PRP is the right treatment for you",
+        ],
+        "expertise": [
+            ("What PRP Is", "Platelet-rich plasma is a concentrate of platelets from your own blood. Platelets carry the growth factors the body uses to direct repair."),
+            ("Where It Is Most Useful", "PRP is most useful in tendon, ligament and long-standing joint problems, including knee, hip and shoulder arthritis and chronic tendon injuries."),
+            ("Why Ultrasound Guidance Matters", "When a patient tells us PRP was tried elsewhere and did nothing, the most common explanation is that it was placed blind and never reached the target. Live ultrasound puts it in the tissue we are treating."),
+        ],
+        "steps": [
+            ("Comprehensive Evaluation", "Examination and imaging first — including the cases where the answer is that this is not the right treatment."),
+            ("Personalized Treatment Plan", "Your physician decides whether PRP fits, or whether a different therapy or a combination suits what the imaging showed."),
+            ("Ultrasound-Guided PRP Injection", "A physician places the PRP in the affected tissue under real-time ultrasound guidance."),
+            ("Recovery & Monitoring", "Follow-up and staged rehabilitation, because tissue only remodels properly if it is loaded properly."),
+        ],
+        "treats": REGEN_TREATS,
+        "includes": REGEN_INCLUDES,
+        "disclaimer": REGEN_DISCLAIMER,
+        "faqs": [
+            ("What is PRP therapy?", "PRP stands for platelet-rich plasma. Platelets are concentrated from your own blood and placed in the injured tissue to deliver the growth factors the body uses to direct repair."),
+            ("What conditions can PRP help?", "It is most useful in tendon, ligament and long-standing joint problems. Candidacy is decided after an examination and a review of your imaging."),
+            ("How is PRP different from cellular therapy?", "PRP delivers concentrated platelets from your own blood. Cellular and exosome treatments act further upstream, on the signalling that drives repair, and are generally reserved for more involved damage."),
+            ("How long does PRP take to work?", "Expect weeks rather than days. The first fortnight can feel like nothing is happening, and the fuller benefit builds across several months."),
+            ("Can PRP replace surgery?", "Sometimes it postpones surgery, and occasionally it removes the need. It will not rebuild a joint already worn to bone, and we would rather say so than sell you a course that cannot work."),
+            ("Why did PRP not work for me before?", "The most common explanation we see is that it was placed blind and never reached the target. Every PRP injection here is placed under ultrasound."),
+        ],
+        "cta": "Your Own Platelets. <em>Placed Precisely.</em>",
+        "cta_sub": "Come in, let us image it properly, and you will get a straight answer about whether PRP can work for you.",
+        "conditions": ["knee-pain", "shoulder-pain", "hip-pain", "arthritis-joint-pain", "tendon-ligament-injuries", "sports-injuries"],
     },
     {
         "slug": "exosome-therapy",
@@ -2608,7 +2654,8 @@ def build_home():
 # The plain-language phrase that opens each service page's h1 (see page_hero). The
 # name a patient types, then the city — never a claim. Kept in step with the <title>.
 SERVICE_H1_LEAD = {
-    "regenerative-medicine-orthobiologics": "PRP &amp; Orthobiologics in Palm Beach Gardens",
+    "regenerative-medicine-orthobiologics": "Regenerative Medicine &amp; Orthobiologics in Palm Beach Gardens",
+    "prp-injections": "PRP Injections in Palm Beach Gardens",
     "exosome-therapy": "Exosome Therapy in Palm Beach Gardens",
     "mesenchymal-stem-cell-therapy": "Mesenchymal Stem Cell Therapy in Palm Beach Gardens",
     "whartons-jelly-therapy": "Wharton&rsquo;s Jelly Therapy in Palm Beach Gardens",
@@ -2900,7 +2947,7 @@ def build_services():
     regen_section = f"""<section class="section section-tint">
   <div class="section-head reveal">
     <p class="eyebrow">Regenerative Medicine</p>
-    <h2>Five regenerative <em>therapies</em></h2>
+    <h2>Six regenerative <em>therapies</em></h2>
     <p class="section-sub">Each is physician-directed and begins with a $300 consultation and imaging review, credited toward treatment. These are self-pay services; none are FDA-approved to treat, cure or prevent any disease.</p>
   </div>
   <div class="subsvc-grid">{regen_cards}</div>

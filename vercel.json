@@ -717,6 +717,11 @@
       "source": "/grand-opening.html",
       "destination": "/grand-opening",
       "permanent": true
+    },
+    {
+      "source": "/services/prp-injections.html",
+      "destination": "/services/prp-injections",
+      "permanent": true
     }
   ],
   "headers": [
@@ -977,6 +982,10 @@
     {
       "source": "/grand-opening",
       "destination": "/grand-opening.html"
+    },
+    {
+      "source": "/services/prp-injections",
+      "destination": "/services/prp-injections.html"
     }
   ]
 }
