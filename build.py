@@ -524,7 +524,12 @@ CONDITIONS_NAV = [
     ("conditions/sports-injuries.html", "Sports Injuries"),
     ("conditions/tendon-ligament-injuries.html", "Tendon & Ligament Injuries"),
     ("conditions/peripheral-neuropathy.html", "Peripheral Neuropathy"),
-    ("conditions/varicose-spider-veins.html", "Varicose & Spider Veins"),
+    # Vein link ownership: the hub owns varicose treatment, sclerotherapy owns spider
+    # veins, the condition page owns venous insufficiency and symptoms. One combined
+    # "Varicose & Spider Veins" link to the condition page made it compete with the hub.
+    ("services/vein-care.html", "Varicose Veins"),
+    ("services/sclerotherapy.html", "Spider Veins"),
+    ("conditions/varicose-spider-veins.html", "Venous Insufficiency"),
 ]
 
 LOCATIONS_NAV = [
@@ -1599,8 +1604,8 @@ SERVICES = [
         ],
         "expertise": [
             ("Comprehensive Ultrasound-Guided Vein Evaluation", "Duplex ultrasound shows which valves have failed and where the reflux actually starts — which is frequently not the vein you can see. Treating the visible one instead is the usual reason veins return."),
-            ("Sclerotherapy for Spider & Reticular Veins", "A solution injected into spider and reticular veins collapses them, and the body clears them over the following weeks. Minutes in the chair, no downtime. More on <a href=\"../services/sclerotherapy.html\">sclerotherapy in Palm Beach Gardens</a>."),
-            ("Endovenous Laser & Radiofrequency (RF) Ablation", "Heat delivered inside the failed saphenous vein seals it shut, and circulation reroutes through healthy vessels. This addresses the cause rather than the bulging vein you can see. More on <a href=\"../services/endovenous-ablation.html\">endovenous ablation in Palm Beach Gardens</a>."),
+            ("Sclerotherapy for Spider & Reticular Veins", "A solution injected into spider and reticular veins collapses them, and the body clears them over the following weeks. Minutes in the chair, no downtime. More on <a href=\"../services/sclerotherapy.html\">sclerotherapy for spider veins in Palm Beach Gardens</a>."),
+            ("Endovenous Laser & Radiofrequency (RF) Ablation", "Heat delivered inside the failed saphenous vein seals it shut, and circulation reroutes through healthy vessels. This addresses the cause rather than the bulging vein you can see. More on <a href=\"../services/endovenous-ablation.html\">laser and RF ablation in Palm Beach Gardens</a>."),
             ("Cosmetic Vein Procedures for Legs, Feet & Ankles", "Surface sclerotherapy and micro-laser for patients whose concern is how the legs look. The aim is an even result rather than an obviously treated one."),
             ("Advanced Wound Care for Venous Insufficiency", "Where poor venous return has caused skin changes or an ulcer, wound management and compression run alongside treating the underlying reflux — an ulcer will not stay healed while the pressure behind it remains."),
             ("Ambulatory Phlebectomy & In-Office Vein Removal", "Surface varicosities lifted out through punctures small enough not to need stitches. The improvement is visible the same day. More on <a href=\"../services/microphlebectomy.html\">microphlebectomy in Palm Beach Gardens</a>."),
@@ -1617,7 +1622,7 @@ SERVICES = [
             ("How long until I can resume normal activities?", "Most people walk out and carry on the same day. What you should avoid, and for how long, depends on which procedure you had."),
         ],
         "cta": "The First Step to <em>Healthier Legs</em>",
-        "cta_sub": "Relief and cosmetic improvement start with a vascular evaluation — schedule your appointment for a personalized, evidence-based vein plan.",
+        "cta_sub": "Looking for a vein clinic or a vein specialist in Palm Beach Gardens? Relief and cosmetic improvement start with a vascular evaluation — schedule your appointment for a personalized, evidence-based vein plan.",
         "conditions": ["varicose-spider-veins"],
         "subservices": ["sclerotherapy", "endovenous-ablation", "microphlebectomy"],
         "subservices_eyebrow": "Explore Each Procedure",
@@ -2200,14 +2205,17 @@ CONDITIONS = [
      "services": ["neuropathy-program", "iv-lounge"],
      "faqs": [("What causes peripheral neuropathy?", "Causes range from metabolic conditions to nerve compression — which is exactly why the program starts with diagnostics that identify your driver before treatment begins."),
               ("Is the program surgical?", "No — it's a non-surgical program. Only a persistent focal nerve issue would prompt evaluation for a targeted nerve release procedure.")]},
-    {"slug": "varicose-spider-veins", "name": "Varicose & Spider Veins",
+    {"slug": "varicose-spider-veins", "name": "Venous Insufficiency",
+     # On the procedure pages' "Conditions this helps" aside. Not the bare name: that
+     # would state sclerotherapy treats venous insufficiency, which no page says.
+     "service_label": "Leg Vein Symptoms",
      "title": "Varicose Veins & Venous Insufficiency | Palm Beach Gardens",
      "desc": "Aching, heavy or swollen legs and visible veins in Palm Beach Gardens — what causes varicose veins and venous insufficiency, and how duplex mapping guides care.",
      "h1": "Healthier, Better-Looking Legs",
      "lede": "Aching, heaviness, swelling, and visible veins usually trace back to one thing: valves that no longer close. We map them, then fix them.",
      "img": "vein-treatment.jpg",
      "symptoms": ["Bulging, rope-like varicose veins", "Visible spider or reticular veins", "Leg heaviness, aching, or swelling by day's end", "Night cramps or restless legs", "Skin changes or slow-healing spots near the ankle"],
-     "body": "Vein disease is progressive and underdiagnosed — and treating the visible veins without finding the underlying reflux is why so many treatments elsewhere don't last. Every vein plan here starts with duplex ultrasound mapping to locate the failing valves. Treatment is minimally invasive and office-based: <a href=\"../services/endovenous-ablation.html\">endovenous laser or radiofrequency ablation</a> for diseased saphenous veins, <a href=\"../services/sclerotherapy.html\">sclerotherapy</a> for spider and reticular veins, <a href=\"../services/microphlebectomy.html\">micro-incision phlebectomy</a> for surface varicosities, and specialized wound care when venous insufficiency has affected the skin.",
+     "body": "Vein disease is progressive and underdiagnosed — and treating the visible veins without finding the underlying reflux is why so many treatments elsewhere don't last. Every vein plan here starts with duplex ultrasound mapping to locate the failing valves. <a href=\"../services/vein-care.html\">Varicose vein treatment</a> is minimally invasive and office-based: <a href=\"../services/endovenous-ablation.html\">endovenous laser or radiofrequency ablation</a> for diseased saphenous veins, <a href=\"../services/sclerotherapy.html\">sclerotherapy for spider and reticular veins</a>, <a href=\"../services/microphlebectomy.html\">micro-incision phlebectomy</a> for surface varicosities, and specialized wound care when venous insufficiency has affected the skin.",
      "services": ["vein-care"],
      "faqs": [("Is vein treatment covered by insurance?", "Medical vein care — treating symptoms and circulation problems — is often covered; cosmetic treatment is usually elective. We verify your benefits before treatment."),
               ("Do varicose veins come back after treatment?", "Treated veins are closed permanently, but new veins can develop over time — structured follow-up and prevention strategies minimize recurrence.")]},
@@ -2776,7 +2784,7 @@ def build_services():
             for q, a in svc["faqs"]
         )
         conds = "".join(
-            f'<li><a href="../conditions/{c}.html">{next(x["name"] for x in CONDITIONS if x["slug"] == c)}</a></li>'
+            f'<li><a href="../conditions/{c}.html">{(lambda x: x.get("service_label", x["name"]))(next(x for x in CONDITIONS if x["slug"] == c))}</a></li>'
             for c in svc.get("conditions", []) if any(x["slug"] == c for x in CONDITIONS)
         )
         conds_html = f"""<aside class="cond-links reveal"><h2>Conditions this helps</h2><ul>{conds}</ul></aside>""" if conds else ""
@@ -3001,7 +3009,7 @@ CONDITION_H1_LEAD = {
     "sports-injuries": "Sports Injury Treatment",
     "tendon-ligament-injuries": "Tendon &amp; Ligament Injury Treatment",
     "peripheral-neuropathy": "Peripheral Neuropathy Treatment",
-    "varicose-spider-veins": "Varicose Vein &amp; Venous Insufficiency Treatment",
+    "varicose-spider-veins": "Venous Insufficiency &amp; Leg Vein Symptoms",
 }
 
 
@@ -3133,7 +3141,7 @@ def build_conditions():
   <div class="section-head reveal"><p class="eyebrow">Further reading</p><h2>Read more about <em>{c['name'].lower()}</em></h2></div>
   <div class="bl-grid bl-grid-3">{reading}</div>
 </section>""" if reading else ""
-        others = "".join(f'<li><a href="../conditions/{x["slug"]}.html">{x["name"]}</a></li>' for x in CONDITIONS if x["slug"] != c["slug"])
+        others = "".join(f'<li><a href="../{href}">{label}</a></li>' for href, label in CONDITIONS_NAV if href != f"conditions/{c['slug']}.html")
         areas = "".join(f'<li><a href="../locations/{l["slug"]}.html">{l["city"]}</a></li>' for l in LOCATIONS)
         crumbs_html = crumbs([("conditions/index.html", "Conditions"), ("", c["name"])], depth=d)
         lead = CONDITION_H1_LEAD[c["slug"]] + " in Palm Beach Gardens"
@@ -3383,7 +3391,7 @@ def build_locations():
         svc_cards = "".join(
             _tx_card(k, d, i=j)
             for j, k in enumerate(LOCATION_SERVICES.get(loc["slug"], LOCATION_SERVICES_DEFAULT)))
-        cond_chips = "".join(f'<li><a href="../conditions/{c["slug"]}.html">{c["name"]}</a></li>' for c in CONDITIONS)
+        cond_chips = "".join(f'<li><a href="../{href}">{label}</a></li>' for href, label in CONDITIONS_NAV)
         doc_cards = "".join(
             f"""<a class="doc-mini reveal" href="../providers/{t['slug']}.html" style="--d:{j * 100}ms">
         <span class="doc-mini-photo">{photo(t["photo"].rsplit("/",1)[1].rsplit(".",1)[0], t["name"], 200, 240, prefix="../", sizes="160px")}</span>
@@ -3674,7 +3682,7 @@ def build_providers():
             ("../services/vein-care.html", "Vein Care — Medical & Cosmetic"),
             ("../services/neuropathy-program.html", "Neuropathy Restoration Program"),
             ("../services/regenerative-medicine-orthobiologics.html", "Regenerative Medicine"),
-            ("../conditions/varicose-spider-veins.html", "Varicose & Spider Veins"),
+            ("../conditions/varicose-spider-veins.html", "Venous Insufficiency"),
             ("../conditions/peripheral-neuropathy.html", "Peripheral Neuropathy"),
         ],
         creds_line="DPM, FACFAS · Owner, RegenOrtho Palm Beach · Owner, Abacoa Podiatry &amp; Leg Vein Center",
