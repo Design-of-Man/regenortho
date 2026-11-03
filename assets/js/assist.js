@@ -7,6 +7,108 @@
    the office via Resend (recipients: Vercel env LEAD_TO / LEAD_CC). FormSubmit
    did this until its 2026-10-28 outage. Failures queue in localStorage and
    retry on the next page load. */
+/* Cloudflare Turnstile bot check, shared by every Design of Man client site
+   (keep this block identical across abacoapodiatry, elite, regenortho,
+   firstrehabnpb and legacymed).
+
+   OFF until TURNSTILE_SITE_KEY and TURNSTILE_SECRET_KEY are both set in the
+   site's Vercel environment. The site key reaches the browser through a GET on
+   the site's own lead endpoint ({"siteKey": "..."}, empty when off), so turning
+   it on or off is an env change, never a code change.
+
+   It NEVER blocks a send. Any failure (key unset, script blocked by an ad
+   blocker, Cloudflare down, challenge timeout) resolves token() to "", the
+   form still posts, and the server routes that lead as "unverified" (kept and
+   sent to the monitoring inbox, no patient confirmation) instead of dropping it.
+
+   Nothing loads from Cloudflare until a visitor starts a form or opens the chat
+   (warm) or sends (token), so pages without a lead form never contact it.
+
+   Usage:
+     dmTurnstile.warm('/api/lead/');               // on first focus / chat open
+     dmTurnstile.token('/api/lead/').then(function (t) { body._turnstile = t; ... });
+*/
+(function () {
+  if (window.dmTurnstile) return;
+  var SCRIPT = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+  var cfg = {}, lib = null, widget = null, waiting = [];
+
+  function config(endpoint) {
+    if (!cfg[endpoint]) {
+      cfg[endpoint] = fetch(endpoint, { method: 'GET', headers: { Accept: 'application/json' }, credentials: 'same-origin' })
+        .then(function (r) { return r.ok ? r.json() : {}; })
+        .then(function (j) { return j && typeof j.siteKey === 'string' ? j.siteKey : ''; })
+        .catch(function () { return ''; });
+    }
+    return cfg[endpoint];
+  }
+
+  function load() {
+    if (!lib) {
+      lib = new Promise(function (resolve, reject) {
+        if (window.turnstile) return resolve(window.turnstile);
+        var s = document.createElement('script');
+        s.src = SCRIPT;
+        s.async = true;
+        s.onload = function () { window.turnstile ? resolve(window.turnstile) : reject(new Error('no turnstile')); };
+        s.onerror = function () { lib = null; reject(new Error('turnstile blocked')); };
+        document.head.appendChild(s);
+      });
+    }
+    return lib;
+  }
+
+  function settle(tok) {
+    var w = waiting;
+    waiting = [];
+    for (var i = 0; i < w.length; i++) w[i](tok || '');
+  }
+
+  function ensure(ts, key) {
+    if (widget !== null) return;
+    // interaction-only: invisible unless Cloudflare needs the visitor to click,
+    // in which case it appears pinned bottom-centre above everything else.
+    var box = document.createElement('div');
+    box.className = 'dm-turnstile';
+    box.style.cssText = 'position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:2147483000;';
+    document.body.appendChild(box);
+    widget = ts.render(box, {
+      sitekey: key,
+      execution: 'execute',
+      appearance: 'interaction-only',
+      'refresh-expired': 'manual',
+      callback: function (t) { settle(t); },
+      'error-callback': function () { settle(''); return true; },
+      'timeout-callback': function () { settle(''); }
+    });
+  }
+
+  function token(endpoint, ms) {
+    return config(endpoint).then(function (key) {
+      if (!key) return '';
+      return load().then(function (ts) {
+        return new Promise(function (resolve) {
+          var done = false;
+          function finish(t) { if (!done) { done = true; resolve(t || ''); } }
+          waiting.push(finish);
+          setTimeout(function () { finish(''); }, ms || 20000);
+          try {
+            ensure(ts, key);
+            ts.reset(widget);   // tokens are single-use: a fresh one per send
+            ts.execute(widget);
+          } catch (e) { finish(''); }
+        });
+      });
+    }).catch(function () { return ''; });
+  }
+
+  function warm(endpoint) {
+    config(endpoint).then(function (key) { if (key) load().catch(function () {}); });
+  }
+
+  window.dmTurnstile = { token: token, warm: warm };
+})();
+
 (function () {
   "use strict";
 
@@ -206,6 +308,9 @@
         });
       } catch (err) {}
     }
+    // Bot check (dmTurnstile, top of this file): fetch the site key and the
+    // Cloudflare script now, so a send does not wait on them. No-op while off.
+    if (window.dmTurnstile) window.dmTurnstile.warm(ENDPOINT);
     panel.classList.add("is-open");
     launcher.style.display = "none";
     if (!log.childElementCount) greet();
@@ -386,13 +491,24 @@
     };
   }
 
+  function turnstileToken() {
+    return window.dmTurnstile ? window.dmTurnstile.token(ENDPOINT) : Promise.resolve("");
+  }
+
   function deliver() {
     typing(function () {
       var m = say("Sending…");
-      fetch(ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify(payload()),
+      /* The Turnstile token rides only on the wire copy: the queued copy below
+         is payload() again, without one, because a token is single use and
+         expires in 300 s. token() always resolves ("" on any failure). */
+      turnstileToken().then(function (t) {
+        var body = payload();
+        body._turnstile = t;
+        return fetch(ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify(body),
+        });
       }).then(function (r) {
         if (!r.ok) throw new Error("http " + r.status);
         return r.json();
@@ -439,10 +555,17 @@
     var q = load(LS_QUEUE) || [];
     if (!q.length) return;
     var item = q[0];
-    fetch(ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Accept": "application/json" },
-      body: JSON.stringify(item),
+    /* A FRESH token for every resend, never one stored in the queue (single
+       use, 300 s). Older queue entries never carried one; strip it anyway. */
+    turnstileToken().then(function (t) {
+      var body = {};
+      for (var k in item) if (Object.prototype.hasOwnProperty.call(item, k) && k !== "_turnstile") body[k] = item[k];
+      body._turnstile = t;
+      return fetch(ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(body),
+      });
     }).then(function (r) {
       if (!r.ok) throw new Error("http " + r.status);
       return r.json();
