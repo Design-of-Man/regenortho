@@ -26,6 +26,12 @@
  *   LEAD_CC         comma-separated copies (hello@designofman.com)
  *   LEAD_FROM       verified Resend sender, "Name <addr@domain>"
  *   CONFIRM_FROM    optional sender for the patient confirmation
+ *   TURNSTILE_SITE_KEY, TURNSTILE_SECRET_KEY  Cloudflare bot check, off until
+ *                   BOTH are set (shared block below)
+ *   TURNSTILE_UNVERIFIED_TO  optional inbox for unverified leads (else LEAD_CC)
+ *
+ * GET answers {"siteKey": "..."} (empty while Turnstile is off) so the browser
+ * can find the key; it is cached for five minutes.
  */
 
 "use strict";
@@ -80,6 +86,70 @@ function finish(req, res, body, ok) {
   return res.end(JSON.stringify(ok ? OK : NOT_OK));
 }
 
+// Cloudflare Turnstile, shared by every Design of Man client site (keep this
+// block identical across abacoapodiatry, elite, regenortho, firstrehabnpb and
+// legacymed; adapt only the require/export style to the file it lives in).
+//
+// ON only when BOTH TURNSTILE_SITE_KEY and TURNSTILE_SECRET_KEY are set, so a
+// half-configured environment can never mark every real lead unverified.
+// The browser sends the token as `_turnstile` (leading underscore: a control
+// field, never printed in an email).
+//
+// Verification outcome is three-way:
+//   "off"        keys unset: behave exactly as before Turnstile existed
+//   "verified"   Cloudflare said success, OR Cloudflare could not be reached
+//                (fail open: their outage must not demote real patients)
+//   "unverified" token missing or rejected. The lead is still KEPT wherever this
+//                site stores leads, and still emailed, but only to the
+//                monitoring inbox (TURNSTILE_UNVERIFIED_TO, else LEAD_CC), with
+//                "[Unverified] " on the subject, and the visitor gets NO
+//                confirmation email. That confirmation to scraped addresses is
+//                what drew spam complaints on the shared Resend account.
+//                If neither monitoring variable is set, it goes to the normal
+//                recipients with the prefix: a lead is never silently lost.
+
+const TURNSTILE_VERIFY = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+
+function turnstileOn() {
+  return Boolean(process.env.TURNSTILE_SITE_KEY && process.env.TURNSTILE_SECRET_KEY);
+}
+
+// What GET on the lead endpoint returns, so the browser can find the site key.
+function turnstileConfig() {
+  return { siteKey: turnstileOn() ? process.env.TURNSTILE_SITE_KEY : "" };
+}
+
+async function turnstileCheck(req, body) {
+  if (!turnstileOn()) return "off";
+  const token = body && typeof body._turnstile === "string" ? body._turnstile.trim() : "";
+  if (!token || token.length > 2048) return "unverified";
+  const params = new URLSearchParams({ secret: process.env.TURNSTILE_SECRET_KEY, response: token });
+  const ip = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim();
+  if (ip) params.set("remoteip", ip);
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 5000);
+  try {
+    const r = await fetch(TURNSTILE_VERIFY, { method: "POST", body: params, signal: ctrl.signal });
+    const j = await r.json();
+    if (j && j.success === true) return "verified";
+    console.warn("turnstile: rejected", (j && j["error-codes"] || []).join(","));
+    return "unverified";
+  } catch (e) {
+    console.warn("turnstile: siteverify unreachable, failing open:", e.message);
+    return "verified";
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+// Recipients for an unverified lead: the monitoring inbox, or null meaning
+// "use the normal recipients" (subject still gets the prefix).
+function unverifiedRecipients() {
+  const raw = process.env.TURNSTILE_UNVERIFIED_TO || process.env.LEAD_CC || "";
+  const list = raw.split(",").map((s) => s.trim()).filter(Boolean);
+  return list.length ? list : null;
+}
+
 async function resend(payload) {
   const r = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -94,8 +164,14 @@ async function resend(payload) {
 }
 
 module.exports = async function handler(req, res) {
+  if (req.method === "GET") {
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "application/json");
+    res.setHeader("Cache-Control", "public, max-age=300");
+    return res.end(JSON.stringify(turnstileConfig()));
+  }
   if (req.method !== "POST") {
-    res.setHeader("Allow", "POST");
+    res.setHeader("Allow", "GET, POST");
     res.statusCode = 405;
     return res.end();
   }
@@ -118,6 +194,11 @@ module.exports = async function handler(req, res) {
     console.warn("lead: dropped bot submission");
     return finish(req, res, body, true);
   }
+
+  // Turnstile, after the filters above. "unverified" is still stored and still
+  // emailed, but only to the monitoring inbox, flagged, with no confirmation.
+  const unverified = (await turnstileCheck(req, body)) === "unverified";
+  if (unverified) console.warn("lead: unverified turnstile");
 
   if (!name || (!phone && !emailOk(email))) return finish(req, res, body, false);
 
@@ -154,12 +235,15 @@ module.exports = async function handler(req, res) {
 
   let emailed = false;
   const to = list(process.env.LEAD_TO);
-  if (process.env.RESEND_API_KEY && to.length && process.env.LEAD_FROM) {
-    const subject = (clean(body._subject, 150) || `New website request (${SITE})`) +
+  const monitor = unverified ? unverifiedRecipients() : null;
+  const officeTo = monitor || to;
+  if (process.env.RESEND_API_KEY && officeTo.length && process.env.LEAD_FROM) {
+    const subject = (unverified ? "[Unverified] " : "") +
+      (clean(body._subject, 150) || `New website request (${SITE})`) +
       (subjectHasName(body._subject, name) ? "" : ` — ${name}`);
     const payload = {
       from: process.env.LEAD_FROM,
-      to,
+      to: officeTo,
       subject,
       html: officeEmail({
         brand: BRAND,
@@ -170,7 +254,7 @@ module.exports = async function handler(req, res) {
       text: fields.map(([k, v]) => `${k}: ${v}`).join("\n") +
         `\n\n-- Sent from ${SITE} (${source}). Saved: ${stored ? "yes" : "NO, keep this email"}.`,
     };
-    const cc = list(process.env.LEAD_CC);
+    const cc = monitor ? [] : list(process.env.LEAD_CC);
     if (cc.length) payload.cc = cc;
     if (emailOk(email)) payload.reply_to = email;
     try {
@@ -183,7 +267,7 @@ module.exports = async function handler(req, res) {
     console.warn("lead: stored only, email not configured (RESEND_API_KEY / LEAD_TO / LEAD_FROM)");
   }
 
-  if ((stored || emailed) && process.env.RESEND_API_KEY && process.env.CONFIRM_FROM && emailOk(email)) {
+  if (!unverified && (stored || emailed) && process.env.RESEND_API_KEY && process.env.CONFIRM_FROM && emailOk(email)) {
     const first = /https?:|www\.|[<>]/i.test(name) ? "there" : name.split(/\s+/)[0];
     try {
       await resend({

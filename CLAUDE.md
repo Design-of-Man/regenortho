@@ -51,6 +51,17 @@ Static site, 56 pages, generated — do not edit HTML files directly.
   (`/contact?sent=1`). FormSubmit was removed after its outage (Cloudflare 521 from
   2026-10-28, every form on the site losing leads); do not point anything back at it.
   Recipients now live only in the Vercel env, not in the page source.
+- TURNSTILE (2026-11-03): Cloudflare's invisible bot check sits on top of the honeypot and
+  `looksRandom()` filters, which still run first and unchanged. It is OFF until BOTH
+  `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` are set in Vercel (optional
+  `TURNSTILE_UNVERIFIED_TO`); `GET /api/lead` hands the browser the site key (empty while off).
+  The browser block (`dmTurnstile`, top of assist.js, which contact-form.js also uses) loads
+  nothing from Cloudflare until a visitor focuses the form or opens the chat, and a token
+  failure never blocks a send; retried queue items get a fresh token. A lead with no valid
+  token is "unverified": still stored, emailed only to TURNSTILE_UNVERIFIED_TO (else LEAD_CC)
+  with "[Unverified] " on the subject, and no patient confirmation. assist.js is not loaded on
+  `/forms/*`, so those pages never contact Cloudflare; keep it that way. The client and server
+  blocks are shared verbatim with the other four client sites: change them in all five or none.
 - BLOG (redesigned 2026-10): `build_blog()` renders a magazine index (feature + topic chips
   + a grid whose `.bl-wide` cards are chosen so rows fill) and image-led posts (split
   header, sticky "On this page" + related-care aside, reading progress, pull quote).

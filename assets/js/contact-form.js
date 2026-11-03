@@ -35,6 +35,14 @@
     success.hidden = false;
   }
 
+  /* Bot check: dmTurnstile is defined at the top of assets/js/assist.js,
+     which loads (deferred, before this file) on every page outside /forms/*.
+     Warm it on the visitor's first focus in the form; it does nothing while
+     the Turnstile keys are unset. */
+  form.addEventListener("focusin", function () {
+    if (window.dmTurnstile) window.dmTurnstile.warm(endpoint);
+  }, { once: true });
+
   form.addEventListener("submit", function (e) {
     if (!form.reportValidity()) return;
     e.preventDefault();
@@ -63,10 +71,15 @@
     payload._subject = (payload._subject || "") + " (from website)";
     payload.verified = "yes";
 
-    fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Accept": "application/json" },
-      body: JSON.stringify(payload),
+    /* token() always resolves, to "" on any failure, so it can never block
+       a send; the server files a tokenless lead as unverified, not lost. */
+    (window.dmTurnstile ? window.dmTurnstile.token(endpoint) : Promise.resolve("")).then(function (t) {
+      payload._turnstile = t;
+      return fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(payload),
+      });
     }).then(function (r) {
       if (!r.ok) throw new Error("http " + r.status);
       return r.json();
