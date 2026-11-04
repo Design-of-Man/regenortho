@@ -119,6 +119,15 @@ Static site, 56 pages, generated — do not edit HTML files directly.
   "Regen Ortho Palm Beach" exists (found 2026-10) but is NOT linked until the practice confirms it.
 - Dr. Marc Matarazzo, MD (ortho/sports medicine, MAKO-certified) · Dr. Orlando Cedeno, DPM
   (podiatric surgery + vein). Those two are the whole named roster.
+  One exception, at Dr. Cedeno's request (2026-11-04): the /laser page names "our licensed
+  esthetician, Sydney Kashuba", who performs laser hair removal. She is not on the team
+  page, in TEAM or in the schema; add her there only when the practice asks.
+- CUSTOM ORTHOTICS AND CANDELA LASER (2026-11-04): Dr. Cedeno's own copy, served at the
+  bare `/orthotics` and `/laser` (`CLEAN_URL_OVERRIDES` in build.py; the vercel.json pair is
+  appended by `sync_vercel_clean_urls()`). Orthotics are made HERE now, so the assistant's
+  foot-and-ankle answer no longer sends orthotics to Abacoa (jupiterlaser.com). Each page's
+  booking button links `/contact?service=<book_key>#book`, which contact-form.js uses to
+  preselect the service menu. Neither page publishes a price, so neither gets an Offer.
 - Emily Bahnick, MSN, RN (IV nurse) LEFT the practice in October 2026 and was removed from
   every page, the schema, llms.txt, the assistant and the share card (the old team-group
   photo had her in it, so og-team.jpg was replaced by og-physicians-v1.jpg, composed from

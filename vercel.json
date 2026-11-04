@@ -722,6 +722,16 @@
       "source": "/services/prp-injections.html",
       "destination": "/services/prp-injections",
       "permanent": true
+    },
+    {
+      "source": "/services/orthotics.html",
+      "destination": "/orthotics",
+      "permanent": true
+    },
+    {
+      "source": "/services/laser.html",
+      "destination": "/laser",
+      "permanent": true
     }
   ],
   "headers": [
@@ -986,6 +996,14 @@
     {
       "source": "/services/prp-injections",
       "destination": "/services/prp-injections.html"
+    },
+    {
+      "source": "/orthotics",
+      "destination": "/services/orthotics.html"
+    },
+    {
+      "source": "/laser",
+      "destination": "/services/laser.html"
     }
   ]
 }

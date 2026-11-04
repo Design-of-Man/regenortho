@@ -65,6 +65,8 @@ the plan, and most are billed through insurance where covered.
 - Ambulatory Microphlebectomy: https://regenorthopb.com/services/microphlebectomy
 - Neuropathy Restoration Program: https://regenorthopb.com/services/neuropathy-program
 - Concierge & Direct-Pay Care: https://regenorthopb.com/services/concierge-care
+- Custom Orthotics: https://regenorthopb.com/orthotics
+- Candela Laser Hair Removal & Leg Veins: https://regenorthopb.com/laser
 
 ## Insurance & payment
 
