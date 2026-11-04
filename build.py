@@ -269,7 +269,9 @@ FOCAL = {
     "sports-recovery":  "55% 45%",
     "svc-concierge":    "50% 45%",
     "svc-iv":           "45% 50%",
+    "svc-laser":        "62% 50%",   # device sits right of centre
     "svc-nonsurgical":  "45% 40%",
+    "svc-orthotics":    "58% 55%",
     "svc-ortho":        "45% 45%",
     "svc-podiatry":     "45% 45%",
     "svc-regen":        "50% 40%",
@@ -514,6 +516,10 @@ SERVICES_NAV = [
     ("services/neuropathy-program.html", "Neuropathy Restoration Program"),
     ("services/medical-weight-loss.html", "Medical Weight Loss & GLP-1"),
     ("services/concierge-care.html", "Concierge & Direct-Pay Care"),
+    # Appended, not inserted: footer() shows SERVICES_NAV[:8], so these two
+    # live in the header menu without bumping a footer link.
+    ("services/orthotics.html", "Custom Orthotics"),
+    ("services/laser.html", "Candela Laser"),
 ]
 
 CONDITIONS_NAV = [
@@ -767,7 +773,8 @@ def crumbs(items, depth=0):
 
 
 def cta_band(depth=0, heading="Ready to feel like <em>yourself</em> again?",
-             sub="Book a consultation with our board-certified specialists and get a personalized plan — often with same-week availability."):
+             sub="Book a consultation with our board-certified specialists and get a personalized plan — often with same-week availability.",
+             book_label="Book a Consultation", book_query=""):
     p = "../" * depth
     return f"""<section class="cta-band">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
@@ -776,7 +783,7 @@ def cta_band(depth=0, heading="Ready to feel like <em>yourself</em> again?",
     <h2>{heading}</h2>
     <p>{sub}</p>
     <div class="cta-row">
-      <a class="btn btn-gold" href="{p}contact.html#book">Book a Consultation</a>
+      <a class="btn btn-gold" href="{p}contact.html{book_query}#book">{book_label}</a>
       <a class="btn btn-ghost-light" href="tel:{PHONE_TEL}" data-call-location="cta_band">{PHONE_VANITY} · {PHONE_DISPLAY}</a>
     </div>
   </div>
@@ -964,6 +971,17 @@ def smart_punctuation(html_str):
 _clean_map_cache = None
 
 
+# Services served somewhere other than /services/<slug>. Each needs a matching
+# rewrite + redirect pair in vercel.json, which sync_vercel_clean_urls() appends.
+CLEAN_URL_OVERRIDES = {
+    # Confirmed live: this is the slug actually ranking, not "services/vein-care".
+    "vein-care": "our-services/vein-care-medical-cosmetic",
+    # Dr. Cedeno asked for these two addresses by name (2026-11-04).
+    "orthotics": "orthotics",
+    "laser": "laser",
+}
+
+
 def clean_url_map():
     global _clean_map_cache
     if _clean_map_cache is not None:
@@ -987,13 +1005,12 @@ def clean_url_map():
         "locations/index.html": "locations",
         "providers/dr-marc-matarazzo.html": "dr-marc-matarazzo-md",
         "providers/dr-orlando-cedeno.html": "dr-orlando-cedeno-dpm",
-        # Confirmed live: this is the slug actually ranking, not "services/vein-care".
-        "services/vein-care.html": "our-services/vein-care-medical-cosmetic",
     }
+    m.update({f"services/{k}.html": v for k, v in CLEAN_URL_OVERRIDES.items()})
     for f in FORMS:
         m[f"forms/{f['slug']}.html"] = f"forms/{f['slug']}"
     for s in SERVICES:
-        if s["slug"] != "vein-care":
+        if s["slug"] not in CLEAN_URL_OVERRIDES:
             m[f"services/{s['slug']}.html"] = f"services/{s['slug']}"
     for b in BLOG_POSTS:
         m[f"blog/{b['slug']}.html"] = f"blog/{b['slug']}"
@@ -2116,6 +2133,117 @@ SERVICES = [
         "cta_sub": "Reserve a concierge appointment for same-day evaluation, private procedures, and a personalized recovery plan with transparent direct-pay pricing.",
         "conditions": ["sports-injuries", "knee-pain", "shoulder-pain"],
     },
+    # The next two were supplied by Dr. Cedeno as finished copy (2026-11-04) and
+    # are reproduced as written. They are served at the bare /orthotics and /laser
+    # (CLEAN_URL_OVERRIDES), and use the optional keys the generic service
+    # template grew for them: book_label / book_key (the booking button text and
+    # the contact-form preselect), intro, columns, notes, and the *_eyebrow /
+    # *_heading overrides. An empty "expertise", "steps" or "faqs" skips that
+    # section. Neither page has a published price, so neither gets an Offer.
+    {
+        "slug": "orthotics",
+        "name": "Custom Orthotics",
+        "nav": "Custom Orthotics",
+        "title": "Custom Orthotics Palm Beach Gardens | RegenOrtho",
+        "desc": "Custom orthotics in Palm Beach Gardens, prescribed by a board-certified foot and ankle surgeon and made in our office. Insurance, HSA and FSA accepted.",
+        "eyebrow": "Custom Orthotics",
+        "h1": "Custom Orthotics, Made Right Here",
+        "lede": "Prescribed by a board-certified foot and ankle surgeon. Built in our office. Fitted to your feet, not a store shelf.",
+        "img": "svc-orthotics.jpg",
+        "img_alt": "Custom-molded foot orthotics beside a plaster foot cast on a clinic workbench",
+        "book_label": "Book an orthotic evaluation",
+        "book_key": "orthotics",
+        "intro_eyebrow": "Custom Orthotics",
+        "intro_heading": "It starts with <em>how your feet land</em>",
+        "intro": "Most foot, knee and back pain starts with how your feet hit the ground. Store-bought inserts guess. Our custom orthotics are designed from a full exam of your feet, your gait and your activity, then made in our own office so we control the fit and can adjust them fast.",
+        "why_eyebrow": "Why RegenOrtho Palm Beach",
+        "why": [
+            "Physician-led, by <a href=\"../providers/dr-orlando-cedeno.html\">Dr. Orlando Cedeno, DPM, FACFAS</a>, with 25+ years in foot and ankle care",
+            "Made in-house: faster turnaround and adjustments without shipping delays",
+            "Part of a full plan: orthotics alongside regenerative treatment, therapy and surgery when needed",
+        ],
+        "treats_first": True,  # the copy runs "Who they help" before "How it works"
+        "treats_eyebrow": "Who They Help",
+        "treats_heading": "Who custom orthotics <em>help</em>",
+        "treats": [
+            "Heel pain and plantar fasciitis",
+            "Flat feet and high arches",
+            "Bunions, hammertoes and forefoot pain",
+            "Achilles and posterior tibial tendon problems",
+            "Knee, hip and low back pain linked to foot mechanics",
+            "Runners, golfers and athletes",
+            "Diabetic and sensitive feet",
+            "Patients recovering from foot or ankle surgery",
+        ],
+        "expertise": [],
+        "steps_heading": "How it <em>works</em>",
+        "steps": [
+            ("Evaluation", "Exam, gait analysis and a review of your shoes and activities."),
+            ("Impression", "We capture an exact model of your feet."),
+            ("Fabrication", "Your orthotics are made in our office."),
+            ("Fitting", "We fit, check and fine-tune them with you."),
+            ("Follow-up", "Adjustments as your feet and activity change."),
+        ],
+        "notes": [
+            ("Coverage", "Many insurance plans cover custom orthotics when medically necessary. HSA and FSA accepted. Our team will check your benefits before you commit."),
+        ],
+        "faqs": [
+            ("How long do custom orthotics last?", "Typically 2 to 3 years, depending on activity and wear."),
+            ("Will custom orthotics fit my shoes?", "We design for your everyday, work and athletic shoes."),
+            ("How long do custom orthotics take to break in?", "Most patients adjust within 1 to 2 weeks."),
+        ],
+        "cta": "Fitted to your feet, <em>not a store shelf</em>",
+        "cta_sub": "Book an evaluation and our team will check your benefits before you commit.",
+        "conditions": ["knee-pain", "hip-pain", "sports-injuries"],
+    },
+    {
+        "slug": "laser",
+        "name": "Candela Laser Hair Removal & Leg Veins",
+        "nav": "Candela Laser",
+        "title": "Laser Hair Removal & Leg Veins Palm Beach Gardens",
+        "desc": "Laser hair removal and spider vein treatment in Palm Beach Gardens with the Candela GentleMax Pro, in a physician-led practice. Free laser consult.",
+        "eyebrow": "Candela Laser",
+        "h1": "Laser Hair Removal and Leg Vein Treatment",
+        "lede": "Powered by the Candela GentleMax Pro, a gold-standard medical laser, in a physician-led practice.",
+        "img": "svc-laser.jpg",
+        "img_alt": "A medical laser platform beside a treatment bed in a bright treatment room",
+        "book_label": "Book a free laser consult",
+        "book_key": "laser",
+        "intro_eyebrow": "Candela GentleMax Pro",
+        "intro_heading": "Two wavelengths, <em>one system</em>",
+        "intro": "The GentleMax Pro combines two laser wavelengths in one system, so we can treat more skin types and more concerns safely. A built-in cooling burst protects your skin with every pulse for a more comfortable treatment.",
+        "why_eyebrow": "Why RegenOrtho Palm Beach",
+        "why": [
+            "Physician-led medical laser care, not a spa franchise",
+            "Vein expertise from a practice that already performs <a href=\"../services/endovenous-ablation.html\">vein ablation</a> and <a href=\"../services/sclerotherapy.html\">sclerotherapy</a>",
+            "Comfortable treatments with built-in skin cooling",
+        ],
+        "columns_eyebrow": "What We Treat",
+        "columns_heading": "Hair removal and <em>leg veins</em>",
+        "columns": [
+            ("Laser hair removal", [
+                "Face, underarms, legs, bikini, back, chest and more",
+                "Safe for a wide range of skin tones",
+                "Most patients need 6 to 8 sessions, spaced 4 to 8 weeks apart",
+                "Performed by our licensed esthetician, Sydney Kashuba, under physician supervision",
+            ]),
+            ("Spider veins and leg veins", [
+                "Treats spider veins and small visible leg veins without needles",
+                "Evaluated by a physician with in-office vein experience, including ultrasound when needed",
+                "Pairs with <a href=\"../services/sclerotherapy.html\">sclerotherapy</a> for larger veins",
+            ]),
+        ],
+        "expertise": [],
+        "steps": [],
+        "notes": [
+            ("What to expect", "Free consult, skin assessment and test spot if needed. Most sessions take 15 to 45 minutes with no downtime. Avoid sun and tanning 2 weeks before and after."),
+            ("Pricing", "Packages available. Ask about grand opening pricing."),
+        ],
+        "faqs": [],
+        "cta": "Start with a <em>free laser consult</em>",
+        "cta_sub": "Free consult, skin assessment and test spot if needed. Ask about grand opening pricing.",
+        "conditions": ["varicose-spider-veins"],
+    },
 ]
 
 # Services that own a slot in the top-level grid/nav. Sub-services (the five
@@ -2281,7 +2409,8 @@ INSURANCE_FAQS = [
 def all_faq_categories():
     cats = [("Getting Started", "start", GENERAL_FAQS)]
     for s in SERVICES:
-        cats.append((s["name"], s["slug"], s["faqs"]))
+        if s["faqs"]:
+            cats.append((s["name"], s["slug"], s["faqs"]))
     cats.append(("IV Therapy & Wellness", "iv-therapy", IV_FAQS))
     cats.append(("Insurance & Payment", "insurance", INSURANCE_FAQS))
     return cats
@@ -2674,6 +2803,8 @@ SERVICE_H1_LEAD = {
     "tesamorelin": "Tesamorelin Therapy in Palm Beach Gardens",
     "mots-c": "MOTS-c Peptide Therapy in Palm Beach Gardens",
     "concierge-care": "Concierge Orthopedic Care in Palm Beach Gardens",
+    "orthotics": "Custom Orthotics in Palm Beach Gardens",
+    "laser": "Laser Hair Removal &amp; Leg Veins in Palm Beach Gardens",
 }
 
 SERVICE_FROM_PRICE = {
@@ -2805,7 +2936,7 @@ def build_services():
         # don't define them render exactly as before.
         treats = "".join(f"<li>{t}</li>" for t in svc.get("treats", []))
         treats_html = f"""<section class="section">
-  <div class="section-head reveal"><p class="eyebrow">Conditions Treated</p><h2>What this therapy is <em>used for</em></h2></div>
+  <div class="section-head reveal"><p class="eyebrow">{svc.get('treats_eyebrow', 'Conditions Treated')}</p><h2>{svc.get('treats_heading', 'What this therapy is <em>used for</em>')}</h2></div>
   <ul class="treats-grid reveal">{treats}</ul>
 </section>""" if treats else ""
 
@@ -2850,6 +2981,45 @@ def build_services():
             crumb_parts.append((f"services/{parent['slug']}.html", parent["name"]))
         crumb_parts.append(("", svc["name"]))
         crumbs_html = crumbs(crumb_parts, depth=d)
+        # Booking button: a service can name its own action and preselect itself
+        # in the contact form's service menu (contact-form.js reads ?service=).
+        book_label = svc.get("book_label", "Book a Consultation")
+        book_query = f"?service={svc['book_key']}" if svc.get("book_key") else ""
+        book_href = f"../contact.html{book_query}#book"
+        intro_html = f"""<section class="section svc-intro-copy">
+  <div class="section-head reveal"><p class="eyebrow">{svc.get('intro_eyebrow', svc['eyebrow'])}</p><h2>{svc['intro_heading']}</h2><p class="section-sub">{svc['intro']}</p></div>
+</section>""" if svc.get("intro") else ""
+        columns_html = ""
+        if svc.get("columns"):
+            cols = "".join(
+                f"""<div class="exp-card svc-col reveal" style="--d:{i * 90}ms"><h3>{t}</h3><ul class="check-list">{''.join(f'<li>{x}</li>' for x in items)}</ul></div>"""
+                for i, (t, items) in enumerate(svc["columns"]))
+            columns_html = f"""<section class="section section-tint">
+  <div class="section-head reveal"><p class="eyebrow">{svc.get('columns_eyebrow', 'What We Treat')}</p><h2>{svc['columns_heading']}</h2></div>
+  <div class="svc-cols">{cols}</div>
+</section>"""
+        notes_html = ""
+        if svc.get("notes"):
+            notes = "".join(
+                f"""<div class="price-card svc-note reveal" style="--d:{i * 90}ms"><p class="eyebrow">{t}</p><p>{b}</p></div>"""
+                for i, (t, b) in enumerate(svc["notes"]))
+            notes_html = f"""<section class="section">
+  <div class="svc-cols svc-notes">{notes}</div>
+  <p class="section-foot svc-notes-cta reveal"><a class="btn btn-navy" href="{book_href}">{book_label}</a></p>
+</section>"""
+        expertise_html = f"""<section class="section section-tint">
+  <div class="section-head reveal"><p class="eyebrow">Our Expertise</p><h2>What this service <em>includes</em></h2></div>
+  <div class="exp-grid">{cards}</div>
+</section>""" if svc["expertise"] else ""
+        steps_html = f"""<section class="section">
+  <div class="section-head reveal"><p class="eyebrow">How It Works</p><h2>{svc.get('steps_heading') or f'{step_word} steps to <em>relief</em>'}</h2></div>
+  <ol class="steps">{steps}</ol>
+</section>""" if svc["steps"] else ""
+        faq_html = f"""<section class="section section-tint">
+  <div class="section-head reveal"><p class="eyebrow">Patient Guide &amp; Answers</p><h2>Common <em>questions</em></h2></div>
+  <div class="faq-list">{faqs}</div>
+  <p class="section-foot"><a href="../faq.html">Browse the full FAQ →</a></p>
+</section>""" if svc["faqs"] else ""
         body = f"""{nav(d)}
 <main id="main">
 <header class="bl-hero split-hero svc-hero">
@@ -2858,41 +3028,35 @@ def build_services():
     <h1><span class="eyebrow h1-lead">{SERVICE_H1_LEAD.get(svc['slug']) or svc['eyebrow']}</span> {svc['h1']}</h1>
     <p class="bl-hero-lede">{svc['lede']}</p>
     <div class="hero-cta-row">
-      <a class="btn btn-gold" href="../contact.html#book">Book a Consultation</a>
+      <a class="btn btn-gold" href="{book_href}">{book_label}</a>
       <a class="btn btn-ghost-light" href="tel:{PHONE_TEL}" data-call-location="page_hero">Call {PHONE_VANITY}</a>
     </div>
   </div>
   <figure class="bl-hero-media">{photo(svc["img"].rsplit(".",1)[0], svc["img_alt"], 1400, 900, prefix="../", sizes="(max-width:900px) 100vw, 50vw", eager=True)}</figure>
 </header>
 {f'<aside class="fl-notice" role="note" aria-label="Florida stem cell therapy notice"><p>{FL_STEM_CELL_NOTICE}</p></aside>' if svc['slug'] in FL_NOTICE_PAGES else ''}
+{intro_html}
 <section class="section svc-intro">
   <div class="why-split">
     <div class="why-head reveal">
-      <p class="eyebrow">Why patients choose us</p>
+      <p class="eyebrow">{svc.get('why_eyebrow', 'Why patients choose us')}</p>
       <h2>Care built around <em>you</em></h2>
-      <a class="btn btn-navy" href="../contact.html#book">Book a Consultation</a>
+      <a class="btn btn-navy" href="{book_href}">{book_label}</a>
     </div>
     <ul class="check-list why-panel reveal" style="--d:120ms">{why}</ul>
   </div>
 </section>
-<section class="section section-tint">
-  <div class="section-head reveal"><p class="eyebrow">Our Expertise</p><h2>What this service <em>includes</em></h2></div>
-  <div class="exp-grid">{cards}</div>
-</section>
-<section class="section">
-  <div class="section-head reveal"><p class="eyebrow">How It Works</p><h2>{step_word} steps to <em>relief</em></h2></div>
-  <ol class="steps">{steps}</ol>
-</section>
-{treats_html}
+{expertise_html}
+{columns_html}
+{treats_html if svc.get("treats_first") else ""}
+{steps_html}
+{"" if svc.get("treats_first") else treats_html}
+{notes_html}
 {price_html}
 {subsvc_html}
 {conds_html}
-<section class="section section-tint">
-  <div class="section-head reveal"><p class="eyebrow">Patient Guide &amp; Answers</p><h2>Common <em>questions</em></h2></div>
-  <div class="faq-list">{faqs}</div>
-  <p class="section-foot"><a href="../faq.html">Browse the full FAQ →</a></p>
-</section>
-{cta_band(d, heading=svc['cta'], sub=svc['cta_sub'])}
+{faq_html}
+{cta_band(d, heading=svc['cta'], sub=svc['cta_sub'], book_label=book_label, book_query=book_query)}
 {disclaimer_html}
 </main>
 {footer(d)}"""
@@ -2902,7 +3066,7 @@ def build_services():
         crumb_schema_parts.append((f"services/{svc['slug']}.html", svc["name"]))
         schema = (
             therapy_schema(svc)
-            + faq_schema(svc["faqs"])
+            + (faq_schema(svc["faqs"]) if svc["faqs"] else "")
             + breadcrumb_schema(crumb_schema_parts)
         )
         page = head(svc["title"], svc["desc"], depth=d,
@@ -4397,6 +4561,8 @@ def build_contact():
           <option>Neuropathy Restoration Program</option>
           <option>Medical Weight Loss / GLP-1</option>
           <option>Concierge &amp; Cash-Pay Services</option>
+          <option data-key="orthotics">Custom Orthotics</option>
+          <option data-key="laser">Candela Laser — Hair Removal &amp; Leg Veins</option>
           <option>Not sure — help me choose</option>
         </select>
       </label>

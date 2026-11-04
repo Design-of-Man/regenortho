@@ -35,6 +35,15 @@
     success.hidden = false;
   }
 
+  /* A service page's booking button links to /contact?service=<key>#book
+     (book_key in build.py); preselect the matching option so the office sees
+     which page the patient came from. Unknown keys leave the menu alone. */
+  var svcKey = (location.search.match(/[?&]service=([a-z0-9-]+)/) || [])[1];
+  if (prefix === "contact" && svcKey) {
+    var opt = form.querySelector('select[name="service"] option[data-key="' + svcKey + '"]');
+    if (opt) opt.selected = true;
+  }
+
   /* Bot check: dmTurnstile is defined at the top of assets/js/assist.js,
      which loads (deferred, before this file) on every page outside /forms/*.
      Warm it on the visitor's first focus in the form; it does nothing while

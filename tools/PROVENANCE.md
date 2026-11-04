@@ -108,3 +108,12 @@ Before them, seven service pages shared one cells macro and four shared one vein
 so 14 of 19 service pages opened on one of three pictures. Every service now has its
 own. The same rules apply: scenes only, alt text describes the scene
 (SERVICES[...]["img_alt"]), never "at RegenOrtho" as if photographed there.
+
+## Orthotics and laser photographs (added 2026-11-04)
+
+`assets/media/svc-orthotics.jpg` and `svc-laser.jpg` are generated the same way, with
+Higgsfield (GPT Image 2.5, 3:2), upscaled to 2K and saved at 2000px, because no office
+photograph of either service existed yet. The laser device is deliberately generic: it is
+NOT a Candela GentleMax Pro and carries no brand. Same rules as above; replace both with
+real office photos (or Candela's own product image for the laser page, which Dr. Cedeno
+OK'd) when the practice supplies them, under a new filename.
