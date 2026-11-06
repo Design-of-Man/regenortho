@@ -385,7 +385,12 @@ CSS coastline scene stays underneath as the no-video fallback. asset_v() returns
   Sharing Debugger / a fresh URL rather than assuming it did not work.
 
 ## Analytics
-- **GA4 waits for consent** (2026-10-26, Nick approved). `head()` emits `ga_tag(p)`: one deferred
+- **2026-11-06: no consent bar any more** (Nick: remove it if not legally required; no Florida or
+  federal law requires one here). consent.js loads GA4 after onload at idle on every page except
+  /forms/*, with Google Signals, ad storage and ad personalization off and page_location = path +
+  gclid/gbraid/wbraid/utm_* only. A stored `rg-consent` = "denied" is still honoured. The
+  paragraph below is history.
+- **GA4 waited for consent 2026-10-26..11-06** (Nick approved). `head()` emits `ga_tag(p)`: one deferred
   `assets/js/consent.js` tag with `data-ga`. It defines `window.gtag`, sets Consent Mode v2 to
   denied, shows a one-time bar (Allow / No thanks, remembered in localStorage `rg-consent`),
   and injects gtag.js only after Allow. Before it, GA started on page load on /contact and

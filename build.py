@@ -360,7 +360,10 @@ def photo(stem, alt, width, height, cls="", prefix="", sizes="100vw", eager=Fals
 # what the on-page notice and the privacy policy promise.
 GA_MEASUREMENT_ID = "G-2Z542HBXHS"
 
-# Consent-gated since 2026-10-26: assets/js/consent.js defines the gtag() queue,
+# 2026-11-06: the Allow / No thanks bar was removed (no law required it; GA had
+# collapsed to the visitors who clicked Allow). consent.js now loads GA4 at idle
+# with Signals, ad storage/personalization and non-campaign query strings off.
+# History: consent-gated 2026-10-26..11-06: assets/js/consent.js defined the gtag() queue,
 # sets Consent Mode to denied, shows a one-time Allow / No thanks bar and loads
 # gtag.js only after Allow (at idle after onload for returning visitors who
 # already allowed, which keeps the old performance behaviour: gtag.js is 176KB and
@@ -368,7 +371,7 @@ GA_MEASUREMENT_ID = "G-2Z542HBXHS"
 # on the contact page and every page with the assistant, where visitors type their
 # name, phone and reason for calling. Same pattern as First Rehab and Legacy Medical.
 def ga_tag(p):
-    return (f'<!-- Google Analytics 4, consent-gated (assets/js/consent.js) -->\n'
+    return (f'<!-- Google Analytics 4 (assets/js/consent.js) -->\n'
             f'<script defer src="{p}assets/js/consent.js?v={asset_v("assets/js/consent.js")}" '
             f'data-ga="{GA_MEASUREMENT_ID}"></script>\n')
 
@@ -5108,7 +5111,7 @@ def build_legal_and_404():
     <h2>Patient forms</h2>
     <p>The new patient intake form and the peptide &amp; GLP-1 questionnaire on this site work differently from the appointment request forms above: <strong>they do not transmit anything.</strong> Everything you type stays in your own browser. When you finish, the form assembles your answers into a summary that you print, save as a PDF, or download — you decide how and when it reaches us. Your progress is stored on your device only if you switch that option on, and the "Erase my answers" button removes it.</p>
     <h2>Analytics</h2>
-    <p>This site may use privacy-friendly, cookieless analytics to understand aggregate site usage. We do not load analytics, advertising, or session-recording scripts on the patient form pages. We do not sell visitor information.</p>
+    <p>This site uses Google Analytics and Vercel Web Analytics to understand aggregate site usage, such as which pages are visited. Google Analytics runs with Google Signals and ad personalization turned off, and it never receives what you type into a form or the assistant. We do not load analytics, advertising, or session-recording scripts on the patient form pages. We do not sell visitor information.</p>
     <h2>Emergencies</h2>
     <p>If you are experiencing a medical emergency, call 911 or go to the nearest emergency room. This website and its assistant are not monitored in real time.</p>
     <h2>Questions</h2>
